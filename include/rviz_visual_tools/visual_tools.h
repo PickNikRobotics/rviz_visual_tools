@@ -68,16 +68,16 @@ namespace rviz_visual_tools
 static const std::string RVIZ_MARKER_TOPIC = "/rviz_visual_tools";
 
 // Note: when adding new colors to colors, also add them to getRandColor() function
-enum colors { RED, 
-              GREEN, 
-              BLUE, 
-              GREY, 
-              WHITE, 
-              ORANGE, 
-              BLACK, 
-              YELLOW, 
-              PURPLE, 
-              TRANSLUCENT, 
+enum colors { RED,
+              GREEN,
+              BLUE,
+              GREY,
+              WHITE,
+              ORANGE,
+              BLACK,
+              YELLOW,
+              PURPLE,
+              TRANSLUCENT,
               TRANSLUCENT2,
               RAND };
 
@@ -311,7 +311,7 @@ public:
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color = BLUE, const double scale = 0.1, const std::string& ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 &scale, const std::string& ns = "Spheres");
-                      
+
 
 
   /**
@@ -446,10 +446,10 @@ public:
   static Eigen::Affine3d convertPoint32ToPose(const geometry_msgs::Point32 &point);
 
   /**
-   * \brief 
+   * \brief
    * \param input - description
    * \param input - description
-   * \return 
+   * \return
    */
   static geometry_msgs::Pose convertPointToPose(const geometry_msgs::Point &point);
 
