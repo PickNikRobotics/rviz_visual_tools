@@ -240,9 +240,9 @@ void VisualTools::loadMarkerPub()
   pub_rviz_marker_ = nh_.advertise<visualization_msgs::Marker>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_marker_.getTopic());
 
-  ros::spinOnce();
+  //ros::spinOnce();
   ros::Duration(0.2).sleep();
-  ros::spinOnce();
+  //ros::spinOnce();
 }
 
 void VisualTools::setFloorToBaseHeight(double floor_to_base_height)
@@ -264,9 +264,9 @@ void VisualTools::setLifetime(double lifetime)
   text_marker_.lifetime = marker_lifetime_;
 }
 
-const rviz_colors VisualTools::getRandColor()
+const rviz_visual_tools::colors VisualTools::getRandColor()
 {
-  std::vector<rviz_colors> all_colors;
+  std::vector<rviz_visual_tools::colors> all_colors;
   
   all_colors.push_back(RED);
   all_colors.push_back(GREEN);
@@ -282,7 +282,7 @@ const rviz_colors VisualTools::getRandColor()
   return all_colors[ rand_num ];
 }
 
-std_msgs::ColorRGBA VisualTools::getColor(const rviz_colors &color)
+std_msgs::ColorRGBA VisualTools::getColor(const rviz_visual_tools::colors &color)
 {
   std_msgs::ColorRGBA result;
   result.a = alpha_;
@@ -359,7 +359,7 @@ std_msgs::ColorRGBA VisualTools::getColor(const rviz_colors &color)
   return result;
 }
 
-geometry_msgs::Vector3 VisualTools::getScale(const rviz_scales &scale, bool arrow_scale, double marker_scale)
+geometry_msgs::Vector3 VisualTools::getScale(const rviz_visual_tools::scales &scale, bool arrow_scale, double marker_scale)
 {
   geometry_msgs::Vector3 result;
   double val(0.0);
@@ -469,38 +469,38 @@ Eigen::Affine3d VisualTools::getVectorBetweenPoints(Eigen::Vector3d a, Eigen::Ve
   return pose;
 }
 
-bool VisualTools::publishSphere(const Eigen::Affine3d &pose, const rviz_colors color, const rviz_scales scale, const std::string& ns)
+bool VisualTools::publishSphere(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
 {
   return publishSphere(convertPose(pose), color, scale, ns);
 }
 
-bool VisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_colors color, const rviz_scales scale, const std::string& ns)
+bool VisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
 {
   geometry_msgs::Pose pose_msg;
   tf::pointEigenToMsg(point, pose_msg.position);
   return publishSphere(pose_msg, color, scale, ns);
 }
 
-bool VisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_colors color, const double scale, const std::string& ns)
+bool VisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_visual_tools::colors color, const double scale, const std::string& ns)
 {
   geometry_msgs::Pose pose_msg;
   tf::pointEigenToMsg(point, pose_msg.position);
   return publishSphere(pose_msg, color, scale, ns);
 }
 
-bool VisualTools::publishSphere(const geometry_msgs::Point &point, const rviz_colors color, const rviz_scales scale, const std::string& ns)
+bool VisualTools::publishSphere(const geometry_msgs::Point &point, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
 {
   geometry_msgs::Pose pose_msg;
   pose_msg.position = point;
   return publishSphere(pose_msg, color, scale, ns);
 }
 
-bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_colors color, const rviz_scales scale, const std::string& ns)
+bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
 {
   return publishSphere(pose, color, getScale(scale, false, 0.1), ns);
 }
 
-bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_colors color, double scale, const std::string& ns)
+bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, double scale, const std::string& ns)
 {
   geometry_msgs::Vector3 scale_msg;
   scale_msg.x = scale;
@@ -508,7 +508,7 @@ bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_colo
   scale_msg.z = scale;
   return publishSphere(pose, color, scale_msg, ns);
 }
-bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_colors color, const geometry_msgs::Vector3 scale, const std::string& ns)
+bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 scale, const std::string& ns)
 {
   if(muted_)
     return true; // this function will only work if we have loaded the publishers
@@ -528,17 +528,17 @@ bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_colo
   // Publish
   loadMarkerPub(); // always check this before publishing
   pub_rviz_marker_.publish( sphere_marker_ );
-  ros::spinOnce();
+  //ros::spinOnce();
 
   return true;
 }
 
-bool VisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_colors color, const rviz_scales scale)
+bool VisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
   return publishArrow(convertPose(pose), color, scale);
 }
 
-bool VisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_colors color, const rviz_scales scale)
+bool VisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
   if(muted_)
     return true;
@@ -558,7 +558,7 @@ bool VisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_color
   return true;
 }
 
-bool VisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_colors color, const double &block_size)
+bool VisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const double &block_size)
 {
   if(muted_)
     return true;
@@ -586,7 +586,7 @@ bool VisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_color
   return true;
 }
 
-bool VisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_colors color, double height, double radius)
+bool VisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, double height, double radius)
 {
   if(muted_)
     return true;
@@ -614,7 +614,7 @@ bool VisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_co
   return true;
 }
 
-bool VisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_colors color, double radius)
+bool VisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_visual_tools::colors color, double radius)
 {
   if(muted_)
     return true;
@@ -668,7 +668,7 @@ bool VisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const rvi
   return true;
 }
 
-bool VisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const rviz_colors color)
+bool VisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const rviz_visual_tools::colors color)
 {
   if(muted_)
     return true;
@@ -699,7 +699,7 @@ bool VisualTools::publishRectangle(const geometry_msgs::Point &point1, const geo
 }
 
 bool VisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                              const rviz_colors color, const rviz_scales scale)
+                              const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
   if(muted_)
     return true;
@@ -722,7 +722,7 @@ bool VisualTools::publishLine(const geometry_msgs::Point &point1, const geometry
   return true;
 }
 
-bool VisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_colors color, const rviz_scales scale, const std::string& ns)
+bool VisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
 {
   if(muted_)
     return true;
@@ -763,7 +763,7 @@ bool VisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, con
   return true;
 }
 
-bool VisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_colors color, const rviz_scales scale, const std::string& ns)
+bool VisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
 {
   std::vector<geometry_msgs::Point> points;
   geometry_msgs::Point temp;
@@ -782,7 +782,7 @@ bool VisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rv
   publishPath(points, color, scale, ns);
 }
 
-bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_colors color, const double scale, const std::string& ns)
+bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const double scale, const std::string& ns)
 {
   geometry_msgs::Vector3 scale_vector;
   scale_vector.x = scale;
@@ -791,12 +791,12 @@ bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points
   publishSpheres( points, color, scale_vector, ns);
 }
 
-bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_colors color, const rviz_scales scale, const std::string& ns)
+bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
 {
   publishSpheres( points, color, getScale(scale, false, 0.25), ns);
 }
 
-bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_colors color, const geometry_msgs::Vector3 &scale, const std::string& ns)
+bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 &scale, const std::string& ns)
 {
   if(muted_)
     return true;
@@ -829,12 +829,12 @@ bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points
   return true;
 }
 
-bool VisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_colors &color, const rviz_scales scale, bool static_id)
+bool VisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, bool static_id)
 {
   publishText(pose, text, color, getScale(scale), static_id);
 }
 
-bool VisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_colors &color, const geometry_msgs::Vector3 scale, bool static_id)
+bool VisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 scale, bool static_id)
 {
   if(muted_)
     return true;

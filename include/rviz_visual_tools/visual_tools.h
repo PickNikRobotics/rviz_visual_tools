@@ -67,27 +67,27 @@ namespace rviz_visual_tools
 // Default constants
 static const std::string RVIZ_MARKER_TOPIC = "/rviz_visual_tools";
 
-// Note: when adding new colors to rviz_colors, also add them to getRandColor() function
-enum rviz_colors { RED, 
-                   GREEN, 
-                   BLUE, 
-                   GREY, 
-                   WHITE, 
-                   ORANGE, 
-                   BLACK, 
-                   YELLOW, 
-                   PURPLE, 
-                   TRANSLUCENT, 
-                   TRANSLUCENT2,
-                   RAND };
+// Note: when adding new colors to colors, also add them to getRandColor() function
+enum colors { RED, 
+              GREEN, 
+              BLUE, 
+              GREY, 
+              WHITE, 
+              ORANGE, 
+              BLACK, 
+              YELLOW, 
+              PURPLE, 
+              TRANSLUCENT, 
+              TRANSLUCENT2,
+              RAND };
 
-enum rviz_scales { XXSMALL,
-                   XSMALL,
-                   SMALL,
-                   REGULAR,
-                   LARGE, xLARGE, xxLARGE, xxxLARGE,
-                   XLARGE,
-                   XXLARGE };
+enum scales { XXSMALL,
+              XSMALL,
+              SMALL,
+              REGULAR,
+              LARGE, xLARGE, xxLARGE, xxxLARGE,
+              XLARGE,
+              XXLARGE };
 
 class VisualTools
 {
@@ -213,16 +213,16 @@ public:
 
   /**
    * \brief Get a random color from the list of hardcoded enum color types
-   * \return Random color from rviz_colors
+   * \return Random color from rviz_visual_tools::colors
    */
-  const rviz_colors getRandColor();
+  const rviz_visual_tools::colors getRandColor();
 
   /**
    * \brief Get the RGB value of standard colors
    * \param color - an enum pre-defined name of a color
    * \return the RGB message equivalent
    */
-  std_msgs::ColorRGBA getColor(const rviz_colors &color);
+  std_msgs::ColorRGBA getColor(const rviz_visual_tools::colors &color);
 
   /**
    * \brief Get the rviz marker scale of standard sizes
@@ -231,7 +231,7 @@ public:
    * \param marker_scale - amount to scale the scale for accounting for different types of markers
    * \return vector of 3 scales
    */
-  geometry_msgs::Vector3 getScale(const rviz_scales &scale, bool arrow_scale = false, double marker_scale = 1.0);
+  geometry_msgs::Vector3 getScale(const rviz_visual_tools::scales &scale, bool arrow_scale = false, double marker_scale = 1.0);
 
   /**
    * \brief Create a vector that points from point a to point b
@@ -292,13 +292,13 @@ public:
    * \param scale - an enum pre-defined name of a size
    * \return true on success
    */
-  bool publishSphere(const Eigen::Affine3d &pose, const rviz_colors color = BLUE, const rviz_scales scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const Eigen::Vector3d &point, const rviz_colors color = BLUE, const rviz_scales scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const Eigen::Vector3d &point, const rviz_colors color, const double scale, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Point &point, const rviz_colors color = BLUE, const rviz_scales scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Pose &pose, const rviz_colors color = BLUE, const rviz_scales scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Pose &pose, const rviz_colors color, const double scale, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Pose &pose, const rviz_colors color, const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere");
+  bool publishSphere(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Sphere");
+  bool publishSphere(const Eigen::Vector3d &point, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Sphere");
+  bool publishSphere(const Eigen::Vector3d &point, const rviz_visual_tools::colors color, const double scale, const std::string& ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Point &point, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const double scale, const std::string& ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere");
 
   /**
    * \brief Publish a marker of a series of spheres to rviz
@@ -308,9 +308,9 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_colors color = BLUE, const double scale = 0.1, const std::string& ns = "Spheres");
-  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_colors color = BLUE, const rviz_scales scale = REGULAR, const std::string& ns = "Spheres");
-  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_colors color, const geometry_msgs::Vector3 &scale, const std::string& ns = "Spheres");
+  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color = BLUE, const double scale = 0.1, const std::string& ns = "Spheres");
+  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Spheres");
+  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 &scale, const std::string& ns = "Spheres");
                       
 
 
@@ -321,8 +321,8 @@ public:
    * \param scale - an enum pre-defined name of a size
    * \return true on success
    */
-  bool publishArrow(const Eigen::Affine3d &pose, const rviz_colors color = BLUE, const rviz_scales scale = REGULAR);
-  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_colors color = BLUE, const rviz_scales scale = REGULAR);
+  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
+  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
 
   /**
    * \brief Publish a marker of rectangle to rviz
@@ -331,7 +331,7 @@ public:
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const rviz_colors color = BLUE);
+  bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const rviz_visual_tools::colors color = BLUE);
 
   /**
    * \brief Publish a marker of line to rviz
@@ -342,7 +342,7 @@ public:
    * \return true on success
    */
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                   const rviz_colors color = BLUE, const rviz_scales scale = REGULAR);
+                   const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
 
   /**
    * \brief Publish a marker of a series of connected lines to rviz
@@ -352,7 +352,7 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_colors color = RED, const rviz_scales scale = REGULAR,
+  bool publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors color = RED, const rviz_visual_tools::scales scale = REGULAR,
                    const std::string& ns = "Path");
 
   /**
@@ -363,7 +363,7 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_colors color = RED, const rviz_scales scale = REGULAR,
+  bool publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors color = RED, const rviz_visual_tools::scales scale = REGULAR,
                       const std::string& ns = "Polygon");
 
   /**
@@ -373,7 +373,7 @@ public:
    * \param size - height=width=depth=size
    * \return true on success
    */
-  bool publishBlock(const geometry_msgs::Pose &pose, const rviz_colors color = BLUE, const double &block_size = 0.1);
+  bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
 
   /**
    * \brief Publish a marker of a cylinder to Rviz
@@ -383,7 +383,7 @@ public:
    * \param radius - geometry of cylinder
    * \return true on success
    */
-  bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_colors color = BLUE, double height = 0.1, double radius = 0.1);
+  bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, double radius = 0.1);
 
   /**
    * \brief Publish a graph
@@ -392,7 +392,7 @@ public:
    * \param radius - width of cylinders
    * \return true on success
    */
-  bool publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_colors color, double radius);
+  bool publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_visual_tools::colors color, double radius);
 
   /**
    * \brief Publish a marker of a text to Rviz
@@ -403,10 +403,10 @@ public:
    * \return true on success
    */
   bool publishText(const geometry_msgs::Pose &pose, const std::string &text,
-                   const rviz_colors &color = WHITE, const rviz_scales scale = REGULAR, bool static_id = true);
+                   const rviz_visual_tools::colors &color = WHITE, const rviz_visual_tools::scales scale = REGULAR, bool static_id = true);
 
   bool publishText(const geometry_msgs::Pose &pose, const std::string &text,
-                   const rviz_colors &color, const geometry_msgs::Vector3 scale, bool static_id = true);
+                   const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 scale, bool static_id = true);
 
   /**
    * \brief Publish a visualization_msgs Marker of a custom type. Allows reuse of the ros publisher
