@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>rviz_visual_tools</name>
+  <version>1.3.0</version>
+  <description>Helper functions for displaying and debugging data in Rviz via published markers</description>
+
+  <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/davetcoleman/rviz_visual_tools</url>
+  <url type="butracker">https://github.com/davetcoleman/rviz_visual_tools/issues</url>
+  <url type="repository">https://github.com/davetcoleman/rviz_visual_tools/</url>
+
+  <author email="davetcoleman@gmail.com">Dave Coleman</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>eigen_conversions</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>tf_conversions</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>graph_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>trajectory_msgs</build_depend>
+  <build_depend>cmake_modules</build_depend>
+
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>visualization_msgs</run_depend>
+  <run_depend>graph_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>trajectory_msgs</run_depend>
+
+</package>

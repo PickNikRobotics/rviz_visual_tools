@@ -1,0 +1,17 @@
+<launch>
+  
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+  <!-- Load Rviz -->
+  <node name="$(anon rviz)" pkg="rviz" type="rviz" respawn="false"
+	args="-d $(find rviz_visual_tools)/launch/visual_tools_test.rviz" output="screen">
+  </node>  
+
+  <!-- Start test -->
+  <node name="rviz_visual_tools_test" launch-prefix="$(arg launch_prefix)" pkg="rviz_visual_tools" 
+	type="visual_tools_test" output="screen">
+  </node>
+
+</launch>
