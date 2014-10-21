@@ -240,6 +240,7 @@ void VisualTools::loadMarkerPub()
   pub_rviz_marker_ = nh_.advertise<visualization_msgs::Marker>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_marker_.getTopic());
 
+  ROS_WARN_STREAM_NAMED("temp","disabled spinOnce");
   //ros::spinOnce();
   ros::Duration(0.2).sleep();
   //ros::spinOnce();
@@ -528,6 +529,9 @@ bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visu
   // Publish
   loadMarkerPub(); // always check this before publishing
   pub_rviz_marker_.publish( sphere_marker_ );
+
+
+  ROS_WARN_STREAM_NAMED("temp","disabled spinOnce");
   //ros::spinOnce();
 
   return true;
