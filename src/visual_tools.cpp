@@ -240,7 +240,7 @@ void VisualTools::loadMarkerPub()
   pub_rviz_marker_ = nh_.advertise<visualization_msgs::Marker>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_marker_.getTopic());
 
-  ROS_WARN_STREAM_NAMED("temp","disabled spinOnce");
+  ROS_WARN_STREAM_THROTTLE_NAMED(60, "temp","disabled spinOnce");
   //ros::spinOnce();
   ros::Duration(0.2).sleep();
   //ros::spinOnce();
@@ -531,7 +531,7 @@ bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visu
   pub_rviz_marker_.publish( sphere_marker_ );
 
 
-  ROS_WARN_STREAM_NAMED("temp","disabled spinOnce");
+  ROS_WARN_STREAM_THROTTLE_NAMED(60, "temp","disabled spinOnce");
   //ros::spinOnce();
 
   return true;
@@ -786,6 +786,21 @@ bool VisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rv
   publishPath(points, color, scale, ns);
 }
 
+bool VisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors color, const double scale, const std::string& ns)
+{
+  std::vector<geometry_msgs::Point> points_msg;
+  geometry_msgs::Point temp;
+
+  for (std::size_t i = 0; i < points.size(); ++i)
+  {
+    tf::pointEigenToMsg(points[i], temp);
+    points_msg.push_back(temp);
+  }
+
+
+  return publishSpheres(points_msg, color, scale, ns);
+}
+
 bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const double scale, const std::string& ns)
 {
   geometry_msgs::Vector3 scale_vector;
@@ -828,7 +843,10 @@ bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points
   // Send to Rviz
   loadMarkerPub(); // always check this before publishing
   pub_rviz_marker_.publish( spheres_marker_ );
-  ros::spinOnce();
+
+  
+  ROS_WARN_STREAM_THROTTLE_NAMED(60, "temp","disabled spinOnce");
+  //ros::spinOnce();
 
   return true;
 }

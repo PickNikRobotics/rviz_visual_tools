@@ -308,6 +308,7 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
+  bool publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors color = BLUE, const double scale = 0.1, const std::string& ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color = BLUE, const double scale = 0.1, const std::string& ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 &scale, const std::string& ns = "Spheres");
