@@ -240,10 +240,9 @@ void VisualTools::loadMarkerPub()
   pub_rviz_marker_ = nh_.advertise<visualization_msgs::Marker>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_marker_.getTopic());
 
-  ROS_WARN_STREAM_THROTTLE_NAMED(60, "temp","disabled spinOnce");
-  //ros::spinOnce();
+  ros::spinOnce();
   ros::Duration(0.2).sleep();
-  //ros::spinOnce();
+  ros::spinOnce();
 }
 
 void VisualTools::setFloorToBaseHeight(double floor_to_base_height)
@@ -531,9 +530,7 @@ bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visu
   pub_rviz_marker_.publish( sphere_marker_ );
 
 
-  ROS_WARN_STREAM_THROTTLE_NAMED(60, "temp","disabled spinOnce");
-  //ros::spinOnce();
-
+  ros::spinOnce();
   return true;
 }
 
@@ -845,8 +842,7 @@ bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points
   pub_rviz_marker_.publish( spheres_marker_ );
 
   
-  ROS_WARN_STREAM_THROTTLE_NAMED(60, "temp","disabled spinOnce");
-  //ros::spinOnce();
+  ros::spinOnce();
 
   return true;
 }
