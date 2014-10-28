@@ -174,6 +174,14 @@ public:
   void loadMarkerPub();
 
   /**
+   * \brief Wait until at least one subscriber connects to a publisher
+   * \param pub - the publisher to check for subsribers
+   * \param wait_time - time to wait for subscriber to be availnle before throwing warning
+   * \return true on successful connection
+   */
+  bool waitForSubscriber(const ros::Publisher &pub, const double &wait_time = 1.0);
+
+  /**
    * \brief Return if we are in verbose mode
    */
   bool isMuted()
@@ -491,6 +499,12 @@ public:
    * \param Pose to fill in
    */
   void generateRandomPose(geometry_msgs::Pose& pose);
+
+  /**
+   * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
+   * \param Pose to fill in
+   */
+  void generateEmptyPose(geometry_msgs::Pose& pose);
 
   /**
    * \brief Get random between min and max

@@ -67,11 +67,10 @@ void VisualTools::initialize()
   loadRvizMarkers();
 }
 
-void VisualTools::deleteAllMarkers()
+void VisualTools::deleteAllMarkers() // TODO ROS-J change to bool
 {
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( reset_marker_ );
-  ros::spinOnce();
+  // Helper for publishing rviz markers
+  publishMarker( reset_marker_ );
 }
 
 void VisualTools::resetMarkerCounts()
@@ -240,9 +239,50 @@ void VisualTools::loadMarkerPub()
   pub_rviz_marker_ = nh_.advertise<visualization_msgs::Marker>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_marker_.getTopic());
 
+  waitForSubscriber(pub_rviz_marker_); 
+}
+
+bool VisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wait_time)
+{
+  // Benchmark runtime
+  ros::Time start_time;
+  start_time = ros::Time::now();
+
+  // Will wait at most 1000 ms (1 sec)
+  ros::Time maxTime(ros::Time::now() + ros::Duration(wait_time));
+
+  // This is wrong. It returns only the number of subscribers that have already established their direct connections to this publisher
+  int num_existing_subscribers = pub.getNumSubscribers();
+
+  // How often to check for subscribers
+  ros::Rate poll_rate(200);
+
+  // Wait for subsriber
+  while(num_existing_subscribers == 0)
+  {
+    // Check if timed out
+    if (ros::Time::now() > maxTime)
+    {
+      ROS_WARN_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within " 
+                            << wait_time << " seconds. It is possible initially published visual messages will be lost.");
+      return false;
+    }
+
+    // Sleep
+    poll_rate.sleep();
+
+    // Check again
+    num_existing_subscribers = pub.getNumSubscribers();
+    //std::cout << "num_existing_subscribers " << num_existing_subscribers << std::endl;
+  }
+
+  // Benchmark runtime
+  double duration = (ros::Time::now() - start_time).toSec();
+  ROS_INFO_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' took " << duration 
+                        << " seconds to connect to a subscriber. Connected to " << num_existing_subscribers 
+                        << " total subsribers");
   ros::spinOnce();
-  ros::Duration(0.2).sleep();
-  ros::spinOnce();
+  return true;
 }
 
 void VisualTools::setFloorToBaseHeight(double floor_to_base_height)
@@ -525,13 +565,8 @@ bool VisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visu
   sphere_marker_.points[0] = pose.position;
   sphere_marker_.colors[0] = getColor(color);
 
-  // Publish
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( sphere_marker_ );
-
-
-  ros::spinOnce();
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( sphere_marker_ );
 }
 
 bool VisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
@@ -552,11 +587,8 @@ bool VisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visua
   arrow_marker_.color = getColor(color);
   arrow_marker_.scale = getScale(scale, true);
 
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( arrow_marker_ );
-  ros::spinOnce();
-
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( arrow_marker_ );
 }
 
 bool VisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const double &block_size)
@@ -580,11 +612,8 @@ bool VisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_visua
   // Set marker color
   block_marker_.color = getColor( color );
 
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( block_marker_ );
-  ros::spinOnce();
-
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( block_marker_ );
 }
 
 bool VisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, double height, double radius)
@@ -608,11 +637,8 @@ bool VisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_vi
   // Set marker color
   cylinder_marker_.color = getColor( color );
 
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( cylinder_marker_ );
-  ros::spinOnce();
-
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( cylinder_marker_ );
 }
 
 bool VisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_visual_tools::colors color, double radius)
@@ -692,11 +718,8 @@ bool VisualTools::publishRectangle(const geometry_msgs::Point &point1, const geo
   rectangle_marker_.scale.y = fabs(point1.y - point2.y);
   rectangle_marker_.scale.z = fabs(point1.z - point2.z);
 
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( rectangle_marker_ );
-  ros::spinOnce();
-
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( rectangle_marker_ );
 }
 
 bool VisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
@@ -716,11 +739,8 @@ bool VisualTools::publishLine(const geometry_msgs::Point &point1, const geometry
   line_marker_.points.push_back(point1);
   line_marker_.points.push_back(point2);
 
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( line_marker_ );
-  ros::spinOnce();
-
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( line_marker_ );
 }
 
 bool VisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
@@ -756,12 +776,8 @@ bool VisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, con
     path_marker_.colors.push_back( this_color );
   }
 
-  // Send to Rviz
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( path_marker_ );
-  ros::spinOnce();
-
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( path_marker_ );
 }
 
 bool VisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
@@ -837,14 +853,8 @@ bool VisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points
     spheres_marker_.colors.push_back( this_color );
   }
 
-  // Send to Rviz
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( spheres_marker_ );
-
-  
-  ros::spinOnce();
-
-  return true;
+  // Helper for publishing rviz markers
+  return publishMarker( spheres_marker_ );
 }
 
 bool VisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, bool static_id)
@@ -875,9 +885,8 @@ bool VisualTools::publishText(const geometry_msgs::Pose &pose, const std::string
   text_marker_.color = getColor( color );
   text_marker_.scale = scale;
 
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( text_marker_ );
-  ros::spinOnce();
+  // Helper for publishing rviz markers
+  publishMarker( text_marker_ );
 
   // Restore the ID count if needed
   if (static_id)
@@ -1024,6 +1033,20 @@ void VisualTools::generateRandomPose(geometry_msgs::Pose& pose)
   pose.orientation.y = quat.y();
   pose.orientation.z = quat.z();
   pose.orientation.w = quat.w();
+}
+
+void VisualTools::generateEmptyPose(geometry_msgs::Pose& pose)
+{
+  // Position
+  pose.position.x = 0;
+  pose.position.y = 0;
+  pose.position.z = 0;
+
+  // Orientation on place
+  pose.orientation.x = 0;
+  pose.orientation.y = 0;
+  pose.orientation.z = 0;
+  pose.orientation.w = 1;
 }
 
 double VisualTools::dRand(double dMin, double dMax)
