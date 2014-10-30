@@ -36,13 +36,11 @@
 
 #include <rviz_visual_tools/visual_tools.h>
 
-
 // Conversions
 #include <tf_conversions/tf_eigen.h>
-
 #include <eigen_conversions/eigen_msg.h>
 
-#include <shape_tools/solid_primitive_dims.h>
+//#include <shape_tools/solid_primitive_dims.h>
 
 namespace rviz_visual_tools
 {
