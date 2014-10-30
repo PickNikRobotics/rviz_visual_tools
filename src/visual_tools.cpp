@@ -267,6 +267,7 @@ bool VisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wai
                             << wait_time << " seconds. It is possible initially published visual messages will be lost.");
       return false;
     }
+    ros::spinOnce();
 
     // Sleep
     poll_rate.sleep();
@@ -277,11 +278,13 @@ bool VisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wai
   }
 
   // Benchmark runtime
-  double duration = (ros::Time::now() - start_time).toSec();
-  ROS_INFO_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' took " << duration 
-                        << " seconds to connect to a subscriber. Connected to " << num_existing_subscribers 
-                        << " total subsribers");
-  ros::spinOnce();
+  if (false)
+  {
+    double duration = (ros::Time::now() - start_time).toSec();
+    ROS_DEBUG_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' took " << duration 
+                           << " seconds to connect to a subscriber. Connected to " << num_existing_subscribers 
+                           << " total subsribers");
+  }
   return true;
 }
 
