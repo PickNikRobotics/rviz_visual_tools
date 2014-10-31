@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.4.0 (2014-10-31)
+------------------
 * Renamed VisualTools to RvizVisualTools
 * Removed unnecessary dependency
 * Bugfix
