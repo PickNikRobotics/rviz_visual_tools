@@ -32,40 +32,71 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/* Author: Dave Coleman <dave@dav.ee>
-   Desc:   
+/* Author: Dave Coleman
+   Desc:   Demo implementation of rviz_visual_tools
+           To use, add a Rviz Marker Display subscribed to topic /rviz_visual_tools
 */
 
-#include <rviz_visual_tools/visual_tools.h>
+// ROS
+#include <ros/ros.h>
+
+// For visualizing things in rviz
+#include <rviz_visual_tools/rviz_visual_tools.h>
+
+namespace rviz_visual_tools
+{
+
+class RvizVisualToolsTest
+{
+private:
+
+  // A shared node handle
+  ros::NodeHandle nh_;
+
+  // For visualizing things in rviz
+  rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
+
+public:
+
+  /**
+   * \brief Constructor
+   */
+  RvizVisualToolsTest()
+  {
+    visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("base","/rviz_visual_tools"));
+
+    // Allow time to publish messages
+    ros::Duration(1.0).sleep();
+
+    while (ros::ok())
+    {
+      visual_tools_->publishTest();
+    }
+  }
+
+  /**
+   * \brief Destructor
+   */
+  ~RvizVisualToolsTest()
+  {
+  }
+
+}; // end class
+
+} // end namespace
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "publish_sphere");
-  ROS_INFO_STREAM_NAMED("main", "Starting Sphere Publisher...");
+  ros::init(argc, argv, "visual_tools_test");
+  ROS_INFO_STREAM("Visual Tools Test");
 
   // Allow the action server to recieve and send ros messages
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
-  rviz_visual_tools::VisualToolsPtr visual_tools_;
-  visual_tools_.reset(new rviz_visual_tools::VisualTools("base"));
-  visual_tools_->loadMarkerPub();
-  ros::Duration(1.0).sleep();
-  ros::spinOnce();
+  rviz_visual_tools::RvizVisualToolsTest tester;
 
-
-Eigen::Vector3d point;
-point[0] = -0.150519;
-point[1] = -0.274884;
-point[2] = 2.07157;
-double radius = 4.31358;
-
-visual_tools_->publishSphere(point, rviz_visual_tools::TRANSLUCENT, radius);
-
-
-  ROS_INFO_STREAM_NAMED("main", "Shutting down.");
-  ros::shutdown();
+  ROS_INFO_STREAM("Shutting down.");
 
   return 0;
 }
-

@@ -89,7 +89,7 @@ enum scales { XXSMALL,
               XLARGE,
               XXLARGE };
 
-class VisualTools
+class RvizVisualTools
 {
 protected:
 
@@ -144,12 +144,12 @@ public:
    * \param base_frame - common base for all visualization markers, usually "/world" or "/odom"
    * \param marker_topic - rostopic to publish markers to - your Rviz display should match
    */
-  VisualTools(const std::string& base_frame,
+  RvizVisualTools(const std::string& base_frame,
               const std::string& marker_topic = RVIZ_MARKER_TOPIC);
   /**
    * \brief Deconstructor
    */
-  ~VisualTools() {};
+  ~RvizVisualTools() {};
 
   /**
    * \brief Tell Rviz to clear all markers on a particular display. Note: only works on ROS Indigo and newer
@@ -520,8 +520,8 @@ public:
 
 }; // class
 
-typedef boost::shared_ptr<VisualTools> VisualToolsPtr;
-typedef boost::shared_ptr<const VisualTools> VisualToolsConstPtr;
+typedef boost::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
+typedef boost::shared_ptr<const RvizVisualTools> RvizVisualToolsConstPtr;
 
 } // namespace
 

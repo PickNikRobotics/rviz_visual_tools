@@ -43,7 +43,7 @@ include_directories(
 
 # Visualization Tools Library
 add_library(${PROJECT_NAME}
-  src/visual_tools.cpp
+  src/rviz_visual_tools.cpp
 )
 
 add_dependencies(${PROJECT_NAME} graph_msgs_generate_messages_cpp)
@@ -53,14 +53,8 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Test executable
-add_executable(visual_tools_test src/visual_tools_test.cpp)
-target_link_libraries(visual_tools_test 
-  ${catkin_LIBRARIES} ${PROJECT_NAME}
-)
-
-# Test executable
-add_executable(publish_sphere src/publish_sphere.cpp)
-target_link_libraries(publish_sphere 
+add_executable(rviz_visual_tools_test src/rviz_visual_tools_test.cpp)
+target_link_libraries(rviz_visual_tools_test 
   ${catkin_LIBRARIES} ${PROJECT_NAME}
 )
 
