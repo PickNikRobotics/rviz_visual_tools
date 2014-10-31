@@ -2,6 +2,17 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Renamed VisualTools to RvizVisualTools
+* Removed unnecessary dependency
+* Bugfix
+* Reduced debug output
+* New waitForSubscriber() function that checks for first subscriber to a publisher
+* New generateEmptyPose() function helper
+* Consolidated publishing rviz messages to central publishMarker() function
+* Contributors: Dave Coleman
+
 1.3.1 (2014-10-27)
 ------------------
 * Added new publishSpheres function
