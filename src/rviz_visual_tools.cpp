@@ -694,7 +694,8 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
   return true;
 }
 
-bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const rviz_visual_tools::colors color)
+bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, 
+                                       const rviz_visual_tools::colors color)
 {
   if(muted_)
     return true;
@@ -705,7 +706,7 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
   rectangle_marker_.id++;
   rectangle_marker_.color = getColor(color);
 
-  // Calculate pose
+  // Calculate center pose
   geometry_msgs::Pose pose;
   pose.position.x = (point1.x - point2.x) / 2.0 + point2.x;
   pose.position.y = (point1.y - point2.y) / 2.0 + point2.y;
@@ -716,6 +717,11 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
   rectangle_marker_.scale.x = fabs(point1.x - point2.x);
   rectangle_marker_.scale.y = fabs(point1.y - point2.y);
   rectangle_marker_.scale.z = fabs(point1.z - point2.z);
+
+  // Prevent scale from being zero
+  if (!rectangle_marker_.scale.x) rectangle_marker_.scale.x = SMALL_SCALE;
+  if (!rectangle_marker_.scale.y) rectangle_marker_.scale.y = SMALL_SCALE;
+  if (!rectangle_marker_.scale.z) rectangle_marker_.scale.z = SMALL_SCALE;
 
   // Helper for publishing rviz markers
   return publishMarker( rectangle_marker_ );

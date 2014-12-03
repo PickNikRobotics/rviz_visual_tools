@@ -66,6 +66,8 @@ namespace rviz_visual_tools
 
 // Default constants
 static const std::string RVIZ_MARKER_TOPIC = "/rviz_visual_tools";
+static const double SMALL_SCALE = 0.001;
+static const double LARGE_SCALE = 100;
 
 // Note: when adding new colors to colors, also add them to getRandColor() function
 enum colors { RED,
