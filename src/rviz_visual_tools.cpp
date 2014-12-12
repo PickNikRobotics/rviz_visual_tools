@@ -352,17 +352,23 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.g = 0.5;
       result.b = 0.0;
       break;
-    case TRANSLUCENT:
-      result.r = 0.1;
-      result.g = 0.1;
-      result.b = 0.8;
-      result.a = 0.3;
-      break;
-    case TRANSLUCENT2:
+    case TRANSLUCENT_LIGHT:
       result.r = 0.1;
       result.g = 0.1;
       result.b = 0.1;
       result.a = 0.1;
+      break;
+    case TRANSLUCENT:
+      result.r = 0.1;
+      result.g = 0.1;
+      result.b = 0.1;
+      result.a = 0.25;
+      break;
+    case TRANSLUCENT_DARK:
+      result.r = 0.1;
+      result.g = 0.1;
+      result.b = 0.1;
+      result.a = 0.5;
       break;
     case BLACK:
       result.r = 0.0;
@@ -388,6 +394,8 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
         result.b = fRand(0.0,1.0);
       } while (result.r + result.g + result.b < 1.5); // 3 would be white
       break;
+    case DEFAULT:
+      ROS_WARN_STREAM_NAMED("getColor","The 'DEFAULT' color should probably not be used with getColor(). Defaulting to blue.");
     case BLUE:
     default:
       result.r = 0.1;
@@ -1021,6 +1029,15 @@ geometry_msgs::Point32 RvizVisualTools::convertPoint32(const Eigen::Vector3d &po
   point_msg.x = point[0];
   point_msg.y = point[1];
   point_msg.z = point[2];
+  return point_msg;
+}
+
+geometry_msgs::Point RvizVisualTools::convertPoint(const geometry_msgs::Vector3 &point)
+{
+  geometry_msgs::Point point_msg;
+  point_msg.x = point.x;
+  point_msg.y = point.y;
+  point_msg.z = point.z;
   return point_msg;
 }
 

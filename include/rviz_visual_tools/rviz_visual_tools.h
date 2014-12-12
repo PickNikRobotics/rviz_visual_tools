@@ -79,9 +79,12 @@ enum colors { RED,
               BLACK,
               YELLOW,
               PURPLE,
+              TRANSLUCENT_LIGHT,
               TRANSLUCENT,
-              TRANSLUCENT2,
-              RAND };
+              TRANSLUCENT_DARK,
+              RAND,
+              DEFAULT // i.e. 'do not change default color'
+            };
 
 enum scales { XXSMALL,
               XSMALL,
@@ -495,6 +498,14 @@ public:
    * \return converted pose
    */
   static geometry_msgs::Point32 convertPoint32(const Eigen::Vector3d &point);
+
+  /**
+   * \brief Convert a Vector3 to a Point
+   *        Note: NOT memory efficient
+   * \param point
+   * \return converted point
+   */
+  static geometry_msgs::Point convertPoint(const geometry_msgs::Vector3 &point);
 
   /**
    * \brief Create a random pose
