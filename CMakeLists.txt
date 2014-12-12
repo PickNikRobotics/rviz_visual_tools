@@ -58,12 +58,17 @@ target_link_libraries(rviz_visual_tools_test
   ${catkin_LIBRARIES} ${PROJECT_NAME}
 )
 
-# Install
+## Install
+
+# Install libraries
 install(TARGETS ${PROJECT_NAME} 
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
-# Mark cpp header files for installation
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-)
+# Install header files
+install(DIRECTORY include/$PROJECT_NAME}/   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+# Install shared resources
+install(DIRECTORY launch    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY resources DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+
