@@ -66,11 +66,12 @@ public:
     visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("base","/rviz_visual_tools"));
 
     // Allow time to publish messages
-    ros::Duration(1.0).sleep();
+    ROS_INFO_STREAM_NAMED("test","Waiting 4 seconds to start test...");
+    ros::Duration(4.0).sleep();
 
     while (ros::ok())
     {
-      visual_tools_->publishTest();
+      visual_tools_->publishTests();
     }
   }
 

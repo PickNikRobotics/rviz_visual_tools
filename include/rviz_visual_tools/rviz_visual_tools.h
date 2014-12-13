@@ -326,8 +326,6 @@ public:
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR, const std::string& ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 &scale, const std::string& ns = "Spheres");
 
-
-
   /**
    * \brief Publish a marker of an arrow to rviz
    * \param pose - the location to publish the marker with respect to the base frame
@@ -345,8 +343,10 @@ public:
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const rviz_visual_tools::colors color = BLUE);
-
+  bool publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, 
+                        const rviz_visual_tools::colors color = BLUE);
+  bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, 
+                        const rviz_visual_tools::colors color = BLUE);
   /**
    * \brief Publish a marker of line to rviz
    * \param point1 - x,y,z of start of line
@@ -366,7 +366,8 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors color = RED, const rviz_visual_tools::scales scale = REGULAR,
+  bool publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors color = RED, 
+                   const rviz_visual_tools::scales scale = REGULAR,
                    const std::string& ns = "Path");
 
   /**
@@ -377,7 +378,8 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors color = RED, const rviz_visual_tools::scales scale = REGULAR,
+  bool publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors color = RED, 
+                      const rviz_visual_tools::scales scale = REGULAR,
                       const std::string& ns = "Polygon");
 
   /**
@@ -390,6 +392,16 @@ public:
   bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
 
   /**
+   * \brief Publish a marker of a axis to Rviz
+   * \param pose - the location to publish the marker with respect to the base frame
+   * \param length - geometry of cylinder
+   * \param radius - geometry of cylinder
+   * \return true on success
+   */
+  bool publishAxis(const geometry_msgs::Pose &pose, double length = 0.1, double radius = 0.01);
+  bool publishAxis(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01);
+
+  /**
    * \brief Publish a marker of a cylinder to Rviz
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
@@ -397,6 +409,7 @@ public:
    * \param radius - geometry of cylinder
    * \return true on success
    */
+  bool publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, double radius = 0.1);
   bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, double radius = 0.1);
 
   /**
@@ -433,7 +446,7 @@ public:
    * \brief Run a simple test of all visual_tool's features
    * \return true on success
    */
-  bool publishTest();
+  bool publishTests();
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose
@@ -500,12 +513,20 @@ public:
   static geometry_msgs::Point32 convertPoint32(const Eigen::Vector3d &point);
 
   /**
-   * \brief Convert a Vector3 to a Point
+   * \brief Convert a Vector3 to a geometry_msg Point
    *        Note: NOT memory efficient
    * \param point
    * \return converted point
    */
   static geometry_msgs::Point convertPoint(const geometry_msgs::Vector3 &point);
+
+  /**
+   * \brief Convert a Eigen point to a geometry_msg Point
+   *        Note: NOT memory efficient
+   * \param point
+   * \return converted point
+   */
+  static geometry_msgs::Point convertPoint(const Eigen::Vector3d &point);
 
   /**
    * \brief Create a random pose

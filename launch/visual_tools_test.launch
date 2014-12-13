@@ -11,7 +11,7 @@
 
   <!-- Start test -->
   <node name="rviz_visual_tools_test" launch-prefix="$(arg launch_prefix)" pkg="rviz_visual_tools" 
-	type="visual_tools_test" output="screen">
+	type="rviz_visual_tools_test" output="screen">
   </node>
 
 </launch>

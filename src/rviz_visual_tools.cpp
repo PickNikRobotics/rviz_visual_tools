@@ -623,6 +623,39 @@ bool RvizVisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_v
   return publishMarker( block_marker_ );
 }
 
+bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length, double radius)
+{
+  return publishAxis(convertPose(pose), length, radius);
+}
+
+bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, double radius)
+{
+  // Publish x axis
+  Eigen::Affine3d x_pose = Eigen::Translation3d(length / 2.0, 0, 0) * 
+    Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
+  x_pose = pose * x_pose;
+  publishCylinder(x_pose, rviz_visual_tools::RED, length, radius);
+
+  // Publish y axis
+  Eigen::Affine3d y_pose = Eigen::Translation3d(0, length / 2.0, 0) * 
+    Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
+  y_pose = pose * y_pose;
+  publishCylinder(y_pose, rviz_visual_tools::GREEN, length, radius);
+
+  // Publish z axis
+  Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) * 
+    Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
+  z_pose = pose * z_pose;
+  publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius);
+
+  return true;
+}
+
+bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color, double height, double radius)
+{
+  return publishCylinder(convertPose(pose), color, height, radius);
+}
+
 bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, double height, double radius)
 {
   if(muted_)
@@ -700,6 +733,12 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
   }
 
   return true;
+}
+
+bool RvizVisualTools::publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, 
+                                       const rviz_visual_tools::colors color)
+{
+  return publishRectangle(convertPoint(point1), convertPoint(point2), color);
 }
 
 bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, 
@@ -920,13 +959,18 @@ bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
   return true;
 }
 
-bool RvizVisualTools::publishTest()
+bool RvizVisualTools::publishTests()
 {
   // Create pose
   geometry_msgs::Pose pose1;
   geometry_msgs::Pose pose2;
 
   // Test all shapes ----------
+
+  ROS_INFO_STREAM_NAMED("test","Publishing Axis");
+  generateRandomPose(pose1);
+  publishAxis(pose1);
+  ros::Duration(1.0).sleep();
 
   ROS_INFO_STREAM_NAMED("test","Publishing Arrow");
   generateRandomPose(pose1);
@@ -1038,6 +1082,15 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const geometry_msgs::Vector3 
   point_msg.x = point.x;
   point_msg.y = point.y;
   point_msg.z = point.z;
+  return point_msg;
+}
+
+geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
+{
+  geometry_msgs::Point point_msg;
+  point_msg.x = point.x();
+  point_msg.y = point.y();
+  point_msg.z = point.z();
   return point_msg;
 }
 
