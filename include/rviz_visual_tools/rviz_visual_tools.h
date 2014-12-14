@@ -427,8 +427,12 @@ public:
    * \param text - what to display
    * \param color - an enum pre-defined name of a colo
    * \param scale - an enum pre-defined name of a size
+   * \param static_id - if true, only one text can be published at a time
    * \return true on success
    */
+  bool publishText(const Eigen::Affine3d &pose, const std::string &text,
+                   const rviz_visual_tools::colors &color = WHITE, const rviz_visual_tools::scales scale = REGULAR, bool static_id = true);
+
   bool publishText(const geometry_msgs::Pose &pose, const std::string &text,
                    const rviz_visual_tools::colors &color = WHITE, const rviz_visual_tools::scales scale = REGULAR, bool static_id = true);
 

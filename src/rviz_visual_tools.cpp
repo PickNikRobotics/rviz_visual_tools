@@ -909,9 +909,16 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
   return publishMarker( spheres_marker_ );
 }
 
+bool RvizVisualTools::publishText(const Eigen::Affine3d &pose, const std::string &text,
+                                  const rviz_visual_tools::colors &color, 
+                                  const rviz_visual_tools::scales scale, bool static_id)
+{
+  return publishText(convertPose(pose), text, color, getScale(scale), static_id);
+}
+
 bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, bool static_id)
 {
-  publishText(pose, text, color, getScale(scale), static_id);
+  return publishText(pose, text, color, getScale(scale), static_id);
 }
 
 bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 scale, bool static_id)
