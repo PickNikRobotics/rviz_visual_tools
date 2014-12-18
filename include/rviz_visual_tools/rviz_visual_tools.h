@@ -355,6 +355,8 @@ public:
    * \param scale - an enum pre-defined name of a size
    * \return true on success
    */
+  bool publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
+                   const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
 

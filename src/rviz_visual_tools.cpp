@@ -774,6 +774,12 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
   return publishMarker( rectangle_marker_ );
 }
 
+bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
+                              const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
+{
+  return publishLine( convertPoseToPoint(point1), convertPoseToPoint(point2), color, scale );
+}
+
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                               const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
@@ -1049,7 +1055,7 @@ geometry_msgs::Pose RvizVisualTools::convertPointToPose(const geometry_msgs::Poi
   return pose_msg;
 }
 
-geometry_msgs::Point convertPoseToPoint(const Eigen::Affine3d &pose)
+geometry_msgs::Point RvizVisualTools::convertPoseToPoint(const Eigen::Affine3d &pose)
 {
   geometry_msgs::Pose pose_msg;
   tf::poseEigenToMsg(pose, pose_msg);
