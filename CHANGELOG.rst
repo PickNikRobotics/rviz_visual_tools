@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.5.0 (2015-01-07)
+------------------
 * New publishLine function
 * New publishText() function with Eigen pose
 * New publishAxis() feature
