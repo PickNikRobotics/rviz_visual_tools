@@ -2,6 +2,24 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New publishLine function
+* New publishText() function with Eigen pose
+* New publishAxis() feature
+* New publishRectangle() functions
+* New publishCylinder() functions
+* New convertPoint() functions
+* API: Renamed publishTest() to publishTests()
+* Fix CMakeLists
+* API Break: Change TRANSLUCENT2 to TRANSLUCENT_LIGHT
+* New convertPoint() function
+* New DEFAULT color to allow color selection to be disabled
+* Fix install space
+* Fix for publishRectangle() - zero scale size
+* Added new size const values
+* Contributors: Dave Coleman
+
 1.4.0 (2014-10-31)
 ------------------
 * Renamed VisualTools to RvizVisualTools
