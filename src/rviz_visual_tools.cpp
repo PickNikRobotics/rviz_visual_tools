@@ -315,6 +315,9 @@ const rviz_visual_tools::colors RvizVisualTools::getRandColor()
   all_colors.push_back(ORANGE);
   //all_colors.push_back(BLACK);
   all_colors.push_back(YELLOW);
+  all_colors.push_back(BROWN);
+  all_colors.push_back(PINK);
+  all_colors.push_back(LIME_GREEN);
   all_colors.push_back(PURPLE);
   
   int rand_num = iRand(0, all_colors.size() - 1);
@@ -379,6 +382,20 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 1.0;
       result.g = 1.0;
       result.b = 0.0;
+    case BROWN:
+      result.r = 0.597;
+      result.g = 0.296;
+      result.b = 0.0;
+      break;
+    case PINK:
+      result.r = 1.0;
+      result.g = 0.4;
+      result.b = 1;
+      break;
+    case LIME_GREEN:
+      result.r = 0.6;
+      result.g = 1.0;
+      result.b = 0.2;
       break;
     case PURPLE:
       result.r = 0.597;
