@@ -132,6 +132,7 @@ protected:
   visualization_msgs::Marker sphere_marker_;
   visualization_msgs::Marker block_marker_;
   visualization_msgs::Marker cylinder_marker_;
+  visualization_msgs::Marker mesh_marker_;
   visualization_msgs::Marker text_marker_;
   visualization_msgs::Marker rectangle_marker_;
   visualization_msgs::Marker line_marker_;
@@ -414,8 +415,20 @@ public:
    * \param radius - geometry of cylinder
    * \return true on success
    */
-  bool publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, double radius = 0.1);
-  bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, double radius = 0.1);
+  bool publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, 
+                       double radius = 0.1);
+  bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, 
+                       double radius = 0.1);
+
+  /**
+   * \brief Publish a mesh from file
+   * \param file name of mesh, starting with "file://"
+   * \return true on success
+   */
+  bool publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color = BLUE, 
+                   double scale = 1);
+  bool publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color = BLUE, 
+                   double scale = 1);
 
   /**
    * \brief Publish a graph

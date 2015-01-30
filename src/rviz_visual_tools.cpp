@@ -75,6 +75,7 @@ void RvizVisualTools::resetMarkerCounts()
   sphere_marker_.id++;
   block_marker_.id++;
   cylinder_marker_.id++;
+  mesh_marker_.id++;
   text_marker_.id++;
   rectangle_marker_.id++;
   line_marker_.id++;
@@ -189,6 +190,17 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   cylinder_marker_.lifetime = marker_lifetime_;
 
+  // Load Mesh ----------------------------------------------------
+  mesh_marker_.header.frame_id = base_frame_;
+  // Set the namespace and id for this marker.  This serves to create a unique ID
+  mesh_marker_.ns = "Mesh";
+  // Set the marker action.  Options are ADD and DELETE
+  mesh_marker_.action = visualization_msgs::Marker::ADD;
+  // Set the marker type.
+  mesh_marker_.type = visualization_msgs::Marker::MESH_RESOURCE;
+  // Lifetime
+  mesh_marker_.lifetime = marker_lifetime_;
+
   // Load Sphere -------------------------------------------------
   sphere_marker_.header.frame_id = base_frame_;
   // Set the namespace and id for this marker.  This serves to create a unique ID
@@ -299,6 +311,7 @@ void RvizVisualTools::setLifetime(double lifetime)
   line_marker_.lifetime = marker_lifetime_;
   sphere_marker_.lifetime = marker_lifetime_;
   block_marker_.lifetime = marker_lifetime_;
+  mesh_marker_.lifetime = marker_lifetime_;
   cylinder_marker_.lifetime = marker_lifetime_;
   text_marker_.lifetime = marker_lifetime_;
 }
@@ -696,6 +709,42 @@ bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rvi
 
   // Helper for publishing rviz markers
   return publishMarker( cylinder_marker_ );
+}
+
+bool RvizVisualTools::publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color, 
+                                  double scale)
+{
+  return publishMesh(convertPose(pose), file_name, color, scale);
+}
+
+bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color, 
+                                  double scale)
+{
+  if(muted_)
+    return true;
+
+  // Set the timestamp
+  mesh_marker_.header.stamp = ros::Time::now();
+
+  mesh_marker_.id++;
+
+  // Set the mesh
+  mesh_marker_.mesh_resource = file_name;
+  mesh_marker_.mesh_use_embedded_materials = true;
+
+  // Set the pose
+  mesh_marker_.pose = pose;
+
+  // Set marker size
+  mesh_marker_.scale.x = scale;
+  mesh_marker_.scale.y = scale;
+  mesh_marker_.scale.z = scale;
+
+  // Set marker color
+  mesh_marker_.color = getColor( color );
+
+  // Helper for publishing rviz markers
+  return publishMarker( mesh_marker_ );
 }
 
 bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_visual_tools::colors color, double radius)
