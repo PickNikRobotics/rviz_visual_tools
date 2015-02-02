@@ -86,6 +86,7 @@ enum colors { RED,
               TRANSLUCENT,
               TRANSLUCENT_DARK,
               RAND,
+	      CLEAR,
               DEFAULT // i.e. 'do not change default color'
             };
 
@@ -425,9 +426,9 @@ public:
    * \param file name of mesh, starting with "file://"
    * \return true on success
    */
-  bool publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color = BLUE, 
+  bool publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR, 
                    double scale = 1);
-  bool publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color = BLUE, 
+  bool publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR, 
                    double scale = 1);
 
   /**
