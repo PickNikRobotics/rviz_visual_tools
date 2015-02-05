@@ -857,20 +857,20 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
     rectangle_marker_.pose = pose;
 
     // Prevent scale from being zero
-    if (l <= 0)
+    if (length <= 0)
       rectangle_marker_.scale.x = SMALL_SCALE;
     else
-      rectangle_marker_.scale.x = l;
+      rectangle_marker_.scale.x = length;
     
-    if (w <= 0)
+    if (width <= 0)
       rectangle_marker_.scale.y = SMALL_SCALE;
     else 
-      rectangle_marker_.scale.y = w;
+      rectangle_marker_.scale.y = width;
 
-    if (h <= 0)
+    if (height <= 0)
       rectangle_marker_.scale.z = SMALL_SCALE;
     else
-      rectangle_marker_.scale.z = h;
+      rectangle_marker_.scale.z = height;
 
     return publishMarker( rectangle_marker_ );
   }
