@@ -846,8 +846,8 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
   return publishMarker( rectangle_marker_ );
 }
 
-  bool RvizVisualTools::publishRectangle(const geometry_msgs::Pose &pose, const double l, const double w, 
-					 const double h, const rviz_visual_tools::colors color)
+  bool RvizVisualTools::publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, 
+					 const double height, const rviz_visual_tools::colors color)
   {
     rectangle_marker_.header.stamp = ros::Time::now();
 
@@ -857,17 +857,17 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
     rectangle_marker_.pose = pose;
 
     // Prevent scale from being zero
-    if (l < 0)
+    if (l <= 0)
       rectangle_marker_.scale.x = SMALL_SCALE;
     else
       rectangle_marker_.scale.x = l;
     
-    if (w < 0)
+    if (w <= 0)
       rectangle_marker_.scale.y = SMALL_SCALE;
     else 
       rectangle_marker_.scale.y = w;
 
-    if (h < 0)
+    if (h <= 0)
       rectangle_marker_.scale.z = SMALL_SCALE;
     else
       rectangle_marker_.scale.z = h;
