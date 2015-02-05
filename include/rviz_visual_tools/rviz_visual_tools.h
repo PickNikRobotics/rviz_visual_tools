@@ -352,6 +352,8 @@ public:
                         const rviz_visual_tools::colors color = BLUE);
   bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, 
                         const rviz_visual_tools::colors color = BLUE);
+  bool publishRectangle(const geometry_msgs::Pose &pose, const double l, const double w, const double h,
+			const rviz_visual_tools::colors color = BLUE);
   /**
    * \brief Publish a marker of line to rviz
    * \param point1 - x,y,z of start of line
