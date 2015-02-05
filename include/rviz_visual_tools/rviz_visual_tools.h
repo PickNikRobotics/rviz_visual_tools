@@ -346,12 +346,18 @@ public:
    * \param point1 - x,y,z top corner location of box
    * \param point2 - x,y,z bottom opposite corner location of box
    * \param color - an enum pre-defined name of a color
+   * \param pose - pose of the box
+   * \param depth - depth of the box
+   * \param width - width of the box
+   * \param height - height of the box
    * \return true on success
    */
   bool publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, 
                         const rviz_visual_tools::colors color = BLUE);
   bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, 
                         const rviz_visual_tools::colors color = BLUE);
+  bool publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
+			const rviz_visual_tools::colors color = BLUE);
   /**
    * \brief Publish a marker of line to rviz
    * \param point1 - x,y,z of start of line

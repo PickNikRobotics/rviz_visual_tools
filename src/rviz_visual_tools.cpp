@@ -846,6 +846,35 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
   return publishMarker( rectangle_marker_ );
 }
 
+  bool RvizVisualTools::publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, 
+					 const double height, const rviz_visual_tools::colors color)
+  {
+    rectangle_marker_.header.stamp = ros::Time::now();
+
+    rectangle_marker_.id++;
+    rectangle_marker_.color = getColor(color);
+
+    rectangle_marker_.pose = pose;
+
+    // Prevent scale from being zero
+    if (l <= 0)
+      rectangle_marker_.scale.x = SMALL_SCALE;
+    else
+      rectangle_marker_.scale.x = l;
+    
+    if (w <= 0)
+      rectangle_marker_.scale.y = SMALL_SCALE;
+    else 
+      rectangle_marker_.scale.y = w;
+
+    if (h <= 0)
+      rectangle_marker_.scale.z = SMALL_SCALE;
+    else
+      rectangle_marker_.scale.z = h;
+
+    return publishMarker( rectangle_marker_ );
+  }
+
 bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
                               const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
