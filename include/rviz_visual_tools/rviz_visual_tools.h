@@ -100,46 +100,6 @@ enum scales { XXSMALL,
 
 class RvizVisualTools
 {
-protected:
-
-  // A shared node handle
-  ros::NodeHandle nh_;
-
-  // ROS publishers
-  ros::Publisher pub_rviz_marker_; // for rviz visualization markers
-
-  // Strings
-  std::string marker_topic_; // topic to publish to rviz
-  std::string base_frame_; // name of base link
-
-  // TODO rename this
-  double floor_to_base_height_; // allows an offset between base link and floor where objects are built
-
-  // Duration to have Rviz markers persist, 0 for infinity
-  ros::Duration marker_lifetime_;
-
-  // End Effector Markers
-  visualization_msgs::MarkerArray ee_marker_array_;
-  geometry_msgs::Pose grasp_pose_to_eef_pose_; // Convert generic grasp pose to this end effector's frame of reference
-  std::vector<geometry_msgs::Pose> marker_poses_;
-
-  // Library settings
-  bool muted_; // Whether to actually publish to rviz or not
-  double alpha_; // opacity of all markers
-  double global_scale_; // allow all markers to be increased by a constanct factor
-
-  // Cached Rviz markers
-  visualization_msgs::Marker arrow_marker_;
-  visualization_msgs::Marker sphere_marker_;
-  visualization_msgs::Marker block_marker_;
-  visualization_msgs::Marker cylinder_marker_;
-  visualization_msgs::Marker mesh_marker_;
-  visualization_msgs::Marker text_marker_;
-  visualization_msgs::Marker rectangle_marker_;
-  visualization_msgs::Marker line_marker_;
-  visualization_msgs::Marker path_marker_;
-  visualization_msgs::Marker spheres_marker_;
-  visualization_msgs::Marker reset_marker_;
 
 private:
   /**
@@ -304,6 +264,46 @@ public:
   }
 
   /**
+   * \brief Publish a visualization_msgs Marker of a custom type. Allows reuse of the ros publisher
+   * \param marker - a pre-made marker ready to be published
+   * \return true on success
+   */
+  bool publishMarker(const visualization_msgs::Marker &marker);
+
+  /**
+   * \brief Enable batch publishing - useful for when many markers need to be published at once and the ROS topic can get
+   *        overloaded. This collects all published markers into array and only publishes them with triggerBatchPublish() is called
+   */
+  void enableBatchPublishing(bool enable)
+  {
+    batch_publishing_enabled_ = enable;
+  }
+
+  /**
+   * \brief Trigger the publish function to send out all collected markers
+   * \return true on success
+   */
+  bool triggerBatchPublish();
+
+  /**
+   * \brief Trigger the publish function to send out all collected markers. Also then turns off the batch mode. This is safer 
+   *        incase programmer forgets
+   * \return true on success
+   */
+  bool triggerBatchPublishAndDisable()
+  {
+    triggerBatchPublish();
+    batch_publishing_enabled_ = false;
+  }
+
+  /**
+   * \brief Publish an array of markers, allows reuse of the ROS publisher
+   * \param markers
+   * \return true on success
+   */
+  bool publishMarkers(const visualization_msgs::MarkerArray &markers);
+
+  /**
    * \brief Publish a marker of a sphere to rviz
    * \param pose - the location to publish the sphere with respect to the base frame
    * \param color - an enum pre-defined name of a color
@@ -465,13 +465,6 @@ public:
                    const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 scale, bool static_id = true);
 
   /**
-   * \brief Publish a visualization_msgs Marker of a custom type. Allows reuse of the ros publisher
-   * \param marker - a pre-made marker ready to be published
-   * \return true on success
-   */
-  bool publishMarker(const visualization_msgs::Marker &marker);
-
-  /**
    * \brief Run a simple test of all visual_tool's features
    * \return true on success
    */
@@ -580,6 +573,51 @@ public:
    * \brief Debug variables to console
    */
   void print();
+
+protected:
+
+  // A shared node handle
+  ros::NodeHandle nh_;
+
+  // ROS publishers
+  ros::Publisher pub_rviz_markers_; // for rviz visualization markers
+
+  // Strings
+  std::string marker_topic_; // topic to publish to rviz
+  std::string base_frame_; // name of base link
+
+  // TODO rename this
+  double floor_to_base_height_; // allows an offset between base link and floor where objects are built
+
+  // Duration to have Rviz markers persist, 0 for infinity
+  ros::Duration marker_lifetime_; // TODO remove this
+
+  // End Effector Markers
+  //visualization_msgs::MarkerArray ee_marker_array_;
+  //geometry_msgs::Pose grasp_pose_to_eef_pose_; // Convert generic grasp pose to this end effector's frame of reference
+  //std::vector<geometry_msgs::Pose> marker_poses_;
+
+  // Settings
+  bool batch_publishing_enabled_;
+  bool muted_; // Whether to actually publish to rviz or not
+  double alpha_; // opacity of all markers
+  double global_scale_; // allow all markers to be increased by a constanct factor
+  
+  // Cached Rviz Marker Array
+  visualization_msgs::MarkerArray markers_;
+
+  // Cached Rviz markers
+  visualization_msgs::Marker arrow_marker_;
+  visualization_msgs::Marker sphere_marker_;
+  visualization_msgs::Marker block_marker_;
+  visualization_msgs::Marker cylinder_marker_;
+  visualization_msgs::Marker mesh_marker_;
+  visualization_msgs::Marker text_marker_;
+  visualization_msgs::Marker rectangle_marker_;
+  visualization_msgs::Marker line_marker_;
+  visualization_msgs::Marker path_marker_;
+  visualization_msgs::Marker spheres_marker_;
+  visualization_msgs::Marker reset_marker_;
 
 }; // class
 

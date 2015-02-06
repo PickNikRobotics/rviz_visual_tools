@@ -45,9 +45,10 @@ namespace rviz_visual_tools
 
 RvizVisualTools::RvizVisualTools(const std::string& base_frame,
                          const std::string& marker_topic)
-  :  nh_("~"),
-     marker_topic_(marker_topic),
-     base_frame_(base_frame)
+  :  nh_("~")
+  ,  marker_topic_(marker_topic)
+  ,  base_frame_(base_frame)
+  ,  batch_publishing_enabled_(false)
 {
   initialize();
 }
@@ -240,14 +241,14 @@ bool RvizVisualTools::loadRvizMarkers()
 
 void RvizVisualTools::loadMarkerPub()
 {
-  if (pub_rviz_marker_)
+  if (pub_rviz_markers_)
     return;
 
   // Rviz marker publisher
-  pub_rviz_marker_ = nh_.advertise<visualization_msgs::Marker>(marker_topic_, 10);
-  ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_marker_.getTopic());
+  pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10);
+  ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
-  waitForSubscriber(pub_rviz_marker_); 
+  waitForSubscriber(pub_rviz_markers_); 
 }
 
 bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wait_time)
@@ -550,6 +551,40 @@ Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(Eigen::Vector3d a, Eigen
   pose.translation() = a;
 
   return pose;
+}
+
+bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
+{
+  // Add single marker to array
+  markers_.markers.push_back(marker);
+
+  // Determine if we should publish now
+  if (!batch_publishing_enabled_)
+  {
+    return triggerBatchPublish();
+  }
+
+  return true;
+}
+
+bool RvizVisualTools::triggerBatchPublish()
+{
+  bool result = publishMarkers( markers_ );
+
+  markers_.markers.clear(); // remove all cached markers
+  return result;
+}
+
+bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &markers)
+{
+  if(muted_)
+    return true;  
+
+  loadMarkerPub(); // always check this before publishing
+
+  pub_rviz_markers_.publish( markers );
+  ros::spinOnce();
+  return true;
 }
 
 bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale, const std::string& ns)
@@ -1057,18 +1092,6 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::st
   // Restore the ID count if needed
   if (static_id)
     text_marker_.id = temp_id;
-
-  return true;
-}
-
-bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
-{
-  if(muted_)
-    return true;
-
-  loadMarkerPub(); // always check this before publishing
-  pub_rviz_marker_.publish( marker );
-  ros::spinOnce();
 
   return true;
 }
