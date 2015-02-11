@@ -124,7 +124,7 @@ public:
   /**
    * \brief Tell Rviz to clear all markers on a particular display. Note: only works on ROS Indigo and newer
    */
-  void deleteAllMarkers();
+  bool deleteAllMarkers();
 
   /**
    * \brief Reset the id's of all published markers so that they overwrite themselves in the future
@@ -286,7 +286,7 @@ public:
   bool triggerBatchPublish();
 
   /**
-   * \brief Trigger the publish function to send out all collected markers. Also then turns off the batch mode. This is safer 
+   * \brief Trigger the publish function to send out all collected markers. Also then turns off the batch mode. This is safer
    *        incase programmer forgets
    * \return true on success
    */
@@ -338,9 +338,14 @@ public:
    * \param scale - an enum pre-defined name of a size
    * \return true on success
    */
-  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
-  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
-
+  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE,
+                    const rviz_visual_tools::scales scale = REGULAR);
+  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE,
+                    const rviz_visual_tools::scales scale = REGULAR);
+  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color,
+                    const rviz_visual_tools::scales scale, double length);
+  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
+                    const rviz_visual_tools::scales scale, double length);
   /**
    * \brief Publish a marker of rectangle to rviz
    * \param point1 - x,y,z top corner location of box
@@ -352,9 +357,9 @@ public:
    * \param height - height of the box
    * \return true on success
    */
-  bool publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, 
+  bool publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                         const rviz_visual_tools::colors color = BLUE);
-  bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, 
+  bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                         const rviz_visual_tools::colors color = BLUE);
   bool publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
 			const rviz_visual_tools::colors color = BLUE);
@@ -379,7 +384,7 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors color = RED, 
+  bool publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors color = RED,
                    const rviz_visual_tools::scales scale = REGULAR,
                    const std::string& ns = "Path");
 
@@ -391,7 +396,7 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors color = RED, 
+  bool publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors color = RED,
                       const rviz_visual_tools::scales scale = REGULAR,
                       const std::string& ns = "Polygon");
 
@@ -422,9 +427,9 @@ public:
    * \param radius - geometry of cylinder
    * \return true on success
    */
-  bool publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, 
+  bool publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1,
                        double radius = 0.1);
-  bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1, 
+  bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, double height = 0.1,
                        double radius = 0.1);
 
   /**
@@ -432,10 +437,10 @@ public:
    * \param file name of mesh, starting with "file://"
    * \return true on success
    */
-  bool publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR, 
-                   double scale = 1);
-  bool publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR, 
-                   double scale = 1);
+  bool publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR,
+                   double scale = 1, const std::string &ns = "mesh");
+  bool publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR,
+                   double scale = 1, const std::string &ns = "mesh");
 
   /**
    * \brief Publish a graph
@@ -602,7 +607,7 @@ protected:
   bool muted_; // Whether to actually publish to rviz or not
   double alpha_; // opacity of all markers
   double global_scale_; // allow all markers to be increased by a constanct factor
-  
+
   // Cached Rviz Marker Array
   visualization_msgs::MarkerArray markers_;
 

@@ -64,10 +64,10 @@ void RvizVisualTools::initialize()
   loadRvizMarkers();
 }
 
-void RvizVisualTools::deleteAllMarkers() // TODO ROS-J change to bool
+bool RvizVisualTools::deleteAllMarkers()
 {
   // Helper for publishing rviz markers
-  publishMarker( reset_marker_ );
+  return publishMarker( reset_marker_ );
 }
 
 void RvizVisualTools::resetMarkerCounts()
@@ -193,8 +193,7 @@ bool RvizVisualTools::loadRvizMarkers()
 
   // Load Mesh ----------------------------------------------------
   mesh_marker_.header.frame_id = base_frame_;
-  // Set the namespace and id for this marker.  This serves to create a unique ID
-  mesh_marker_.ns = "Mesh";
+
   // Set the marker action.  Options are ADD and DELETE
   mesh_marker_.action = visualization_msgs::Marker::ADD;
   // Set the marker type.
@@ -248,7 +247,7 @@ void RvizVisualTools::loadMarkerPub()
   pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED("visual_tools","Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
-  waitForSubscriber(pub_rviz_markers_); 
+  waitForSubscriber(pub_rviz_markers_);
 }
 
 bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wait_time)
@@ -272,7 +271,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
     // Check if timed out
     if (ros::Time::now() > maxTime)
     {
-      ROS_WARN_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within " 
+      ROS_WARN_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
                             << wait_time << " seconds. It is possible initially published visual messages will be lost.");
       return false;
     }
@@ -290,8 +289,8 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
   if (false)
   {
     double duration = (ros::Time::now() - start_time).toSec();
-    ROS_DEBUG_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' took " << duration 
-                           << " seconds to connect to a subscriber. Connected to " << num_existing_subscribers 
+    ROS_DEBUG_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' took " << duration
+                           << " seconds to connect to a subscriber. Connected to " << num_existing_subscribers
                            << " total subsribers");
   }
   return true;
@@ -320,7 +319,7 @@ void RvizVisualTools::setLifetime(double lifetime)
 const rviz_visual_tools::colors RvizVisualTools::getRandColor()
 {
   std::vector<rviz_visual_tools::colors> all_colors;
-  
+
   all_colors.push_back(RED);
   all_colors.push_back(GREEN);
   all_colors.push_back(BLUE);
@@ -333,7 +332,7 @@ const rviz_visual_tools::colors RvizVisualTools::getRandColor()
   all_colors.push_back(PINK);
   all_colors.push_back(LIME_GREEN);
   all_colors.push_back(PURPLE);
-  
+
   int rand_num = iRand(0, all_colors.size() - 1);
   return all_colors[ rand_num ];
 }
@@ -484,7 +483,7 @@ geometry_msgs::Vector3 RvizVisualTools::getScale(const rviz_visual_tools::scales
       break;
   }
 
-  // Allows an individual marker size factor and a size factor for all markers 
+  // Allows an individual marker size factor and a size factor for all markers
   result.x = val * marker_scale * global_scale_;
   result.y = val * marker_scale * global_scale_;
   result.z = val * marker_scale * global_scale_;
@@ -578,7 +577,7 @@ bool RvizVisualTools::triggerBatchPublish()
 bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &markers)
 {
   if(muted_)
-    return true;  
+    return true;
 
   loadMarkerPub(); // always check this before publishing
 
@@ -647,12 +646,14 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_
   return publishMarker( sphere_marker_ );
 }
 
-bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
+bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color,
+                                   const rviz_visual_tools::scales scale)
 {
   return publishArrow(convertPose(pose), color, scale);
 }
 
-bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
+bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
+                                   const rviz_visual_tools::scales scale)
 {
   if(muted_)
     return true;
@@ -664,6 +665,31 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
   arrow_marker_.pose = pose;
   arrow_marker_.color = getColor(color);
   arrow_marker_.scale = getScale(scale, true);
+
+  // Helper for publishing rviz markers
+  return publishMarker( arrow_marker_ );
+}
+
+bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color,
+                                   const rviz_visual_tools::scales scale, double length)
+{
+  return publishArrow(convertPose(pose), color, scale, length);
+}
+
+bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
+                                   const rviz_visual_tools::scales scale, double length)
+{
+  if(muted_)
+    return true;
+
+  // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+  arrow_marker_.header.stamp = ros::Time::now();
+
+  arrow_marker_.id++;
+  arrow_marker_.pose = pose;
+  arrow_marker_.color = getColor(color);
+  arrow_marker_.scale = getScale(scale, true);
+  arrow_marker_.scale.x = length; // overrides previous x scale specified
 
   // Helper for publishing rviz markers
   return publishMarker( arrow_marker_ );
@@ -702,19 +728,19 @@ bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length
 bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, double radius)
 {
   // Publish x axis
-  Eigen::Affine3d x_pose = Eigen::Translation3d(length / 2.0, 0, 0) * 
+  Eigen::Affine3d x_pose = Eigen::Translation3d(length / 2.0, 0, 0) *
     Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
   x_pose = pose * x_pose;
   publishCylinder(x_pose, rviz_visual_tools::RED, length, radius);
 
   // Publish y axis
-  Eigen::Affine3d y_pose = Eigen::Translation3d(0, length / 2.0, 0) * 
+  Eigen::Affine3d y_pose = Eigen::Translation3d(0, length / 2.0, 0) *
     Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
   y_pose = pose * y_pose;
   publishCylinder(y_pose, rviz_visual_tools::GREEN, length, radius);
 
   // Publish z axis
-  Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) * 
+  Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) *
     Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
   z_pose = pose * z_pose;
   publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius);
@@ -752,14 +778,14 @@ bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rvi
   return publishMarker( cylinder_marker_ );
 }
 
-bool RvizVisualTools::publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color, 
-                                  double scale)
+bool RvizVisualTools::publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color,
+                                  double scale, const std::string &ns)
 {
-  return publishMesh(convertPose(pose), file_name, color, scale);
+  return publishMesh(convertPose(pose), file_name, color, scale, ns);
 }
 
-bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color, 
-                                  double scale)
+bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color,
+                                  double scale, const std::string &ns)
 {
   if(muted_)
     return true;
@@ -780,6 +806,9 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::st
   mesh_marker_.scale.x = scale;
   mesh_marker_.scale.y = scale;
   mesh_marker_.scale.z = scale;
+
+  // Set the namespace and id for this marker.  This serves to create a unique ID
+  mesh_marker_.ns = ns;
 
   // Set marker color
   mesh_marker_.color = getColor( color );
@@ -842,13 +871,13 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
   return true;
 }
 
-bool RvizVisualTools::publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, 
+bool RvizVisualTools::publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                                        const rviz_visual_tools::colors color)
 {
   return publishRectangle(convertPoint(point1), convertPoint(point2), color);
 }
 
-bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, 
+bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                                        const rviz_visual_tools::colors color)
 {
   if(muted_)
@@ -881,7 +910,7 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
   return publishMarker( rectangle_marker_ );
 }
 
-  bool RvizVisualTools::publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, 
+  bool RvizVisualTools::publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width,
 					 const double height, const rviz_visual_tools::colors color)
   {
     rectangle_marker_.header.stamp = ros::Time::now();
@@ -896,10 +925,10 @@ bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const
       rectangle_marker_.scale.x = SMALL_SCALE;
     else
       rectangle_marker_.scale.x = depth;
-    
+
     if (width <= 0)
       rectangle_marker_.scale.y = SMALL_SCALE;
-    else 
+    else
       rectangle_marker_.scale.y = width;
 
     if (height <= 0)
@@ -1052,7 +1081,7 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
 }
 
 bool RvizVisualTools::publishText(const Eigen::Affine3d &pose, const std::string &text,
-                                  const rviz_visual_tools::colors &color, 
+                                  const rviz_visual_tools::colors &color,
                                   const rviz_visual_tools::scales scale, bool static_id)
 {
   return publishText(convertPose(pose), text, color, getScale(scale), static_id);
@@ -1298,5 +1327,3 @@ void RvizVisualTools::print()
 }
 
 } // namespace
-
-
