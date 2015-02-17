@@ -729,19 +729,19 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
 {
   // Publish x axis
   Eigen::Affine3d x_pose = Eigen::Translation3d(length / 2.0, 0, 0) *
-    Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
+   Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
   x_pose = pose * x_pose;
   publishCylinder(x_pose, rviz_visual_tools::RED, length, radius);
 
   // Publish y axis
   Eigen::Affine3d y_pose = Eigen::Translation3d(0, length / 2.0, 0) *
-    Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
+   Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
   y_pose = pose * y_pose;
   publishCylinder(y_pose, rviz_visual_tools::GREEN, length, radius);
 
   // Publish z axis
   Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) *
-    Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
+   Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
   z_pose = pose * z_pose;
   publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius);
 
@@ -1267,9 +1267,21 @@ void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose)
   pose.position.y = dRand(0, 1);
   pose.position.z = dRand(0, 1);
 
-  // Orientation on place
-  double angle = M_PI * dRand(0.1,1.0);
-  Eigen::Quaterniond quat(Eigen::AngleAxis<double>(double(angle), Eigen::Vector3d::UnitZ()));
+  // Random orientation (random rotation axis from unit sphere and random angle)
+  // r = radius = 1.0
+  // e = elevation, 0 <= e <= pi
+  // a = azimuth, 0 <= a <= 2pi
+
+  double angle = 2 * M_PI * dRand(0.0,1.0);
+  double e = M_PI * dRand(0.0,1.0);
+  double a = 2 * M_PI * dRand(0.0,1.0);
+
+  Eigen::Vector3d axis;
+  axis[0] = 1.0 * sin(e) * cos(a);
+  axis[1] = 1.0 * sin(e) * sin(a);
+  axis[2] = 1.0 * cos(e); 
+
+  Eigen::Quaterniond quat(Eigen::AngleAxis<double>(double(angle), axis));
   pose.orientation.x = quat.x();
   pose.orientation.y = quat.y();
   pose.orientation.z = quat.z();
