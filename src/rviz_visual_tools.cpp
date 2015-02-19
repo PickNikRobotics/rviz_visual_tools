@@ -394,7 +394,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
     case YELLOW:
       result.r = 1.0;
       result.g = 1.0;
-      result.b = 0.0;
+      result.b = 0.2;
     case BROWN:
       result.r = 0.597;
       result.g = 0.296;
@@ -566,12 +566,25 @@ bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
   return true;
 }
 
+void RvizVisualTools::enableBatchPublishing(bool enable)
+{
+  batch_publishing_enabled_ = enable;
+  //ROS_ERROR_STREAM_NAMED("temp","BATCH PUBLISHING ENABLED = " << enable);
+}
+
 bool RvizVisualTools::triggerBatchPublish()
 {
   bool result = publishMarkers( markers_ );
 
   markers_.markers.clear(); // remove all cached markers
   return result;
+}
+
+bool RvizVisualTools::triggerBatchPublishAndDisable()
+{
+  triggerBatchPublish();
+  batch_publishing_enabled_ = false;
+  //ROS_ERROR_STREAM_NAMED("temp","BATCH PUBLISHING DISABLED");
 }
 
 bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &markers)

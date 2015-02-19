@@ -275,10 +275,7 @@ public:
    * \brief Enable batch publishing - useful for when many markers need to be published at once and the ROS topic can get
    *        overloaded. This collects all published markers into array and only publishes them with triggerBatchPublish() is called
    */
-  void enableBatchPublishing(bool enable)
-  {
-    batch_publishing_enabled_ = enable;
-  }
+  void enableBatchPublishing(bool enable);
 
   /**
    * \brief Trigger the publish function to send out all collected markers
@@ -291,11 +288,7 @@ public:
    *        incase programmer forgets
    * \return true on success
    */
-  bool triggerBatchPublishAndDisable()
-  {
-    triggerBatchPublish();
-    batch_publishing_enabled_ = false;
-  }
+  bool triggerBatchPublishAndDisable();
 
   /**
    * \brief Publish an array of markers, allows reuse of the ROS publisher
