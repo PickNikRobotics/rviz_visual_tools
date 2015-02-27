@@ -948,18 +948,7 @@ bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Af
 bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                               const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
-  geometry_msgs::Point point1_geom_msg;
-  geometry_msgs::Point point2_geom_msg;
-  
-  point1_geom_msg.x = point1(0);
-  point1_geom_msg.y = point1(1);
-  point1_geom_msg.z = point1(2);
-
-  point2_geom_msg.x = point2(0);
-  point2_geom_msg.y = point2(1);
-  point2_geom_msg.z = point2(2);
-
-  return publishLine (point1_geom_msg, point2_geom_msg, color, scale);
+  return publishLine (RvizVisualTools::convertPoint(point1), RvizVisualTools::convertPoint(point2), color, scale);
 }
 
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,

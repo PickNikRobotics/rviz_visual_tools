@@ -378,6 +378,7 @@ public:
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
+
   /**
    * \brief Publish a marker of a series of connected lines to rviz
    * \param path - a series of points to connect with lines
