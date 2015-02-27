@@ -374,9 +374,10 @@ public:
    */
   bool publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
+  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, 
+                   const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
-
   /**
    * \brief Publish a marker of a series of connected lines to rviz
    * \param path - a series of points to connect with lines
