@@ -559,7 +559,7 @@ public:
   static geometry_msgs::Point convertPoint(const Eigen::Vector3d &point);
 
   /**
-   * \brief Create a random pose
+   * \brief Create a random pose within bounds of random_pose_bounds_
    * \param Pose to fill in
    */
   void generateRandomPose(geometry_msgs::Pose& pose);
@@ -626,6 +626,13 @@ protected:
   visualization_msgs::Marker path_marker_;
   visualization_msgs::Marker spheres_marker_;
   visualization_msgs::Marker reset_marker_;
+
+  // bounds for generateRandomPose
+  // 6 x 3 Array
+  // min, max, is_random
+  // if is_random = 0, min is taken as a constant value for that parameter
+  // variables = (x, y, z, elevation, azimuth, rotation angle)
+  Eigen::ArrayXXf random_pose_bounds_;
 
 }; // class
 
