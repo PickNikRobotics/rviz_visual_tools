@@ -708,6 +708,25 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
   return publishMarker( arrow_marker_ );
 }
 
+bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color,
+                                   const rviz_visual_tools::scales scale, double length)
+{
+  if(muted_)
+    return true;
+
+  // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+  arrow_marker_.header = pose.header;
+
+  arrow_marker_.id++;
+  arrow_marker_.pose = pose.pose;
+  arrow_marker_.color = getColor(color);
+  arrow_marker_.scale = getScale(scale, true);
+  arrow_marker_.scale.x = length; // overrides previous x scale specified
+
+  // Helper for publishing rviz markers
+  return publishMarker( arrow_marker_ );
+}
+
 bool RvizVisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const double &block_size)
 {
   if(muted_)

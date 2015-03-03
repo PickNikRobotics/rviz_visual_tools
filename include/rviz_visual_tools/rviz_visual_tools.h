@@ -59,6 +59,7 @@
 #include <std_msgs/ColorRGBA.h>
 #include <graph_msgs/GeometryGraph.h>
 #include <geometry_msgs/PoseArray.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Polygon.h>
 #include <trajectory_msgs/JointTrajectory.h>
 
@@ -340,6 +341,9 @@ public:
                     const rviz_visual_tools::scales scale, double length);
   bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
                     const rviz_visual_tools::scales scale, double length);
+  bool publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color,
+                    const rviz_visual_tools::scales scale, double length);
+
   /**
    * \brief Publish a marker of rectangle to rviz
    * \param point1 - x,y,z top corner location of box
