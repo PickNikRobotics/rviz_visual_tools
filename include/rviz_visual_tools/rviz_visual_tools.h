@@ -583,11 +583,41 @@ public:
   /**
    * \brief bounds for generateRandomPose
    */
-  // 6 x 3 Array
-  // min, max, is_random
-  // if is_random = 0, min is taken as a constant value for that parameter
-  // variables = (x, y, z, elevation, azimuth, rotation angle)
-  Eigen::ArrayXXf random_pose_bounds_;
+  struct randomPoseBounds 
+  {
+    float x_min_;
+    float x_max_;
+    float y_min_;
+    float y_max_;
+    float z_min_;
+    float z_max_;
+    float elevation_min_;
+    float elevation_max_;
+    float azimuth_min_;
+    float azimuth_max_;
+    float angle_min_;
+    float angle_max_;
+
+    randomPoseBounds(float x_min = 0.0, float x_max = 1.0, float y_min = 0.0, float y_max = 1.0, float z_min = 0.0, float z_max = 1.0, 
+                     float elevation_min = 0.0, float elevation_max = M_PI, float azimuth_min = 0.0, float azimuth_max = 2 * M_PI, 
+                     float angle_min = 0.0, float angle_max = 2 * M_PI)
+    {
+      x_min_ = x_min;
+      x_max_ = x_max;
+      y_min_ = y_min;
+      y_max_ = y_max;
+      z_min_ = z_min;
+      z_max_ = z_max;
+      elevation_min_ = elevation_min;
+      elevation_max_ = elevation_max;
+      azimuth_min_ = azimuth_min;
+      azimuth_max_ = azimuth_max;
+      angle_min_ = angle_min;
+      angle_max_ = angle_max;
+    }
+
+  };
+  randomPoseBounds random_pose_bounds_;
 
 protected:
 
