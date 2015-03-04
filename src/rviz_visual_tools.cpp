@@ -67,10 +67,10 @@ void RvizVisualTools::initialize()
   random_pose_bounds_.row(0) << 0 , 1, 1;        // x position
   random_pose_bounds_.row(1) << 0 , 1, 1;        // y position
   random_pose_bounds_.row(2) << 0 , 1, 1;        // z position
-  random_pose_bounds_.row(3) << 0 , M_PI, 1;     // elevation
-  random_pose_bounds_.row(4) << 0 , 2 * M_PI, 1; // azimuth
-  random_pose_bounds_.row(5) << 0 , 2 * M_PI, 1; // rotation about axis
-
+  random_pose_bounds_.row(3) << 0 , 3.14159, 1;     // elevation
+  random_pose_bounds_.row(4) << 0 , 2 * 3.14159, 1; // azimuth
+  random_pose_bounds_.row(5) << 0 , 2 * 3.14159, 1; // rotation about axis
+  ROS_DEBUG_STREAM_NAMED("initialize","random_pose_bounds_ =\n" << random_pose_bounds_ << "\nM_PI = " << M_PI);
 }
 
 bool RvizVisualTools::deleteAllMarkers()
@@ -1277,30 +1277,33 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose)
 {
+
+  ROS_DEBUG_STREAM_NAMED("gen_random_pose", "M_PI / random_pose_bounds_(3,1) = " << M_PI / random_pose_bounds_(3,1));
+  ROS_DEBUG_STREAM_NAMED("gen_random_pose", "2 * M_PI / random_pose_bounds_(4,1) = " << 2 * M_PI / random_pose_bounds_(4,1));
   // Error check elevation & azimuth angles
   // 0 <= elevation <= pi
   // 0 <= azimuth   <= 2 * pi
   if (random_pose_bounds_(3,0) < 0)
     {
-      ROS_WARN_STREAM_NAMED("rviz_visual_tools.generateRandomPose", "min elevation bound < 0, setting equal to 0");
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "min elevation bound < 0, setting equal to 0");
       random_pose_bounds_(3,0) = 0;
     }
 
   if (random_pose_bounds_(3,1) > M_PI)
     {
-      ROS_WARN_STREAM_NAMED("rviz_visual_tools.generateRandomPose", "max elevation bound > pi, setting equal to pi");
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "max elevation bound > pi, setting equal to pi ");
       random_pose_bounds_(3,1) = M_PI;
     }
 
   if (random_pose_bounds_(4,0) < 0)
     {
-      ROS_WARN_STREAM_NAMED("rviz_visual_tools.generateRandomPose", "min azimuth bound < 0, setting equal to 0");
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "min azimuth bound < 0, setting equal to 0");
       random_pose_bounds_(4,0) = 0;
     }
 
   if (random_pose_bounds_(4,1) > 2 * M_PI)
     {
-      ROS_WARN_STREAM_NAMED("rviz_visual_tools.generateRandomPose", "max azimuth bound > 2 pi, setting equal to 2 pi");
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "max azimuth bound > 2 pi, setting equal to 2 pi ");
       random_pose_bounds_(4,1) = 2 * M_PI;
     }
 
