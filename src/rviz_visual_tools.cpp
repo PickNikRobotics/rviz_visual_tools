@@ -61,7 +61,7 @@ void RvizVisualTools::initialize()
   alpha_ = 0.8;
   global_scale_ = 1.0;
   // Cache the reusable markers
-  loadRvizMarkers();
+  loadRvizMarkers();                      
 }
 
 bool RvizVisualTools::deleteAllMarkers()
@@ -977,6 +977,12 @@ bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Af
   return publishLine( convertPoseToPoint(point1), convertPoseToPoint(point2), color, scale );
 }
 
+bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
+                              const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
+{
+  return publishLine (RvizVisualTools::convertPoint(point1), RvizVisualTools::convertPoint(point2), color, scale);
+}
+
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                               const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
@@ -1294,24 +1300,48 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose)
 {
+  // Error check elevation & azimuth angles
+  // 0 <= elevation <= pi
+  // 0 <= azimuth   <= 2 * pi
+  if (random_pose_bounds_.elevation_min_ < 0)
+    {
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "min elevation bound < 0, setting equal to 0");
+      random_pose_bounds_.elevation_min_ = 0;
+    }
+
+  if (random_pose_bounds_.elevation_max_ > M_PI)
+    {
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "max elevation bound > pi, setting equal to pi ");
+      random_pose_bounds_.elevation_max_ = M_PI;
+    }
+
+  if (random_pose_bounds_.azimuth_min_ < 0)
+    {
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "min azimuth bound < 0, setting equal to 0");
+      random_pose_bounds_.azimuth_min_ = 0;
+    }
+
+  if (random_pose_bounds_.azimuth_max_ > 2 * M_PI)
+    {
+      ROS_WARN_STREAM_NAMED("gen_random_pose", "max azimuth bound > 2 pi, setting equal to 2 pi ");
+      random_pose_bounds_.azimuth_max_ = 2 * M_PI;
+    }
+
+
   // Position
-  pose.position.x = dRand(0, 1);
-  pose.position.y = dRand(0, 1);
-  pose.position.z = dRand(0, 1);
+  pose.position.x = dRand(random_pose_bounds_.x_min_, random_pose_bounds_.x_max_);
+  pose.position.y = dRand(random_pose_bounds_.y_min_, random_pose_bounds_.y_max_);
+  pose.position.z = dRand(random_pose_bounds_.z_min_, random_pose_bounds_.z_max_);
 
   // Random orientation (random rotation axis from unit sphere and random angle)
-  // r = radius = 1.0
-  // e = elevation, 0 <= e <= pi
-  // a = azimuth, 0 <= a <= 2pi
-
-  double angle = 2 * M_PI * dRand(0.0,1.0);
-  double e = M_PI * dRand(0.0,1.0);
-  double a = 2 * M_PI * dRand(0.0,1.0);
+  double angle = dRand(random_pose_bounds_.angle_min_, random_pose_bounds_.angle_max_);
+  double elevation = dRand(random_pose_bounds_.elevation_min_, random_pose_bounds_.elevation_max_);
+  double azimuth = dRand(random_pose_bounds_.azimuth_min_, random_pose_bounds_.azimuth_max_);
 
   Eigen::Vector3d axis;
-  axis[0] = 1.0 * sin(e) * cos(a);
-  axis[1] = 1.0 * sin(e) * sin(a);
-  axis[2] = 1.0 * cos(e); 
+  axis[0] = sin(elevation) * cos(azimuth);
+  axis[1] = sin(elevation) * sin(azimuth);
+  axis[2] = cos(elevation); 
 
   Eigen::Quaterniond quat(Eigen::AngleAxis<double>(double(angle), axis));
   pose.orientation.x = quat.x();
