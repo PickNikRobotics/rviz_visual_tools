@@ -403,7 +403,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
     case YELLOW:
       result.r = 1.0;
       result.g = 1.0;
-      result.b = 0.0;
+      result.b = 0.2;
     case BROWN:
       result.r = 0.597;
       result.g = 0.296;
@@ -575,12 +575,25 @@ bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
   return true;
 }
 
+void RvizVisualTools::enableBatchPublishing(bool enable)
+{
+  batch_publishing_enabled_ = enable;
+  //ROS_ERROR_STREAM_NAMED("temp","BATCH PUBLISHING ENABLED = " << enable);
+}
+
 bool RvizVisualTools::triggerBatchPublish()
 {
   bool result = publishMarkers( markers_ );
 
   markers_.markers.clear(); // remove all cached markers
   return result;
+}
+
+bool RvizVisualTools::triggerBatchPublishAndDisable()
+{
+  triggerBatchPublish();
+  batch_publishing_enabled_ = false;
+  //ROS_ERROR_STREAM_NAMED("temp","BATCH PUBLISHING DISABLED");
 }
 
 bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &markers)
@@ -696,6 +709,25 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
 
   arrow_marker_.id++;
   arrow_marker_.pose = pose;
+  arrow_marker_.color = getColor(color);
+  arrow_marker_.scale = getScale(scale, true);
+  arrow_marker_.scale.x = length; // overrides previous x scale specified
+
+  // Helper for publishing rviz markers
+  return publishMarker( arrow_marker_ );
+}
+
+bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color,
+                                   const rviz_visual_tools::scales scale, double length)
+{
+  if(muted_)
+    return true;
+
+  // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+  arrow_marker_.header = pose.header;
+
+  arrow_marker_.id++;
+  arrow_marker_.pose = pose.pose;
   arrow_marker_.color = getColor(color);
   arrow_marker_.scale = getScale(scale, true);
   arrow_marker_.scale.x = length; // overrides previous x scale specified

@@ -59,6 +59,7 @@
 #include <std_msgs/ColorRGBA.h>
 #include <graph_msgs/GeometryGraph.h>
 #include <geometry_msgs/PoseArray.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Polygon.h>
 #include <trajectory_msgs/JointTrajectory.h>
 
@@ -275,10 +276,7 @@ public:
    * \brief Enable batch publishing - useful for when many markers need to be published at once and the ROS topic can get
    *        overloaded. This collects all published markers into array and only publishes them with triggerBatchPublish() is called
    */
-  void enableBatchPublishing(bool enable)
-  {
-    batch_publishing_enabled_ = enable;
-  }
+  void enableBatchPublishing(bool enable);
 
   /**
    * \brief Trigger the publish function to send out all collected markers
@@ -291,11 +289,7 @@ public:
    *        incase programmer forgets
    * \return true on success
    */
-  bool triggerBatchPublishAndDisable()
-  {
-    triggerBatchPublish();
-    batch_publishing_enabled_ = false;
-  }
+  bool triggerBatchPublishAndDisable();
 
   /**
    * \brief Publish an array of markers, allows reuse of the ROS publisher
@@ -347,6 +341,9 @@ public:
                     const rviz_visual_tools::scales scale, double length);
   bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
                     const rviz_visual_tools::scales scale, double length);
+  bool publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color,
+                    const rviz_visual_tools::scales scale, double length);
+
   /**
    * \brief Publish a marker of rectangle to rviz
    * \param point1 - x,y,z top corner location of box
