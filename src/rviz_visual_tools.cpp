@@ -324,6 +324,7 @@ const rviz_visual_tools::colors RvizVisualTools::getRandColor()
   all_colors.push_back(GREEN);
   all_colors.push_back(BLUE);
   all_colors.push_back(GREY);
+  all_colors.push_back(DARK_GREY);
   all_colors.push_back(WHITE);
   all_colors.push_back(ORANGE);
   //all_colors.push_back(BLACK);
@@ -357,6 +358,10 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.9;
       result.g = 0.9;
       result.b = 0.9;
+    case DARK_GREY:
+      result.r = 0.6;
+      result.g = 0.6;
+      result.b = 0.6;
       break;
     case WHITE:
       result.r = 1.0;
