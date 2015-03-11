@@ -91,7 +91,7 @@ enum colors { RED,
               RAND,
 	      CLEAR,
               DEFAULT // i.e. 'do not change default color'
-            };
+};
 
 enum scales { XXSMALL,
               XSMALL,
@@ -100,6 +100,31 @@ enum scales { XXSMALL,
               LARGE, xLARGE, xxLARGE, xxxLARGE,
               XLARGE,
               XXLARGE };
+
+/**
+ * \brief bounds for generateRandomPose()
+ */
+struct RandomPoseBounds
+{
+  float x_min_,         x_max_;
+  float y_min_,         y_max_;
+  float z_min_,         z_max_;
+  float elevation_min_, elevation_max_;
+  float azimuth_min_,   azimuth_max_;
+  float angle_min_,     angle_max_;
+
+  RandomPoseBounds(float x_min = 0.0, float x_max = 1.0, float y_min = 0.0, float y_max = 1.0, float z_min = 0.0, float z_max = 1.0,
+                   float elevation_min = 0.0, float elevation_max = M_PI, float azimuth_min = 0.0, float azimuth_max = 2 * M_PI,
+                   float angle_min = 0.0, float angle_max = 2 * M_PI)
+  {
+    x_min_ = x_min;                 x_max_ = x_max;
+    y_min_ = y_min;                 y_max_ = y_max;
+    z_min_ = z_min;                 z_max_ = z_max;
+    elevation_min_ = elevation_min; elevation_max_ = elevation_max;
+    azimuth_min_ = azimuth_min;     azimuth_max_ = azimuth_max;
+    angle_min_ = angle_min;         angle_max_ = angle_max;
+  }
+};
 
 class RvizVisualTools
 {
@@ -118,7 +143,7 @@ public:
    * \param marker_topic - rostopic to publish markers to - your Rviz display should match
    */
   RvizVisualTools(const std::string& base_frame,
-              const std::string& marker_topic = RVIZ_MARKER_TOPIC);
+                  const std::string& marker_topic = RVIZ_MARKER_TOPIC);
   /**
    * \brief Deconstructor
    */
@@ -357,7 +382,7 @@ public:
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
   bool publishXArrow(const  geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = RED,
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
-  
+
   /**
    * \brief Publish an arrow along the y-axis of a pose
    * \param pose - the location to publish the marker with respect to the base frame
@@ -400,7 +425,7 @@ public:
   bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                         const rviz_visual_tools::colors color = BLUE);
   bool publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
-			const rviz_visual_tools::colors color = BLUE);
+                        const rviz_visual_tools::colors color = BLUE);
   /**
    * \brief Publish a marker of line to rviz
    * \param point1 - x,y,z of start of line
@@ -411,7 +436,7 @@ public:
    */
   bool publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
-  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, 
+  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
@@ -598,8 +623,9 @@ public:
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_
    * \param Pose to fill in
+   * \parma options bounds on the pose to generate
    */
-  void generateRandomPose(geometry_msgs::Pose& pose);
+  void generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
 
   /**
    * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
@@ -618,46 +644,6 @@ public:
    * \brief Debug variables to console
    */
   void print();
-
-
-  /**
-   * \brief bounds for generateRandomPose
-   */
-  struct randomPoseBounds 
-  {
-    float x_min_;
-    float x_max_;
-    float y_min_;
-    float y_max_;
-    float z_min_;
-    float z_max_;
-    float elevation_min_;
-    float elevation_max_;
-    float azimuth_min_;
-    float azimuth_max_;
-    float angle_min_;
-    float angle_max_;
-
-    randomPoseBounds(float x_min = 0.0, float x_max = 1.0, float y_min = 0.0, float y_max = 1.0, float z_min = 0.0, float z_max = 1.0, 
-                     float elevation_min = 0.0, float elevation_max = M_PI, float azimuth_min = 0.0, float azimuth_max = 2 * M_PI, 
-                     float angle_min = 0.0, float angle_max = 2 * M_PI)
-    {
-      x_min_ = x_min;
-      x_max_ = x_max;
-      y_min_ = y_min;
-      y_max_ = y_max;
-      z_min_ = z_min;
-      z_max_ = z_max;
-      elevation_min_ = elevation_min;
-      elevation_max_ = elevation_max;
-      azimuth_min_ = azimuth_min;
-      azimuth_max_ = azimuth_max;
-      angle_min_ = angle_min;
-      angle_max_ = angle_max;
-    }
-
-  };
-  randomPoseBounds random_pose_bounds_;
 
 protected:
 
