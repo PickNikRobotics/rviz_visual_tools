@@ -333,6 +333,8 @@ const rviz_visual_tools::colors RvizVisualTools::getRandColor()
   all_colors.push_back(PINK);
   all_colors.push_back(LIME_GREEN);
   all_colors.push_back(PURPLE);
+  all_colors.push_back(CYAN);
+  all_colors.push_back(MAGENTA);
 
   int rand_num = iRand(0, all_colors.size() - 1);
   return all_colors[ rand_num ];
@@ -426,6 +428,16 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.g = 0.0;
       result.b = 0.597;
       break;
+    case CYAN:
+      result.r=0.0;
+      result.g=1.0;
+      result.b=1.0;
+      break;
+    case MAGENTA:
+      result.r=1.0;
+      result.g=0.0;
+      result.b=1.0;
+      break;      
     case RAND:
       // Make sure color is not *too* light
       do
