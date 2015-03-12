@@ -5,6 +5,7 @@
   <description>Helper functions for displaying and debugging data in Rviz via published markers</description>
 
   <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
+  <maintainer email="mcevoy.andy@gmail.com">Andy McEvoy</maintainer>
 
   <license>BSD</license>
 
