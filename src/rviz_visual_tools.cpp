@@ -1092,7 +1092,8 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
 					       const Eigen::Vector3d &position,
 					       const Eigen::Matrix3d &rotation_matrix,
 					       const Eigen::Vector3d &min_point,
-					       const Eigen::Vector3d &max_point)
+					       const Eigen::Vector3d &max_point,
+					       const RvizVisualTools::colors &color=RvizVisualTools::BLUE)
 {
   /* Publish cuboid at a certain pose. Useful to show an oriented
      bounding as computed by PCL. */
@@ -1123,18 +1124,18 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
     p7 = pose * p7;
     p8 = pose * p8;
 
-    RvizVisualTools::publishLine(p1, p2);
-    RvizVisualTools::publishLine(p1, p4);
-    RvizVisualTools::publishLine(p1, p5);
-    RvizVisualTools::publishLine(p5, p6);
-    RvizVisualTools::publishLine(p5, p8);
-    RvizVisualTools::publishLine(p2, p6);
-    RvizVisualTools::publishLine(p6, p7);
-    RvizVisualTools::publishLine(p7, p8);
-    RvizVisualTools::publishLine(p2, p3);
-    RvizVisualTools::publishLine(p4, p8);
-    RvizVisualTools::publishLine(p3, p4);
-    RvizVisualTools::publishLine(p3, p7);
+    RvizVisualTools::publishLine(p1, p2, color);
+    RvizVisualTools::publishLine(p1, p4, color);
+    RvizVisualTools::publishLine(p1, p5, color);
+    RvizVisualTools::publishLine(p5, p6, color);
+    RvizVisualTools::publishLine(p5, p8, color);
+    RvizVisualTools::publishLine(p2, p6, color);
+    RvizVisualTools::publishLine(p6, p7, color);
+    RvizVisualTools::publishLine(p7, p8, color);
+    RvizVisualTools::publishLine(p2, p3, color);
+    RvizVisualTools::publishLine(p4, p8, color);
+    RvizVisualTools::publishLine(p3, p4, color);
+    RvizVisualTools::publishLine(p3, p7, color);
 
     return true;
   }
