@@ -1088,7 +1088,58 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
   publishPath(points, color, scale, ns);
 }
 
-bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors &color, const double scale, const std::string& ns)
+  bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
+					       const Eigen::Vector3d &position,
+					       const Eigen::Matrix3d &rotation_matrix,
+					       const Eigen::Vector3d &min_point,
+					       const Eigen::Vector3d &max_point)
+{
+  /* Publish cuboid at a certain pose. Useful to show an oriented
+     bounding as computed by PCL. */
+    Eigen::Vector3d p1 (min_point[0], min_point[1], min_point[2]);
+    Eigen::Vector3d p2 (min_point[0], min_point[1], max_point[2]);
+    Eigen::Vector3d p3 (max_point[0], min_point[1], max_point[2]);
+    Eigen::Vector3d p4 (max_point[0], min_point[1], min_point[2]);
+    Eigen::Vector3d p5 (min_point[0], max_point[1], min_point[2]);
+    Eigen::Vector3d p6 (min_point[0], max_point[1], max_point[2]);
+    Eigen::Vector3d p7 (max_point[0], max_point[1], max_point[2]);
+    Eigen::Vector3d p8 (max_point[0], max_point[1], min_point[2]);
+
+    p1 = rotation_matrix * p1 + position;
+    p2 = rotation_matrix * p2 + position;
+    p3 = rotation_matrix * p3 + position;
+    p4 = rotation_matrix * p4 + position;
+    p5 = rotation_matrix * p5 + position;
+    p6 = rotation_matrix * p6 + position;
+    p7 = rotation_matrix * p7 + position;
+    p8 = rotation_matrix * p8 + position;
+
+    p1 = pose * p1;
+    p2 = pose * p2;
+    p3 = pose * p3;
+    p4 = pose * p4;
+    p5 = pose * p5;
+    p6 = pose * p6;
+    p7 = pose * p7;
+    p8 = pose * p8;
+
+    RvizVisualTools::publishLine(p1, p2);
+    RvizVisualTools::publishLine(p1, p4);
+    RvizVisualTools::publishLine(p1, p5);
+    RvizVisualTools::publishLine(p5, p6);
+    RvizVisualTools::publishLine(p5, p8);
+    RvizVisualTools::publishLine(p2, p6);
+    RvizVisualTools::publishLine(p6, p7);
+    RvizVisualTools::publishLine(p7, p8);
+    RvizVisualTools::publishLine(p2, p3);
+    RvizVisualTools::publishLine(p4, p8);
+    RvizVisualTools::publishLine(p3, p4);
+    RvizVisualTools::publishLine(p3, p7);
+
+    return true;
+  }
+
+bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors color, const double scale, const std::string& ns)
 {
   std::vector<geometry_msgs::Point> points_msg;
   geometry_msgs::Point temp;
