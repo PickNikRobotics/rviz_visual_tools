@@ -63,6 +63,9 @@
 #include <geometry_msgs/Polygon.h>
 #include <trajectory_msgs/JointTrajectory.h>
 
+// Deprecation
+#include <rviz_visual_tools/deprecation.h>
+
 namespace rviz_visual_tools
 {
 
@@ -294,7 +297,7 @@ public:
   }
 
   /**
-   * \brief Publish a visualization_msgs Marker of a custom type. Allows reuse of the ros publisher
+   * \brief Display a visualization_msgs Marker of a custom type. Allows reuse of the ros publisher
    * \param marker - a pre-made marker ready to be published
    * \return true on success
    */
@@ -320,14 +323,14 @@ public:
   bool triggerBatchPublishAndDisable();
 
   /**
-   * \brief Publish an array of markers, allows reuse of the ROS publisher
+   * \brief Display an array of markers, allows reuse of the ROS publisher
    * \param markers
    * \return true on success
    */
   bool publishMarkers(const visualization_msgs::MarkerArray &markers);
 
   /**
-   * \brief Publish a marker of a sphere to rviz
+   * \brief Display a marker of a sphere
    * \param pose - the location to publish the sphere with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -342,7 +345,7 @@ public:
   bool publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere");
 
   /**
-   * \brief Publish a marker of a series of spheres to rviz
+   * \brief Display a marker of a series of spheres
    * \param spheres - where to publish them
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -355,7 +358,7 @@ public:
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors color, const geometry_msgs::Vector3 &scale, const std::string& ns = "Spheres");
 
   /**
-   * \brief Publish a marker of an arrow to rviz
+   * \brief Display an arrow along the x-axis of a pose
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -373,7 +376,7 @@ public:
                     const rviz_visual_tools::scales scale, double length);
 
   /**
-   * \brief Publish an arrow along the x-axis of a pose
+   * \brief Display an arrow along the x-axis of a pose
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -386,7 +389,7 @@ public:
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
 
   /**
-   * \brief Publish an arrow along the y-axis of a pose
+   * \brief Display an arrow along the y-axis of a pose
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -399,7 +402,7 @@ public:
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
 
   /**
-   * \brief Publish an arrow along the z-axis of a pose
+   * \brief Display an arrow along the z-axis of a pose
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -412,24 +415,50 @@ public:
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
 
   /**
-   * \brief Publish a marker of rectangle to rviz
+   * \brief Display a rectangular cuboid
    * \param point1 - x,y,z top corner location of box
    * \param point2 - x,y,z bottom opposite corner location of box
    * \param color - an enum pre-defined name of a color
+   * \return true on success
+   */
+  bool publishCuboid(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
+                     const rviz_visual_tools::colors color = BLUE);
+  bool publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
+                     const rviz_visual_tools::colors color = BLUE);
+  /**
+   * \brief Display a rectangular cuboid
    * \param pose - pose of the box
    * \param depth - depth of the box
    * \param width - width of the box
    * \param height - height of the box
+   * \param color - an enum pre-defined name of a color
    * \return true on success
    */
+  bool publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
+                     const rviz_visual_tools::colors color = BLUE);
+
+  // To be removed in release of ROS JADE:
+  RVIZ_VISUAL_TOOLS_DEPRECATED
   bool publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                        const rviz_visual_tools::colors color = BLUE);
+                        const rviz_visual_tools::colors color = BLUE)
+  {
+    return publishCuboid(point1, point2, color);
+  }
+  RVIZ_VISUAL_TOOLS_DEPRECATED
   bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                        const rviz_visual_tools::colors color = BLUE);
+                        const rviz_visual_tools::colors color = BLUE)
+  {
+    return publishCuboid(point1, point2, color);
+  }
+  RVIZ_VISUAL_TOOLS_DEPRECATED
   bool publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
-                        const rviz_visual_tools::colors color = BLUE);
+                        const rviz_visual_tools::colors color = BLUE)
+  {
+    return publishCuboid(pose, depth, width, height, color);
+  }
+
   /**
-   * \brief Publish a marker of line to rviz
+   * \brief Display a marker of line
    * \param point1 - x,y,z of start of line
    * \param point2 - x,y,z of end of line
    * \param color - an enum pre-defined name of a color
@@ -444,7 +473,7 @@ public:
                    const rviz_visual_tools::colors color = BLUE, const rviz_visual_tools::scales scale = REGULAR);
 
   /**
-   * \brief Publish a marker of a series of connected lines to rviz
+   * \brief Display a marker of a series of connected lines
    * \param path - a series of points to connect with lines
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -456,7 +485,7 @@ public:
                    const std::string& ns = "Path");
 
   /**
-   * \brief Publish a marker of a polygon to Rviz
+   * \brief Display a marker of a polygon
    * \param polygon - a series of points to connect with lines
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
@@ -468,7 +497,7 @@ public:
                       const std::string& ns = "Polygon");
 
   /**
-   * \brief Publish a marker of a block to Rviz
+   * \brief Display a marker of a block
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param size - height=width=depth=size
@@ -477,7 +506,7 @@ public:
   bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
 
   /**
-   * \brief Publish a marker of a axis to Rviz
+   * \brief Display a marker of a axis
    * \param pose - the location to publish the marker with respect to the base frame
    * \param length - geometry of cylinder
    * \param radius - geometry of cylinder
@@ -487,7 +516,7 @@ public:
   bool publishAxis(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01);
 
   /**
-   * \brief Publish a marker of a cylinder to Rviz
+   * \brief Display a marker of a cylinder
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param height - geometry of cylinder
@@ -500,7 +529,7 @@ public:
                        double radius = 0.1);
 
   /**
-   * \brief Publish a mesh from file
+   * \brief Display a mesh from file
    * \param file name of mesh, starting with "file://"
    * \return true on success
    */
@@ -510,7 +539,7 @@ public:
                    double scale = 1, const std::string &ns = "mesh");
 
   /**
-   * \brief Publish a graph
+   * \brief Display a graph
    * \param graph of nodes and edges
    * \param color - an enum pre-defined name of a color
    * \param radius - width of cylinders
@@ -519,7 +548,7 @@ public:
   bool publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_visual_tools::colors color, double radius);
 
   /**
-   * \brief Publish a marker of a text to Rviz
+   * \brief Display a marker of a text
    * \param pose - the location to publish the marker with respect to the base frame
    * \param text - what to display
    * \param color - an enum pre-defined name of a colo
@@ -686,7 +715,7 @@ protected:
   visualization_msgs::Marker cylinder_marker_;
   visualization_msgs::Marker mesh_marker_;
   visualization_msgs::Marker text_marker_;
-  visualization_msgs::Marker rectangle_marker_;
+  visualization_msgs::Marker cuboid_marker_;
   visualization_msgs::Marker line_marker_;
   visualization_msgs::Marker path_marker_;
   visualization_msgs::Marker spheres_marker_;

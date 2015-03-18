@@ -78,7 +78,7 @@ void RvizVisualTools::resetMarkerCounts()
   cylinder_marker_.id++;
   mesh_marker_.id++;
   text_marker_.id++;
-  rectangle_marker_.id++;
+  cuboid_marker_.id++;
   line_marker_.id++;
   path_marker_.id++;
   spheres_marker_.id++;
@@ -103,17 +103,17 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   arrow_marker_.lifetime = marker_lifetime_;
 
-  // Load rectangle ----------------------------------------------------
+  // Load cuboid ----------------------------------------------------
 
-  rectangle_marker_.header.frame_id = base_frame_;
+  cuboid_marker_.header.frame_id = base_frame_;
   // Set the namespace and id for this marker.  This serves to create a unique ID
-  rectangle_marker_.ns = "Rectangle";
+  cuboid_marker_.ns = "Cuboid";
   // Set the marker type.
-  rectangle_marker_.type = visualization_msgs::Marker::CUBE;
+  cuboid_marker_.type = visualization_msgs::Marker::CUBE;
   // Set the marker action.  Options are ADD and DELETE
-  rectangle_marker_.action = visualization_msgs::Marker::ADD;
+  cuboid_marker_.action = visualization_msgs::Marker::ADD;
   // Lifetime
-  rectangle_marker_.lifetime = marker_lifetime_;
+  cuboid_marker_.lifetime = marker_lifetime_;
 
   // Load line ----------------------------------------------------
 
@@ -307,7 +307,7 @@ void RvizVisualTools::setLifetime(double lifetime)
 
   // Update cached markers
   arrow_marker_.lifetime = marker_lifetime_;
-  rectangle_marker_.lifetime = marker_lifetime_;
+  cuboid_marker_.lifetime = marker_lifetime_;
   line_marker_.lifetime = marker_lifetime_;
   sphere_marker_.lifetime = marker_lifetime_;
   block_marker_.lifetime = marker_lifetime_;
@@ -920,72 +920,72 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
   return true;
 }
 
-bool RvizVisualTools::publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
+bool RvizVisualTools::publishCuboid(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                                        const rviz_visual_tools::colors color)
 {
-  return publishRectangle(convertPoint(point1), convertPoint(point2), color);
+  return publishCuboid(convertPoint(point1), convertPoint(point2), color);
 }
 
-bool RvizVisualTools::publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
+bool RvizVisualTools::publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                                        const rviz_visual_tools::colors color)
 {
   if(muted_)
     return true;
 
   // Set the timestamp
-  rectangle_marker_.header.stamp = ros::Time::now();
+  cuboid_marker_.header.stamp = ros::Time::now();
 
-  rectangle_marker_.id++;
-  rectangle_marker_.color = getColor(color);
+  cuboid_marker_.id++;
+  cuboid_marker_.color = getColor(color);
 
   // Calculate center pose
   geometry_msgs::Pose pose;
   pose.position.x = (point1.x - point2.x) / 2.0 + point2.x;
   pose.position.y = (point1.y - point2.y) / 2.0 + point2.y;
   pose.position.z = (point1.z - point2.z) / 2.0 + point2.z;
-  rectangle_marker_.pose = pose;
+  cuboid_marker_.pose = pose;
 
   // Calculate scale
-  rectangle_marker_.scale.x = fabs(point1.x - point2.x);
-  rectangle_marker_.scale.y = fabs(point1.y - point2.y);
-  rectangle_marker_.scale.z = fabs(point1.z - point2.z);
+  cuboid_marker_.scale.x = fabs(point1.x - point2.x);
+  cuboid_marker_.scale.y = fabs(point1.y - point2.y);
+  cuboid_marker_.scale.z = fabs(point1.z - point2.z);
 
   // Prevent scale from being zero
-  if (!rectangle_marker_.scale.x) rectangle_marker_.scale.x = SMALL_SCALE;
-  if (!rectangle_marker_.scale.y) rectangle_marker_.scale.y = SMALL_SCALE;
-  if (!rectangle_marker_.scale.z) rectangle_marker_.scale.z = SMALL_SCALE;
+  if (!cuboid_marker_.scale.x) cuboid_marker_.scale.x = SMALL_SCALE;
+  if (!cuboid_marker_.scale.y) cuboid_marker_.scale.y = SMALL_SCALE;
+  if (!cuboid_marker_.scale.z) cuboid_marker_.scale.z = SMALL_SCALE;
 
   // Helper for publishing rviz markers
-  return publishMarker( rectangle_marker_ );
+  return publishMarker( cuboid_marker_ );
 }
 
-  bool RvizVisualTools::publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width,
+  bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width,
 					 const double height, const rviz_visual_tools::colors color)
   {
-    rectangle_marker_.header.stamp = ros::Time::now();
+    cuboid_marker_.header.stamp = ros::Time::now();
 
-    rectangle_marker_.id++;
-    rectangle_marker_.color = getColor(color);
+    cuboid_marker_.id++;
+    cuboid_marker_.color = getColor(color);
 
-    rectangle_marker_.pose = pose;
+    cuboid_marker_.pose = pose;
 
     // Prevent scale from being zero
     if (depth <= 0)
-      rectangle_marker_.scale.x = SMALL_SCALE;
+      cuboid_marker_.scale.x = SMALL_SCALE;
     else
-      rectangle_marker_.scale.x = depth;
+      cuboid_marker_.scale.x = depth;
 
     if (width <= 0)
-      rectangle_marker_.scale.y = SMALL_SCALE;
+      cuboid_marker_.scale.y = SMALL_SCALE;
     else
-      rectangle_marker_.scale.y = width;
+      cuboid_marker_.scale.y = width;
 
     if (height <= 0)
-      rectangle_marker_.scale.z = SMALL_SCALE;
+      cuboid_marker_.scale.z = SMALL_SCALE;
     else
-      rectangle_marker_.scale.z = height;
+      cuboid_marker_.scale.z = height;
 
-    return publishMarker( rectangle_marker_ );
+    return publishMarker( cuboid_marker_ );
   }
 
 bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
@@ -1203,10 +1203,10 @@ bool RvizVisualTools::publishTests()
   publishSphere(pose1, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test","Publishing Rectangle");
+  ROS_INFO_STREAM_NAMED("test","Publishing Rectangular Cuboid");
   generateRandomPose(pose1);
   generateRandomPose(pose2);
-  publishRectangle(pose1.position, pose2.position, rviz_visual_tools::RAND);
+  publishCuboid(pose1.position, pose2.position, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
   ROS_INFO_STREAM_NAMED("test","Publishing Line");
