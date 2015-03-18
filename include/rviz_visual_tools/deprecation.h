@@ -32,9 +32,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-
-#ifndef RVIZ_VISUAL_TOOLS_MACROS_DEPRECATION_
-#define RVIZ_VISUAL_TOOLS_MACROS_DEPRECATION_
+#ifndef RVIZ_VISUAL_TOOLS__DEPRECATION_
+#define RVIZ_VISUAL_TOOLS__DEPRECATION_
 
 /** \def RVIZ_VISUAL_TOOLS_DEPRECATED
     Macro that marks functions as deprecated */
