@@ -97,7 +97,7 @@ See ``visual_tools.h`` for more details and documentation on the following funct
 
  - publishSphere
  - publishArrow
- - publishRectangle
+ - publishCuboid
  - publishLine
  - publishBlock
  - publishText
