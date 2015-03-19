@@ -769,6 +769,11 @@ bool RvizVisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_v
   return publishMarker( block_marker_ );
 }
 
+bool RvizVisualTools::publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color, const double &block_size)
+{
+  return publishBlock(convertPose(pose), color, block_size);
+}
+
 bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length, double radius)
 {
   return publishAxis(convertPose(pose), length, radius);

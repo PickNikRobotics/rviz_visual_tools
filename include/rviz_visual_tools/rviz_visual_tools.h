@@ -111,16 +111,16 @@ enum scales { XXSMALL,
  */
 struct RandomPoseBounds
 {
-  float x_min_,         x_max_;
-  float y_min_,         y_max_;
-  float z_min_,         z_max_;
-  float elevation_min_, elevation_max_;
-  float azimuth_min_,   azimuth_max_;
-  float angle_min_,     angle_max_;
+  double x_min_,         x_max_;
+  double y_min_,         y_max_;
+  double z_min_,         z_max_;
+  double elevation_min_, elevation_max_;
+  double azimuth_min_,   azimuth_max_;
+  double angle_min_,     angle_max_;
 
-  RandomPoseBounds(float x_min = 0.0, float x_max = 1.0, float y_min = 0.0, float y_max = 1.0, float z_min = 0.0, float z_max = 1.0,
-                   float elevation_min = 0.0, float elevation_max = M_PI, float azimuth_min = 0.0, float azimuth_max = 2 * M_PI,
-                   float angle_min = 0.0, float angle_max = 2 * M_PI)
+  RandomPoseBounds(double x_min = 0.0, double x_max = 1.0, double y_min = 0.0, double y_max = 1.0, double z_min = 0.0, double z_max = 1.0,
+                   double elevation_min = 0.0, double elevation_max = M_PI, double azimuth_min = 0.0, double azimuth_max = 2 * M_PI,
+                   double angle_min = 0.0, double angle_max = 2 * M_PI)
   {
     x_min_ = x_min;                 x_max_ = x_max;
     y_min_ = y_min;                 y_max_ = y_max;
@@ -504,7 +504,8 @@ public:
    * \return true on success
    */
   bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
-
+  bool publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
+  
   /**
    * \brief Display a marker of a axis
    * \param pose - the location to publish the marker with respect to the base frame
