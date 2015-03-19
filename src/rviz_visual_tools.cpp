@@ -1317,7 +1317,8 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
-  //generateRandomPose(convertPose(pose), pose_bounds);
+  Eigen::Affine3d pose_eigen = convertPose(pose);
+  generateRandomPose(pose_eigen, pose_bounds);
 }
 
 void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds)
@@ -1366,15 +1367,7 @@ void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds
   axis[2] = cos(elevation); 
 
   Eigen::Quaterniond quat(Eigen::AngleAxis<double>(double(angle), axis));
-  Eigen::Affine3d copy = pose;
-  pose = copy.translation() * quat;
-  //pose.rotation() = quat;
-  /*
-  pose.orientation.x = quat.x();
-  pose.orientation.y = quat.y();
-  pose.orientation.z = quat.z();
-  pose.orientation.w = quat.w();
-  */
+  pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quat;                              
 }
 
 void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose& pose)
