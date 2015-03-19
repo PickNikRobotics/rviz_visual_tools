@@ -1322,6 +1322,12 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
+  Eigen::Affine3d pose_eigen = convertPose(pose);
+  generateRandomPose(pose_eigen, pose_bounds);
+}
+
+void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds)
+{
   // Error check elevation & azimuth angles
   // 0 <= elevation <= pi
   // 0 <= azimuth   <= 2 * pi
@@ -1351,9 +1357,9 @@ void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBo
 
 
   // Position
-  pose.position.x = dRand(pose_bounds.x_min_, pose_bounds.x_max_);
-  pose.position.y = dRand(pose_bounds.y_min_, pose_bounds.y_max_);
-  pose.position.z = dRand(pose_bounds.z_min_, pose_bounds.z_max_);
+  pose.translation().x() = dRand(pose_bounds.x_min_, pose_bounds.x_max_);
+  pose.translation().y() = dRand(pose_bounds.y_min_, pose_bounds.y_max_);
+  pose.translation().z() = dRand(pose_bounds.z_min_, pose_bounds.z_max_);
 
   // Random orientation (random rotation axis from unit sphere and random angle)
   double angle = dRand(pose_bounds.angle_min_, pose_bounds.angle_max_);
@@ -1366,10 +1372,7 @@ void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBo
   axis[2] = cos(elevation); 
 
   Eigen::Quaterniond quat(Eigen::AngleAxis<double>(double(angle), axis));
-  pose.orientation.x = quat.x();
-  pose.orientation.y = quat.y();
-  pose.orientation.z = quat.z();
-  pose.orientation.w = quat.w();
+  pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quat;                              
 }
 
 void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose& pose)

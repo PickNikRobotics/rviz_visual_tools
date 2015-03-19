@@ -658,6 +658,7 @@ public:
    * \parma options bounds on the pose to generate
    */
   void generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
+  void generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
 
   /**
    * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
