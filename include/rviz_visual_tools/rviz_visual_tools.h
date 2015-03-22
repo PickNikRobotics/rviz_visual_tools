@@ -531,13 +531,18 @@ public:
 
   /**
    * \brief Display a mesh from file
+   * \param pose - the location to publish the marker with respect to the base frame
    * \param file name of mesh, starting with "file://"
+   * \param color - an enum pre-defined name of a color
+   * \param scale - an enum pre-defined name of a size
+   * \param ns - namespace of marker
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
    * \return true on success
    */
   bool publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR,
-                   double scale = 1, const std::string &ns = "mesh");
+                   double scale = 1, const std::string &ns = "mesh", const std::size_t &id = 0);
   bool publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color = CLEAR,
-                   double scale = 1, const std::string &ns = "mesh");
+                   double scale = 1, const std::string &ns = "mesh", const std::size_t &id = 0);
 
   /**
    * \brief Display a graph
@@ -552,7 +557,7 @@ public:
    * \brief Display a marker of a text
    * \param pose - the location to publish the marker with respect to the base frame
    * \param text - what to display
-   * \param color - an enum pre-defined name of a colo
+   * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param static_id - if true, only one text can be published at a time
    * \return true on success

@@ -833,13 +833,13 @@ bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rvi
 }
 
 bool RvizVisualTools::publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const rviz_visual_tools::colors color,
-                                  double scale, const std::string &ns)
+                                  double scale, const std::string &ns, const std::size_t &id)
 {
-  return publishMesh(convertPose(pose), file_name, color, scale, ns);
+  return publishMesh(convertPose(pose), file_name, color, scale, ns, id);
 }
 
 bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors color,
-                                  double scale, const std::string &ns)
+                                  double scale, const std::string &ns, const std::size_t &id)
 {
   if(muted_)
     return true;
@@ -847,7 +847,10 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::st
   // Set the timestamp
   mesh_marker_.header.stamp = ros::Time::now();
 
-  mesh_marker_.id++;
+  if (id == 0)
+    mesh_marker_.id++;
+  else
+    mesh_marker_.id = id;
 
   // Set the mesh
   mesh_marker_.mesh_resource = file_name;
@@ -1322,8 +1325,9 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
-  Eigen::Affine3d pose_eigen = convertPose(pose);
+  Eigen::Affine3d pose_eigen;
   generateRandomPose(pose_eigen, pose_bounds);
+  pose = convertPose(pose_eigen);
 }
 
 void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds)
