@@ -44,7 +44,7 @@ namespace rviz_visual_tools
 {
 
 RvizVisualTools::RvizVisualTools(const std::string& base_frame,
-                         const std::string& marker_topic)
+                                 const std::string& marker_topic)
   :  nh_("~")
   ,  marker_topic_(marker_topic)
   ,  base_frame_(base_frame)
@@ -61,7 +61,7 @@ void RvizVisualTools::initialize()
   alpha_ = 0.8;
   global_scale_ = 1.0;
   // Cache the reusable markers
-  loadRvizMarkers();                      
+  loadRvizMarkers();
 }
 
 bool RvizVisualTools::deleteAllMarkers()
@@ -437,7 +437,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r=1.0;
       result.g=0.0;
       result.b=1.0;
-      break;      
+      break;
     case RAND:
       // Make sure color is not *too* light
       do
@@ -783,19 +783,19 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
 {
   // Publish x axis
   Eigen::Affine3d x_pose = Eigen::Translation3d(length / 2.0, 0, 0) *
-   Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
+    Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
   x_pose = pose * x_pose;
   publishCylinder(x_pose, rviz_visual_tools::RED, length, radius);
 
   // Publish y axis
   Eigen::Affine3d y_pose = Eigen::Translation3d(0, length / 2.0, 0) *
-   Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
+    Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
   y_pose = pose * y_pose;
   publishCylinder(y_pose, rviz_visual_tools::GREEN, length, radius);
 
   // Publish z axis
   Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) *
-   Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
+    Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
   z_pose = pose * z_pose;
   publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius);
 
@@ -929,13 +929,13 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
 }
 
 bool RvizVisualTools::publishCuboid(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                                       const rviz_visual_tools::colors color)
+                                    const rviz_visual_tools::colors color)
 {
   return publishCuboid(convertPoint(point1), convertPoint(point2), color);
 }
 
 bool RvizVisualTools::publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                                       const rviz_visual_tools::colors color)
+                                    const rviz_visual_tools::colors color)
 {
   if(muted_)
     return true;
@@ -967,49 +967,49 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Point &point1, const ge
   return publishMarker( cuboid_marker_ );
 }
 
-  bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width,
-					 const double height, const rviz_visual_tools::colors color)
-  {
-    cuboid_marker_.header.stamp = ros::Time::now();
+bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width,
+                                    const double height, const rviz_visual_tools::colors color)
+{
+  cuboid_marker_.header.stamp = ros::Time::now();
 
-    cuboid_marker_.id++;
-    cuboid_marker_.color = getColor(color);
+  cuboid_marker_.id++;
+  cuboid_marker_.color = getColor(color);
 
-    cuboid_marker_.pose = pose;
+  cuboid_marker_.pose = pose;
 
-    // Prevent scale from being zero
-    if (depth <= 0)
-      cuboid_marker_.scale.x = SMALL_SCALE;
-    else
-      cuboid_marker_.scale.x = depth;
+  // Prevent scale from being zero
+  if (depth <= 0)
+    cuboid_marker_.scale.x = SMALL_SCALE;
+  else
+    cuboid_marker_.scale.x = depth;
 
-    if (width <= 0)
-      cuboid_marker_.scale.y = SMALL_SCALE;
-    else
-      cuboid_marker_.scale.y = width;
+  if (width <= 0)
+    cuboid_marker_.scale.y = SMALL_SCALE;
+  else
+    cuboid_marker_.scale.y = width;
 
-    if (height <= 0)
-      cuboid_marker_.scale.z = SMALL_SCALE;
-    else
-      cuboid_marker_.scale.z = height;
+  if (height <= 0)
+    cuboid_marker_.scale.z = SMALL_SCALE;
+  else
+    cuboid_marker_.scale.z = height;
 
-    return publishMarker( cuboid_marker_ );
-  }
+  return publishMarker( cuboid_marker_ );
+}
 
 bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
-                              const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
+                                  const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
   return publishLine( convertPoseToPoint(point1), convertPoseToPoint(point2), color, scale );
 }
 
 bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                              const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
+                                  const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
   return publishLine (RvizVisualTools::convertPoint(point1), RvizVisualTools::convertPoint(point2), color, scale);
 }
 
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                              const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
+                                  const rviz_visual_tools::colors color, const rviz_visual_tools::scales scale)
 {
   if(muted_)
     return true;
@@ -1336,28 +1336,28 @@ void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds
   // 0 <= elevation <= pi
   // 0 <= azimuth   <= 2 * pi
   if (pose_bounds.elevation_min_ < 0)
-    {
-      ROS_WARN_STREAM_NAMED("gen_random_pose", "min elevation bound < 0, setting equal to 0");
-      pose_bounds.elevation_min_ = 0;
-    }
+  {
+    ROS_WARN_STREAM_NAMED("gen_random_pose", "min elevation bound < 0, setting equal to 0");
+    pose_bounds.elevation_min_ = 0;
+  }
 
   if (pose_bounds.elevation_max_ > M_PI)
-    {
-      ROS_WARN_STREAM_NAMED("gen_random_pose", "max elevation bound > pi, setting equal to pi ");
-      pose_bounds.elevation_max_ = M_PI;
-    }
+  {
+    ROS_WARN_STREAM_NAMED("gen_random_pose", "max elevation bound > pi, setting equal to pi ");
+    pose_bounds.elevation_max_ = M_PI;
+  }
 
   if (pose_bounds.azimuth_min_ < 0)
-    {
-      ROS_WARN_STREAM_NAMED("gen_random_pose", "min azimuth bound < 0, setting equal to 0");
-      pose_bounds.azimuth_min_ = 0;
-    }
+  {
+    ROS_WARN_STREAM_NAMED("gen_random_pose", "min azimuth bound < 0, setting equal to 0");
+    pose_bounds.azimuth_min_ = 0;
+  }
 
   if (pose_bounds.azimuth_max_ > 2 * M_PI)
-    {
-      ROS_WARN_STREAM_NAMED("gen_random_pose", "max azimuth bound > 2 pi, setting equal to 2 pi ");
-      pose_bounds.azimuth_max_ = 2 * M_PI;
-    }
+  {
+    ROS_WARN_STREAM_NAMED("gen_random_pose", "max azimuth bound > 2 pi, setting equal to 2 pi ");
+    pose_bounds.azimuth_max_ = 2 * M_PI;
+  }
 
 
   // Position
@@ -1373,10 +1373,10 @@ void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds
   Eigen::Vector3d axis;
   axis[0] = sin(elevation) * cos(azimuth);
   axis[1] = sin(elevation) * sin(azimuth);
-  axis[2] = cos(elevation); 
+  axis[2] = cos(elevation);
 
   Eigen::Quaterniond quat(Eigen::AngleAxis<double>(double(angle), axis));
-  pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quat;                              
+  pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quat;
 }
 
 void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose& pose)
@@ -1430,43 +1430,67 @@ void RvizVisualTools::print()
 }
 
 bool RvizVisualTools::publishXArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color,
-                   const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales scale, double length)
 {
   return publishArrow(convertPose(pose), color, scale, length);
 }
 
-bool RvizVisualTools::publishXArrow(const  geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
-                   const rviz_visual_tools::scales scale, double length)
+bool RvizVisualTools::publishXArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
+                                    const rviz_visual_tools::scales scale, double length)
+{
+  return publishArrow(pose, color, scale, length);
+}
+
+bool RvizVisualTools::publishXArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color,
+                                    const rviz_visual_tools::scales scale, double length)
 {
   return publishArrow(pose, color, scale, length);
 }
 
 bool RvizVisualTools::publishYArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color,
-                   const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales scale, double length)
 {
   Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
-bool RvizVisualTools::publishYArrow(const  geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
-                   const rviz_visual_tools::scales scale, double length)
+bool RvizVisualTools::publishYArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
+                                    const rviz_visual_tools::scales scale, double length)
 {
   Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
+bool RvizVisualTools::publishYArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color,
+                                    const rviz_visual_tools::scales scale, double length)
+{
+  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
+  geometry_msgs::PoseStamped new_pose = pose;
+  new_pose.pose = convertPose(arrow_pose);
+  return publishArrow(new_pose, color, scale, length);
+}
+
 bool RvizVisualTools::publishZArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color,
-                   const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales scale, double length)
 {
   Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
-bool RvizVisualTools::publishZArrow(const  geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
-                   const rviz_visual_tools::scales scale, double length)
+bool RvizVisualTools::publishZArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color,
+                                    const rviz_visual_tools::scales scale, double length)
 {
   Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
+}
+
+bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color,
+                                    const rviz_visual_tools::scales scale, double length)
+{
+  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
+  geometry_msgs::PoseStamped new_pose = pose;
+  new_pose.pose = convertPose(arrow_pose);
+  return publishArrow(new_pose, color, scale, length);
 }
 
 

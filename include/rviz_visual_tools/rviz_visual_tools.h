@@ -387,6 +387,8 @@ public:
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
   bool publishXArrow(const  geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = RED,
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
+  bool publishXArrow(const  geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color = RED,
+                     const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
 
   /**
    * \brief Display an arrow along the y-axis of a pose
@@ -400,6 +402,8 @@ public:
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
   bool publishYArrow(const  geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = GREEN,
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
+  bool publishYArrow(const  geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color = GREEN,
+                     const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
 
   /**
    * \brief Display an arrow along the z-axis of a pose
@@ -412,6 +416,8 @@ public:
   bool publishZArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE,
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
   bool publishZArrow(const  geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE,
+                     const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
+  bool publishZArrow(const  geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors color = BLUE,
                      const rviz_visual_tools::scales scale = REGULAR, double length = 0.1);
 
   /**
