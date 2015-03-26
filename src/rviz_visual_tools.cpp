@@ -32,7 +32,9 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-// Author: Dave Coleman
+/* Author: Dave Coleman <dave@dav.ee>, Andy McEvoy
+   Desc:   Helper functions for displaying basic shape markers in Rviz
+*/
 
 #include <rviz_visual_tools/rviz_visual_tools.h>
 
@@ -1328,6 +1330,18 @@ void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBo
   Eigen::Affine3d pose_eigen;
   generateRandomPose(pose_eigen, pose_bounds);
   pose = convertPose(pose_eigen);
+}
+
+void RvizVisualTools::generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height,
+                                           RandomPoseBounds pose_bounds, RandomCuboidBounds cuboid_bounds)
+{
+  // Size
+  depth = fRand(cuboid_bounds.cuboid_size_min_, cuboid_bounds.cuboid_size_max_);
+  width = fRand(cuboid_bounds.cuboid_size_min_, cuboid_bounds.cuboid_size_max_);
+  height = fRand(cuboid_bounds.cuboid_size_min_, cuboid_bounds.cuboid_size_max_);
+
+  // Orientation 
+  generateRandomPose(cuboid_pose, pose_bounds);
 }
 
 void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds)

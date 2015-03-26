@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2013, University of Colorado, Boulder
+ *  Copyright (c) 2015, University of Colorado, Boulder
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -32,12 +32,9 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/* \author  Dave Coleman
- * \desc    Helper functions for displaying and debugging data in Rviz via published markers
- *
- *          See README.md for developers notes.
- *
- */
+/* Author: Dave Coleman <dave@dav.ee>, Andy McEvoy
+   Desc:   Helper functions for displaying basic shape markers in Rviz
+*/
 
 #ifndef RVIZ_VISUAL_TOOLS__VISUAL_TOOLS_H_
 #define RVIZ_VISUAL_TOOLS__VISUAL_TOOLS_H_
@@ -107,7 +104,7 @@ enum scales { XXSMALL,
               XXLARGE };
 
 /**
- * \brief bounds for generateRandomPose()
+ * \brief Bounds for generateRandomPose()
  */
 struct RandomPoseBounds
 {
@@ -130,6 +127,21 @@ struct RandomPoseBounds
     angle_min_ = angle_min;         angle_max_ = angle_max;
   }
 };
+
+/**
+ * \brief Bounds for generateRandomCuboid()
+ */
+struct RandomCuboidBounds
+{
+  double cuboid_size_min_, cuboid_size_max_;
+
+  RandomCuboidBounds(double cuboid_size_min = 0.02, double cuboid_size_max = 0.15)
+  {
+    cuboid_size_min_ = cuboid_size_min;
+    cuboid_size_max_ = cuboid_size_max;
+  }
+};
+
 
 class RvizVisualTools
 {
@@ -671,6 +683,12 @@ public:
   void generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
   void generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
 
+  /**
+   * \brief Create a random rectangular cuboid of some shape
+   */
+  void generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height, 
+                            RandomPoseBounds pose_bounds = RandomPoseBounds(), RandomCuboidBounds cuboid_bounds = RandomCuboidBounds());
+    
   /**
    * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
    * \param Pose to fill in
