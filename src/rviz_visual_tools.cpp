@@ -1281,6 +1281,14 @@ bool RvizVisualTools::publishTests()
   publishText(pose1, "Test", rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
+  ROS_INFO_STREAM_NAMED("test","Publishing Wireframe Cuboid");
+  eigen::Vector3d min_point, max_point;
+  min_point << -1, -2.5, -3;
+  max_point << 3, 2, 1;
+  generateRandomPose(pose1);
+  publishCuboid(pose1.position, min_point, max_point);
+  ros::Duration(1.0).sleep();
+
   return true;
 }
 
@@ -1381,7 +1389,7 @@ void RvizVisualTools::generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, dou
   width = fRand(cuboid_bounds.cuboid_size_min_, cuboid_bounds.cuboid_size_max_);
   height = fRand(cuboid_bounds.cuboid_size_min_, cuboid_bounds.cuboid_size_max_);
 
-  // Orientation 
+  // Orientation
   generateRandomPose(cuboid_pose, pose_bounds);
 }
 
