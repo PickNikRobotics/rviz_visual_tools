@@ -521,6 +521,8 @@ public:
    * \param size - height=width=depth=size
    * \return true on success
    */
+  bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = BLUE, const double &block_size = 0.1);
+  bool publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = BLUE, const double &block_size = 0.1);
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
@@ -534,9 +536,6 @@ public:
                               const Eigen::Vector3d &min_point,
                               const Eigen::Vector3d &max_point,
                               const rviz_visual_tools::colors &color=BLUE);
-
-  bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
-  bool publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
 
   /**
    * \brief Display a marker of a axis
