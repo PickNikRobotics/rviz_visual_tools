@@ -521,6 +521,22 @@ public:
    * \param size - height=width=depth=size
    * \return true on success
    */
+
+  bool publishWireframeCuboid(const Eigen::Vector3d &position,
+			      const Eigen::Matrix3d &rotation_matrix,
+			      const Eigen::Vector3d &min_point,
+			      const Eigen::Vector3d &max_point,
+			      const rviz_visual_tools::colors color=BLUE)
+  /**
+   * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
+   * \param position - cuboid vertices are translated according to it
+   * \param rotation_matrix - cuboid vertices are rotated according to it
+   * \param min_point - minimum x, y, z coordinates
+   * \param max_point - maximum x, y, z coordinates
+   * \param color - an enum pre-defined name of a color
+   * \return true on success
+   */
+
   bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
   bool publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors color = BLUE, const double &block_size = 0.1);
   
