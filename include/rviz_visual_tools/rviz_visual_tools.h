@@ -523,7 +523,20 @@ public:
    */
   bool publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = BLUE, const double &block_size = 0.1);
   bool publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = BLUE, const double &block_size = 0.1);
-  
+
+  /**
+   * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
+   * \param pose - cuboid vertices are transformed according to it
+   * \param min_point - minimum x, y, z coordinates
+   * \param max_point - maximum x, y, z coordinates
+   * \param color - an enum pre-defined name of a color
+   * \return true on success
+   */
+  bool publishWireframeCuboid(const Eigen::Affine3d &pose,
+                              const Eigen::Vector3d &min_point,
+                              const Eigen::Vector3d &max_point,
+                              const rviz_visual_tools::colors &color=BLUE);
+
   /**
    * \brief Display a marker of a axis
    * \param pose - the location to publish the marker with respect to the base frame
@@ -686,9 +699,9 @@ public:
   /**
    * \brief Create a random rectangular cuboid of some shape
    */
-  void generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height, 
+  void generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height,
                             RandomPoseBounds pose_bounds = RandomPoseBounds(), RandomCuboidBounds cuboid_bounds = RandomCuboidBounds());
-    
+
   /**
    * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
    * \param Pose to fill in
