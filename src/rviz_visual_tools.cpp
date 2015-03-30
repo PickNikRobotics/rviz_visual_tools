@@ -619,12 +619,12 @@ bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &mark
   return true;
 }
 
-bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, const std::string& ns)
+bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
 {
   return publishSphere(convertPose(pose), color, scale, ns);
 }
 
-bool RvizVisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, const std::string& ns)
+bool RvizVisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
 {
   geometry_msgs::Pose pose_msg;
   tf::pointEigenToMsg(point, pose_msg.position);
@@ -638,14 +638,14 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_vis
   return publishSphere(pose_msg, color, scale, ns);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::Point &point, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, const std::string& ns)
+bool RvizVisualTools::publishSphere(const geometry_msgs::Point &point, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
 {
   geometry_msgs::Pose pose_msg;
   pose_msg.position = point;
   return publishSphere(pose_msg, color, scale, ns);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, const std::string& ns)
+bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
 {
   return publishSphere(pose, color, getScale(scale, false, 0.1), ns);
 }
@@ -680,13 +680,13 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_
 }
 
 bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales scale)
+                                   const rviz_visual_tools::scales &scale)
 {
   return publishArrow(convertPose(pose), color, scale);
 }
 
 bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales scale)
+                                   const rviz_visual_tools::scales &scale)
 {
   if(muted_)
     return true;
@@ -704,13 +704,13 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
 }
 
 bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales scale, double length)
+                                   const rviz_visual_tools::scales &scale, double length)
 {
   return publishArrow(convertPose(pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales scale, double length)
+                                   const rviz_visual_tools::scales &scale, double length)
 {
   if(muted_)
     return true;
@@ -729,7 +729,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
 }
 
 bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales scale, double length)
+                                   const rviz_visual_tools::scales &scale, double length)
 {
   if(muted_)
     return true;
@@ -1000,19 +1000,19 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose &pose, const doubl
 }
 
 bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Affine3d &point2,
-                                  const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale)
+                                  const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
 {
   return publishLine( convertPoseToPoint(point1), convertPoseToPoint(point2), color, scale );
 }
 
 bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                                  const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale)
+                                  const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
 {
   return publishLine (RvizVisualTools::convertPoint(point1), RvizVisualTools::convertPoint(point2), color, scale);
 }
 
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                                  const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale)
+                                  const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
 {
   if(muted_)
     return true;
@@ -1032,7 +1032,7 @@ bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geom
   return publishMarker( line_marker_ );
 }
 
-bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, const std::string& ns)
+bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
 {
   if(muted_)
     return true;
@@ -1069,7 +1069,7 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
   return publishMarker( line_list_marker_ );
 }
 
-bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, const std::string& ns)
+bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
 {
   std::vector<geometry_msgs::Point> points;
   geometry_msgs::Point temp;
@@ -1152,7 +1152,7 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
   publishSpheres( points, color, scale_vector, ns);
 }
 
-bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, const std::string& ns)
+bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
 {
   publishSpheres( points, color, getScale(scale, false, 0.25), ns);
 }
@@ -1188,12 +1188,12 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
 
 bool RvizVisualTools::publishText(const Eigen::Affine3d &pose, const std::string &text,
                                   const rviz_visual_tools::colors &color,
-                                  const rviz_visual_tools::scales scale, bool static_id)
+                                  const rviz_visual_tools::scales &scale, bool static_id)
 {
   return publishText(convertPose(pose), text, color, getScale(scale), static_id);
 }
 
-bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales scale, bool static_id)
+bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, bool static_id)
 {
   return publishText(pose, text, color, getScale(scale), static_id);
 }
@@ -1493,39 +1493,39 @@ void RvizVisualTools::print()
 }
 
 bool RvizVisualTools::publishXArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   return publishArrow(convertPose(pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishXArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   return publishArrow(pose, color, scale, length);
 }
 
 bool RvizVisualTools::publishXArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   return publishArrow(pose, color, scale, length);
 }
 
 bool RvizVisualTools::publishYArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishYArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishYArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   geometry_msgs::PoseStamped new_pose = pose;
@@ -1534,21 +1534,21 @@ bool RvizVisualTools::publishYArrow(const geometry_msgs::PoseStamped &pose, cons
 }
 
 bool RvizVisualTools::publishZArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishZArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length)
 {
   Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
   geometry_msgs::PoseStamped new_pose = pose;
