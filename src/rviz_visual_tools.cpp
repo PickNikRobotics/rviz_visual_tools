@@ -1088,11 +1088,10 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
   publishPath(points, color, scale, ns);
 }
 
-  bool RvizVisualTools::publishWireframeCuboid(const Eigen::Vector3d &position,
-                                               const Eigen::Matrix3d &rotation_matrix,
+  bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
                                                const Eigen::Vector3d &min_point,
                                                const Eigen::Vector3d &max_point,
-                                               const RvizVisualTools::colors color=RvizVisualTools::BLUE)
+                                               const RvizVisualTools::colors &color=RvizVisualTools::BLUE)
 {
     // Extract 8 cuboid vertices
     Eigen::Vector3d p1 (min_point[0], min_point[1], min_point[2]);
@@ -1104,14 +1103,14 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
     Eigen::Vector3d p7 (max_point[0], max_point[1], max_point[2]);
     Eigen::Vector3d p8 (max_point[0], max_point[1], min_point[2]);
 
-    p1 = rotation_matrix * p1 + position;
-    p2 = rotation_matrix * p2 + position;
-    p3 = rotation_matrix * p3 + position;
-    p4 = rotation_matrix * p4 + position;
-    p5 = rotation_matrix * p5 + position;
-    p6 = rotation_matrix * p6 + position;
-    p7 = rotation_matrix * p7 + position;
-    p8 = rotation_matrix * p8 + position;
+    p1 = pose * p1;
+    p2 = pose * p2;
+    p3 = pose * p3;
+    p4 = pose * p4;
+    p5 = pose * p5;
+    p6 = pose * p6;
+    p7 = pose * p7;
+    p8 = pose * p8;
 
     RvizVisualTools::publishLine(p1, p2, color);
     RvizVisualTools::publishLine(p1, p4, color);
