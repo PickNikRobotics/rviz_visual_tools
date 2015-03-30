@@ -523,10 +523,10 @@ public:
    */
 
   bool publishWireframeCuboid(const Eigen::Vector3d &position,
-			      const Eigen::Matrix3d &rotation_matrix,
-			      const Eigen::Vector3d &min_point,
-			      const Eigen::Vector3d &max_point,
-			      const rviz_visual_tools::colors color=BLUE)
+                              const Eigen::Matrix3d &rotation_matrix,
+                              const Eigen::Vector3d &min_point,
+                              const Eigen::Vector3d &max_point,
+                              const rviz_visual_tools::colors color=BLUE)
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
    * \param position - cuboid vertices are translated according to it
