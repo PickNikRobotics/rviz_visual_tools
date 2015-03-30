@@ -1091,7 +1091,7 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
   bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
                                                const Eigen::Vector3d &min_point,
                                                const Eigen::Vector3d &max_point,
-                                               const RvizVisualTools::colors &color=RvizVisualTools::BLUE)
+                                               const rviz_visual_tools::colors &color)
 {
     // Extract 8 cuboid vertices
     Eigen::Vector3d p1 (min_point[0], min_point[1], min_point[2]);
@@ -1128,7 +1128,7 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
     return true;
   }
 
-bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors color, const double scale, const std::string& ns)
+bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors &color, const double scale, const std::string& ns)
 {
   std::vector<geometry_msgs::Point> points_msg;
   geometry_msgs::Point temp;
@@ -1282,11 +1282,11 @@ bool RvizVisualTools::publishTests()
   ros::Duration(1.0).sleep();
 
   ROS_INFO_STREAM_NAMED("test","Publishing Wireframe Cuboid");
-  eigen::Vector3d min_point, max_point;
-  min_point << -1, -2.5, -3;
-  max_point << 3, 2, 1;
+  Eigen::Vector3d min_point, max_point;
+  min_point << -0.1, -.25, -.3;
+  max_point << .3, .2, .1;
   generateRandomPose(pose1);
-  publishCuboid(pose1.position, min_point, max_point);
+  publishWireframeCuboid(convertPose(pose1), min_point, max_point);
   ros::Duration(1.0).sleep();
 
   return true;
