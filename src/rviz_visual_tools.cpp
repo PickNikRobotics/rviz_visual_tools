@@ -1089,10 +1089,10 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
 }
 
   bool RvizVisualTools::publishWireframeCuboid(const Eigen::Vector3d &position,
-					       const Eigen::Matrix3d &rotation_matrix,
-					       const Eigen::Vector3d &min_point,
-					       const Eigen::Vector3d &max_point,
-					       const RvizVisualTools::colors color=RvizVisualTools::BLUE)
+                                               const Eigen::Matrix3d &rotation_matrix,
+                                               const Eigen::Vector3d &min_point,
+                                               const Eigen::Vector3d &max_point,
+                                               const RvizVisualTools::colors color=RvizVisualTools::BLUE)
 {
     // Extract 8 cuboid vertices
     Eigen::Vector3d p1 (min_point[0], min_point[1], min_point[2]);
