@@ -1169,6 +1169,18 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
   publishPath(points, color, scale, ns);
 }
 
+  bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
+                                               double depth,
+                                               double width,
+                                               double height,
+                                               const rviz_visual_tools::colors &color)
+  {
+    Eigen::Vector3d min_point, max_point;
+    min_point << -depth/2, -width/2, -height/2;
+    max_point << depth/2, width/2, height/2;
+    return publishWireframeCuboid(pose, min_point, max_point, color);
+  }
+
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
                                              const Eigen::Vector3d &min_point,
                                              const Eigen::Vector3d &max_point,
@@ -1370,6 +1382,12 @@ bool RvizVisualTools::publishTests()
   max_point << .3, .2, .1;
   generateRandomPose(pose1);
   publishWireframeCuboid(convertPose(pose1), min_point, max_point);
+  ros::Duration(1.0).sleep();
+
+  ROS_INFO_STREAM_NAMED("test","Publishing depth/width/height Wireframe Cuboid");
+  double depth = 0.5, width = 0.25, height = 0.125;
+  generateRandomPose(pose1);
+  publishWireframeCuboid(convertPose(pose1), depth, width, height);
   ros::Duration(1.0).sleep();
 
   return true;
