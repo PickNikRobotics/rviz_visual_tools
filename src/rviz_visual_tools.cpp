@@ -1384,6 +1384,13 @@ bool RvizVisualTools::publishTests()
   publishWireframeCuboid(convertPose(pose1), min_point, max_point);
   ros::Duration(1.0).sleep();
 
+  ROS_INFO_STREAM_NAMED("test","Publishing depth/width/height Wireframe Cuboid");
+  Eigen::Vector3d min_point, max_point;
+  double depth = 0.5, width = 0.25, height = 0.125;
+  generateRandomPose(pose1);
+  publishWireframeCuboid(convertPose(pose1), depth, width, height);
+  ros::Duration(1.0).sleep();
+
   return true;
 }
 
