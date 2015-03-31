@@ -352,30 +352,36 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.8;
       result.g = 0.1;
       result.b = 0.1;
+      result.a = 1.0;
       break;
     case GREEN:
       result.r = 0.1;
       result.g = 0.8;
       result.b = 0.1;
+      result.a = 1.0;
       break;
     case GREY:
       result.r = 0.9;
       result.g = 0.9;
       result.b = 0.9;
+      result.a = 1.0;
     case DARK_GREY:
       result.r = 0.6;
       result.g = 0.6;
       result.b = 0.6;
+      result.a = 1.0;
       break;
     case WHITE:
       result.r = 1.0;
       result.g = 1.0;
       result.b = 1.0;
+      result.a = 1.0;
       break;
     case ORANGE:
       result.r = 1.0;
       result.g = 0.5;
       result.b = 0.0;
+      result.a = 1.0;
       break;
     case TRANSLUCENT_LIGHT:
       result.r = 0.1;
@@ -399,46 +405,54 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.0;
       result.g = 0.0;
       result.b = 0.0;
+      result.a = 1.0;
       break;
     case YELLOW:
       result.r = 1.0;
       result.g = 1.0;
       result.b = 0.2;
+      result.a = 1.0;
     case BROWN:
       result.r = 0.597;
       result.g = 0.296;
       result.b = 0.0;
+      result.a = 1.0;
       break;
     case PINK:
       result.r = 1.0;
       result.g = 0.4;
       result.b = 1;
+      result.a = 1.0;
       break;
     case LIME_GREEN:
       result.r = 0.6;
       result.g = 1.0;
       result.b = 0.2;
+      result.a = 1.0;
       break;
     case CLEAR:
-      result.r=1.0;
-      result.g=1.0;
-      result.b=1.0;
-      result.a=0.0;
+      result.r = 1.0;
+      result.g = 1.0;
+      result.b = 1.0;
+      result.a = 0.0;
       break;
     case PURPLE:
       result.r = 0.597;
       result.g = 0.0;
       result.b = 0.597;
+      result.a = 1.0;
       break;
     case CYAN:
-      result.r=0.0;
-      result.g=1.0;
-      result.b=1.0;
+      result.r = 0.0;
+      result.g = 1.0;
+      result.b = 1.0;
+      result.a = 1.0;
       break;
     case MAGENTA:
-      result.r=1.0;
-      result.g=0.0;
-      result.b=1.0;
+      result.r = 1.0;
+      result.g = 0.0;
+      result.b = 1.0;
+      result.a = 1.0;
       break;
     case RAND:
       // Make sure color is not *too* light
@@ -447,6 +461,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
         result.r = fRand(0.0,1.0);
         result.g = fRand(0.0,1.0);
         result.b = fRand(0.0,1.0);
+        result.a = 1.0;
       } while (result.r + result.g + result.b < 1.5); // 3 would be white
       break;
     case DEFAULT:
@@ -456,6 +471,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.1;
       result.g = 0.1;
       result.b = 0.8;
+      result.a = 1.0;
   }
 
   return result;
