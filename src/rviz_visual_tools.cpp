@@ -1170,10 +1170,10 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
 }
 
   bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
-					       double depth,
-					       double width,
-					       double height,
-					       const rviz_visual_tools::colors &color)
+                                               double depth,
+                                               double width,
+                                               double height,
+                                               const rviz_visual_tools::colors &color)
   {
     Eigen::Vector3d min_point, max_point;
     min_point << -depth/2, -width/2, -height/2;

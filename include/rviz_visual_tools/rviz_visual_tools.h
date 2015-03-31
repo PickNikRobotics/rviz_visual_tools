@@ -534,10 +534,10 @@ public:
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Affine3d &pose,
-			      double depth,
-			      double width,
-			      double height,
-			      const rviz_visual_tools::colors &color=BLUE);
+                              double depth,
+                              double width,
+                              double height,
+                              const rviz_visual_tools::colors &color=BLUE);
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
