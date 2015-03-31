@@ -538,6 +538,17 @@ public:
                               const rviz_visual_tools::colors &color=BLUE);
 
   /**
+   * \brief Publish outline of a rectangle
+   * \param pose - cuboid vertices are transformed according to it
+   * \param height
+   * \param width
+   * \param color - an enum pre-defined name of a color
+   * \return true on success
+   */
+  bool publishWireframeRectangle(const Eigen::Affine3d &pose, const double& height, const double& width,
+                                 const rviz_visual_tools::colors &color = BLUE, const rviz_visual_tools::scales &scale = REGULAR);
+
+  /**
    * \brief Display a marker of a axis
    * \param pose - the location to publish the marker with respect to the base frame
    * \param length - geometry of cylinder

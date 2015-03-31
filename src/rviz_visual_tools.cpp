@@ -59,7 +59,6 @@ void RvizVisualTools::initialize()
 {
   floor_to_base_height_ = 0;
   marker_lifetime_ = ros::Duration(0.0); // 0 - unlimited
-  muted_ = false;
   alpha_ = 0.8;
   global_scale_ = 1.0;
   // Cache the reusable markers
@@ -624,9 +623,6 @@ bool RvizVisualTools::triggerBatchPublishAndDisable()
 
 bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &markers)
 {
-  if(muted_)
-    return true;
-
   if (!pub_rviz_markers_) // always check this before publishing
     loadMarkerPub();
 
@@ -677,9 +673,6 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_
 
 bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 scale, const std::string& ns)
 {
-  if(muted_)
-    return true; // this function will only work if we have loaded the publishers
-
   // Set the frame ID and timestamp
   sphere_marker_.header.stamp = ros::Time::now();
 
@@ -769,9 +762,6 @@ bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visua
 bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
                                    const rviz_visual_tools::scales &scale)
 {
-  if(muted_)
-    return true;
-
   // Set the frame ID and timestamp.  See the TF tutorials for information on these.
   arrow_marker_.header.stamp = ros::Time::now();
 
@@ -793,9 +783,6 @@ bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visua
 bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
                                    const rviz_visual_tools::scales &scale, double length)
 {
-  if(muted_)
-    return true;
-
   // Set the frame ID and timestamp.  See the TF tutorials for information on these.
   arrow_marker_.header.stamp = ros::Time::now();
 
@@ -812,9 +799,6 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
 bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
                                    const rviz_visual_tools::scales &scale, double length)
 {
-  if(muted_)
-    return true;
-
   // Set the frame ID and timestamp.  See the TF tutorials for information on these.
   arrow_marker_.header = pose.header;
 
@@ -830,9 +814,6 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const
 
 bool RvizVisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, const double &block_size)
 {
-  if(muted_)
-    return true;
-
   // Set the timestamp
   block_marker_.header.stamp = ros::Time::now();
 
@@ -893,9 +874,6 @@ bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, const rviz_vi
 
 bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, double height, double radius)
 {
-  if(muted_)
-    return true;
-
   // Set the timestamp
   cylinder_marker_.header.stamp = ros::Time::now();
 
@@ -925,9 +903,6 @@ bool RvizVisualTools::publishMesh(const Eigen::Affine3d &pose, const std::string
 bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const rviz_visual_tools::colors &color,
                                   double scale, const std::string &ns, const std::size_t &id)
 {
-  if(muted_)
-    return true;
-
   // Set the timestamp
   mesh_marker_.header.stamp = ros::Time::now();
 
@@ -960,9 +935,6 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose &pose, const std::st
 
 bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const rviz_visual_tools::colors &color, double radius)
 {
-  if(muted_)
-    return true;
-
   // Track which pairs of nodes we've already connected since graph is bi-directional
   typedef std::pair<std::size_t, std::size_t> node_ids;
   std::set<node_ids> added_edges;
@@ -1021,9 +993,6 @@ bool RvizVisualTools::publishCuboid(const Eigen::Vector3d &point1, const Eigen::
 bool RvizVisualTools::publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                                     const rviz_visual_tools::colors &color)
 {
-  if(muted_)
-    return true;
-
   // Set the timestamp
   cuboid_marker_.header.stamp = ros::Time::now();
 
@@ -1095,9 +1064,6 @@ bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Ve
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                                   const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
 {
-  if(muted_)
-    return true;
-
   // Set the timestamp
   line_marker_.header.stamp = ros::Time::now();
 
@@ -1113,11 +1079,9 @@ bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geom
   return publishMarker( line_marker_ );
 }
 
-bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
+bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors &color,
+                                  const rviz_visual_tools::scales &scale, const std::string& ns)
 {
-  if(muted_)
-    return true;
-
   if (path.size() < 2)
   {
     ROS_WARN_STREAM_NAMED("publishPath","Skipping path because " << path.size() << " points passed in.");
@@ -1209,6 +1173,58 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
   return true;
 }
 
+bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, const double& height, const double& width,
+                                                const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
+{
+  // Extract 8 cuboid vertices
+  Eigen::Vector3d p1 (-width/2.0, -height/2.0, 0.0);
+  Eigen::Vector3d p2 (-width/2.0,  height/2.0, 0.0);
+  Eigen::Vector3d p3 (width/2.0,   height/2.0, 0.0);
+  Eigen::Vector3d p4 (width/2.0,  -height/2.0, 0.0);
+
+  p1 = pose * p1;
+  p2 = pose * p2;
+  p3 = pose * p3;
+  p4 = pose * p4;
+
+  // Setup marker
+  line_list_marker_.header.stamp = ros::Time();
+  line_list_marker_.ns = "Wireframe Rectangle";
+
+  // Provide a new id every call to this function
+  line_list_marker_.id++;
+
+  std_msgs::ColorRGBA this_color = getColor( color );
+  line_list_marker_.scale = getScale(scale, false, 0.25);
+  line_list_marker_.color = this_color;
+  line_list_marker_.points.clear();
+  line_list_marker_.colors.clear();
+
+  // Add each point pair to the line message
+  line_list_marker_.points.push_back( convertPoint(p1) );
+  line_list_marker_.points.push_back( convertPoint(p2) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  line_list_marker_.points.push_back( convertPoint(p2) );
+  line_list_marker_.points.push_back( convertPoint(p3) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  line_list_marker_.points.push_back( convertPoint(p3) );
+  line_list_marker_.points.push_back( convertPoint(p4) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  line_list_marker_.points.push_back( convertPoint(p4) );
+  line_list_marker_.points.push_back( convertPoint(p1) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  // Helper for publishing rviz markers
+  return publishMarker( line_list_marker_ );
+}
+
 bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors &color, const double scale, const std::string& ns)
 {
   std::vector<geometry_msgs::Point> points_msg;
@@ -1240,9 +1256,6 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
 
 bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 &scale, const std::string& ns)
 {
-  if(muted_)
-    return true;
-
   spheres_marker_.header.stamp = ros::Time();
   spheres_marker_.ns = ns;
 
@@ -1281,9 +1294,6 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::st
 
 bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::string &text, const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 scale, bool static_id)
 {
-  if(muted_)
-    return true;
-
   // Save the ID if this is a static ID or keep incrementing ID if not static
   double temp_id = text_marker_.id;
   if (static_id)
@@ -1562,7 +1572,6 @@ void RvizVisualTools::print()
   std::cout << "base_frame_: " << base_frame_ << std::endl;
   std::cout << "floor_to_base_height_: " << floor_to_base_height_ << std::endl;
   std::cout << "marker_lifetime_: " << marker_lifetime_.toSec() << std::endl;
-  std::cout << "muted_: " << muted_ << std::endl;
   std::cout << "alpha_: " << alpha_ << std::endl;
 }
 
