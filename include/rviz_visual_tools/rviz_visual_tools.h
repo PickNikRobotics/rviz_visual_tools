@@ -533,11 +533,11 @@ public:
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
-					       double depth,
-					       double width,
-					       double height,
-					       const rviz_visual_tools::colors &color)
+  bool publishWireframeCuboid(const Eigen::Affine3d &pose,
+			      double depth,
+			      double width,
+			      double height,
+			      const rviz_visual_tools::colors &color=BLUE);
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
