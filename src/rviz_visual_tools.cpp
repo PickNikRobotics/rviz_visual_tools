@@ -1212,12 +1212,12 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
 bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors &color, const double scale, const std::string& ns)
 {
   std::vector<geometry_msgs::Point> points_msg;
-  geometry_msgs::Point temp;
+  //geometry_msgs::Point temp;
 
   for (std::size_t i = 0; i < points.size(); ++i)
   {
-    tf::pointEigenToMsg(points[i], temp);
-    points_msg.push_back(temp);
+    //tf::pointEigenToMsg(points[i], temp);
+    points_msg.push_back(convertPoint(points[i]));
   }
 
 
@@ -1336,6 +1336,7 @@ bool RvizVisualTools::publishTests()
   ros::Duration(1.0).sleep();
 
   ROS_INFO_STREAM_NAMED("test","Publishing Rectangular Cuboid");
+  // TODO: use generateRandomCuboid()
   generateRandomPose(pose1);
   generateRandomPose(pose2);
   publishCuboid(pose1.position, pose2.position, rviz_visual_tools::RAND);
@@ -1364,6 +1365,7 @@ bool RvizVisualTools::publishTests()
 
   ROS_INFO_STREAM_NAMED("test","Publishing Wireframe Cuboid");
   Eigen::Vector3d min_point, max_point;
+  // TODO: use generateRandomCuboid()
   min_point << -0.1, -.25, -.3;
   max_point << .3, .2, .1;
   generateRandomPose(pose1);
@@ -1375,91 +1377,82 @@ bool RvizVisualTools::publishTests()
 
 geometry_msgs::Pose RvizVisualTools::convertPose(const Eigen::Affine3d &pose)
 {
-  geometry_msgs::Pose pose_msg;
-  tf::poseEigenToMsg(pose, pose_msg);
-  return pose_msg;
+  tf::poseEigenToMsg(pose, shared_pose_msg_);
+  return shared_pose_msg_;
 }
 
 Eigen::Affine3d RvizVisualTools::convertPose(const geometry_msgs::Pose &pose)
 {
-  Eigen::Affine3d pose_eigen;
-  tf::poseMsgToEigen(pose, pose_eigen);
-  return pose_eigen;
+  tf::poseMsgToEigen(pose, shared_pose_eigen_);
+  return shared_pose_eigen_;
 }
 
 Eigen::Affine3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point32 &point)
 {
-  Eigen::Affine3d pose_eigen = Eigen::Affine3d::Identity();
-  pose_eigen.translation().x() = point.x;
-  pose_eigen.translation().y() = point.y;
-  pose_eigen.translation().z() = point.z;
-  return pose_eigen;
+  shared_pose_eigen_ = Eigen::Affine3d::Identity();
+  shared_pose_eigen_.translation().x() = point.x;
+  shared_pose_eigen_.translation().y() = point.y;
+  shared_pose_eigen_.translation().z() = point.z;
+  return shared_pose_eigen_;
 }
 
 geometry_msgs::Pose RvizVisualTools::convertPointToPose(const geometry_msgs::Point &point)
 {
-  geometry_msgs::Pose pose_msg;
+  geometry_msgs::Pose pose_msg; // TODO, how to use shared_pose_msg_ but reset the orientation?
   pose_msg.position = point;
   return pose_msg;
 }
 
 geometry_msgs::Point RvizVisualTools::convertPoseToPoint(const Eigen::Affine3d &pose)
 {
-  geometry_msgs::Pose pose_msg;
-  tf::poseEigenToMsg(pose, pose_msg);
-  return pose_msg.position;
+  tf::poseEigenToMsg(pose, shared_pose_msg_);
+  return shared_pose_msg_.position;
 }
 
 Eigen::Vector3d RvizVisualTools::convertPoint(const geometry_msgs::Point &point)
 {
-  Eigen::Vector3d point_eigen;
-  point_eigen[0] = point.x;
-  point_eigen[1] = point.y;
-  point_eigen[2] = point.z;
-  return point_eigen;
+  shared_point_eigen_[0] = point.x;
+  shared_point_eigen_[1] = point.y;
+  shared_point_eigen_[2] = point.z;
+  return shared_point_eigen_;
 }
 
 Eigen::Vector3d RvizVisualTools::convertPoint32(const geometry_msgs::Point32 &point)
 {
-  Eigen::Vector3d point_eigen;
-  point_eigen[0] = point.x;
-  point_eigen[1] = point.y;
-  point_eigen[2] = point.z;
-  return point_eigen;
+  shared_point_eigen_[0] = point.x;
+  shared_point_eigen_[1] = point.y;
+  shared_point_eigen_[2] = point.z;
+  return shared_point_eigen_;
 }
 
 geometry_msgs::Point32 RvizVisualTools::convertPoint32(const Eigen::Vector3d &point)
 {
-  geometry_msgs::Point32 point_msg;
-  point_msg.x = point[0];
-  point_msg.y = point[1];
-  point_msg.z = point[2];
-  return point_msg;
+  shared_point32_msg_.x = point[0];
+  shared_point32_msg_.y = point[1];
+  shared_point32_msg_.z = point[2];
+  return shared_point32_msg_;
 }
 
 geometry_msgs::Point RvizVisualTools::convertPoint(const geometry_msgs::Vector3 &point)
 {
-  geometry_msgs::Point point_msg;
-  point_msg.x = point.x;
-  point_msg.y = point.y;
-  point_msg.z = point.z;
-  return point_msg;
+  shared_point_msg_.x = point.x;
+  shared_point_msg_.y = point.y;
+  shared_point_msg_.z = point.z;
+  return shared_point_msg_;
 }
 
 geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 {
-  geometry_msgs::Point point_msg;
-  point_msg.x = point.x();
-  point_msg.y = point.y();
-  point_msg.z = point.z();
-  return point_msg;
+  shared_point_msg_.x = point.x();
+  shared_point_msg_.y = point.y();
+  shared_point_msg_.z = point.z();
+  return shared_point_msg_;
 }
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
-  Eigen::Affine3d pose_eigen;
-  generateRandomPose(pose_eigen, pose_bounds);
-  pose = convertPose(pose_eigen);
+  generateRandomPose(shared_pose_eigen_, pose_bounds);
+  pose = convertPose(shared_pose_eigen_);
 }
 
 void RvizVisualTools::generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height,

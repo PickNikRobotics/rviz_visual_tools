@@ -614,7 +614,7 @@ public:
    * \param pose
    * \return converted pose
    */
-  static geometry_msgs::Pose convertPose(const Eigen::Affine3d &pose);
+  geometry_msgs::Pose convertPose(const Eigen::Affine3d &pose);
 
   /**
    * \brief Convert a geometry_msg pose to an Eigen pose
@@ -622,7 +622,7 @@ public:
    * \param pose
    * \return converted pose
    */
-  static Eigen::Affine3d convertPose(const geometry_msgs::Pose &pose);
+  Eigen::Affine3d convertPose(const geometry_msgs::Pose &pose);
 
   /**
    * \brief Convert a geometry_msg point (32bit) to an Eigen pose
@@ -630,7 +630,7 @@ public:
    * \param pose
    * \return converted point with default rotation matrix
    */
-  static Eigen::Affine3d convertPoint32ToPose(const geometry_msgs::Point32 &point);
+  Eigen::Affine3d convertPoint32ToPose(const geometry_msgs::Point32 &point);
 
   /**
    * \brief
@@ -638,7 +638,7 @@ public:
    * \param input - description
    * \return
    */
-  static geometry_msgs::Pose convertPointToPose(const geometry_msgs::Point &point);
+  geometry_msgs::Pose convertPointToPose(const geometry_msgs::Point &point);
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg point
@@ -646,7 +646,7 @@ public:
    * \param pose
    * \return converted point with orientation discarded
    */
-  static geometry_msgs::Point convertPoseToPoint(const Eigen::Affine3d &pose);
+  geometry_msgs::Point convertPoseToPoint(const Eigen::Affine3d &pose);
 
   /**
    * \brief Convert a geometry_msg point to an Eigen point
@@ -654,7 +654,7 @@ public:
    * \param point
    * \return converted pose
    */
-  static Eigen::Vector3d convertPoint(const geometry_msgs::Point &point);
+  Eigen::Vector3d convertPoint(const geometry_msgs::Point &point);
 
   /**
    * \brief Convert a geometry_msg point to an Eigen point
@@ -662,7 +662,7 @@ public:
    * \param point
    * \return converted pose
    */
-  static Eigen::Vector3d convertPoint32(const geometry_msgs::Point32 &point);
+  Eigen::Vector3d convertPoint32(const geometry_msgs::Point32 &point);
 
   /**
    * \brief Convert an Eigen point to a 32 bit geometry_msg point
@@ -670,7 +670,7 @@ public:
    * \param point
    * \return converted pose
    */
-  static geometry_msgs::Point32 convertPoint32(const Eigen::Vector3d &point);
+  geometry_msgs::Point32 convertPoint32(const Eigen::Vector3d &point);
 
   /**
    * \brief Convert a Vector3 to a geometry_msg Point
@@ -678,7 +678,7 @@ public:
    * \param point
    * \return converted point
    */
-  static geometry_msgs::Point convertPoint(const geometry_msgs::Vector3 &point);
+  geometry_msgs::Point convertPoint(const geometry_msgs::Vector3 &point);
 
   /**
    * \brief Convert a Eigen point to a geometry_msg Point
@@ -686,7 +686,7 @@ public:
    * \param point
    * \return converted point
    */
-  static geometry_msgs::Point convertPoint(const Eigen::Vector3d &point);
+  geometry_msgs::Point convertPoint(const Eigen::Vector3d &point);
 
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_
@@ -764,6 +764,14 @@ protected:
   visualization_msgs::Marker line_list_marker_;
   visualization_msgs::Marker spheres_marker_;
   visualization_msgs::Marker reset_marker_;
+
+  // Cached geometry variables used for conversion
+  geometry_msgs::Pose shared_pose_msg_;
+  geometry_msgs::Point shared_point_msg_;
+    geometry_msgs::Point32 shared_point32_msg_;
+  Eigen::Affine3d shared_pose_eigen_;
+  Eigen::Vector3d shared_point_eigen_;
+
 
 }; // class
 
