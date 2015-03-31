@@ -1088,45 +1088,45 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
   publishPath(points, color, scale, ns);
 }
 
-  bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
-                                               const Eigen::Vector3d &min_point,
-                                               const Eigen::Vector3d &max_point,
-                                               const rviz_visual_tools::colors &color)
+bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
+                                             const Eigen::Vector3d &min_point,
+                                             const Eigen::Vector3d &max_point,
+                                             const rviz_visual_tools::colors &color)
 {
-    // Extract 8 cuboid vertices
-    Eigen::Vector3d p1 (min_point[0], min_point[1], min_point[2]);
-    Eigen::Vector3d p2 (min_point[0], min_point[1], max_point[2]);
-    Eigen::Vector3d p3 (max_point[0], min_point[1], max_point[2]);
-    Eigen::Vector3d p4 (max_point[0], min_point[1], min_point[2]);
-    Eigen::Vector3d p5 (min_point[0], max_point[1], min_point[2]);
-    Eigen::Vector3d p6 (min_point[0], max_point[1], max_point[2]);
-    Eigen::Vector3d p7 (max_point[0], max_point[1], max_point[2]);
-    Eigen::Vector3d p8 (max_point[0], max_point[1], min_point[2]);
+  // Extract 8 cuboid vertices
+  Eigen::Vector3d p1 (min_point[0], min_point[1], min_point[2]);
+  Eigen::Vector3d p2 (min_point[0], min_point[1], max_point[2]);
+  Eigen::Vector3d p3 (max_point[0], min_point[1], max_point[2]);
+  Eigen::Vector3d p4 (max_point[0], min_point[1], min_point[2]);
+  Eigen::Vector3d p5 (min_point[0], max_point[1], min_point[2]);
+  Eigen::Vector3d p6 (min_point[0], max_point[1], max_point[2]);
+  Eigen::Vector3d p7 (max_point[0], max_point[1], max_point[2]);
+  Eigen::Vector3d p8 (max_point[0], max_point[1], min_point[2]);
 
-    p1 = pose * p1;
-    p2 = pose * p2;
-    p3 = pose * p3;
-    p4 = pose * p4;
-    p5 = pose * p5;
-    p6 = pose * p6;
-    p7 = pose * p7;
-    p8 = pose * p8;
+  p1 = pose * p1;
+  p2 = pose * p2;
+  p3 = pose * p3;
+  p4 = pose * p4;
+  p5 = pose * p5;
+  p6 = pose * p6;
+  p7 = pose * p7;
+  p8 = pose * p8;
 
-    RvizVisualTools::publishLine(p1, p2, color);
-    RvizVisualTools::publishLine(p1, p4, color);
-    RvizVisualTools::publishLine(p1, p5, color);
-    RvizVisualTools::publishLine(p5, p6, color);
-    RvizVisualTools::publishLine(p5, p8, color);
-    RvizVisualTools::publishLine(p2, p6, color);
-    RvizVisualTools::publishLine(p6, p7, color);
-    RvizVisualTools::publishLine(p7, p8, color);
-    RvizVisualTools::publishLine(p2, p3, color);
-    RvizVisualTools::publishLine(p4, p8, color);
-    RvizVisualTools::publishLine(p3, p4, color);
-    RvizVisualTools::publishLine(p3, p7, color);
+  RvizVisualTools::publishLine(p1, p2, color);
+  RvizVisualTools::publishLine(p1, p4, color);
+  RvizVisualTools::publishLine(p1, p5, color);
+  RvizVisualTools::publishLine(p5, p6, color);
+  RvizVisualTools::publishLine(p5, p8, color);
+  RvizVisualTools::publishLine(p2, p6, color);
+  RvizVisualTools::publishLine(p6, p7, color);
+  RvizVisualTools::publishLine(p7, p8, color);
+  RvizVisualTools::publishLine(p2, p3, color);
+  RvizVisualTools::publishLine(p4, p8, color);
+  RvizVisualTools::publishLine(p3, p4, color);
+  RvizVisualTools::publishLine(p3, p7, color);
 
-    return true;
-  }
+  return true;
+}
 
 bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors &color, const double scale, const std::string& ns)
 {
