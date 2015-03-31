@@ -1169,6 +1169,18 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
   publishPath(points, color, scale, ns);
 }
 
+  bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
+					       double depth,
+					       double width,
+					       double height,
+					       const rviz_visual_tools::colors &color)
+  {
+    Eigen::Vector3d min_point, max_point;
+    min_point << -depth/2, -width/2, -height/2;
+    max_point << depth/2, width/2, height/2;
+    return publishWireframeCuboid(pose, min_point, max_point, color);
+  }
+
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose,
                                              const Eigen::Vector3d &min_point,
                                              const Eigen::Vector3d &max_point,
