@@ -374,24 +374,6 @@ public:
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
-   * \return true on success
-   */
-  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = BLUE,
-                    const rviz_visual_tools::scales &scale = REGULAR);
-  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = BLUE,
-                    const rviz_visual_tools::scales &scale = REGULAR);
-  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                    const rviz_visual_tools::scales &scale, double length);
-  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                    const rviz_visual_tools::scales &scale, double length);
-  bool publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                    const rviz_visual_tools::scales &scale, double length);
-
-  /**
-   * \brief Display an arrow along the x-axis of a pose
-   * \param pose - the location to publish the marker with respect to the base frame
-   * \param color - an enum pre-defined name of a color
-   * \param scale - an enum pre-defined name of a size
    * \param length - the length of the arrow tail
    * \return true on success
    */
@@ -431,6 +413,24 @@ public:
                      const rviz_visual_tools::scales &scale = REGULAR, double length = 0.1);
   bool publishZArrow(const  geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color = BLUE,
                      const rviz_visual_tools::scales &scale = REGULAR, double length = 0.1);
+
+  /**
+   * \brief Display an arrow along the x-axis of a pose
+   * \param pose - the location to publish the marker with respect to the base frame
+   * \param color - an enum pre-defined name of a color
+   * \param scale - an enum pre-defined name of a size
+   * \return true on success
+   */
+  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = BLUE,
+                    const rviz_visual_tools::scales &scale = REGULAR);
+  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = BLUE,
+                    const rviz_visual_tools::scales &scale = REGULAR);
+  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
+                    const rviz_visual_tools::scales &scale, double length);
+  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
+                    const rviz_visual_tools::scales &scale, double length);
+  bool publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
+                    const rviz_visual_tools::scales &scale, double length);
 
   /**
    * \brief Display a rectangular cuboid
