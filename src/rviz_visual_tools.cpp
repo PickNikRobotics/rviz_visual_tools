@@ -820,7 +820,7 @@ bool RvizVisualTools::publishAxisWithLabel(const Eigen::Affine3d &pose, const st
                                            const rviz_visual_tools::scales &scale)
 {
   publishText(pose, label, rviz_visual_tools::BLACK, rviz_visual_tools::SMALL, false);  // TODO: change size based on passed in scale
-  publishAxis(pose, 0.1, 0.1, label);
+  publishAxis(pose, 0.1, 0.01, label);
   return true;
 }
 

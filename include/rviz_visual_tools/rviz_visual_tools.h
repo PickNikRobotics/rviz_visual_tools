@@ -571,9 +571,9 @@ public:
    * \return true on success
    */
   bool publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = BLUE, double height = 0.1,
-                       double radius = 0.1, const std::string& ns = "Cylinder");
+                       double radius = 0.01, const std::string& ns = "Cylinder");
   bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = BLUE, double height = 0.1,
-                       double radius = 0.1, const std::string& ns = "Cylinder");
+                       double radius = 0.01, const std::string& ns = "Cylinder");
 
   /**
    * \brief Display a mesh from file
