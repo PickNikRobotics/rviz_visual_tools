@@ -183,8 +183,6 @@ bool RvizVisualTools::loadRvizMarkers()
 
   // Load Cylinder ----------------------------------------------------
   cylinder_marker_.header.frame_id = base_frame_;
-  // Set the namespace and id for this marker.  This serves to create a unique ID
-  cylinder_marker_.ns = "Cylinder";
   // Set the marker action.  Options are ADD and DELETE
   cylinder_marker_.action = visualization_msgs::Marker::ADD;
   // Set the marker type.
@@ -754,27 +752,6 @@ bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose, cons
 }
 
 bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales &scale)
-{
-  return publishArrow(convertPose(pose), color, scale);
-}
-
-bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales &scale)
-{
-  // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-  arrow_marker_.header.stamp = ros::Time::now();
-
-  arrow_marker_.id++;
-  arrow_marker_.pose = pose;
-  arrow_marker_.color = getColor(color);
-  arrow_marker_.scale = getScale(scale, true);
-
-  // Helper for publishing rviz markers
-  return publishMarker( arrow_marker_ );
-}
-
-bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
                                    const rviz_visual_tools::scales &scale, double length)
 {
   return publishArrow(convertPose(pose), color, scale, length);
@@ -783,7 +760,7 @@ bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visua
 bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
                                    const rviz_visual_tools::scales &scale, double length)
 {
-  // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+  // Set the frame ID and timestamp.  
   arrow_marker_.header.stamp = ros::Time::now();
 
   arrow_marker_.id++;
@@ -799,7 +776,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
 bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
                                    const rviz_visual_tools::scales &scale, double length)
 {
-  // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+  // Set the frame ID and timestamp.  
   arrow_marker_.header = pose.header;
 
   arrow_marker_.id++;
@@ -839,44 +816,66 @@ bool RvizVisualTools::publishBlock(const Eigen::Affine3d &pose, const rviz_visua
   return publishBlock(convertPose(pose), color, block_size);
 }
 
-bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length, double radius)
+bool RvizVisualTools::publishAxisWithLabel(const Eigen::Affine3d &pose, const std::string& label, 
+                                           const rviz_visual_tools::scales &scale)
 {
-  return publishAxis(convertPose(pose), length, radius);
+  publishText(pose, label, rviz_visual_tools::BLACK, rviz_visual_tools::SMALL, false);  // TODO: change size based on passed in scale
+  publishAxis(pose, 0.1, 0.1, label);
+  return true;
 }
 
-bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, double radius)
+bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length, double radius, const std::string& ns)
 {
+  return publishAxis(convertPose(pose), length, radius, ns);
+}
+
+bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, double radius, const std::string& ns)
+{
+  // Batch publish, unless it is already enabled by user
+  bool manual_batch_publish = false;
+  if (!batch_publishing_enabled_)
+  {
+    enableBatchPublishing(true);
+    manual_batch_publish = true;
+  }
+    
   // Publish x axis
   Eigen::Affine3d x_pose = Eigen::Translation3d(length / 2.0, 0, 0) *
     Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
   x_pose = pose * x_pose;
-  publishCylinder(x_pose, rviz_visual_tools::RED, length, radius);
+  publishCylinder(x_pose, rviz_visual_tools::RED, length, radius, ns);
 
   // Publish y axis
   Eigen::Affine3d y_pose = Eigen::Translation3d(0, length / 2.0, 0) *
     Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
   y_pose = pose * y_pose;
-  publishCylinder(y_pose, rviz_visual_tools::GREEN, length, radius);
+  publishCylinder(y_pose, rviz_visual_tools::GREEN, length, radius, ns);
 
   // Publish z axis
   Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) *
     Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
   z_pose = pose * z_pose;
-  publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius);
+  publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius, ns);
+
+  // Batch publish
+  if (manual_batch_publish)
+    triggerBatchPublishAndDisable();
 
   return true;
 }
 
-bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, double height, double radius)
+bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, double height, 
+                                      double radius, const std::string& ns)
 {
-  return publishCylinder(convertPose(pose), color, height, radius);
+  return publishCylinder(convertPose(pose), color, height, radius, ns);
 }
 
-bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, double height, double radius)
+bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, double height, 
+                                      double radius, const std::string& ns)
 {
   // Set the timestamp
   cylinder_marker_.header.stamp = ros::Time::now();
-
+  cylinder_marker_.ns = ns;
   cylinder_marker_.id++;
 
   // Set the pose

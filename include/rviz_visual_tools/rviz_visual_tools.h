@@ -197,23 +197,6 @@ public:
   bool waitForSubscriber(const ros::Publisher &pub, const double &wait_time = 1.0);
 
   /**
-   * \brief Return if we are in verbose mode
-   */
-  bool isMuted()
-  {
-    return muted_;
-  }
-
-  /**
-   * \brief Set this class to not actually publish anything to Rviz.
-   * \param muted true if verbose
-   */
-  void setMuted(bool muted)
-  {
-    muted_ = muted;
-  }
-
-  /**
    * \brief Allows an offset between base link and floor where objects are built. Default is zero
    * \param floor_to_base_height - the offset
    */
@@ -419,18 +402,15 @@ public:
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
+   * \param length - how long the arrow tail should be
    * \return true on success
    */
   bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = BLUE,
-                    const rviz_visual_tools::scales &scale = REGULAR);
+                    const rviz_visual_tools::scales &scale = REGULAR, double length = 0.1);
   bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = BLUE,
-                    const rviz_visual_tools::scales &scale = REGULAR);
-  bool publishArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                    const rviz_visual_tools::scales &scale, double length);
-  bool publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                    const rviz_visual_tools::scales &scale, double length);
-  bool publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                    const rviz_visual_tools::scales &scale, double length);
+                    const rviz_visual_tools::scales &scale = REGULAR, double length = 0.1);
+  bool publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color = BLUE,
+                    const rviz_visual_tools::scales &scale = REGULAR, double length = 0.1);
 
   /**
    * \brief Display a rectangular cuboid
@@ -564,14 +544,23 @@ public:
                                  const rviz_visual_tools::colors &color = BLUE, const rviz_visual_tools::scales &scale = REGULAR);
 
   /**
+   * \brief Display a marker of a axis with a text label describing it
+   * \param pose - the location to publish the marker with respect to the base frame
+   * \param label - name of axis/coordinate frame
+   * \param scale - size of axis
+   * \return true on success
+   */
+  bool publishAxisWithLabel(const Eigen::Affine3d &pose, const std::string& label, const rviz_visual_tools::scales &scale = REGULAR);
+
+  /**
    * \brief Display a marker of a axis
    * \param pose - the location to publish the marker with respect to the base frame
    * \param length - geometry of cylinder
    * \param radius - geometry of cylinder
    * \return true on success
    */
-  bool publishAxis(const geometry_msgs::Pose &pose, double length = 0.1, double radius = 0.01);
-  bool publishAxis(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01);
+  bool publishAxis(const geometry_msgs::Pose &pose, double length = 0.1, double radius = 0.01, const std::string& ns = "Axis");
+  bool publishAxis(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01, const std::string& ns = "Axis");
 
   /**
    * \brief Display a marker of a cylinder
@@ -582,9 +571,9 @@ public:
    * \return true on success
    */
   bool publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = BLUE, double height = 0.1,
-                       double radius = 0.1);
+                       double radius = 0.1, const std::string& ns = "Cylinder");
   bool publishCylinder(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = BLUE, double height = 0.1,
-                       double radius = 0.1);
+                       double radius = 0.1, const std::string& ns = "Cylinder");
 
   /**
    * \brief Display a mesh from file
@@ -771,7 +760,6 @@ protected:
 
   // Settings
   bool batch_publishing_enabled_;
-  bool muted_; // Whether to actually publish to rviz or not
   double alpha_; // opacity of all markers
   double global_scale_; // allow all markers to be increased by a constanct factor
 
@@ -794,7 +782,7 @@ protected:
   // Cached geometry variables used for conversion
   geometry_msgs::Pose shared_pose_msg_;
   geometry_msgs::Point shared_point_msg_;
-    geometry_msgs::Point32 shared_point32_msg_;
+  geometry_msgs::Point32 shared_point32_msg_;
   Eigen::Affine3d shared_pose_eigen_;
   Eigen::Vector3d shared_point_eigen_;
 
