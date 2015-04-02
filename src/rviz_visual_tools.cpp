@@ -1592,8 +1592,6 @@ void RvizVisualTools::print()
   std::cout << "alpha_: " << alpha_ << std::endl;
 }
 
-<<<<<<< Updated upstream
-=======
 bool RvizVisualTools::publishXArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
                                     const rviz_visual_tools::scales &scale, double length)
 {
@@ -1657,8 +1655,5 @@ bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose, cons
   new_pose.pose = convertPose(arrow_pose);
   return publishArrow(new_pose, color, scale, length);
 }
-
-
->>>>>>> Stashed changes
 
 } // namespace
