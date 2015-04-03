@@ -731,21 +731,21 @@ bool RvizVisualTools::publishYArrow(const geometry_msgs::PoseStamped &pose, cons
 bool RvizVisualTools::publishZArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
                                     const rviz_visual_tools::scales &scale, double length)
 {
-  Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
+  Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishZArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
                                     const rviz_visual_tools::scales &scale, double length)
 {
-  Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
+  Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
                                     const rviz_visual_tools::scales &scale, double length)
 {
-  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitY());
+  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   geometry_msgs::PoseStamped new_pose = pose;
   new_pose.pose = convertPose(arrow_pose);
   return publishArrow(new_pose, color, scale, length);
@@ -1590,70 +1590,6 @@ void RvizVisualTools::print()
   std::cout << "floor_to_base_height_: " << floor_to_base_height_ << std::endl;
   std::cout << "marker_lifetime_: " << marker_lifetime_.toSec() << std::endl;
   std::cout << "alpha_: " << alpha_ << std::endl;
-}
-
-bool RvizVisualTools::publishXArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  return publishArrow(convertPose(pose), color, scale, length);
-}
-
-bool RvizVisualTools::publishXArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  return publishArrow(pose, color, scale, length);
-}
-
-bool RvizVisualTools::publishXArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  return publishArrow(pose, color, scale, length);
-}
-
-bool RvizVisualTools::publishYArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
-  return publishArrow(convertPose(arrow_pose), color, scale, length);
-}
-
-bool RvizVisualTools::publishYArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
-  return publishArrow(convertPose(arrow_pose), color, scale, length);
-}
-
-bool RvizVisualTools::publishYArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
-  geometry_msgs::PoseStamped new_pose = pose;
-  new_pose.pose = convertPose(arrow_pose);
-  return publishArrow(new_pose, color, scale, length);
-}
-
-bool RvizVisualTools::publishZArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
-  return publishArrow(convertPose(arrow_pose), color, scale, length);
-}
-
-bool RvizVisualTools::publishZArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
-  return publishArrow(convertPose(arrow_pose), color, scale, length);
-}
-
-bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
-{
-  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
-  geometry_msgs::PoseStamped new_pose = pose;
-  new_pose.pose = convertPose(arrow_pose);
-  return publishArrow(new_pose, color, scale, length);
 }
 
 } // namespace
