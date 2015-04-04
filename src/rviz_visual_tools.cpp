@@ -1236,6 +1236,60 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, con
   return publishMarker( line_list_marker_ );
 }
 
+bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose,
+                                                const Eigen::Vector3d &p1_in, const Eigen::Vector3d &p2_in,
+                                                const Eigen::Vector3d &p3_in, const Eigen::Vector3d &p4_in,
+                                                const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
+{
+  Eigen::Vector3d p1;
+  Eigen::Vector3d p2;
+  Eigen::Vector3d p3;
+  Eigen::Vector3d p4;
+
+  // Transform to pose
+  p1 = pose * p1_in;
+  p2 = pose * p2_in;
+  p3 = pose * p3_in;
+  p4 = pose * p4_in;
+
+  // Setup marker
+  line_list_marker_.header.stamp = ros::Time();
+  line_list_marker_.ns = "Wireframe Rectangle";
+
+  // Provide a new id every call to this function
+  line_list_marker_.id++;
+
+  std_msgs::ColorRGBA this_color = getColor( color );
+  line_list_marker_.scale = getScale(scale, false, 0.25);
+  line_list_marker_.color = this_color;
+  line_list_marker_.points.clear();
+  line_list_marker_.colors.clear();
+
+  // Add each point pair to the line message
+  line_list_marker_.points.push_back( convertPoint(p1) );
+  line_list_marker_.points.push_back( convertPoint(p2) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  line_list_marker_.points.push_back( convertPoint(p2) );
+  line_list_marker_.points.push_back( convertPoint(p3) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  line_list_marker_.points.push_back( convertPoint(p3) );
+  line_list_marker_.points.push_back( convertPoint(p4) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  line_list_marker_.points.push_back( convertPoint(p4) );
+  line_list_marker_.points.push_back( convertPoint(p1) );
+  line_list_marker_.colors.push_back( this_color );
+  line_list_marker_.colors.push_back( this_color );
+
+  // Helper for publishing rviz markers
+  return publishMarker( line_list_marker_ );
+}
+
 bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const rviz_visual_tools::colors &color, const double scale, const std::string& ns)
 {
   std::vector<geometry_msgs::Point> points_msg;

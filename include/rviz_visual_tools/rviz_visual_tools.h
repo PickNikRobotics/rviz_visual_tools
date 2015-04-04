@@ -542,7 +542,10 @@ public:
    */
   bool publishWireframeRectangle(const Eigen::Affine3d &pose, const double& height, const double& width,
                                  const rviz_visual_tools::colors &color = BLUE, const rviz_visual_tools::scales &scale = REGULAR);
-
+  bool publishWireframeRectangle(const Eigen::Affine3d &pose,
+                                 const Eigen::Vector3d &p1, const Eigen::Vector3d &p2,
+                                 const Eigen::Vector3d &p3, const Eigen::Vector3d &p4,
+                                 const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale);
   /**
    * \brief Display a marker of a axis with a text label describing it
    * \param pose - the location to publish the marker with respect to the base frame
