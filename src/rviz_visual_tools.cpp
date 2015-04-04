@@ -816,7 +816,7 @@ bool RvizVisualTools::publishBlock(const Eigen::Affine3d &pose, const rviz_visua
   return publishBlock(convertPose(pose), color, block_size);
 }
 
-bool RvizVisualTools::publishAxisWithLabel(const Eigen::Affine3d &pose, const std::string& label, 
+bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string& label, 
                                            const rviz_visual_tools::scales &scale)
 {
   publishText(pose, label, rviz_visual_tools::BLACK, rviz_visual_tools::SMALL, false);  // TODO: change size based on passed in scale
