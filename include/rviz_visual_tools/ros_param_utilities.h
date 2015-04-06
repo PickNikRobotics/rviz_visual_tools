@@ -42,6 +42,9 @@
 // ROS
 #include <ros/ros.h>
 
+// Eigen
+#include <Eigen/Geometry>
+
 namespace rviz_visual_tools
 {
 
@@ -49,61 +52,39 @@ namespace rviz_visual_tools
 // Helper Functions
 // -------------------------------------------------------------------------------------------------
 
-bool getBoolParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, bool &value)
-{
-  // Load a param
-  if (!nh.hasParam(param_name))
-  {
-    ROS_ERROR_STREAM_NAMED(parent_name, "Missing parameter '" << param_name << "'. Searching in namespace: " << nh.getNamespace());
-    return false;
-  }
-  nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name, "Loaded parameter '" << param_name << "' with value " << value);
+/**
+ * \brief Get a paremeter from the ROS param server. Note that does not provide for default values
+ * \param parent_name - the name of the class that is calling this function, used for filtering out logging output by namespacing it
+ * \param nh - a ROS node handle
+ * \param param_name - name of parameter to get
+ * \param value - resulting loaded values, or no change if error (function returns false)
+ * \return true on success
+ */
+bool getBoolParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, bool &value);
 
-  return true;
-}
+bool getDoubleParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+                        double &value);
 
-bool getDoubleParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, double &value)
-{
-  // Load a param
-  if (!nh.hasParam(param_name))
-  {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " << nh.getNamespace());
-    return false;
-  }
-  nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
+bool getDoubleParameters(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+                         std::vector<double> &values);
 
-  return true;
-}
+bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, int &value);
 
-bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, int &value)
-{
-  // Load a param
-  if (!nh.hasParam(param_name))
-  {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " << nh.getNamespace());
-    return false;
-  }
-  nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
+bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+                        std::string &value);
 
-  return true;
-}
+/**
+ * \brief Output a string of doubles from an array for debugging
+ * \param doubles
+ * \return string of numbers separated by commas
+ */
+std::string getDebugArrayString(std::vector<double> values);
 
-bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, std::string &value)
-{
-  // Load a param
-  if (!nh.hasParam(param_name))
-  {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " << nh.getNamespace());
-    return false;
-  }
-  nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
-
-  return true;
-}
+/**
+ * \brief Convert from 6 doubles of [x,y,z] [r,p,y] to a transform
+ * \return true on success
+ */
+bool convertDoublesToEigen(const std::string& parent_name, std::vector<double> values, Eigen::Affine3d& transform);
 
 } // end namespace
 

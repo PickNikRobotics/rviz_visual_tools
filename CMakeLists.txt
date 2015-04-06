@@ -44,6 +44,7 @@ include_directories(
 # Visualization Tools Library
 add_library(${PROJECT_NAME}
   src/rviz_visual_tools.cpp
+  src/ros_param_utilities.cpp
 )
 
 add_dependencies(${PROJECT_NAME} graph_msgs_generate_messages_cpp)
