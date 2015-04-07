@@ -655,7 +655,7 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
   triangle_marker_.pose = pose;
   
   geometry_msgs::Point p[3];
-  double d_theta = M_PI / 16.0;
+  static const double delta_theta = M_PI / 16.0;
   double theta = 0;
 
   for (std::size_t i = 0; i < 32; i ++)
@@ -669,14 +669,14 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
     p[1].z = scale * sin(theta);
 
     p[2].x = scale;
-    p[2].y = scale * cos(theta + d_theta);
-    p[2].z = scale * sin(theta + d_theta);
+    p[2].y = scale * cos(theta + delta_theta);
+    p[2].z = scale * sin(theta + delta_theta);
 
     triangle_marker_.points.push_back(p[0]);
     triangle_marker_.points.push_back(p[1]);
     triangle_marker_.points.push_back(p[2]);
 
-    theta += d_theta;
+    theta += delta_theta;
   }
 
   triangle_marker_.scale.x = 1.0;
