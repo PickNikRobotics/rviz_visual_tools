@@ -325,6 +325,46 @@ public:
   bool publishMarkers(const visualization_msgs::MarkerArray &markers);
 
   /**
+   * \brief Display a cone of a given angle along the x-axis
+   * \param pose - the location and orientation of the cone
+   * \param color - color of the cone
+   * \param scale - size of the cone
+   * \return true on success
+   */
+  bool publishCone(const Eigen::Affine3d &pose, double angle, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale  = 1.0);
+  bool publishCone(const geometry_msgs::Pose &pose, double angle, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+
+  /**
+   * \brief Display the XY plane of a given pose
+   * \param pose - the position of the plane
+   * \param color - the color of the plane
+   * \param scale - the size of the vizualized plane
+   * \return true on success
+   */
+  bool publishXYPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishXYPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+
+  /**
+   * \brief Display the XY plane of a given pose
+   * \param pose - the position of the plane
+   * \param color - the color of the plane
+   * \param scale - the size of the vizualized plane
+   * \return true on success
+   */
+  bool publishXZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishXZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+
+  /**
+   * \brief Display the XY plane of a given pose
+   * \param pose - the position of the plane
+   * \param color - the color of the plane
+   * \param scale - the size of the vizualized plane
+   * \return true on success
+   */
+  bool publishYZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishYZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+
+  /**
    * \brief Display a marker of a sphere
    * \param pose - the location to publish the sphere with respect to the base frame
    * \param color - an enum pre-defined name of a color
@@ -781,6 +821,7 @@ protected:
   visualization_msgs::Marker line_list_marker_;
   visualization_msgs::Marker spheres_marker_;
   visualization_msgs::Marker reset_marker_;
+  visualization_msgs::Marker triangle_marker_;
 
   // Cached geometry variables used for conversion
   geometry_msgs::Pose shared_pose_msg_;
