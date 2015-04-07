@@ -83,6 +83,7 @@ void RvizVisualTools::resetMarkerCounts()
   line_marker_.id++;
   line_list_marker_.id++;
   spheres_marker_.id++;
+  triangle_marker_.id++;
 }
 
 bool RvizVisualTools::loadRvizMarkers()
@@ -233,6 +234,17 @@ bool RvizVisualTools::loadRvizMarkers()
   text_marker_.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
   // Lifetime
   text_marker_.lifetime = marker_lifetime_;
+
+  // Load Triangle List -------------------------------------------
+  // Set the namespace and id for this marker. This serves to create a unique ID
+  triangle_marker_.header.frame_id = base_frame_;
+  triangle_marker_.ns = "Triangle";
+  // Set the marker action. Options are ADD and DELETE
+  triangle_marker_.action = visualization_msgs::Marker::ADD;
+  // Set the marker type
+  triangle_marker_.type = visualization_msgs::Marker::TRIANGLE_LIST;
+  // Lifetime
+  triangle_marker_.lifetime = marker_lifetime_;
 
   return true;
 }
@@ -627,6 +639,187 @@ bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &mark
   pub_rviz_markers_.publish( markers );
   ros::spinOnce();
   return true;
+}
+
+bool RvizVisualTools::publishCone(const Eigen::Affine3d &pose, double angle, const rviz_visual_tools::colors &color, double scale)
+{
+  return publishCone(convertPose(pose), angle, color, scale);
+}
+
+bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle, const rviz_visual_tools::colors &color, double scale)
+{
+  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.id++;
+
+  triangle_marker_.color = getColor(color);
+  triangle_marker_.pose = pose;
+  
+  geometry_msgs::Point p[3];
+  double d_theta = M_PI / 16.0;
+  double theta = 0;
+
+  for (std::size_t i = 0; i < 32; i ++)
+  {
+    p[0].x = 0;
+    p[0].y = 0;
+    p[0].z = 0;
+    
+    p[1].x = scale;
+    p[1].y = scale * cos(theta);
+    p[1].z = scale * sin(theta);
+
+    p[2].x = scale;
+    p[2].y = scale * cos(theta + d_theta);
+    p[2].z = scale * sin(theta + d_theta);
+
+    triangle_marker_.points.push_back(p[0]);
+    triangle_marker_.points.push_back(p[1]);
+    triangle_marker_.points.push_back(p[2]);
+
+    theta += d_theta;
+  }
+
+  triangle_marker_.scale.x = 1.0;
+  triangle_marker_.scale.y = 1.0;
+  triangle_marker_.scale.z = 1.0;
+
+
+  return publishMarker(triangle_marker_);
+}
+
+bool RvizVisualTools::publishXYPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, double scale)
+{
+  return publishXYPlane(convertPose(pose),color,scale);
+}
+
+bool RvizVisualTools::publishXYPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, double scale)
+{
+  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.id++;
+
+  triangle_marker_.color = getColor(color);
+  triangle_marker_.pose = pose;
+  
+  geometry_msgs::Point p[4];
+  p[0].x = 1.0 * scale;
+  p[0].y = 1.0 * scale;
+  p[0].z = 0.0;
+
+  p[1].x = -1.0 * scale;
+  p[1].y = 1.0 * scale;
+  p[1].z = 0.0;
+
+  p[2].x = -1.0 * scale;
+  p[2].y = -1.0 * scale;
+  p[2].z = 0.0;
+
+  p[3].x = 1.0 * scale;
+  p[3].y = -1.0 * scale;  
+  p[3].z = 0.0;
+
+  triangle_marker_.scale.x = 1.0;
+  triangle_marker_.scale.y = 1.0;
+  triangle_marker_.scale.z = 1.0;
+
+  triangle_marker_.points.push_back(p[0]);
+  triangle_marker_.points.push_back(p[1]);
+  triangle_marker_.points.push_back(p[2]);
+
+  triangle_marker_.points.push_back(p[2]);
+  triangle_marker_.points.push_back(p[3]);
+  triangle_marker_.points.push_back(p[0]);
+
+  return publishMarker(triangle_marker_);
+}
+
+bool RvizVisualTools::publishXZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, double scale)
+{
+  return publishXZPlane(convertPose(pose),color,scale);
+}
+
+bool RvizVisualTools::publishXZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, double scale)
+{
+  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.id++;
+
+  triangle_marker_.color = getColor(color);
+  triangle_marker_.pose = pose;
+  
+  geometry_msgs::Point p[4];
+  p[0].x = 1.0 * scale;
+  p[0].y = 0;
+  p[0].z = 1.0 * scale;
+
+  p[1].x = -1.0 * scale;
+  p[1].y = 0;
+  p[1].z = 1.0 * scale;
+
+  p[2].x = -1.0 * scale;
+  p[2].y = 0;
+  p[2].z = -1.0 * scale;
+
+  p[3].x = 1.0 * scale;
+  p[3].y = 0;
+  p[3].z = -1.0 * scale;  
+
+  triangle_marker_.scale.x = 1.0;
+  triangle_marker_.scale.y = 1.0;
+  triangle_marker_.scale.z = 1.0;
+
+  triangle_marker_.points.push_back(p[0]);
+  triangle_marker_.points.push_back(p[1]);
+  triangle_marker_.points.push_back(p[2]);
+
+  triangle_marker_.points.push_back(p[2]);
+  triangle_marker_.points.push_back(p[3]);
+  triangle_marker_.points.push_back(p[0]);
+
+  return publishMarker(triangle_marker_);
+}
+
+bool RvizVisualTools::publishYZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, double scale)
+{
+  return publishYZPlane(convertPose(pose),color,scale);
+}
+
+bool RvizVisualTools::publishYZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, double scale)
+{
+  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.id++;
+
+  triangle_marker_.color = getColor(color);
+  triangle_marker_.pose = pose;
+  
+  geometry_msgs::Point p[4];
+  p[0].x = 0;
+  p[0].y = 1.0 * scale;
+  p[0].z = 1.0 * scale;
+
+  p[1].x = 0;
+  p[1].y = -1.0 * scale;
+  p[1].z = 1.0 * scale;
+
+  p[2].x = 0;
+  p[2].y = -1.0 * scale;
+  p[2].z = -1.0 * scale;
+
+  p[3].x = 0;
+  p[3].y = 1.0 * scale;
+  p[3].z = -1.0 * scale;  
+
+  triangle_marker_.scale.x = 1.0;
+  triangle_marker_.scale.y = 1.0;
+  triangle_marker_.scale.z = 1.0;
+
+  triangle_marker_.points.push_back(p[0]);
+  triangle_marker_.points.push_back(p[1]);
+  triangle_marker_.points.push_back(p[2]);
+
+  triangle_marker_.points.push_back(p[2]);
+  triangle_marker_.points.push_back(p[3]);
+  triangle_marker_.points.push_back(p[0]);
+
+  return publishMarker(triangle_marker_);
 }
 
 bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale, const std::string& ns)
@@ -1451,6 +1644,20 @@ bool RvizVisualTools::publishTests()
   double depth = 0.5, width = 0.25, height = 0.125;
   generateRandomPose(pose1);
   publishWireframeCuboid(convertPose(pose1), depth, width, height);
+  ros::Duration(1.0).sleep();
+
+  ROS_INFO_STREAM_NAMED("test","Publishing Planes");
+  generateRandomPose(pose1);
+  publishXYPlane(pose1, rviz_visual_tools::RED, 0.1);
+  ros::Duration(1.0).sleep();
+  publishXZPlane(pose1, rviz_visual_tools::GREEN, 0.1);
+  ros::Duration(1.0).sleep();
+  publishYZPlane(pose1, rviz_visual_tools::BLUE, 0.1);
+  ros::Duration(1.0).sleep();
+
+  ROS_INFO_STREAM_NAMED("test","Publising Axis Cone");
+  generateRandomPose(pose1);
+  publishCone(pose1, M_PI / 6.0, rviz_visual_tools::RAND, 0.2);
   ros::Duration(1.0).sleep();
 
   return true;
