@@ -83,7 +83,6 @@ bool getDoubleParameters(const std::string& parent_name, ros::NodeHandle &nh, co
     return false;
   }
   nh.getParam(param_name, values);
-  std::copy(values.begin(), values.end(), std::ostream_iterator<double>(std::cout, "\n"));
   ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with values [" << getDebugArrayString(values) << "]");
 
   return true;
