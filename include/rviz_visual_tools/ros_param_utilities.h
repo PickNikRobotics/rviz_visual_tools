@@ -70,6 +70,8 @@ bool getDoubleParameters(const std::string& parent_name, ros::NodeHandle &nh, co
 
 bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, int &value);
 
+bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, unsigned int &value);
+
 bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
                         std::string &value);
 

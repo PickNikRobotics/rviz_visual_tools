@@ -103,6 +103,23 @@ bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const 
   return true;
 }
 
+bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, unsigned int &value)
+{
+  // Load a param
+  if (!nh.hasParam(param_name))
+  {
+    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " 
+                           << nh.getNamespace());
+    return false;
+  }
+  int nonsigned_value;
+  nh.getParam(param_name, nonsigned_value);
+  value = nonsigned_value;
+  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
+
+  return true;
+}
+
 bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
                         std::string &value)
 {
