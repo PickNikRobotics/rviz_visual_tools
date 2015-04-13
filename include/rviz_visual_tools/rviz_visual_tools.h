@@ -780,6 +780,18 @@ public:
 
 protected:
 
+  /**
+   * \brief Allows certain marker functions to batch publish without breaking external functinality
+   */
+  void enableInternalBatchPublishing(bool enable);
+
+  /**
+   * \brief Trigger the publish function to send out all collected markers. Also then turns off the batch mode. This is safer
+   *        incase programmer forgets. This is the internal version
+   * \return true on success
+   */
+  bool triggerInternalBatchPublishAndDisable();
+
   // A shared node handle
   ros::NodeHandle nh_;
 
@@ -803,6 +815,7 @@ protected:
 
   // Settings
   bool batch_publishing_enabled_;
+  bool internal_batch_publishing_enabled_; // this allows certain marker functions to batch publish without breaking external functinality
   double alpha_; // opacity of all markers
   double global_scale_; // allow all markers to be increased by a constanct factor
 

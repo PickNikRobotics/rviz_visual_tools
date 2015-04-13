@@ -1853,4 +1853,22 @@ void RvizVisualTools::print()
   std::cout << "alpha_: " << alpha_ << std::endl;
 }
 
+void RvizVisualTools::enableInternalBatchPublishing(bool enable)
+{
+  // Don't interfere with external batch publishing
+  if (batch_publishing_enabled_)
+    return;
+  internal_batch_publishing_enabled_ = true;
+}
+
+bool RvizVisualTools::triggerInternalBatchPublishAndDisable()
+{
+  internal_batch_publishing_enabled_ = false;
+
+  bool result = publishMarkers( markers_ );
+
+  markers_.markers.clear(); // remove all cached markers
+  return result;
+}
+
 } // namespace
