@@ -60,27 +60,32 @@ namespace rviz_visual_tools
  * \param value - resulting loaded values, or no change if error (function returns false)
  * \return true on success
  */
-bool getBoolParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, bool &value);
+bool getBoolParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, bool &value);
 
-bool getDoubleParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+bool getDoubleParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                         double &value);
 
-bool getDoubleParameters(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+bool getDoubleParameters(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                          std::vector<double> &values);
 
-bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, int &value);
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, int &value);
 
-bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, unsigned int &value);
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, unsigned int &value);
 
-bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+bool getStringParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                         std::string &value);
 
+bool getStringParameters(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
+                         std::vector<std::string> &values);
+
 /**
- * \brief Output a string of doubles from an array for debugging
- * \param doubles
+ * \brief Output a string of values from an array for debugging
+ * \param array of values
  * \return string of numbers separated by commas
  */
 std::string getDebugArrayString(std::vector<double> values);
+
+std::string getDebugArrayString(std::vector<std::string> values);
 
 /**
  * \brief Convert from 6 doubles of [x,y,z] [r,p,y] to a transform
@@ -91,18 +96,3 @@ bool convertDoublesToEigen(const std::string& parent_name, std::vector<double> v
 } // end namespace
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

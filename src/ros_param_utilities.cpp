@@ -41,7 +41,7 @@
 namespace rviz_visual_tools
 {
 
-bool getBoolParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, bool &value)
+bool getBoolParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, bool &value)
 {
   // Load a param
   if (!nh.hasParam(param_name))
@@ -55,7 +55,7 @@ bool getBoolParameter(const std::string& parent_name, ros::NodeHandle &nh, const
   return true;
 }
 
-bool getDoubleParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+bool getDoubleParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                         double &value)
 {
   // Load a param
@@ -70,7 +70,7 @@ bool getDoubleParameter(const std::string& parent_name, ros::NodeHandle &nh, con
   return true;
 }
 
-bool getDoubleParameters(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+bool getDoubleParameters(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                          std::vector<double> &values)
 {
   // Load a param
@@ -85,7 +85,7 @@ bool getDoubleParameters(const std::string& parent_name, ros::NodeHandle &nh, co
   return true;
 }
 
-bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, int &value)
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, int &value)
 {
   // Load a param
   if (!nh.hasParam(param_name))
@@ -99,7 +99,7 @@ bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const 
   return true;
 }
 
-bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, unsigned int &value)
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, unsigned int &value)
 {
   // Load a param
   if (!nh.hasParam(param_name))
@@ -115,7 +115,7 @@ bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const 
   return true;
 }
 
-bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, const std::string &param_name, 
+bool getStringParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                         std::string &value)
 {
   // Load a param
@@ -130,7 +130,33 @@ bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, con
   return true;
 }
 
+bool getStringParameters(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
+                         std::vector<std::string> &values)
+{
+  // Load a param
+  if (!nh.hasParam(param_name))
+  {
+    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << nh.getNamespace() << "/" << param_name << "'.");
+    return false;
+  }
+  nh.getParam(param_name, values);
+  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value "
+                         << getDebugArrayString(values));
+
+  return true;
+}
+
 std::string getDebugArrayString(std::vector<double> values)
+{
+  std::stringstream debug_values;
+  for (std::size_t i = 0; i < values.size(); ++i)
+  {
+    debug_values << values[i] << ",";
+  }
+  return debug_values.str();
+}
+
+std::string getDebugArrayString(std::vector<std::string> values)
 {
   std::stringstream debug_values;
   for (std::size_t i = 0; i < values.size(); ++i)
@@ -157,18 +183,3 @@ bool convertDoublesToEigen(const std::string& parent_name, std::vector<double> v
 }
 
 } // end namespace
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
