@@ -46,12 +46,11 @@ bool getBoolParameter(const std::string& parent_name, ros::NodeHandle &nh, const
   // Load a param
   if (!nh.hasParam(param_name))
   {
-    ROS_ERROR_STREAM_NAMED(parent_name, "Missing parameter '" << param_name << "'. Searching in namespace: " 
-                           << nh.getNamespace());
+    ROS_ERROR_STREAM_NAMED(parent_name, "Missing parameter '" << nh.getNamespace() << "/" << param_name << "'.");
     return false;
   }
   nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name, "Loaded parameter '" << param_name << "' with value " << value);
+  ROS_DEBUG_STREAM_NAMED(parent_name, "Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value " << value);
 
   return true;
 }
@@ -62,12 +61,11 @@ bool getDoubleParameter(const std::string& parent_name, ros::NodeHandle &nh, con
   // Load a param
   if (!nh.hasParam(param_name))
   {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " 
-                           << nh.getNamespace());
+    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << nh.getNamespace() << "/" << param_name << "'.");
     return false;
   }
   nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
+  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value " << value);
 
   return true;
 }
@@ -78,12 +76,11 @@ bool getDoubleParameters(const std::string& parent_name, ros::NodeHandle &nh, co
   // Load a param
   if (!nh.hasParam(param_name))
   {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " 
-                           << nh.getNamespace());
+    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << nh.getNamespace() << "/" << param_name << "'.");
     return false;
   }
   nh.getParam(param_name, values);
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with values [" << getDebugArrayString(values) << "]");
+  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with values [" << getDebugArrayString(values) << "]");
 
   return true;
 }
@@ -93,12 +90,11 @@ bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const 
   // Load a param
   if (!nh.hasParam(param_name))
   {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " 
-                           << nh.getNamespace());
+    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << nh.getNamespace() << "/" << param_name << "'.");
     return false;
   }
   nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
+  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value " << value);
 
   return true;
 }
@@ -108,14 +104,13 @@ bool getIntParameter(const std::string& parent_name, ros::NodeHandle &nh, const 
   // Load a param
   if (!nh.hasParam(param_name))
   {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " 
-                           << nh.getNamespace());
+    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << nh.getNamespace() << "/" << param_name << "'.");
     return false;
   }
   int nonsigned_value;
   nh.getParam(param_name, nonsigned_value);
   value = nonsigned_value;
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
+  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value " << value);
 
   return true;
 }
@@ -126,12 +121,11 @@ bool getStringParameter(const std::string& parent_name, ros::NodeHandle &nh, con
   // Load a param
   if (!nh.hasParam(param_name))
   {
-    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << param_name << "'. Searching in namespace: " << 
-                           nh.getNamespace());
+    ROS_ERROR_STREAM_NAMED(parent_name,"Missing parameter '" << nh.getNamespace() << "/" << param_name << "'.");
     return false;
   }
   nh.getParam(param_name, value);
-  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << param_name << "' with value " << value);
+  ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value " << value);
 
   return true;
 }
