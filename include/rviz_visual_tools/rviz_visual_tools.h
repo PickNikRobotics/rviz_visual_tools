@@ -474,6 +474,8 @@ public:
    */
   bool publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
                      const colors &color = BLUE);
+  bool publishCuboid(const Eigen::Affine3d  &pose, const double depth, const double width, const double height,
+                     const colors &color = BLUE);
 
   // To be removed in release of ROS JADE:
   RVIZ_VISUAL_TOOLS_DEPRECATED

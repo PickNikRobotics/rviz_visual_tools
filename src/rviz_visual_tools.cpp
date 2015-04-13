@@ -1212,6 +1212,12 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Point &point1, const ge
   return publishMarker( cuboid_marker_ );
 }
 
+bool RvizVisualTools::publishCuboid(const Eigen::Affine3d &pose, const double depth, const double width,
+                                    const double height, const rviz_visual_tools::colors &color)
+{
+  return publishCuboid( convertPose(pose), depth, width, height, color);
+}
+
 bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width,
                                     const double height, const rviz_visual_tools::colors &color)
 {
