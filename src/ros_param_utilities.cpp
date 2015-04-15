@@ -80,6 +80,10 @@ bool getDoubleParameters(const std::string& parent_name, const ros::NodeHandle &
     return false;
   }
   nh.getParam(param_name, values);
+
+  if (values.empty())
+    ROS_WARN_STREAM_NAMED(parent_name,"Empty vector for parameter '" << nh.getNamespace() << "/" << param_name << "'.");
+
   ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with values [" << getDebugArrayString(values) << "]");
 
   return true;
@@ -140,6 +144,10 @@ bool getStringParameters(const std::string& parent_name, const ros::NodeHandle &
     return false;
   }
   nh.getParam(param_name, values);
+
+  if (values.empty())
+    ROS_WARN_STREAM_NAMED(parent_name,"Empty vector for parameter '" << nh.getNamespace() << "/" << param_name << "'.");
+
   ROS_DEBUG_STREAM_NAMED(parent_name,"Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value "
                          << getDebugArrayString(values));
 
