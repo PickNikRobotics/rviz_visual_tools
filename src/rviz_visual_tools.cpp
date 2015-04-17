@@ -602,7 +602,7 @@ bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
   markers_.markers.push_back(marker);
 
   // Determine if we should publish now
-  if (!batch_publishing_enabled_)
+  if (!batch_publishing_enabled_ && !internal_batch_publishing_enabled_)
   {
     return triggerBatchPublish();
   }
@@ -1025,12 +1025,7 @@ bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length
 bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, double radius, const std::string& ns)
 {
   // Batch publish, unless it is already enabled by user
-  bool manual_batch_publish = false;
-  if (!batch_publishing_enabled_)
-  {
-    enableBatchPublishing(true);
-    manual_batch_publish = true;
-  }
+  enableInternalBatchPublishing(true);
     
   // Publish x axis
   Eigen::Affine3d x_pose = Eigen::Translation3d(length / 2.0, 0, 0) *
@@ -1051,10 +1046,7 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
   publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius, ns);
 
   // Batch publish
-  if (manual_batch_publish)
-    triggerBatchPublishAndDisable();
-
-  return true;
+  return triggerInternalBatchPublishAndDisable();
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, double height, 
@@ -1863,7 +1855,9 @@ void RvizVisualTools::enableInternalBatchPublishing(bool enable)
 {
   // Don't interfere with external batch publishing
   if (batch_publishing_enabled_)
+  {
     return;
+  }
   internal_batch_publishing_enabled_ = true;
 }
 
