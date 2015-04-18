@@ -421,6 +421,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.g = 1.0;
       result.b = 0.0;
       result.a = 1.0;
+      break;
     case BROWN:
       result.r = 0.597;
       result.g = 0.296;
