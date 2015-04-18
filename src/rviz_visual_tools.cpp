@@ -327,7 +327,7 @@ void RvizVisualTools::setLifetime(double lifetime)
   text_marker_.lifetime = marker_lifetime_;
 }
 
-const rviz_visual_tools::colors RvizVisualTools::getRandColor()
+rviz_visual_tools::colors RvizVisualTools::getRandColor()
 {
   std::vector<rviz_visual_tools::colors> all_colors;
 

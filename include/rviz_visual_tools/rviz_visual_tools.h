@@ -221,7 +221,7 @@ public:
    * \brief Get a random color from the list of hardcoded enum color types
    * \return Random color from rviz_visual_tools::colors
    */
-  const colors getRandColor();
+  colors getRandColor();
 
   /**
    * \brief Get the RGB value of standard colors
