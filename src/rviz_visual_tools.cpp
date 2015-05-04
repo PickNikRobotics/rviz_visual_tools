@@ -1736,6 +1736,22 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
   return shared_point_msg_;
 }
 
+Eigen::Affine3d RvizVisualTools::convertXYZRPY(std::vector<double> transform6)
+{
+  if (transform6.size() != 6)
+  {
+    ROS_ERROR_STREAM_NAMED("rviz_visual_tools","Incorrect number of variables passed for 6-size transform");
+    throw;
+  }
+
+  Eigen::AngleAxisd roll_angle (transform6[3], Eigen::Vector3d::UnitZ());
+  Eigen::AngleAxisd pitch_angle(transform6[4], Eigen::Vector3d::UnitX());
+  Eigen::AngleAxisd yaw_angle  (transform6[5], Eigen::Vector3d::UnitY());
+  Eigen::Quaternion<double> quaternion = roll_angle * yaw_angle * pitch_angle;
+
+  return Eigen::Translation3d(transform6[0], transform6[1], transform6[2]) * quaternion;
+}
+
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
   generateRandomPose(shared_pose_eigen_, pose_bounds);
@@ -1799,8 +1815,8 @@ void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds
   axis[1] = sin(elevation) * sin(azimuth);
   axis[2] = cos(elevation);
 
-  Eigen::Quaterniond quat(Eigen::AngleAxis<double>(double(angle), axis));
-  pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quat;
+  Eigen::Quaterniond quaternion(Eigen::AngleAxis<double>(double(angle), axis));
+  pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quaternion;
 }
 
 void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose& pose)
