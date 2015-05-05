@@ -752,7 +752,7 @@ public:
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion
    * \return true on success
    */
-  Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
+  static Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
 
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_

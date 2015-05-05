@@ -1747,6 +1747,9 @@ Eigen::Affine3d RvizVisualTools::convertXYZRPY(std::vector<double> transform6)
   Eigen::AngleAxisd roll_angle (transform6[3], Eigen::Vector3d::UnitZ());
   Eigen::AngleAxisd pitch_angle(transform6[4], Eigen::Vector3d::UnitX());
   Eigen::AngleAxisd yaw_angle  (transform6[5], Eigen::Vector3d::UnitY());
+  // Eigen::AngleAxisd roll_angle (transform6[3], Eigen::Vector3d::UnitX());
+  // Eigen::AngleAxisd pitch_angle(transform6[4], Eigen::Vector3d::UnitY());
+  // Eigen::AngleAxisd yaw_angle  (transform6[5], Eigen::Vector3d::UnitZ());
   Eigen::Quaternion<double> quaternion = roll_angle * yaw_angle * pitch_angle;
 
   return Eigen::Translation3d(transform6[0], transform6[1], transform6[2]) * quaternion;
