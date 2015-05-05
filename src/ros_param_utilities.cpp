@@ -41,7 +41,8 @@
 namespace rviz_visual_tools
 {
 
-bool getBoolParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, bool &value)
+bool getBoolParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
+                      bool &value)
 {
   // Load a param
   if (!nh.hasParam(param_name))
@@ -51,6 +52,29 @@ bool getBoolParameter(const std::string& parent_name, const ros::NodeHandle &nh,
   }
   nh.getParam(param_name, value);
   ROS_DEBUG_STREAM_NAMED(parent_name, "Loaded parameter '" << nh.getNamespace() << "/" << param_name << "' with value " << value);
+
+  return true;
+}
+
+bool getBoolMap(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &params_namespace,
+                std::map<std::string, bool> &parameters)
+{
+  // Load a param
+  if (!nh.hasParam(params_namespace))
+  {
+    ROS_ERROR_STREAM_NAMED(parent_name, "Missing parameters in namespace '" << nh.getNamespace() << "/"
+                           << params_namespace << "'.");
+    return false;
+  }
+  nh.getParam(params_namespace, parameters);
+
+  // Debug
+  for(std::map<std::string, bool>::const_iterator param_it = parameters.begin(); param_it != parameters.end();
+      param_it++)
+  {
+    ROS_DEBUG_STREAM_NAMED(parent_name, "Loaded parameter '" << nh.getNamespace() << "/" << params_namespace
+                           << "/" << param_it->first << "' with value " << param_it->second);
+  }
 
   return true;
 }
@@ -89,7 +113,8 @@ bool getDoubleParameters(const std::string& parent_name, const ros::NodeHandle &
   return true;
 }
 
-bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, int &value)
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
+                     int &value)
 {
   // Load a param
   if (!nh.hasParam(param_name))
@@ -103,7 +128,8 @@ bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, 
   return true;
 }
 
-bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, unsigned int &value)
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
+                     unsigned int &value)
 {
   // Load a param
   if (!nh.hasParam(param_name))

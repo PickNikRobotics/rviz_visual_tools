@@ -1744,15 +1744,18 @@ Eigen::Affine3d RvizVisualTools::convertXYZRPY(std::vector<double> transform6)
     throw;
   }
 
-  Eigen::AngleAxisd roll_angle (transform6[3], Eigen::Vector3d::UnitZ());
-  Eigen::AngleAxisd pitch_angle(transform6[4], Eigen::Vector3d::UnitX());
-  Eigen::AngleAxisd yaw_angle  (transform6[5], Eigen::Vector3d::UnitY());
-  // Eigen::AngleAxisd roll_angle (transform6[3], Eigen::Vector3d::UnitX());
-  // Eigen::AngleAxisd pitch_angle(transform6[4], Eigen::Vector3d::UnitY());
-  // Eigen::AngleAxisd yaw_angle  (transform6[5], Eigen::Vector3d::UnitZ());
+  return convertXYZRPY(transform6[0], transform6[1], transform6[2], transform6[3], transform6[4], transform6[5]);
+}
+
+Eigen::Affine3d RvizVisualTools::convertXYZRPY(const double& x, const double& y, const double& z, 
+                                               const double& roll, const double& pitch, const double& yaw)
+{
+  Eigen::AngleAxisd roll_angle (roll, Eigen::Vector3d::UnitZ());
+  Eigen::AngleAxisd pitch_angle(pitch, Eigen::Vector3d::UnitX());
+  Eigen::AngleAxisd yaw_angle  (yaw, Eigen::Vector3d::UnitY());
   Eigen::Quaternion<double> quaternion = roll_angle * yaw_angle * pitch_angle;
 
-  return Eigen::Translation3d(transform6[0], transform6[1], transform6[2]) * quaternion;
+  return Eigen::Translation3d(x, y, z) * quaternion;
 }
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)

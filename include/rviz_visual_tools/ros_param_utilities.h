@@ -60,7 +60,11 @@ namespace rviz_visual_tools
  * \param value - resulting loaded values, or no change if error (function returns false)
  * \return true on success
  */
-bool getBoolParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, bool &value);
+bool getBoolParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, 
+                      bool &value);
+
+bool getBoolMap(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &params_namespace, 
+                std::map<std::string, bool> &parameters);
 
 bool getDoubleParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                         double &value);
@@ -68,9 +72,11 @@ bool getDoubleParameter(const std::string& parent_name, const ros::NodeHandle &n
 bool getDoubleParameters(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                          std::vector<double> &values);
 
-bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, int &value);
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, 
+                     int &value);
 
-bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, unsigned int &value);
+bool getIntParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name, 
+                     unsigned int &value);
 
 bool getStringParameter(const std::string& parent_name, const ros::NodeHandle &nh, const std::string &param_name,
                         std::string &value);

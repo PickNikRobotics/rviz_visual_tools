@@ -752,6 +752,8 @@ public:
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler ZXY convention
    * \return true on success
    */
+  static Eigen::Affine3d convertXYZRPY(const double& x, const double& y, const double& z, 
+                                       const double& roll, const double& pitch, const double& yaw);
   static Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
 
   /**
