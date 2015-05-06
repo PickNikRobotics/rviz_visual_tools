@@ -1005,13 +1005,20 @@ bool RvizVisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_v
   return publishMarker( block_marker_ );
 }
 
-bool RvizVisualTools::publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, const double &block_size)
+bool RvizVisualTools::publishBlock(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color, 
+                                   const double &block_size)
 {
   return publishBlock(convertPose(pose), color, block_size);
 }
 
 bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string& label, 
                                            const rviz_visual_tools::scales &scale)
+{
+  return publishAxisLabeled(convertPose(pose), label, scale);
+}
+ 
+bool RvizVisualTools::publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string& label, 
+                                         const scales &scale)
 {
   publishText(pose, label, rviz_visual_tools::BLACK, rviz_visual_tools::SMALL, false);  // TODO: change size based on passed in scale
   publishAxis(pose, 0.1, 0.01, label);
