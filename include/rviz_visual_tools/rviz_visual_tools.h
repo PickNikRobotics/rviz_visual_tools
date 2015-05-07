@@ -553,11 +553,13 @@ public:
    * \param width - object width
    * \param height - object height
    * \param color - an enum pre-defined name of a color
+   * \param ns - namespace
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Affine3d &pose, double depth, double width,
                               double height, const rviz_visual_tools::colors &color = BLUE,
-                              const std::string& ns = "Wireframe Cuboid");
+                              const std::string& ns = "Wireframe Cuboid", const std::size_t &id = 0);
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
@@ -565,11 +567,13 @@ public:
    * \param min_point - minimum x, y, z coordinates
    * \param max_point - maximum x, y, z coordinates
    * \param color - an enum pre-defined name of a color
+   * \param ns - namespace
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Affine3d &pose, const Eigen::Vector3d &min_point,
                               const Eigen::Vector3d &max_point, const rviz_visual_tools::colors &color = BLUE,
-                              const std::string& ns = "Wireframe Cuboid");
+                              const std::string& ns = "Wireframe Cuboid", const std::size_t &id = 0);
 
   /**
    * \brief Publish outline of a rectangle

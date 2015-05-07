@@ -487,7 +487,8 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
   return result;
 }
 
-geometry_msgs::Vector3 RvizVisualTools::getScale(const rviz_visual_tools::scales &scale, bool arrow_scale, double marker_scale)
+geometry_msgs::Vector3 RvizVisualTools::getScale(const rviz_visual_tools::scales &scale, bool arrow_scale, 
+                                                 double marker_scale)
 {
   geometry_msgs::Vector3 result;
   double val(0.0);
@@ -1333,17 +1334,18 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
 
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose, double depth, double width,
                                              double height, const rviz_visual_tools::colors &color,
-                                             const std::string& ns)
+                                             const std::string& ns, const std::size_t &id)
 {
   Eigen::Vector3d min_point, max_point;
   min_point << -depth/2, -width/2, -height/2;
   max_point << depth/2, width/2, height/2;
-  return publishWireframeCuboid(pose, min_point, max_point, color, ns);
+  return publishWireframeCuboid(pose, min_point, max_point, color, ns, id);
 }
 
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose, const Eigen::Vector3d &min_point,
                                              const Eigen::Vector3d &max_point,
-                                             const rviz_visual_tools::colors &color, const std::string& ns)
+                                             const rviz_visual_tools::colors &color, const std::string& ns, 
+                                             const std::size_t &id)
 {
   // Extract 8 cuboid vertices
   Eigen::Vector3d p1 (min_point[0], min_point[1], min_point[2]);
@@ -1364,28 +1366,17 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose, const 
   p7 = pose * p7;
   p8 = pose * p8;
 
-  // RvizVisualTools::publishLine(p1, p2, color);
-  // RvizVisualTools::publishLine(p1, p4, color);
-  // RvizVisualTools::publishLine(p1, p5, color);
-  // RvizVisualTools::publishLine(p5, p6, color);
-  // RvizVisualTools::publishLine(p5, p8, color);
-  // RvizVisualTools::publishLine(p2, p6, color);
-  // RvizVisualTools::publishLine(p6, p7, color);
-  // RvizVisualTools::publishLine(p7, p8, color);
-  // RvizVisualTools::publishLine(p2, p3, color);
-  // RvizVisualTools::publishLine(p4, p8, color);
-  // RvizVisualTools::publishLine(p3, p4, color);
-  // RvizVisualTools::publishLine(p3, p7, color);
-
   // Setup marker
   line_list_marker_.header.stamp = ros::Time();
   line_list_marker_.ns = ns;
-
-  // Provide a new id every call to this function
-  line_list_marker_.id++;
+  
+  if (id == 0) // Provide a new id every call to this function
+    line_list_marker_.id++;
+  else // allow marker to be overwritten
+    line_list_marker_.id = id;
 
   std_msgs::ColorRGBA this_color = getColor( color );
-  line_list_marker_.scale = getScale(REGULAR, false, 0.25);
+  line_list_marker_.scale = getScale(XXSMALL);
   line_list_marker_.color = this_color;
   line_list_marker_.points.clear();
   line_list_marker_.colors.clear();
