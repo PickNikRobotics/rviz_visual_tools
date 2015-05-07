@@ -555,11 +555,9 @@ public:
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishWireframeCuboid(const Eigen::Affine3d &pose,
-                              double depth,
-                              double width,
-                              double height,
-                              const colors &color=BLUE);
+  bool publishWireframeCuboid(const Eigen::Affine3d &pose, double depth, double width,
+                              double height, const rviz_visual_tools::colors &color = BLUE,
+                              const std::string& ns = "Wireframe Cuboid");
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
@@ -569,10 +567,9 @@ public:
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishWireframeCuboid(const Eigen::Affine3d &pose,
-                              const Eigen::Vector3d &min_point,
-                              const Eigen::Vector3d &max_point,
-                              const colors &color=BLUE);
+  bool publishWireframeCuboid(const Eigen::Affine3d &pose, const Eigen::Vector3d &min_point,
+                              const Eigen::Vector3d &max_point, const rviz_visual_tools::colors &color = BLUE,
+                              const std::string& ns = "Wireframe Cuboid");
 
   /**
    * \brief Publish outline of a rectangle
@@ -753,7 +750,7 @@ public:
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler ZXY convention
    * \return true on success
    */
-  static Eigen::Affine3d convertXYZRPY(const double& x, const double& y, const double& z, 
+  static Eigen::Affine3d convertXYZRPY(const double& x, const double& y, const double& z,
                                        const double& roll, const double& pitch, const double& yaw);
   static Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
 
