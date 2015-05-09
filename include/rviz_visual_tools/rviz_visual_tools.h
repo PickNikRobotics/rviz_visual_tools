@@ -790,6 +790,21 @@ public:
    */
   void print();
 
+  /**
+   * \brief Load parameter settings of the server under ~/debug_level
+   * \param parent_name - only used for debugging, allows one to see what paremeters are loaded in what namespace
+   * \param setting_namespace - where on this node's namespace to load settings 
+   *        e.g. /this_name/setting_namespace/some_parameter
+   * \return true on success
+   */
+  bool loadEnabledSettings(const std::string& parent_name, const std::string& setting_namespace);
+
+  /**
+   * \brief Check if a setting is enabled
+   * \return true on success
+   */
+  bool isEnabled(const std::string& setting_name);
+
 protected:
 
   /**
@@ -855,7 +870,10 @@ protected:
   Eigen::Affine3d shared_pose_eigen_;
   Eigen::Vector3d shared_point_eigen_;
 
-
+  // Visualization settings
+  bool enabled_setttings_loaded_;
+  std::map<std::string, bool> enabled_;
+  
 }; // class
 
 typedef boost::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;

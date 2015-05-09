@@ -38,6 +38,9 @@
 
 #include <rviz_visual_tools/rviz_visual_tools.h>
 
+// Parameter loading
+#include <rviz_visual_tools/ros_param_utilities.h>
+
 // Conversions
 #include <tf_conversions/tf_eigen.h>
 #include <eigen_conversions/eigen_msg.h>
@@ -47,10 +50,11 @@ namespace rviz_visual_tools
 
 RvizVisualTools::RvizVisualTools(const std::string& base_frame,
                                  const std::string& marker_topic)
-  :  nh_("~")
-  ,  marker_topic_(marker_topic)
-  ,  base_frame_(base_frame)
-  ,  batch_publishing_enabled_(false)
+  : nh_("~")
+  , marker_topic_(marker_topic)
+  , base_frame_(base_frame)
+  , batch_publishing_enabled_(false)
+  , enabled_setttings_loaded_(false)
 {
   initialize();
 }
@@ -723,6 +727,7 @@ bool RvizVisualTools::publishXYPlane(const geometry_msgs::Pose &pose, const rviz
   triangle_marker_.scale.y = 1.0;
   triangle_marker_.scale.z = 1.0;
 
+  triangle_marker_.points.clear();
   triangle_marker_.points.push_back(p[0]);
   triangle_marker_.points.push_back(p[1]);
   triangle_marker_.points.push_back(p[2]);
@@ -739,7 +744,8 @@ bool RvizVisualTools::publishXZPlane(const Eigen::Affine3d &pose, const rviz_vis
   return publishXZPlane(convertPose(pose),color,scale);
 }
 
-bool RvizVisualTools::publishXZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, double scale)
+bool RvizVisualTools::publishXZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, 
+                                     double scale)
 {
   triangle_marker_.header.stamp = ros::Time::now();
   triangle_marker_.id++;
@@ -768,6 +774,7 @@ bool RvizVisualTools::publishXZPlane(const geometry_msgs::Pose &pose, const rviz
   triangle_marker_.scale.y = 1.0;
   triangle_marker_.scale.z = 1.0;
 
+  triangle_marker_.points.clear();
   triangle_marker_.points.push_back(p[0]);
   triangle_marker_.points.push_back(p[1]);
   triangle_marker_.points.push_back(p[2]);
@@ -813,6 +820,7 @@ bool RvizVisualTools::publishYZPlane(const geometry_msgs::Pose &pose, const rviz
   triangle_marker_.scale.y = 1.0;
   triangle_marker_.scale.z = 1.0;
 
+  triangle_marker_.points.clear();
   triangle_marker_.points.push_back(p[0]);
   triangle_marker_.points.push_back(p[1]);
   triangle_marker_.points.push_back(p[2]);
@@ -1962,6 +1970,33 @@ bool RvizVisualTools::triggerInternalBatchPublishAndDisable()
 
   markers_.markers.clear(); // remove all cached markers
   return result;
+}
+
+bool RvizVisualTools::loadEnabledSettings(const std::string& parent_name, const std::string& setting_namespace)
+{
+  // Check if the map has been loaded yet
+  if (!enabled_setttings_loaded_)
+  {
+    enabled_setttings_loaded_ = true;
+    return getBoolMap(parent_name, nh_, setting_namespace, enabled_);
+  }
+  return true;
+}
+
+bool RvizVisualTools::isEnabled(const std::string& setting_name)
+{
+  // Check if the map has been loaded yet. it is preferred if this is manually 
+  if (!enabled_setttings_loaded_)
+    ROS_ERROR_STREAM_NAMED("rviz_visual_tools","Enabled settings are not yet loaded e.g. call loadEnabledSettings()");
+
+  std::map<std::string,bool>::iterator it = enabled_.find(setting_name);
+  if(it != enabled_.end())
+  {
+    // Element found;
+    return it->second;
+  }
+  ROS_ERROR_STREAM_NAMED("rviz_visual_tools","isEnabled() key '" << setting_name << "' does not exist on the parameter server");
+  return false;
 }
 
 } // namespace
