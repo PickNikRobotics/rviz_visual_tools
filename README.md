@@ -150,18 +150,13 @@ This package helps you quickly choose colors - feel free to send PRs with more c
  - rviz_visual_tools::LARGE
  - rviz_visual_tools::XLARGE
 
-### Lifetime
+## TF Visual Tools
 
-All markers will persist for the duration set by ``setLifetime``, defaulting to 30 seconds. You can reset this earlier by calling
-```
-resetMarkerCounts();
-```
-This will cause all new markers to overwrite older ones.
+This tool lets you easily debug Eigen transforms in Rviz. Demo use:
 
-You can also delete all markers (new in ROS Indigo) by calling
-```
-deleteAllMarkers();
-```
+    rviz_visual_tools::TFVisualTools tf_visualizer;
+    Eigen::Affine3d world_to_shelf_transform = Eigen::Affine3d::Identity(); // or whatever value
+    tf_visualizer.publishTransform(world_to_shelf_transform, "world", "shelf");
 
 ## Developers Notes
 
