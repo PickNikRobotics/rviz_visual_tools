@@ -801,7 +801,8 @@ public:
 
   /**
    * \brief Check if a setting is enabled
-   * \return true on success
+   * \param setting_name - name of key on the parameter server as loaded in the 'setting_namespace'
+   * \return true if setting is enabled
    */
   bool isEnabled(const std::string& setting_name);
 
@@ -833,12 +834,7 @@ protected:
   double floor_to_base_height_; // allows an offset between base link and floor where objects are built
 
   // Duration to have Rviz markers persist, 0 for infinity
-  ros::Duration marker_lifetime_; // TODO remove this
-
-  // End Effector Markers
-  //visualization_msgs::MarkerArray ee_marker_array_;
-  //geometry_msgs::Pose grasp_pose_to_eef_pose_; // Convert generic grasp pose to this end effector's frame of reference
-  //std::vector<geometry_msgs::Pose> marker_poses_;
+  ros::Duration marker_lifetime_; // TODO remove this  
 
   // Settings
   bool batch_publishing_enabled_;
