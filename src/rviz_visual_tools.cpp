@@ -1836,6 +1836,17 @@ Eigen::Affine3d RvizVisualTools::convertXYZRPY(const double& x, const double& y,
   return Eigen::Translation3d(x, y, z) * quaternion;
 }
 
+void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d& pose, double& x, double& y, double& z, 
+                                      double& roll, double& pitch, double& yaw)
+{
+  x = pose(0,3);
+  y = pose(1,3);
+  z = pose(2,3);
+  roll  = atan2f(pose(2,1), pose(2,2));
+  pitch = asinf(-pose(2,0));
+  yaw   = atan2f(pose(1,0), pose(0,0));
+}
+
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
   generateRandomPose(shared_pose_eigen_, pose_bounds);

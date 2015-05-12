@@ -752,12 +752,17 @@ public:
 
   /**
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler ZXY convention
-   * \return true on success
+   * \return 4x4 matrix in form of affine3d
    */
   static Eigen::Affine3d convertXYZRPY(const double& x, const double& y, const double& z,
                                        const double& roll, const double& pitch, const double& yaw);
   static Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
 
+  /**
+   * \brief Convert an affine3d to xyz rpy components
+   */
+  static void convertToXYZRPY(const Eigen::Affine3d& pose, double& x, double& y, double& z, 
+                              double& roll, double& pitch, double& yaw);
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_
    * \param Pose to fill in
