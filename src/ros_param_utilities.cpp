@@ -207,10 +207,11 @@ bool convertDoublesToEigen(const std::string& parent_name, std::vector<double> v
     ROS_ERROR_STREAM_NAMED(parent_name, "Invalid number of doubles provided for transform, size=" << values.size());
     return false;
   }
-  Eigen::AngleAxisd roll_angle (values[3], Eigen::Vector3d::UnitZ());
-  Eigen::AngleAxisd pitch_angle(values[4], Eigen::Vector3d::UnitX());
-  Eigen::AngleAxisd yaw_angle  (values[5], Eigen::Vector3d::UnitY());
-  Eigen::Quaternion<double> quat = roll_angle * yaw_angle * pitch_angle;
+  // This version is correct RPY
+  Eigen::AngleAxisd roll_angle (values[3], Eigen::Vector3d::UnitX());
+  Eigen::AngleAxisd pitch_angle(values[4], Eigen::Vector3d::UnitY());
+  Eigen::AngleAxisd yaw_angle  (values[5], Eigen::Vector3d::UnitZ());
+  Eigen::Quaternion<double> quat = roll_angle * pitch_angle * yaw_angle;
 
   transform = Eigen::Translation3d(values[0], values[1], values[2]) * quat;
   return true;

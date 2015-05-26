@@ -1828,6 +1828,7 @@ Eigen::Affine3d RvizVisualTools::convertXYZRPY(std::vector<double> transform6)
 Eigen::Affine3d RvizVisualTools::convertXYZRPY(const double& x, const double& y, const double& z,
                                                const double& roll, const double& pitch, const double& yaw)
 {
+  // WARN: THIS VERSION IS WRONG, IS ACTUALL YAW ROLL PITCH
   Eigen::AngleAxisd roll_angle (roll, Eigen::Vector3d::UnitZ());
   Eigen::AngleAxisd pitch_angle(pitch, Eigen::Vector3d::UnitX());
   Eigen::AngleAxisd yaw_angle  (yaw, Eigen::Vector3d::UnitY());
