@@ -44,7 +44,6 @@ include_directories(
 # Visualization Tools Library
 add_library(${PROJECT_NAME}
   src/rviz_visual_tools.cpp
-  src/ros_param_utilities.cpp
   src/tf_visual_tools.cpp
 )
 
