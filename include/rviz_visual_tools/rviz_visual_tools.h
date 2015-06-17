@@ -477,26 +477,6 @@ public:
   bool publishCuboid(const Eigen::Affine3d  &pose, const double depth, const double width, const double height,
                      const colors &color = BLUE);
 
-  // To be removed in release of ROS JADE:
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  bool publishRectangle(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                        const colors &color = BLUE)
-  {
-    return publishCuboid(point1, point2, color);
-  }
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  bool publishRectangle(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                        const colors &color = BLUE)
-  {
-    return publishCuboid(point1, point2, color);
-  }
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  bool publishRectangle(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
-                        const colors &color = BLUE)
-  {
-    return publishCuboid(pose, depth, width, height, color);
-  }
-
   /**
    * \brief Display a marker of line
    * \param point1 - x,y,z of start of line
@@ -790,27 +770,6 @@ public:
   static float fRand(float min, float max);
   static int iRand(int min, int max);
 
-  /**
-   * \brief Debug variables to console
-   */
-  void print();
-
-  /**
-   * \brief Load parameter settings of the server under ~/debug_level
-   * \param parent_name - only used for debugging, allows one to see what paremeters are loaded in what namespace
-   * \param setting_namespace - where on this node's namespace to load settings 
-   *        e.g. /this_name/setting_namespace/some_parameter
-   * \return true on success
-   */
-  bool loadEnabledSettings(const std::string& parent_name, const std::string& setting_namespace);
-
-  /**
-   * \brief Check if a setting is enabled
-   * \param setting_name - name of key on the parameter server as loaded in the 'setting_namespace'
-   * \return true if setting is enabled
-   */
-  bool isEnabled(const std::string& setting_name);
-
 protected:
 
   /**
@@ -870,10 +829,6 @@ protected:
   geometry_msgs::Point32 shared_point32_msg_;
   Eigen::Affine3d shared_pose_eigen_;
   Eigen::Vector3d shared_point_eigen_;
-
-  // Visualization settings
-  bool enabled_setttings_loaded_;
-  std::map<std::string, bool> enabled_;
   
 }; // class
 

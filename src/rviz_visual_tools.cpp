@@ -38,9 +38,6 @@
 
 #include <rviz_visual_tools/rviz_visual_tools.h>
 
-// Parameter loading
-#include <rviz_visual_tools/ros_param_utilities.h>
-
 // Conversions
 #include <tf_conversions/tf_eigen.h>
 #include <eigen_conversions/eigen_msg.h>
@@ -54,7 +51,6 @@ RvizVisualTools::RvizVisualTools(const std::string& base_frame,
   , marker_topic_(marker_topic)
   , base_frame_(base_frame)
   , batch_publishing_enabled_(false)
-  , enabled_setttings_loaded_(false)
 {
   initialize();
 }
@@ -1954,16 +1950,6 @@ int RvizVisualTools::iRand(int min, int max)
   return min + x % n;
 }
 
-void RvizVisualTools::print()
-{
-  ROS_WARN_STREAM_NAMED("visual_tools","Debug Visual Tools variable values:");
-  std::cout << "marker_topic_: " << marker_topic_ << std::endl;
-  std::cout << "base_frame_: " << base_frame_ << std::endl;
-  std::cout << "floor_to_base_height_: " << floor_to_base_height_ << std::endl;
-  std::cout << "marker_lifetime_: " << marker_lifetime_.toSec() << std::endl;
-  std::cout << "alpha_: " << alpha_ << std::endl;
-}
-
 void RvizVisualTools::enableInternalBatchPublishing(bool enable)
 {
   // Don't interfere with external batch publishing
@@ -1982,33 +1968,6 @@ bool RvizVisualTools::triggerInternalBatchPublishAndDisable()
 
   markers_.markers.clear(); // remove all cached markers
   return result;
-}
-
-bool RvizVisualTools::loadEnabledSettings(const std::string& parent_name, const std::string& setting_namespace)
-{
-  // Check if the map has been loaded yet
-  if (!enabled_setttings_loaded_)
-  {
-    enabled_setttings_loaded_ = true;
-    return getBoolMap(parent_name, nh_, setting_namespace, enabled_);
-  }
-  return true;
-}
-
-bool RvizVisualTools::isEnabled(const std::string& setting_name)
-{
-  // Check if the map has been loaded yet. it is preferred if this is manually 
-  if (!enabled_setttings_loaded_)
-    ROS_ERROR_STREAM_NAMED("rviz_visual_tools","Enabled settings are not yet loaded e.g. call loadEnabledSettings()");
-
-  std::map<std::string,bool>::iterator it = enabled_.find(setting_name);
-  if(it != enabled_.end())
-  {
-    // Element found;
-    return it->second;
-  }
-  ROS_ERROR_STREAM_NAMED("rviz_visual_tools","isEnabled() key '" << setting_name << "' does not exist on the parameter server");
-  return false;
 }
 
 } // namespace
