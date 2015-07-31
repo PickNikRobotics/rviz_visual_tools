@@ -741,7 +741,7 @@ public:
   /**
    * \brief Convert an affine3d to xyz rpy components
    */
-  static void convertToXYZRPY(const Eigen::Affine3d& pose, double& x, double& y, double& z, 
+  static void convertToXYZRPY(const Eigen::Affine3d& pose, double& x, double& y, double& z,
                               double& roll, double& pitch, double& yaw);
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_
@@ -769,6 +769,16 @@ public:
   static double dRand(double min, double max);
   static float fRand(float min, float max);
   static int iRand(int min, int max);
+
+  /**
+   * \brief Display in the console a transform in quaternions
+   */
+  static void printTransform(const Eigen::Affine3d &transform);
+
+  /**
+   * \brief Display in the console a transform in roll pitch yaw
+   */
+  static void printTransformRPY(const Eigen::Affine3d &transform);
 
 protected:
 
@@ -798,7 +808,7 @@ protected:
   double floor_to_base_height_; // allows an offset between base link and floor where objects are built
 
   // Duration to have Rviz markers persist, 0 for infinity
-  ros::Duration marker_lifetime_; // TODO remove this  
+  ros::Duration marker_lifetime_; // TODO remove this
 
   // Settings
   bool batch_publishing_enabled_;
@@ -829,7 +839,7 @@ protected:
   geometry_msgs::Point32 shared_point32_msg_;
   Eigen::Affine3d shared_pose_eigen_;
   Eigen::Vector3d shared_point_eigen_;
-  
+
 }; // class
 
 typedef boost::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;

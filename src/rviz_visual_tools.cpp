@@ -1970,4 +1970,18 @@ bool RvizVisualTools::triggerInternalBatchPublishAndDisable()
   return result;
 }
 
+void RvizVisualTools::printTransform(const Eigen::Affine3d &transform)
+{
+  Eigen::Quaterniond q(transform.rotation());
+  std::cout << "T.xyz = [" << transform.translation().x() << ", " << transform.translation().y() << ", " << transform.translation().z() << "], Q.xyzw = ["
+            << q.x() << ", " << q.y() << ", " << q.z() << ", " << q.w() << "]" << std::endl;
+}
+
+void RvizVisualTools::printTransformRPY(const Eigen::Affine3d &transform)
+{
+  double x, y, z, r, p, yaw;
+  convertToXYZRPY(transform, x, y, z, r, p, yaw);
+  std::cout << "transform: [" << x << ", " << y << ", " << z << ", " << r << ", " << p << ", " << yaw << "]\n";
+}
+
 } // namespace
