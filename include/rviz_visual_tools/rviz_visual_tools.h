@@ -40,7 +40,7 @@
 #define RVIZ_VISUAL_TOOLS__VISUAL_TOOLS_H_
 
 #include <ros/ros.h>
-#include <cmath> // for random poses
+#include <cmath>  // for random poses
 
 // Eigen
 #include <Eigen/Geometry>
@@ -65,66 +65,81 @@
 
 namespace rviz_visual_tools
 {
-
 // Default constants
 static const std::string RVIZ_MARKER_TOPIC = "/rviz_visual_tools";
 static const double SMALL_SCALE = 0.001;
 static const double LARGE_SCALE = 100;
 
 // Note: when adding new colors to colors, also add them to getRandColor() function
-enum colors { BLACK,
-              BLUE,
-              BROWN,
-              CYAN,
-              DARK_GREY,
-              GREEN,
-              GREY,
-              LIME_GREEN,
-              MAGENTA,
-              ORANGE,
-              PINK,
-              PURPLE,
-              RED,
-              WHITE,
-              YELLOW,
-              TRANSLUCENT_LIGHT,
-              TRANSLUCENT,
-              TRANSLUCENT_DARK,
-              RAND,
-	      CLEAR,
-              DEFAULT // i.e. 'do not change default color'
+enum colors
+{
+  BLACK,
+  BLUE,
+  BROWN,
+  CYAN,
+  DARK_GREY,
+  GREEN,
+  GREY,
+  LIME_GREEN,
+  MAGENTA,
+  ORANGE,
+  PINK,
+  PURPLE,
+  RED,
+  WHITE,
+  YELLOW,
+  TRANSLUCENT_LIGHT,
+  TRANSLUCENT,
+  TRANSLUCENT_DARK,
+  RAND,
+  CLEAR,
+  DEFAULT  // i.e. 'do not change default color'
 };
 
-enum scales { XXSMALL,
-              XSMALL,
-              SMALL,
-              REGULAR,
-              LARGE, xLARGE, xxLARGE, xxxLARGE,
-              XLARGE,
-              XXLARGE };
+enum scales
+{
+  XXSMALL,
+  XSMALL,
+  SMALL,
+  REGULAR,
+  LARGE,
+  xLARGE,
+  xxLARGE,
+  xxxLARGE,
+  XLARGE,
+  XXLARGE
+};
 
 /**
  * \brief Bounds for generateRandomPose()
  */
 struct RandomPoseBounds
 {
-  double x_min_,         x_max_;
-  double y_min_,         y_max_;
-  double z_min_,         z_max_;
+  double x_min_, x_max_;
+  double y_min_, y_max_;
+  double z_min_, z_max_;
   double elevation_min_, elevation_max_;
-  double azimuth_min_,   azimuth_max_;
-  double angle_min_,     angle_max_;
+  double azimuth_min_, azimuth_max_;
+  double angle_min_, angle_max_;
 
-  RandomPoseBounds(double x_min = 0.0, double x_max = 1.0, double y_min = 0.0, double y_max = 1.0, double z_min = 0.0, double z_max = 1.0,
-                   double elevation_min = 0.0, double elevation_max = M_PI, double azimuth_min = 0.0, double azimuth_max = 2 * M_PI,
-                   double angle_min = 0.0, double angle_max = 2 * M_PI)
+  RandomPoseBounds(double x_min = 0.0, double x_max = 1.0, double y_min = 0.0, double y_max = 1.0,
+                   double z_min = 0.0, double z_max = 1.0, double elevation_min = 0.0,
+                   double elevation_max = M_PI, double azimuth_min = 0.0,
+                   double azimuth_max = 2 * M_PI, double angle_min = 0.0,
+                   double angle_max = 2 * M_PI)
   {
-    x_min_ = x_min;                 x_max_ = x_max;
-    y_min_ = y_min;                 y_max_ = y_max;
-    z_min_ = z_min;                 z_max_ = z_max;
-    elevation_min_ = elevation_min; elevation_max_ = elevation_max;
-    azimuth_min_ = azimuth_min;     azimuth_max_ = azimuth_max;
-    angle_min_ = angle_min;         angle_max_ = angle_max;
+    x_min_ = x_min;
+    x_max_ = x_max;
+    y_min_ = y_min;
+    y_max_ = y_max;
+    z_min_ = z_min;
+    z_max_ = z_max;
+    elevation_min_ = elevation_min;
+    elevation_max_ = elevation_max;
+    azimuth_min_ = azimuth_min;
+    azimuth_max_ = azimuth_max;
+    angle_min_ = angle_min;
+    angle_max_ = angle_max;
   }
 };
 
@@ -142,10 +157,8 @@ struct RandomCuboidBounds
   }
 };
 
-
 class RvizVisualTools
 {
-
 private:
   /**
    * \brief Shared function for initilization by constructors
@@ -153,21 +166,21 @@ private:
   void initialize();
 
 public:
-
   /**
    * \brief Constructor
    * \param base_frame - common base for all visualization markers, usually "/world" or "/odom"
    * \param marker_topic - rostopic to publish markers to - your Rviz display should match
    */
-  RvizVisualTools(const std::string& base_frame,
-                  const std::string& marker_topic = RVIZ_MARKER_TOPIC);
+  RvizVisualTools(const std::string &base_frame,
+                  const std::string &marker_topic = RVIZ_MARKER_TOPIC);
   /**
    * \brief Deconstructor
    */
-  ~RvizVisualTools() {};
+  ~RvizVisualTools(){};
 
   /**
-   * \brief Tell Rviz to clear all markers on a particular display. Note: only works on ROS Indigo and newer
+   * \brief Tell Rviz to clear all markers on a particular display. Note: only works on ROS Indigo
+   * and newer
    */
   bool deleteAllMarkers();
 
@@ -206,11 +219,7 @@ public:
    * \brief Change the transparency of all markers published
    * \param alpha - value 0 - 1 where 0 is invisible
    */
-  void setAlpha(double alpha)
-  {
-    alpha_ = alpha;
-  }
-
+  void setAlpha(double alpha) { alpha_ = alpha; }
   /**
    * \brief Set the lifetime of markers published to rviz
    * \param lifetime seconds of how long to show markers. 0 for inifinity
@@ -237,7 +246,8 @@ public:
    * \param marker_scale - amount to scale the scale for accounting for different types of markers
    * \return vector of 3 scales
    */
-  geometry_msgs::Vector3 getScale(const scales &scale, bool arrow_scale = false, double marker_scale = 1.0);
+  geometry_msgs::Vector3 getScale(const scales &scale, bool arrow_scale = false,
+                                  double marker_scale = 1.0);
 
   /**
    * \brief Create a vector that points from point a to point b
@@ -259,17 +269,13 @@ public:
    * \brief Get the base frame
    * \return name of base frame
    */
-  const std::string getBaseFrame()
-  {
-    return base_frame_;
-  }
-
+  const std::string getBaseFrame() { return base_frame_; }
   /**
    * \brief Change the global base frame
    *        Note: this might reset all your current markers
    * \param name of frame
    */
-  void setBaseFrame(const std::string& base_frame)
+  void setBaseFrame(const std::string &base_frame)
   {
     base_frame_ = base_frame;
     loadRvizMarkers();
@@ -278,19 +284,11 @@ public:
   /**
    * \brief Getter for the global scale used for changing size of all markers
    */
-  double getGlobalScale()
-  {
-    return global_scale_;
-  }
-
+  double getGlobalScale() { return global_scale_; }
   /**
    * \brief Setter for the global scale used for changing size of all markers
    */
-  void setGlobalScale(double global_scale)
-  {
-    global_scale_ = global_scale;
-  }
-
+  void setGlobalScale(double global_scale) { global_scale_ = global_scale; }
   /**
    * \brief Display a visualization_msgs Marker of a custom type. Allows reuse of the ros publisher
    * \param marker - a pre-made marker ready to be published
@@ -299,8 +297,10 @@ public:
   bool publishMarker(const visualization_msgs::Marker &marker);
 
   /**
-   * \brief Enable batch publishing - useful for when many markers need to be published at once and the ROS topic can get
-   *        overloaded. This collects all published markers into array and only publishes them with triggerBatchPublish() is called
+   * \brief Enable batch publishing - useful for when many markers need to be published at once and
+   * the ROS topic can get
+   *        overloaded. This collects all published markers into array and only publishes them with
+   * triggerBatchPublish() is called
    */
   void enableBatchPublishing(bool enable);
 
@@ -311,7 +311,8 @@ public:
   bool triggerBatchPublish();
 
   /**
-   * \brief Trigger the publish function to send out all collected markers. Also then turns off the batch mode. This is safer
+   * \brief Trigger the publish function to send out all collected markers. Also then turns off the
+   * batch mode. This is safer
    *        incase programmer forgets
    * \return true on success
    */
@@ -331,10 +332,10 @@ public:
    * \param scale - size of the cone
    * \return true on success
    */
-  bool publishCone(const Eigen::Affine3d &pose, double angle, const rviz_visual_tools::colors &color
-                   = TRANSLUCENT, double scale  = 1.0);
-  bool publishCone(const geometry_msgs::Pose &pose, double angle, const rviz_visual_tools::colors &color
-                   = TRANSLUCENT, double scale = 1.0);
+  bool publishCone(const Eigen::Affine3d &pose, double angle,
+                   const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishCone(const geometry_msgs::Pose &pose, double angle,
+                   const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
@@ -343,10 +344,10 @@ public:
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishXYPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
-                      double scale = 1.0);
-  bool publishXYPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
-                      double scale = 1.0);
+  bool publishXYPlane(const Eigen::Affine3d &pose,
+                      const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishXYPlane(const geometry_msgs::Pose &pose,
+                      const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
@@ -355,10 +356,10 @@ public:
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishXZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
-                      double scale = 1.0);
-  bool publishXZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
-                      double scale = 1.0);
+  bool publishXZPlane(const Eigen::Affine3d &pose,
+                      const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishXZPlane(const geometry_msgs::Pose &pose,
+                      const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
@@ -367,8 +368,10 @@ public:
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishYZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
-  bool publishYZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishYZPlane(const Eigen::Affine3d &pose,
+                      const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishYZPlane(const geometry_msgs::Pose &pose,
+                      const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
 
   /**
    * \brief Display a marker of a sphere
@@ -376,17 +379,27 @@ public:
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param ns - namespace of marker
-   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults
+   * to incremental counter
    * \return true on success
    */
-  bool publishSphere(const Eigen::Affine3d &pose, const colors &color = BLUE, const scales &scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const Eigen::Vector3d &point, const colors &color = BLUE, const scales &scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const Eigen::Vector3d &point, const colors &color, const double scale, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Point &point, const colors &color = BLUE, const scales &scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color = BLUE, const scales &scale = REGULAR, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color, const double scale, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color, const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere");
-  bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color, const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere", const std::size_t &id = 0);
+  bool publishSphere(const Eigen::Affine3d &pose, const colors &color = BLUE,
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+  bool publishSphere(const Eigen::Vector3d &point, const colors &color = BLUE,
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+  bool publishSphere(const Eigen::Vector3d &point, const colors &color, const double scale,
+                     const std::string &ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Point &point, const colors &color = BLUE,
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color = BLUE,
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color, const double scale,
+                     const std::string &ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color,
+                     const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere");
+  bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color,
+                     const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere",
+                     const std::size_t &id = 0);
 
   /**
    * \brief Display a marker of a series of spheres
@@ -396,10 +409,14 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishSpheres(const std::vector<Eigen::Vector3d> &points, const colors &color = BLUE, const double scale = 0.1, const std::string& ns = "Spheres");
-  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color = BLUE, const double scale = 0.1, const std::string& ns = "Spheres");
-  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color = BLUE, const scales &scale = REGULAR, const std::string& ns = "Spheres");
-  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color, const geometry_msgs::Vector3 &scale, const std::string& ns = "Spheres");
+  bool publishSpheres(const std::vector<Eigen::Vector3d> &points, const colors &color = BLUE,
+                      const double scale = 0.1, const std::string &ns = "Spheres");
+  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color = BLUE,
+                      const double scale = 0.1, const std::string &ns = "Spheres");
+  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color = BLUE,
+                      const scales &scale = REGULAR, const std::string &ns = "Spheres");
+  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color,
+                      const geometry_msgs::Vector3 &scale, const std::string &ns = "Spheres");
 
   /**
    * \brief Display an arrow along the x-axis of a pose
@@ -411,9 +428,9 @@ public:
    */
   bool publishXArrow(const Eigen::Affine3d &pose, const colors &color = RED,
                      const scales &scale = REGULAR, double length = 0.1);
-  bool publishXArrow(const  geometry_msgs::Pose &pose, const colors &color = RED,
+  bool publishXArrow(const geometry_msgs::Pose &pose, const colors &color = RED,
                      const scales &scale = REGULAR, double length = 0.1);
-  bool publishXArrow(const  geometry_msgs::PoseStamped &pose, const colors &color = RED,
+  bool publishXArrow(const geometry_msgs::PoseStamped &pose, const colors &color = RED,
                      const scales &scale = REGULAR, double length = 0.1);
 
   /**
@@ -426,9 +443,9 @@ public:
    */
   bool publishYArrow(const Eigen::Affine3d &pose, const colors &color = GREEN,
                      const scales &scale = REGULAR, double length = 0.1);
-  bool publishYArrow(const  geometry_msgs::Pose &pose, const colors &color = GREEN,
+  bool publishYArrow(const geometry_msgs::Pose &pose, const colors &color = GREEN,
                      const scales &scale = REGULAR, double length = 0.1);
-  bool publishYArrow(const  geometry_msgs::PoseStamped &pose, const colors &color = GREEN,
+  bool publishYArrow(const geometry_msgs::PoseStamped &pose, const colors &color = GREEN,
                      const scales &scale = REGULAR, double length = 0.1);
 
   /**
@@ -441,9 +458,9 @@ public:
    */
   bool publishZArrow(const Eigen::Affine3d &pose, const colors &color = BLUE,
                      const scales &scale = REGULAR, double length = 0.1);
-  bool publishZArrow(const  geometry_msgs::Pose &pose, const colors &color = BLUE,
+  bool publishZArrow(const geometry_msgs::Pose &pose, const colors &color = BLUE,
                      const scales &scale = REGULAR, double length = 0.1);
-  bool publishZArrow(const  geometry_msgs::PoseStamped &pose, const colors &color = BLUE,
+  bool publishZArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE,
                      const scales &scale = REGULAR, double length = 0.1);
 
   /**
@@ -481,10 +498,10 @@ public:
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width, const double height,
-                     const colors &color = BLUE);
-  bool publishCuboid(const Eigen::Affine3d  &pose, const double depth, const double width, const double height,
-                     const colors &color = BLUE);
+  bool publishCuboid(const geometry_msgs::Pose &pose, const double depth, const double width,
+                     const double height, const colors &color = BLUE);
+  bool publishCuboid(const Eigen::Affine3d &pose, const double depth, const double width,
+                     const double height, const colors &color = BLUE);
 
   /**
    * \brief Display a marker of line
@@ -510,8 +527,7 @@ public:
    * \return true on success
    */
   bool publishPath(const std::vector<geometry_msgs::Point> &path, const colors &color = RED,
-                   const scales &scale = REGULAR,
-                   const std::string& ns = "Path");
+                   const scales &scale = REGULAR, const std::string &ns = "Path");
 
   /**
    * \brief Display a marker of a polygon
@@ -522,8 +538,7 @@ public:
    * \return true on success
    */
   bool publishPolygon(const geometry_msgs::Polygon &polygon, const colors &color = RED,
-                      const scales &scale = REGULAR,
-                      const std::string& ns = "Polygon");
+                      const scales &scale = REGULAR, const std::string &ns = "Polygon");
 
   /**
    * \brief Display a marker of a block
@@ -532,8 +547,10 @@ public:
    * \param size - height=width=depth=size
    * \return true on success
    */
-  bool publishBlock(const geometry_msgs::Pose &pose, const colors &color = BLUE, const double &block_size = 0.1);
-  bool publishBlock(const Eigen::Affine3d &pose, const colors &color = BLUE, const double &block_size = 0.1);
+  bool publishBlock(const geometry_msgs::Pose &pose, const colors &color = BLUE,
+                    const double &block_size = 0.1);
+  bool publishBlock(const Eigen::Affine3d &pose, const colors &color = BLUE,
+                    const double &block_size = 0.1);
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
@@ -543,12 +560,14 @@ public:
    * \param height - object height
    * \param color - an enum pre-defined name of a color
    * \param ns - namespace
-   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults
+   * to incremental counter
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Affine3d &pose, double depth, double width,
                               double height, const rviz_visual_tools::colors &color = BLUE,
-                              const std::string& ns = "Wireframe Cuboid", const std::size_t &id = 0);
+                              const std::string &ns = "Wireframe Cuboid",
+                              const std::size_t &id = 0);
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
@@ -557,12 +576,15 @@ public:
    * \param max_point - maximum x, y, z coordinates
    * \param color - an enum pre-defined name of a color
    * \param ns - namespace
-   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults
+   * to incremental counter
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Affine3d &pose, const Eigen::Vector3d &min_point,
-                              const Eigen::Vector3d &max_point, const rviz_visual_tools::colors &color = BLUE,
-                              const std::string& ns = "Wireframe Cuboid", const std::size_t &id = 0);
+                              const Eigen::Vector3d &max_point,
+                              const rviz_visual_tools::colors &color = BLUE,
+                              const std::string &ns = "Wireframe Cuboid",
+                              const std::size_t &id = 0);
 
   /**
    * \brief Publish outline of a rectangle
@@ -572,12 +594,13 @@ public:
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishWireframeRectangle(const Eigen::Affine3d &pose, const double& height, const double& width,
-                                 const colors &color = BLUE, const scales &scale = REGULAR);
-  bool publishWireframeRectangle(const Eigen::Affine3d &pose,
-                                 const Eigen::Vector3d &p1, const Eigen::Vector3d &p2,
-                                 const Eigen::Vector3d &p3, const Eigen::Vector3d &p4,
-                                 const colors &color, const scales &scale);
+  bool publishWireframeRectangle(const Eigen::Affine3d &pose, const double &height,
+                                 const double &width, const colors &color = BLUE,
+                                 const scales &scale = REGULAR);
+  bool publishWireframeRectangle(const Eigen::Affine3d &pose, const Eigen::Vector3d &p1,
+                                 const Eigen::Vector3d &p2, const Eigen::Vector3d &p3,
+                                 const Eigen::Vector3d &p4, const colors &color,
+                                 const scales &scale);
   /**
    * \brief Display a marker of a axis with a text label describing it
    * \param pose - the location to publish the marker with respect to the base frame
@@ -585,8 +608,10 @@ public:
    * \param scale - size of axis
    * \return true on success
    */
-  bool publishAxisLabeled(const Eigen::Affine3d &pose, const std::string& label, const scales &scale = REGULAR);
-  bool publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string& label, const scales &scale = REGULAR);
+  bool publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label,
+                          const scales &scale = REGULAR);
+  bool publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label,
+                          const scales &scale = REGULAR);
 
   /**
    * \brief Display a marker of a axis
@@ -595,8 +620,10 @@ public:
    * \param radius - geometry of cylinder
    * \return true on success
    */
-  bool publishAxis(const geometry_msgs::Pose &pose, double length = 0.1, double radius = 0.01, const std::string& ns = "Axis");
-  bool publishAxis(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01, const std::string& ns = "Axis");
+  bool publishAxis(const geometry_msgs::Pose &pose, double length = 0.1, double radius = 0.01,
+                   const std::string &ns = "Axis");
+  bool publishAxis(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01,
+                   const std::string &ns = "Axis");
 
   /**
    * \brief Display a marker of a cylinder
@@ -607,9 +634,10 @@ public:
    * \return true on success
    */
   bool publishCylinder(const Eigen::Affine3d &pose, const colors &color = BLUE, double height = 0.1,
-                       double radius = 0.01, const std::string& ns = "Cylinder");
-  bool publishCylinder(const geometry_msgs::Pose &pose, const colors &color = BLUE, double height = 0.1,
-                       double radius = 0.01, const std::string& ns = "Cylinder");
+                       double radius = 0.01, const std::string &ns = "Cylinder");
+  bool publishCylinder(const geometry_msgs::Pose &pose, const colors &color = BLUE,
+                       double height = 0.1, double radius = 0.01,
+                       const std::string &ns = "Cylinder");
 
   /**
    * \brief Display a mesh from file
@@ -618,13 +646,16 @@ public:
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param ns - namespace of marker
-   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults
+   * to incremental counter
    * \return true on success
    */
-  bool publishMesh(const Eigen::Affine3d &pose, const std::string& file_name, const colors &color = CLEAR,
-                   double scale = 1, const std::string &ns = "mesh", const std::size_t &id = 0);
-  bool publishMesh(const geometry_msgs::Pose &pose, const std::string& file_name, const colors &color = CLEAR,
-                   double scale = 1, const std::string &ns = "mesh", const std::size_t &id = 0);
+  bool publishMesh(const Eigen::Affine3d &pose, const std::string &file_name,
+                   const colors &color = CLEAR, double scale = 1, const std::string &ns = "mesh",
+                   const std::size_t &id = 0);
+  bool publishMesh(const geometry_msgs::Pose &pose, const std::string &file_name,
+                   const colors &color = CLEAR, double scale = 1, const std::string &ns = "mesh",
+                   const std::size_t &id = 0);
 
   /**
    * \brief Display a graph
@@ -645,13 +676,15 @@ public:
    * \return true on success
    */
   bool publishText(const Eigen::Affine3d &pose, const std::string &text,
-                   const colors &color = WHITE, const scales &scale = REGULAR, bool static_id = true);
+                   const colors &color = WHITE, const scales &scale = REGULAR,
+                   bool static_id = true);
 
   bool publishText(const geometry_msgs::Pose &pose, const std::string &text,
-                   const colors &color = WHITE, const scales &scale = REGULAR, bool static_id = true);
+                   const colors &color = WHITE, const scales &scale = REGULAR,
+                   bool static_id = true);
 
-  bool publishText(const geometry_msgs::Pose &pose, const std::string &text,
-                   const colors &color, const geometry_msgs::Vector3 scale, bool static_id = true);
+  bool publishText(const geometry_msgs::Pose &pose, const std::string &text, const colors &color,
+                   const geometry_msgs::Vector3 scale, bool static_id = true);
 
   /**
    * \brief Run a simple test of all visual_tool's features
@@ -740,37 +773,40 @@ public:
   geometry_msgs::Point convertPoint(const Eigen::Vector3d &point);
 
   /**
-   * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler ZXY convention
+   * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler
+   * ZXY convention
    * \return 4x4 matrix in form of affine3d
    */
-  static Eigen::Affine3d convertXYZRPY(const double& x, const double& y, const double& z,
-                                       const double& roll, const double& pitch, const double& yaw);
+  static Eigen::Affine3d convertXYZRPY(const double &x, const double &y, const double &z,
+                                       const double &roll, const double &pitch, const double &yaw);
   static Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
 
   /**
    * \brief Convert an affine3d to xyz rpy components
    */
-  static void convertToXYZRPY(const Eigen::Affine3d& pose, double& x, double& y, double& z,
-                              double& roll, double& pitch, double& yaw);
+  static void convertToXYZRPY(const Eigen::Affine3d &pose, double &x, double &y, double &z,
+                              double &roll, double &pitch, double &yaw);
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_
    * \param Pose to fill in
    * \parma options bounds on the pose to generate
    */
-  void generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
-  void generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
+  void generateRandomPose(geometry_msgs::Pose &pose,
+                          RandomPoseBounds pose_bounds = RandomPoseBounds());
+  void generateRandomPose(Eigen::Affine3d &pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
 
   /**
    * \brief Create a random rectangular cuboid of some shape
    */
-  void generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height,
-                            RandomPoseBounds pose_bounds = RandomPoseBounds(), RandomCuboidBounds cuboid_bounds = RandomCuboidBounds());
+  void generateRandomCuboid(geometry_msgs::Pose &cuboid_pose, double &depth, double &width,
+                            double &height, RandomPoseBounds pose_bounds = RandomPoseBounds(),
+                            RandomCuboidBounds cuboid_bounds = RandomCuboidBounds());
 
   /**
    * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
    * \param Pose to fill in
    */
-  void generateEmptyPose(geometry_msgs::Pose& pose);
+  void generateEmptyPose(geometry_msgs::Pose &pose);
 
   /**
    * \brief Get random between min and max
@@ -790,14 +826,14 @@ public:
   static void printTransformRPY(const Eigen::Affine3d &transform);
 
 protected:
-
   /**
    * \brief Allows certain marker functions to batch publish without breaking external functinality
    */
   void enableInternalBatchPublishing(bool enable);
 
   /**
-   * \brief Trigger the publish function to send out all collected markers. Also then turns off the batch mode. This is safer
+   * \brief Trigger the publish function to send out all collected markers. Also then turns off the
+   * batch mode. This is safer
    *        incase programmer forgets. This is the internal version
    * \return true on success
    */
@@ -807,23 +843,25 @@ protected:
   ros::NodeHandle nh_;
 
   // ROS publishers
-  ros::Publisher pub_rviz_markers_; // for rviz visualization markers
+  ros::Publisher pub_rviz_markers_;  // for rviz visualization markers
 
   // Strings
-  std::string marker_topic_; // topic to publish to rviz
-  std::string base_frame_; // name of base link
+  std::string marker_topic_;  // topic to publish to rviz
+  std::string base_frame_;    // name of base link
 
   // TODO rename this
-  double floor_to_base_height_; // allows an offset between base link and floor where objects are built
+  double floor_to_base_height_;  // allows an offset between base link and floor where objects are
+                                 // built
 
   // Duration to have Rviz markers persist, 0 for infinity
-  ros::Duration marker_lifetime_; // TODO remove this
+  ros::Duration marker_lifetime_;  // TODO remove this
 
   // Settings
   bool batch_publishing_enabled_;
-  bool internal_batch_publishing_enabled_; // this allows certain marker functions to batch publish without breaking external functinality
-  double alpha_; // opacity of all markers
-  double global_scale_; // allow all markers to be increased by a constanct factor
+  bool internal_batch_publishing_enabled_;  // this allows certain marker functions to batch publish
+                                            // without breaking external functinality
+  double alpha_;                            // opacity of all markers
+  double global_scale_;  // allow all markers to be increased by a constanct factor
 
   // Cached Rviz Marker Array
   visualization_msgs::MarkerArray markers_;
@@ -849,11 +887,11 @@ protected:
   Eigen::Affine3d shared_pose_eigen_;
   Eigen::Vector3d shared_point_eigen_;
 
-}; // class
+};  // class
 
 typedef boost::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
 typedef boost::shared_ptr<const RvizVisualTools> RvizVisualToolsConstPtr;
 
-} // namespace
+}  // namespace
 
 #endif

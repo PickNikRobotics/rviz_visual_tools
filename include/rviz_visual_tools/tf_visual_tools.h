@@ -57,48 +57,45 @@
 
 namespace rviz_visual_tools
 {
-
 class TFVisualTools
 {
 public:
+  /**
+   * \brief Constructor
+   */
+  TFVisualTools();
 
-/**
- * \brief Constructor
- */
-TFVisualTools();
-
-/**
- * \brief Visualize transforms in Rviz, etc
- * \return true on success
- */
-bool publishTransform(const Eigen::Affine3d& transform, const std::string& from_frame,
+  /**
+   * \brief Visualize transforms in Rviz, etc
+   * \return true on success
+   */
+  bool publishTransform(const Eigen::Affine3d& transform, const std::string& from_frame,
                         const std::string& to_frame);
 
-/**
- * \brief At a certain frequency update the tf transforms that we are tracking
- */
-void publishAllTransforms(const ros::TimerEvent& e);
+  /**
+   * \brief At a certain frequency update the tf transforms that we are tracking
+   */
+  void publishAllTransforms(const ros::TimerEvent& e);
 
 private:
+  // A shared node handle
+  ros::NodeHandle nh_;
 
-// A shared node handle
-ros::NodeHandle nh_;
+  // Send tf messages
+  tf2_ros::TransformBroadcaster tf_pub_;
 
-// Send tf messages
-tf2_ros::TransformBroadcaster tf_pub_;
+  // Separate thread to publish transforms
+  ros::Timer non_realtime_loop_;
 
-// Separate thread to publish transforms
-ros::Timer non_realtime_loop_;
+  // Collect the transfroms
+  std::vector<geometry_msgs::TransformStamped> transforms_;
 
-// Collect the transfroms
-std::vector< geometry_msgs::TransformStamped > transforms_;
-
-}; // end class
+};  // end class
 
 // Create boost pointers for this class
 typedef boost::shared_ptr<TFVisualTools> TFVisualToolsPtr;
 typedef boost::shared_ptr<const TFVisualTools> TFVisualToolsConstPtr;
 
-} // end namespace
+}  // end namespace
 
 #endif

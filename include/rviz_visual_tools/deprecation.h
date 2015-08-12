@@ -43,7 +43,7 @@
 #elif defined(_MSC_VER)
 #define RVIZ_VISUAL_TOOLS_DEPRECATED __declspec(deprecated)
 #elif defined(__clang__)
-#define RVIZ_VISUAL_TOOLS_DEPRECATED  __attribute__((deprecated("Use of this method is deprecated")))
+#define RVIZ_VISUAL_TOOLS_DEPRECATED __attribute__((deprecated("Use of this method is deprecated")))
 #else
 #define RVIZ_VISUAL_TOOLS_DEPRECATED /* Nothing */
 #endif
