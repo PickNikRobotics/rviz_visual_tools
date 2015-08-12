@@ -886,6 +886,31 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_
   return publishMarker( sphere_marker_ );
 }
 
+bool RvizVisualTools::publishSphere(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color, const geometry_msgs::Vector3 scale, const std::string& ns, const std::size_t &id)
+{
+  // Set the frame ID and timestamp
+  sphere_marker_.header = pose.header;
+
+  if (id == 0)
+    sphere_marker_.id++;
+  else
+    sphere_marker_.id = id;  
+
+  sphere_marker_.color = getColor(color);
+  sphere_marker_.scale = scale;
+  sphere_marker_.ns = ns;
+
+  // Update the single point with new pose
+  sphere_marker_.points[0] = pose.pose.position;
+  sphere_marker_.colors[0] = getColor(color);
+
+  // Helper for publishing rviz markers
+  publishMarker( sphere_marker_ );
+
+  sphere_marker_.header.frame_id = base_frame_; // restore default frame
+  return true;
+}
+
 bool RvizVisualTools::publishXArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
                                     const rviz_visual_tools::scales &scale, double length)
 {
@@ -961,7 +986,8 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
 {
   // Set the frame ID and timestamp.
   arrow_marker_.header.stamp = ros::Time::now();
-
+  arrow_marker_.header.frame_id = base_frame_;
+  
   arrow_marker_.id++;
   arrow_marker_.pose = pose;
   arrow_marker_.color = getColor(color);
@@ -973,19 +999,25 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_v
 }
 
 bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales &scale, double length)
+                                   const rviz_visual_tools::scales &scale, double length, const std::size_t &id)
 {
   // Set the frame ID and timestamp.
   arrow_marker_.header = pose.header;
 
-  arrow_marker_.id++;
+  if (id == 0)
+    arrow_marker_.id++;
+  else
+    arrow_marker_.id = id;
+  
   arrow_marker_.pose = pose.pose;
   arrow_marker_.color = getColor(color);
   arrow_marker_.scale = getScale(scale, true);
   arrow_marker_.scale.x = length; // overrides previous x scale specified
 
   // Helper for publishing rviz markers
-  return publishMarker( arrow_marker_ );
+  publishMarker( arrow_marker_ );
+
+  arrow_marker_.header.frame_id = base_frame_; // restore default frame
 }
 
 bool RvizVisualTools::publishBlock(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color, const double &block_size)

@@ -331,8 +331,10 @@ public:
    * \param scale - size of the cone
    * \return true on success
    */
-  bool publishCone(const Eigen::Affine3d &pose, double angle, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale  = 1.0);
-  bool publishCone(const geometry_msgs::Pose &pose, double angle, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishCone(const Eigen::Affine3d &pose, double angle, const rviz_visual_tools::colors &color
+                   = TRANSLUCENT, double scale  = 1.0);
+  bool publishCone(const geometry_msgs::Pose &pose, double angle, const rviz_visual_tools::colors &color
+                   = TRANSLUCENT, double scale = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
@@ -341,8 +343,10 @@ public:
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishXYPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
-  bool publishXYPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishXYPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
+                      double scale = 1.0);
+  bool publishXYPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
+                      double scale = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
@@ -351,8 +355,10 @@ public:
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishXZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
-  bool publishXZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT, double scale = 1.0);
+  bool publishXZPlane(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
+                      double scale = 1.0);
+  bool publishXZPlane(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color = TRANSLUCENT,
+                      double scale = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
@@ -369,6 +375,8 @@ public:
    * \param pose - the location to publish the sphere with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
+   * \param ns - namespace of marker
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults to incremental counter
    * \return true on success
    */
   bool publishSphere(const Eigen::Affine3d &pose, const colors &color = BLUE, const scales &scale = REGULAR, const std::string& ns = "Sphere");
@@ -378,6 +386,7 @@ public:
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color = BLUE, const scales &scale = REGULAR, const std::string& ns = "Sphere");
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color, const double scale, const std::string& ns = "Sphere");
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color, const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere");
+  bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color, const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere", const std::size_t &id = 0);
 
   /**
    * \brief Display a marker of a series of spheres
@@ -450,7 +459,7 @@ public:
   bool publishArrow(const geometry_msgs::Pose &pose, const colors &color = BLUE,
                     const scales &scale = REGULAR, double length = 0.1);
   bool publishArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE,
-                    const scales &scale = REGULAR, double length = 0.1);
+                    const scales &scale = REGULAR, double length = 0.1, const std::size_t &id = 0);
 
   /**
    * \brief Display a rectangular cuboid
