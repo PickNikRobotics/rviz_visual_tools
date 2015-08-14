@@ -694,15 +694,22 @@ public:
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param pose
    * \return converted pose
    */
   geometry_msgs::Pose convertPose(const Eigen::Affine3d &pose);
 
   /**
+   * \brief Convert an Eigen pose to a geometry_msg pose - thread safe
+   * \param input pose
+   * \param output converted pose   
+   */  
+  static void convertPoseSafe(const Eigen::Affine3d &pose, geometry_msgs::Pose &pose_msg);
+
+  /**
    * \brief Convert a geometry_msg pose to an Eigen pose
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param pose
    * \return converted pose
    */
@@ -710,7 +717,7 @@ public:
 
   /**
    * \brief Convert a geometry_msg point (32bit) to an Eigen pose
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param pose
    * \return converted point with default rotation matrix
    */
@@ -726,7 +733,7 @@ public:
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg point
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param pose
    * \return converted point with orientation discarded
    */
@@ -734,7 +741,7 @@ public:
 
   /**
    * \brief Convert a geometry_msg point to an Eigen point
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param point
    * \return converted pose
    */
@@ -742,7 +749,7 @@ public:
 
   /**
    * \brief Convert a geometry_msg point to an Eigen point
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param point
    * \return converted pose
    */
@@ -750,7 +757,7 @@ public:
 
   /**
    * \brief Convert an Eigen point to a 32 bit geometry_msg point
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param point
    * \return converted pose
    */
@@ -758,7 +765,7 @@ public:
 
   /**
    * \brief Convert a Vector3 to a geometry_msg Point
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param point
    * \return converted point
    */
@@ -766,7 +773,7 @@ public:
 
   /**
    * \brief Convert a Eigen point to a geometry_msg Point
-   *        Note: NOT memory efficient
+   *        Note: Not thread safe but very convenient
    * \param point
    * \return converted point
    */

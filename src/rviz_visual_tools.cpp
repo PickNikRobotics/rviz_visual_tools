@@ -1861,6 +1861,11 @@ geometry_msgs::Pose RvizVisualTools::convertPose(const Eigen::Affine3d &pose)
   return shared_pose_msg_;
 }
 
+void RvizVisualTools::convertPoseSafe(const Eigen::Affine3d &pose, geometry_msgs::Pose &pose_msg)
+{
+  tf::poseEigenToMsg(pose, pose_msg);
+}
+
 Eigen::Affine3d RvizVisualTools::convertPose(const geometry_msgs::Pose &pose)
 {
   tf::poseMsgToEigen(pose, shared_pose_eigen_);
@@ -1878,9 +1883,12 @@ Eigen::Affine3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point
 
 geometry_msgs::Pose RvizVisualTools::convertPointToPose(const geometry_msgs::Point &point)
 {
-  geometry_msgs::Pose pose_msg;  // TODO, how to use shared_pose_msg_ but reset the orientation?
-  pose_msg.position = point;
-  return pose_msg;
+  shared_pose_msg_.orientation.x = 0.0;
+  shared_pose_msg_.orientation.y = 0.0;
+  shared_pose_msg_.orientation.z = 0.0;
+  shared_pose_msg_.orientation.w = 1.0;  
+  shared_pose_msg_.position = point;
+  return shared_pose_msg_;
 }
 
 geometry_msgs::Point RvizVisualTools::convertPoseToPoint(const Eigen::Affine3d &pose)
