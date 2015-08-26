@@ -60,7 +60,7 @@
 #include <geometry_msgs/Polygon.h>
 #include <trajectory_msgs/JointTrajectory.h>
 
-// Deprecation
+// rviz_visual_tools
 #include <rviz_visual_tools/deprecation.h>
 
 namespace rviz_visual_tools
@@ -397,6 +397,8 @@ public:
                      const std::string &ns = "Sphere");
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color,
                      const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere");
+  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color,
+                     const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id);
   bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color,
                      const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere",
                      const std::size_t &id = 0);
@@ -462,6 +464,8 @@ public:
                      const scales &scale = REGULAR, double length = 0.1);
   bool publishZArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE,
                      const scales &scale = REGULAR, double length = 0.1);
+  bool publishZArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE,
+                     const scales &scale = REGULAR, double length = 0.1, const std::size_t &id = 0);  
 
   /**
    * \brief Display an arrow along the x-axis of a pose

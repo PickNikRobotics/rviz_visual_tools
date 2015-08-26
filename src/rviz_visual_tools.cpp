@@ -913,6 +913,17 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose,
   return publishMarker(sphere_marker_);
 }
 
+bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose,
+                                    const rviz_visual_tools::colors &color,
+                                    const geometry_msgs::Vector3 scale, const std::string &ns,
+                                    const std::size_t &id)
+{
+  geometry_msgs::PoseStamped ps;
+  ps.pose = pose;
+  ps.header.frame_id = base_frame_;
+  return publishSphere(ps, color, scale, ns, id);
+}
+  
 bool RvizVisualTools::publishSphere(const geometry_msgs::PoseStamped &pose,
                                     const rviz_visual_tools::colors &color,
                                     const geometry_msgs::Vector3 scale, const std::string &ns,
@@ -1016,6 +1027,18 @@ bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose,
   geometry_msgs::PoseStamped new_pose = pose;
   new_pose.pose = convertPose(arrow_pose);
   return publishArrow(new_pose, color, scale, length);
+}
+
+bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose,
+                                    const rviz_visual_tools::colors &color,
+                                    const rviz_visual_tools::scales &scale, double length,
+                                    const std::size_t &id)
+{
+  Eigen::Affine3d arrow_pose =
+      convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
+  geometry_msgs::PoseStamped new_pose = pose;
+  new_pose.pose = convertPose(arrow_pose);
+  return publishArrow(new_pose, color, scale, length, id);
 }
 
 bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose,
