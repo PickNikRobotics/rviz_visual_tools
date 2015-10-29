@@ -267,7 +267,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
   start_time = ros::Time::now();
 
   // Will wait at most 1000 ms (1 sec)
-  ros::Time maxTime(ros::Time::now() + ros::Duration(wait_time));
+  ros::Time max_time(ros::Time::now() + ros::Duration(wait_time));
 
   // This is wrong. It returns only the number of subscribers that have already established their
   // direct connections to this publisher
@@ -280,7 +280,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
   while (num_existing_subscribers == 0)
   {
     // Check if timed out
-    if (ros::Time::now() > maxTime)
+    if (ros::Time::now() > max_time)
     {
       ROS_WARN_STREAM_NAMED(
           "visual_tools",
