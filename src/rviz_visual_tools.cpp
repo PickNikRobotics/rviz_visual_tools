@@ -1986,6 +1986,12 @@ Eigen::Affine3d RvizVisualTools::convertXYZRPY(const double &x, const double &y,
   return Eigen::Translation3d(x, y, z) * quaternion;
 }
 
+void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d &pose, std::vector<double> &xyzrpy)
+{
+  xyzrpy.resize(6);
+  convertToXYZRPY(pose, xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5]);
+}
+
 void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d &pose, double &x, double &y, double &z,
                                       double &roll, double &pitch, double &yaw)
 {

@@ -791,9 +791,17 @@ public:
   static Eigen::Affine3d convertXYZRPY(const double &x, const double &y, const double &z,
                                        const double &roll, const double &pitch, const double &yaw);
   static Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
+  
+  /**
+   * \brief Convert an affine3d to xyz rpy components
+   * \param input Eigen pose
+   * \param output vector of size 6 in order xyz rpy
+   */
+  static void convertToXYZRPY(const Eigen::Affine3d &pose, std::vector<double> &xyzrpy);
 
   /**
    * \brief Convert an affine3d to xyz rpy components
+   * \param input Eigen pose
    */
   static void convertToXYZRPY(const Eigen::Affine3d &pose, double &x, double &y, double &z,
                               double &roll, double &pitch, double &yaw);
