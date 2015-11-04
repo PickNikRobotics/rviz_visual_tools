@@ -42,6 +42,8 @@
 #include <tf_conversions/tf_eigen.h>
 #include <eigen_conversions/eigen_msg.h>
 
+#include <cmath>  // for random poses
+
 namespace rviz_visual_tools
 {
 RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::string &marker_topic)

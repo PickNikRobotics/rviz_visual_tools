@@ -40,7 +40,6 @@
 #define RVIZ_VISUAL_TOOLS__VISUAL_TOOLS_H_
 
 #include <ros/ros.h>
-#include <cmath>  // for random poses
 
 // Eigen
 #include <Eigen/Geometry>
@@ -61,7 +60,7 @@
 #include <trajectory_msgs/JointTrajectory.h>
 
 // rviz_visual_tools
-#include <rviz_visual_tools/deprecation.h>
+//#include <rviz_visual_tools/deprecation.h>
 
 namespace rviz_visual_tools
 {
