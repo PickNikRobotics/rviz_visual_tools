@@ -124,7 +124,7 @@ Conversion functions
  - convertPoseToPoint
  - convertPoint
  - convertPoint32
- - convertXYZRPY
+ - convertFromXYZRPY
  - convertToXYZRPY
 
 Convenience functions
@@ -185,6 +185,12 @@ This tool lets you easily debug Eigen transforms in Rviz. Demo use:
     Eigen::Affine3d world_to_shelf_transform = Eigen::Affine3d::Identity(); // or whatever value
     tf_visualizer.publishTransform(world_to_shelf_transform, "world", "shelf");
 
+## Running Tests
+
+There is a small number of tests available. With catkin-tools installed, run:
+
+    catkin run_tests --no-deps --this -i
+	
 ## Developers Notes
 
 Useful notes for anyone wanting to dig in deeper:

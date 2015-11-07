@@ -45,7 +45,7 @@ namespace rviz_visual_tools
 {
 TFVisualTools::TFVisualTools()
 {
-  double loop_hz = 0.5;  // hz
+  double loop_hz = 15;  // hz
   ros::Duration update_freq = ros::Duration(1.0 / loop_hz);
   non_realtime_loop_ = nh_.createTimer(update_freq, &TFVisualTools::publishAllTransforms, this);
 
@@ -70,7 +70,7 @@ bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform,
   {
     if (transforms_[i].child_frame_id == to_frame && transforms_[i].header.frame_id == from_frame)
     {
-      ROS_WARN_STREAM_NAMED("tf_visual_tools", "This transform has already been added, updating");
+      //ROS_WARN_STREAM_NAMED("tf_visual_tools", "This transform has already been added, updating");
       transforms_[i].transform = tf2_msg.transform;
       return true;
     }

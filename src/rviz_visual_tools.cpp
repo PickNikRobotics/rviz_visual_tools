@@ -1962,7 +1962,7 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
   return shared_point_msg_;
 }
 
-Eigen::Affine3d RvizVisualTools::convertXYZRPY(std::vector<double> transform6)
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6)
 {
   if (transform6.size() != 6)
   {
@@ -1971,19 +1971,19 @@ Eigen::Affine3d RvizVisualTools::convertXYZRPY(std::vector<double> transform6)
     throw;
   }
 
-  return convertXYZRPY(transform6[0], transform6[1], transform6[2], transform6[3], transform6[4],
+  return convertFromXYZRPY(transform6[0], transform6[1], transform6[2], transform6[3], transform6[4],
                        transform6[5]);
 }
 
-Eigen::Affine3d RvizVisualTools::convertXYZRPY(const double &x, const double &y, const double &z,
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const double &x, const double &y, const double &z,
                                                const double &roll, const double &pitch,
                                                const double &yaw)
 {
-  // WARN: THIS VERSION IS WRONG, IS ACTUALL YAW ROLL PITCH
-  Eigen::AngleAxisd roll_angle(roll, Eigen::Vector3d::UnitZ());
-  Eigen::AngleAxisd pitch_angle(pitch, Eigen::Vector3d::UnitX());
-  Eigen::AngleAxisd yaw_angle(yaw, Eigen::Vector3d::UnitY());
-  Eigen::Quaternion<double> quaternion = roll_angle * yaw_angle * pitch_angle;
+  // R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
+  Eigen::AngleAxisd roll_angle(roll, Eigen::Vector3d::UnitX());
+  Eigen::AngleAxisd pitch_angle(pitch, Eigen::Vector3d::UnitY());
+  Eigen::AngleAxisd yaw_angle(yaw, Eigen::Vector3d::UnitZ());
+  Eigen::Quaternion<double> quaternion = roll_angle * pitch_angle * yaw_angle;
 
   return Eigen::Translation3d(x, y, z) * quaternion;
 }
@@ -2000,9 +2000,12 @@ void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d &pose, double &x, do
   x = pose(0, 3);
   y = pose(1, 3);
   z = pose(2, 3);
-  roll = atan2f(pose(2, 1), pose(2, 2));
-  pitch = asinf(-pose(2, 0));
-  yaw = atan2f(pose(1, 0), pose(0, 0));
+
+  // R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
+  Eigen::Vector3d vec = pose.rotation().eulerAngles(0, 1, 2);
+  roll = vec[0];
+  pitch = vec[1];
+  yaw = vec[2];
 }
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose &pose, RandomPoseBounds pose_bounds)

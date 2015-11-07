@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+ <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <include file="$(find iiwa_7_r800_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include>
+
+  <!-- GDB Debug Option -->
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" 
+	   value="gdb -x $(find rviz_visual_tools)/launch/debug_settings.gdb --ex run --args" />
+
+  <test test-name="rvt_test" pkg="rviz_visual_tools" type="rvt_test" time-limit="180"
+	launch-prefix="$(arg launch_prefix)">
+  </test>
+
+</launch>

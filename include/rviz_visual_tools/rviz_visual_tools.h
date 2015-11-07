@@ -784,24 +784,20 @@ public:
 
   /**
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler
-   * ZXY convention
+   *        R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
    * \return 4x4 matrix in form of affine3d
    */
-  static Eigen::Affine3d convertXYZRPY(const double &x, const double &y, const double &z,
+  static Eigen::Affine3d convertFromXYZRPY(const double &x, const double &y, const double &z,
                                        const double &roll, const double &pitch, const double &yaw);
-  static Eigen::Affine3d convertXYZRPY(std::vector<double> transform6);
+  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);
   
   /**
    * \brief Convert an affine3d to xyz rpy components
+   *        R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
    * \param input Eigen pose
    * \param output vector of size 6 in order xyz rpy
    */
   static void convertToXYZRPY(const Eigen::Affine3d &pose, std::vector<double> &xyzrpy);
-
-  /**
-   * \brief Convert an affine3d to xyz rpy components
-   * \param input Eigen pose
-   */
   static void convertToXYZRPY(const Eigen::Affine3d &pose, double &x, double &y, double &z,
                               double &roll, double &pitch, double &yaw);
   /**
@@ -867,7 +863,7 @@ protected:
   std::string marker_topic_;  // topic to publish to rviz
   std::string base_frame_;    // name of base link
 
-  // TODO rename this
+  // TODO rename this or REMOVE
   double floor_to_base_height_;  // allows an offset between base link and floor where objects are
                                  // built
 

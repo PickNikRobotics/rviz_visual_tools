@@ -27,6 +27,9 @@
   <build_depend>trajectory_msgs</build_depend>
   <build_depend>cmake_modules</build_depend>
 
+  <test_depend>rostest</test_depend>
+  <test_depend>rosunit</test_depend>
+
   <run_depend>geometry_msgs</run_depend>
   <run_depend>visualization_msgs</run_depend>
   <run_depend>graph_msgs</run_depend>
