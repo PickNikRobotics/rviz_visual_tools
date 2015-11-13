@@ -301,7 +301,7 @@ public:
    *        overloaded. This collects all published markers into array and only publishes them with
    * triggerBatchPublish() is called
    */
-  void enableBatchPublishing(bool enable);
+  void enableBatchPublishing(bool enable = true);
 
   /**
    * \brief Trigger the publish function to send out all collected markers
@@ -464,7 +464,7 @@ public:
   bool publishZArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE,
                      const scales &scale = REGULAR, double length = 0.1);
   bool publishZArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE,
-                     const scales &scale = REGULAR, double length = 0.1, const std::size_t &id = 0);  
+                     const scales &scale = REGULAR, double length = 0.1, const std::size_t &id = 0);
 
   /**
    * \brief Display an arrow along the x-axis of a pose
@@ -706,8 +706,8 @@ public:
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose - thread safe
    * \param input pose
-   * \param output converted pose   
-   */  
+   * \param output converted pose
+   */
   static void convertPoseSafe(const Eigen::Affine3d &pose, geometry_msgs::Pose &pose_msg);
 
   /**
@@ -790,7 +790,7 @@ public:
   static Eigen::Affine3d convertFromXYZRPY(const double &x, const double &y, const double &z,
                                        const double &roll, const double &pitch, const double &yaw);
   static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);
-  
+
   /**
    * \brief Convert an affine3d to xyz rpy components
    *        R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
