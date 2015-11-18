@@ -10,6 +10,10 @@ This package includes:
 
 Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, University of Colorado Boulder with help from Andy McEvoy and others.
 
+ * [![Build Status](https://travis-ci.org/davetcoleman/rviz_visual_tools.svg)](https://travis-ci.org/davetcoleman/rviz_visual_tools)
+ * Devel Job Status: [![Devel Job Status](http://jenkins.ros.org/buildStatus/icon?job=devel-indigo-rviz-visual-tools)](http://jenkins.ros.org/job/devel-indigo-rviz-visual-tools)
+ * AMD64 Debian Job Status: [![Build Status](http://jenkins.ros.org/buildStatus/icon?job=ros-indigo-rviz-visual-tools_binarydeb_trusty_amd64)](http://jenkins.ros.org/job/ros-indigo-rviz-visual-tools_binarydeb_trusty_amd64/)
+ * 
 <img align="right" src="https://raw.github.com/davetcoleman/rviz_visual_tools/indigo-devel/resources/screenshot.png" />
 
 ## Install
