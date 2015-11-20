@@ -383,21 +383,19 @@ public:
    * \return true on success
    */
   bool publishSphere(const Eigen::Affine3d &pose, const colors &color = BLUE,
-                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const Eigen::Vector3d &point, const colors &color = BLUE,
-                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const Eigen::Vector3d &point, const colors &color, const double scale,
-                     const std::string &ns = "Sphere");
+                     const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::Point &point, const colors &color = BLUE,
-                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color = BLUE,
-                     const scales &scale = REGULAR, const std::string &ns = "Sphere");
+                     const scales &scale = REGULAR, const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color, const double scale,
-                     const std::string &ns = "Sphere");
+                     const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color,
-                     const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere");
-  bool publishSphere(const geometry_msgs::Pose &pose, const colors &color,
-                     const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id);
+                     const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color,
                      const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere",
                      const std::size_t &id = 0);

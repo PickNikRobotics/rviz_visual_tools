@@ -563,6 +563,8 @@ Eigen::Vector3d RvizVisualTools::getCenterPoint(Eigen::Vector3d a, Eigen::Vector
 
 Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(Eigen::Vector3d a, Eigen::Vector3d b)
 {
+  // TODO: handle the error case when a & b are the same point. currently it retunrs nan for the quaternion
+
   // from
   // http://answers.ros.org/question/31006/how-can-a-vector3-axis-be-used-to-produce-a-quaternion/
 
@@ -843,66 +845,71 @@ bool RvizVisualTools::publishYZPlane(const geometry_msgs::Pose &pose,
   return publishMarker(triangle_marker_);
 }
 
-bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose,
-                                    const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, const std::string &ns)
+bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
+                                    const rviz_visual_tools::scales &scale, const std::string &ns,
+                                    const std::size_t &id)
 {
-  return publishSphere(convertPose(pose), color, scale, ns);
+  return publishSphere(convertPose(pose), color, scale, ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const Eigen::Vector3d &point,
-                                    const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, const std::string &ns)
+bool RvizVisualTools::publishSphere(const Eigen::Vector3d &point, const rviz_visual_tools::colors &color,
+                                    const rviz_visual_tools::scales &scale, const std::string &ns,
+                                    const std::size_t &id)
 {
   geometry_msgs::Pose pose_msg;
   tf::pointEigenToMsg(point, pose_msg.position);
-  return publishSphere(pose_msg, color, scale, ns);
+  return publishSphere(pose_msg, color, scale, ns, id);
 }
 
 bool RvizVisualTools::publishSphere(const Eigen::Vector3d &point,
                                     const rviz_visual_tools::colors &color, const double scale,
-                                    const std::string &ns)
+                                    const std::string &ns, const std::size_t &id)
 {
   geometry_msgs::Pose pose_msg;
   tf::pointEigenToMsg(point, pose_msg.position);
-  return publishSphere(pose_msg, color, scale, ns);
+  return publishSphere(pose_msg, color, scale, ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::Point &point,
-                                    const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, const std::string &ns)
+bool RvizVisualTools::publishSphere(const geometry_msgs::Point &point, const rviz_visual_tools::colors &color,
+                                    const rviz_visual_tools::scales &scale, const std::string &ns,
+                                    const std::size_t &id)
 {
   geometry_msgs::Pose pose_msg;
   pose_msg.position = point;
-  return publishSphere(pose_msg, color, scale, ns);
+  return publishSphere(pose_msg, color, scale, ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose,
-                                    const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, const std::string &ns)
+bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
+                                    const rviz_visual_tools::scales &scale, const std::string &ns,
+                                    const std::size_t &id)
 {
-  return publishSphere(pose, color, getScale(scale, false, 0.1), ns);
+  return publishSphere(pose, color, getScale(scale, false, 0.1), ns, id);
 }
 
 bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose,
                                     const rviz_visual_tools::colors &color, double scale,
-                                    const std::string &ns)
+                                    const std::string &ns, const std::size_t &id)
 {
   geometry_msgs::Vector3 scale_msg;
   scale_msg.x = scale;
   scale_msg.y = scale;
   scale_msg.z = scale;
-  return publishSphere(pose, color, scale_msg, ns);
+  return publishSphere(pose, color, scale_msg, ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose,
-                                    const rviz_visual_tools::colors &color,
-                                    const geometry_msgs::Vector3 scale, const std::string &ns)
+bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
+                                    const geometry_msgs::Vector3 scale, const std::string &ns,
+                                    const std::size_t &id)
 {
   // Set the frame ID and timestamp
   sphere_marker_.header.stamp = ros::Time::now();
 
-  sphere_marker_.id++;
+  // Overwrite ID or increment?
+  if (id == 0)
+    sphere_marker_.id++;
+  else
+    sphere_marker_.id = id;
+
   sphere_marker_.color = getColor(color);
   sphere_marker_.scale = scale;
   sphere_marker_.ns = ns;
@@ -915,17 +922,6 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose,
   return publishMarker(sphere_marker_);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose,
-                                    const rviz_visual_tools::colors &color,
-                                    const geometry_msgs::Vector3 scale, const std::string &ns,
-                                    const std::size_t &id)
-{
-  geometry_msgs::PoseStamped ps;
-  ps.pose = pose;
-  ps.header.frame_id = base_frame_;
-  return publishSphere(ps, color, scale, ns, id);
-}
-  
 bool RvizVisualTools::publishSphere(const geometry_msgs::PoseStamped &pose,
                                     const rviz_visual_tools::colors &color,
                                     const geometry_msgs::Vector3 scale, const std::string &ns,
@@ -1911,7 +1907,7 @@ geometry_msgs::Pose RvizVisualTools::convertPointToPose(const geometry_msgs::Poi
   shared_pose_msg_.orientation.x = 0.0;
   shared_pose_msg_.orientation.y = 0.0;
   shared_pose_msg_.orientation.z = 0.0;
-  shared_pose_msg_.orientation.w = 1.0;  
+  shared_pose_msg_.orientation.w = 1.0;
   shared_pose_msg_.position = point;
   return shared_pose_msg_;
 }
