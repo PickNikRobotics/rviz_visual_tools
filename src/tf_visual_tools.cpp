@@ -45,7 +45,7 @@ namespace rviz_visual_tools
 {
 TFVisualTools::TFVisualTools()
 {
-  double loop_hz = 15;  // hz
+  double loop_hz = 2;  // hz
   ros::Duration update_freq = ros::Duration(1.0 / loop_hz);
   non_realtime_loop_ = nh_.createTimer(update_freq, &TFVisualTools::publishAllTransforms, this);
 
