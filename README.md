@@ -10,9 +10,9 @@ This package includes:
 
 Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, University of Colorado Boulder with help from Andy McEvoy and others.
 
- * Travis CI: [![Build Status](https://travis-ci.org/davetcoleman/rviz_visual_tools.svg)](https://travis-ci.org/davetcoleman/rviz_visual_tools)
- * Devel Job Status: [![Devel Job Status](http://jenkins.ros.org/buildStatus/icon?job=devel-indigo-rviz_visual_tools)](http://jenkins.ros.org/job/devel-indigo-rviz_visual_tools)
- * AMD64 Debian Job Status: [![Build Status](http://jenkins.ros.org/buildStatus/icon?job=ros-indigo-rviz-visual-tools_binarydeb_trusty_amd64)](http://jenkins.ros.org/job/ros-indigo-rviz-visual-tools_binarydeb_trusty_amd64/)
+ * [![Build Status](https://travis-ci.org/davetcoleman/rviz_visual_tools.svg)](https://travis-ci.org/davetcoleman/rviz_visual_tools) Travis CI
+ * [![Devel Job Status](http://jenkins.ros.org/buildStatus/icon?job=devel-indigo-rviz_visual_tools)](http://jenkins.ros.org/job/devel-indigo-rviz_visual_tools) Devel Job Status
+ * [![Build Status](http://jenkins.ros.org/buildStatus/icon?job=ros-indigo-rviz-visual-tools_binarydeb_trusty_amd64)](http://jenkins.ros.org/job/ros-indigo-rviz-visual-tools_binarydeb_trusty_amd64/) AMD64 Debian Job Status
 
 <img align="right" src="https://raw.github.com/davetcoleman/rviz_visual_tools/indigo-devel/resources/screenshot.png" />
 
@@ -119,7 +119,7 @@ And more...
 
 Reset function
 
- - ``deleteAllMarkers`` - tells Rviz to clear out all current markers from being displayed. 
+ - ``deleteAllMarkers`` - tells Rviz to clear out all current markers from being displayed.
 
 Conversion functions
 
@@ -194,7 +194,7 @@ This tool lets you easily debug Eigen transforms in Rviz. Demo use:
 There is a small number of tests available. With catkin-tools installed, run:
 
     catkin run_tests --no-deps --this -i
-	
+
 ## Developers Notes
 
 Useful notes for anyone wanting to dig in deeper:
