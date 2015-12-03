@@ -205,4 +205,4 @@ Useful notes for anyone wanting to dig in deeper:
 
 ## Contribute
 
-Feel free to send PRs for new helper functions, fixes, etc. - I'll happily discuss and merge them. I do not, however, want to send much time helping people use this because I am a busy grad student. Use at your own risk.
+Please send PRs for new helper functions, fixes, etc!
