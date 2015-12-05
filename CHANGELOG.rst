@@ -2,6 +2,13 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* catkin lint cleanup
+* Updated travis badge
+* Updated README
+* Contributors: Dave Coleman
+
 2.0.0 (2015-12-02)
 ------------------
 * Updated README
