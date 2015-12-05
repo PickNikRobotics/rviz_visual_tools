@@ -3,16 +3,16 @@ project(rviz_visual_tools)
 
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS
-  eigen_conversions 
-  geometry_msgs
-  roscpp
-  tf_conversions
-  visualization_msgs
-  graph_msgs
-  std_msgs
-  trajectory_msgs
   cmake_modules
+  eigen_conversions
+  geometry_msgs
+  graph_msgs
+  roscpp
   rostest
+  std_msgs
+  tf_conversions
+  trajectory_msgs
+  visualization_msgs
 )
 
 find_package(Eigen REQUIRED)
@@ -24,7 +24,7 @@ catkin_package(
     ${PROJECT_NAME}
   CATKIN_DEPENDS
     geometry_msgs
-    visualization_msgs 
+    visualization_msgs
     graph_msgs
     std_msgs
     trajectory_msgs
@@ -32,13 +32,13 @@ catkin_package(
 )
 
 # Enable gdb to show line numbers
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -W -Wall -Wno-unused-parameter -fno-strict-aliasing")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -W -Wall -Wno-unused-parameter -fno-strict-aliasing")
 #set(CMAKE_BUILD_TYPE Debug)
 
-## Build 
+## Build
 
 include_directories(
-  include 
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -56,7 +56,7 @@ target_link_libraries(${PROJECT_NAME}
 
 # Test executable
 add_executable(rviz_visual_tools_test src/rviz_visual_tools_test.cpp)
-target_link_libraries(rviz_visual_tools_test 
+target_link_libraries(rviz_visual_tools_test
   ${catkin_LIBRARIES} ${PROJECT_NAME}
 )
 
@@ -67,8 +67,8 @@ if(CATKIN_ENABLE_TESTING)
   add_rostest_gtest(rvt_test launch/rvt_test.launch tests/rvt_test.cpp)
   target_link_libraries(rvt_test
     ${PROJECT_NAME}
-    ${catkin_LIBRARIES} 
-    ${Boost_LIBRARIES} 
+    ${catkin_LIBRARIES}
+    ${Boost_LIBRARIES}
   )
 
 endif()
@@ -76,7 +76,7 @@ endif()
 ## Install ------------------------------------------------------------
 
 # Install libraries
-install(TARGETS ${PROJECT_NAME} 
+install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
 # Install header files
@@ -85,4 +85,3 @@ install(DIRECTORY include/${PROJECT_NAME}/   DESTINATION ${CATKIN_PACKAGE_INCLUD
 # Install shared resources
 install(DIRECTORY launch    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY resources DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
