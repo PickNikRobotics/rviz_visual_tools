@@ -78,7 +78,7 @@ public:
   ~RvizVisualToolsTest() {}
 };  // end class
 
-}  // end namespace
+}  // namespace rviz_visual_tools
 
 int main(int argc, char** argv)
 {

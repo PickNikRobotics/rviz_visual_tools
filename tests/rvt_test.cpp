@@ -36,6 +36,10 @@
    Desc:   Test for Rviz Visual tools
 */
 
+// C++
+#include <string>
+#include <vector>
+
 #include <ros/ros.h>
 #include <gtest/gtest.h>
 
@@ -45,9 +49,8 @@
 class RVTTest
 {
 public:
-
   // A shared node handle
-  //ros::NodeHandle nh_;
+  // ros::NodeHandle nh_;
 
   // For visualizing things in rviz
   rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
@@ -64,16 +67,19 @@ public:
   bool testAffine3d(const std::string& id, const Eigen::Affine3d& expect, const Eigen::Affine3d& actual)
   {
     static const double EPSILON = 0.000001;
-    EXPECT_GT( EPSILON, fabs( expect.translation().x() - actual.translation().x() ) ) << id << " Translation x - expect: " << expect.translation().x() << " actual: " <<  actual.translation().x();
-    EXPECT_GT( EPSILON, fabs( expect.translation().y() - actual.translation().y() ) ) << id << " Translation y - expect: " << expect.translation().y() << " actual: " <<  actual.translation().y();
-    EXPECT_GT( EPSILON, fabs( expect.translation().z() - actual.translation().z() ) ) << id << " Translation z - expect: " << expect.translation().z() << " actual: " <<  actual.translation().z();
+    EXPECT_GT(EPSILON, fabs(expect.translation().x() - actual.translation().x()))
+        << id << " Translation x - expect: " << expect.translation().x() << " actual: " << actual.translation().x();
+    EXPECT_GT(EPSILON, fabs(expect.translation().y() - actual.translation().y()))
+        << id << " Translation y - expect: " << expect.translation().y() << " actual: " << actual.translation().y();
+    EXPECT_GT(EPSILON, fabs(expect.translation().z() - actual.translation().z()))
+        << id << " Translation z - expect: " << expect.translation().z() << " actual: " << actual.translation().z();
 
     Eigen::Quaterniond q1(expect.rotation());
     Eigen::Quaterniond q2(actual.rotation());
-    EXPECT_GT( EPSILON, fabs( q1.x() - q2.x() ) ) << id << " Quaternion x - expect: " << q1.x() << " actual: " <<  q2.x();
-    EXPECT_GT( EPSILON, fabs( q1.y() - q2.y() ) ) << id << " Quaternion y - expect: " << q1.y() << " actual: " <<  q2.y();
-    EXPECT_GT( EPSILON, fabs( q1.z() - q2.z() ) ) << id << " Quaternion z - expect: " << q1.z() << " actual: " <<  q2.z();
-    EXPECT_GT( EPSILON, fabs( q1.w() - q2.w() ) ) << id << " Quaternion w - expect: " << q1.w() << " actual: " <<  q2.w();
+    EXPECT_GT(EPSILON, fabs(q1.x() - q2.x())) << id << " Quaternion x - expect: " << q1.x() << " actual: " << q2.x();
+    EXPECT_GT(EPSILON, fabs(q1.y() - q2.y())) << id << " Quaternion y - expect: " << q1.y() << " actual: " << q2.y();
+    EXPECT_GT(EPSILON, fabs(q1.z() - q2.z())) << id << " Quaternion z - expect: " << q1.z() << " actual: " << q2.z();
+    EXPECT_GT(EPSILON, fabs(q1.w() - q2.w())) << id << " Quaternion w - expect: " << q1.w() << " actual: " << q2.w();
 
     return true;
   }
@@ -82,25 +88,22 @@ public:
   {
     EXPECT_EQ(expect.size(), actual.size()) << id << " Unequal vector sizes";
 
-    static const double EPSILON = 0.000001;    
+    static const double EPSILON = 0.000001;
     for (std::size_t i = 0; i < expect.size(); ++i)
     {
-      EXPECT_GT( EPSILON, fabs( expect[i] - actual[i] ) ) << "Section " << id << ", Element " << i << ", Expect: " << expect[i] << ", Actual: " <<  actual[i];
+      EXPECT_GT(EPSILON, fabs(expect[i] - actual[i])) << "Section " << id << ", Element " << i
+                                                      << ", Expect: " << expect[i] << ", Actual: " << actual[i];
     }
 
     return true;
   }
-
-}; // class
+};  // class
 
 /* Create instance of test class ---------------------------------------------------------- */
 RVTTest base;
 
 /* Run tests ------------------------------------------------------------------------------ */
-TEST(RVTTest, initialize)
-{
-  ASSERT_TRUE(base.initialize());
-}
+TEST(RVTTest, initialize) { ASSERT_TRUE(base.initialize()); }
 
 // Test rpy conversion
 TEST(RVTTest, test_rpy_conversions)
@@ -110,8 +113,13 @@ TEST(RVTTest, test_rpy_conversions)
   std::vector<double> xyzrpy;
   base.visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
   std::vector<double> expected_vector;
-  expected_vector.push_back(0); expected_vector.push_back(0); expected_vector.push_back(0); expected_vector.push_back(0); expected_vector.push_back(0); expected_vector.push_back(0); 
-  EXPECT_TRUE(base.testVector("Identity: ", expected_vector, xyzrpy));            
+  expected_vector.push_back(0);
+  expected_vector.push_back(0);
+  expected_vector.push_back(0);
+  expected_vector.push_back(0);
+  expected_vector.push_back(0);
+  expected_vector.push_back(0);
+  EXPECT_TRUE(base.testVector("Identity: ", expected_vector, xyzrpy));
 
   // Identity conversion back to Eigen
   Eigen::Affine3d expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy);
@@ -131,11 +139,10 @@ TEST(RVTTest, test_rpy_conversions)
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy);
   EXPECT_TRUE(base.testAffine3d("123 convert back", expected_affine, expected_affine2));
 
-
   // Rotation conversions to RPY
   expected_vector[3] = 1;
   expected_vector[4] = 1.5;
-  expected_vector[5] = 2;  
+  expected_vector[5] = 2;
 
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(expected_vector);
   base.visual_tools_->convertToXYZRPY(expected_affine2, xyzrpy);
@@ -143,19 +150,18 @@ TEST(RVTTest, test_rpy_conversions)
 }
 
 /* Main  ------------------------------------------------------------------------------------- */
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  ros::init (argc, argv, "rviz_visual_tools_tests");
+  ros::init(argc, argv, "rviz_visual_tools_tests");
   return RUN_ALL_TESTS();
 }
 
-
-  /*
+/*
 reminders:
-  EXPECT_FALSE(robot_state.hasFixedLinks());
-  EXPECT_EQ(robot_state.getFixedLinksCount(), 0);
-  EXPECT_TRUE(robot_state.getPrimaryFixedLink() == NULL);
-  EXPECT_GT(robot_state.getFixedLinksMode(), 0);
-  EXPECT_LT( fabs(vars[0] - 0), EPSILON) << "Virtual joint in wrong position " << vars[0];
-  */
+EXPECT_FALSE(robot_state.hasFixedLinks());
+EXPECT_EQ(robot_state.getFixedLinksCount(), 0);
+EXPECT_TRUE(robot_state.getPrimaryFixedLink() == NULL);
+EXPECT_GT(robot_state.getFixedLinksMode(), 0);
+EXPECT_LT( fabs(vars[0] - 0), EPSILON) << "Virtual joint in wrong position " << vars[0];
+*/

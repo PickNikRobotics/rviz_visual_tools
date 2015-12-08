@@ -41,6 +41,9 @@
 // TF
 #include <eigen_conversions/eigen_msg.h>
 
+// C++
+#include <string>
+
 namespace rviz_visual_tools
 {
 TFVisualTools::TFVisualTools()
@@ -52,11 +55,10 @@ TFVisualTools::TFVisualTools()
   ROS_INFO_STREAM_NAMED("tf_visual_tools", "TFVisualTools Ready.");
 }
 
-bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform,
-                                     const std::string& from_frame, const std::string& to_frame)
+bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform, const std::string& from_frame,
+                                     const std::string& to_frame)
 {
-  ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transform from " << from_frame << " to "
-                                                                         << to_frame);
+  ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transform from " << from_frame << " to " << to_frame);
 
   // Create transform msg
   geometry_msgs::TransformStamped tf2_msg;
@@ -70,7 +72,7 @@ bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform,
   {
     if (transforms_[i].child_frame_id == to_frame && transforms_[i].header.frame_id == from_frame)
     {
-      //ROS_WARN_STREAM_NAMED("tf_visual_tools", "This transform has already been added, updating");
+      // ROS_WARN_STREAM_NAMED("tf_visual_tools", "This transform has already been added, updating");
       transforms_[i].transform = tf2_msg.transform;
       return true;
     }
@@ -94,4 +96,4 @@ void TFVisualTools::publishAllTransforms(const ros::TimerEvent& e)
   tf_pub_.sendTransform(transforms_);
 }
 
-}  // end namespace
+}  // namespace rviz_visual_tools

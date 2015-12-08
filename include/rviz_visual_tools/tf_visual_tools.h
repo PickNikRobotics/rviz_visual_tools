@@ -38,8 +38,12 @@
    because of https://github.com/ros/geometry_experimental/issues/108
 */
 
-#ifndef RVIZ_VISUAL_TOOLS__TF_VISUAL_TOOLS
-#define RVIZ_VISUAL_TOOLS__TF_VISUAL_TOOLS
+#ifndef RVIZ_VISUAL_TOOLS_TF_VISUAL_TOOLS_H
+#define RVIZ_VISUAL_TOOLS_TF_VISUAL_TOOLS_H
+
+// C++
+#include <vector>
+#include <string>
 
 // ROS
 #include <ros/ros.h>
@@ -69,8 +73,7 @@ public:
    * \brief Visualize transforms in Rviz, etc
    * \return true on success
    */
-  bool publishTransform(const Eigen::Affine3d& transform, const std::string& from_frame,
-                        const std::string& to_frame);
+  bool publishTransform(const Eigen::Affine3d& transform, const std::string& from_frame, const std::string& to_frame);
 
   /**
    * \brief At a certain frequency update the tf transforms that we are tracking
@@ -89,13 +92,12 @@ private:
 
   // Collect the transfroms
   std::vector<geometry_msgs::TransformStamped> transforms_;
-
 };  // end class
 
 // Create boost pointers for this class
 typedef boost::shared_ptr<TFVisualTools> TFVisualToolsPtr;
 typedef boost::shared_ptr<const TFVisualTools> TFVisualToolsConstPtr;
 
-}  // end namespace
+}  // namespace rviz_visual_tools
 
-#endif
+#endif  // RVIZ_VISUAL_TOOLS_TF_VISUAL_TOOLS_H

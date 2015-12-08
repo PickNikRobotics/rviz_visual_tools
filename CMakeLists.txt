@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf_conversions
   trajectory_msgs
   visualization_msgs
+  roslint
 )
 
 find_package(Eigen REQUIRED)
@@ -30,10 +31,6 @@ catkin_package(
     trajectory_msgs
   INCLUDE_DIRS include
 )
-
-# Enable gdb to show line numbers
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -W -Wall -Wno-unused-parameter -fno-strict-aliasing")
-#set(CMAKE_BUILD_TYPE Debug)
 
 ## Build
 
@@ -72,6 +69,9 @@ if(CATKIN_ENABLE_TESTING)
   )
 
 endif()
+
+## Test for correct C++ source code ---------------------------------------
+roslint_cpp()
 
 ## Install ------------------------------------------------------------
 
