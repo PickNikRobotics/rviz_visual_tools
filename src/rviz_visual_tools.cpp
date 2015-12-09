@@ -487,8 +487,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
         result.g = fRand(0.0, 1.0);
         result.b = fRand(0.0, 1.0);
         result.a = 1.0;
-      }
-      while (result.r + result.g + result.b < 1.5);  // 3 would be white
+      } while (result.r + result.g + result.b < 1.5);  // 3 would be white
       break;
     case DEFAULT:
       ROS_WARN_STREAM_NAMED("getColor", "The 'DEFAULT' color should probably not "
@@ -573,8 +572,8 @@ Eigen::Vector3d RvizVisualTools::getCenterPoint(Eigen::Vector3d a, Eigen::Vector
 
 Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(Eigen::Vector3d a, Eigen::Vector3d b)
 {
-  // TODO(davetcoleman): handle the error case when a & b are the same point. currently it
-  // retunrs nan for the quaternion
+  // TODO(davetcoleman): handle the error case when a & b are the same point.
+  // currently it returns nan for the quaternion
 
   // from
   // http://answers.ros.org/question/31006/how-can-a-vector3-axis-be-used-to-produce-a-quaternion/
@@ -2065,8 +2064,7 @@ int RvizVisualTools::iRand(int min, int max)
   do
   {
     x = rand();
-  }
-  while (x >= RAND_MAX - remainder);
+  } while (x >= RAND_MAX - remainder);
   return min + x % n;
 }
 

@@ -878,7 +878,6 @@ protected:
   geometry_msgs::Point32 shared_point32_msg_;
   Eigen::Affine3d shared_pose_eigen_;
   Eigen::Vector3d shared_point_eigen_;
-  int bug_;
 };  // class
 
 typedef boost::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
