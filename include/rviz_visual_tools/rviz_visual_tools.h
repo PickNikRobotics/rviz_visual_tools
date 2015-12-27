@@ -632,7 +632,7 @@ public:
   /**
    * \brief Display a mesh from file
    * \param pose - the location to publish the marker with respect to the base frame
-   * \param file name of mesh, starting with "file://"
+   * \param file name of mesh, starting with "file://" e.g. "file:///home/user/mesh.stl"
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param ns - namespace of marker

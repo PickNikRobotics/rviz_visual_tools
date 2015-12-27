@@ -93,7 +93,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Load reset marker -------------------------------------------------
   reset_marker_.header.frame_id = base_frame_;
   reset_marker_.header.stamp = ros::Time();
-  reset_marker_.action = 3;  // In ROS-J: visualization_msgs::Marker::DELETEALL;
+  reset_marker_.action = 3;  // TODO(davetcoleman): In ROS-J set to visualization_msgs::Marker::DELETEALL;
 
   // Load arrow ----------------------------------------------------
 
