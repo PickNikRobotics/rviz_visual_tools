@@ -2,6 +2,13 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Formatting
+* Removed unused var
+* roslint fixes
+* Contributors: Dave Coleman
+
 2.0.1 (2015-12-05)
 ------------------
 * catkin lint cleanup
