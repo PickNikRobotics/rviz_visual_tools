@@ -241,6 +241,12 @@ public:
   std_msgs::ColorRGBA getColor(const colors &color);
 
   /**
+   * \brief Create a random color that is not too light
+   * \return the RGB message of a random color
+   */
+  std_msgs::ColorRGBA createRandColor();
+
+  /**
    * \brief Get the rviz marker scale of standard sizes
    * \param scale - an enum pre-defined name of a size
    * \param arrow_scale - they do not have an even scaling, compensate
@@ -837,6 +843,9 @@ protected:
 
   // A shared node handle
   ros::NodeHandle nh_;
+
+  // Short name for this class
+  std::string name_;
 
   // ROS publishers
   ros::Publisher pub_rviz_markers_;  // for rviz visualization markers

@@ -52,7 +52,11 @@
 namespace rviz_visual_tools
 {
 RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::string &marker_topic)
-  : nh_("~"), marker_topic_(marker_topic), base_frame_(base_frame), batch_publishing_enabled_(false)
+  : nh_("~")
+  , name_("visual_tools")
+  , marker_topic_(marker_topic)
+  , base_frame_(base_frame)
+  , batch_publishing_enabled_(false)
 {
   initialize();
   double bug;
@@ -266,7 +270,7 @@ void RvizVisualTools::loadMarkerPub()
 
   // Rviz marker publisher
   pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10);
-  ROS_DEBUG_STREAM_NAMED("visual_tools", "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
+  ROS_DEBUG_STREAM_NAMED(name_, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
   waitForSubscriber(pub_rviz_markers_);
 }
@@ -294,7 +298,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
     // Check if timed out
     if (ros::Time::now() > max_time)
     {
-      ROS_WARN_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic()
+      ROS_WARN_STREAM_NAMED(name_, "Topic '" << pub.getTopic()
                                                       << "' unable to connect to any subscribers within " << wait_time
                                                       << " seconds. It is possible initially "
                                                          "published visual messages will be lost.");
@@ -315,7 +319,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
   if (false)
   {
     double duration = (ros::Time::now() - start_time).toSec();
-    ROS_DEBUG_STREAM_NAMED("visual_tools", "Topic '" << pub.getTopic() << "' took " << duration
+    ROS_DEBUG_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' took " << duration
                                                      << " seconds to connect to a subscriber. Connected to "
                                                      << num_existing_subscribers << " total subsribers");
   }
@@ -324,7 +328,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
 
 void RvizVisualTools::setFloorToBaseHeight(double floor_to_base_height)
 {
-  ROS_WARN_STREAM_NAMED("rviz_visual_tools", "Deperecated function");
+  ROS_WARN_STREAM_NAMED(name_, "Deperecated function");
 }
 
 void RvizVisualTools::setLifetime(double lifetime)
@@ -369,7 +373,7 @@ rviz_visual_tools::colors RvizVisualTools::getRandColor()
 std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &color)
 {
   std_msgs::ColorRGBA result;
-  result.a = alpha_;
+
   switch (color)
   {
     case RED:
@@ -480,17 +484,10 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.a = 1.0;
       break;
     case RAND:
-      // Make sure color is not *too* light
-      do
-      {
-        result.r = fRand(0.0, 1.0);
-        result.g = fRand(0.0, 1.0);
-        result.b = fRand(0.0, 1.0);
-        result.a = 1.0;
-      } while (result.r + result.g + result.b < 1.5);  // 3 would be white
+      result = createRandColor();
       break;
     case DEFAULT:
-      ROS_WARN_STREAM_NAMED("getColor", "The 'DEFAULT' color should probably not "
+      ROS_WARN_STREAM_NAMED(name_, "The 'DEFAULT' color should probably not "
                                         "be used with getColor(). Defaulting to "
                                         "blue.");
     case BLUE:
@@ -500,6 +497,35 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.b = 0.8;
       result.a = 1.0;
   }
+
+  return result;
+}
+
+std_msgs::ColorRGBA RvizVisualTools::createRandColor()
+{
+  std_msgs::ColorRGBA result;
+
+  const std::size_t MAX_ATTEMPTS = 10; // bound the performance
+  std::size_t attempts = 0;
+
+  // Make sure color is not *too* dark
+  do
+  {
+    result.r = fRand(0.0, 1.0);
+    result.g = fRand(0.0, 1.0);
+    result.b = fRand(0.0, 1.0);
+    ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is " << (result.r + result.g + result.b)
+                           << " attempt #" << attempts);
+    attempts++;
+    if (attempts > MAX_ATTEMPTS)
+    {
+      ROS_WARN_STREAM_NAMED(name_, "Unable to find appropriate random color after " << MAX_ATTEMPTS << " attempts");
+      break;
+    }
+  } while (result.r + result.g + result.b < 1.5);  // 3 would be white
+
+  // Set alpha value
+  result.a = 1.0;
 
   return result;
 }
@@ -542,7 +568,7 @@ geometry_msgs::Vector3 RvizVisualTools::getScale(const rviz_visual_tools::scales
       val = 1.0;
       break;
     default:
-      ROS_ERROR_STREAM_NAMED("visualization_tools", "Not implemented yet");
+      ROS_ERROR_STREAM_NAMED(name_, "Not implemented yet");
       break;
   }
 
@@ -636,7 +662,6 @@ bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
 void RvizVisualTools::enableBatchPublishing(bool enable)
 {
   batch_publishing_enabled_ = enable;
-  // ROS_ERROR_STREAM_NAMED("temp","BATCH PUBLISHING ENABLED = " << enable);
 }
 
 bool RvizVisualTools::triggerBatchPublish()
@@ -651,7 +676,6 @@ bool RvizVisualTools::triggerBatchPublishAndDisable()
 {
   triggerBatchPublish();
   batch_publishing_enabled_ = false;
-  // ROS_ERROR_STREAM_NAMED("temp","BATCH PUBLISHING DISABLED");
 }
 
 bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &markers)
@@ -1377,7 +1401,7 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED("publishPath", "Skipping path because " << path.size() << " points passed in.");
+    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
     return true;
   }
 
@@ -1763,50 +1787,50 @@ bool RvizVisualTools::publishTests()
 
   // Test all shapes ----------
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Axis");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Axis");
   generateRandomPose(pose1);
   publishAxis(pose1);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Arrow");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Arrow");
   generateRandomPose(pose1);
   publishArrow(pose1, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Sphere");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Sphere");
   generateRandomPose(pose1);
   publishSphere(pose1, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Rectangular Cuboid");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Rectangular Cuboid");
   // TODO(davetcoleman): use generateRandomCuboid()
   generateRandomPose(pose1);
   generateRandomPose(pose2);
   publishCuboid(pose1.position, pose2.position, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Line");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Line");
   generateRandomPose(pose1);
   generateRandomPose(pose2);
   publishLine(pose1.position, pose2.position, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Block");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Block");
   generateRandomPose(pose1);
   publishBlock(pose1, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Cylinder");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Cylinder");
   generateRandomPose(pose1);
   publishCylinder(pose1, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Text");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Text");
   generateRandomPose(pose1);
   publishText(pose1, "Test", rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Wireframe Cuboid");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Wireframe Cuboid");
   Eigen::Vector3d min_point, max_point;
   // TODO(davetcoleman): use generateRandomCuboid()
   min_point << -0.1, -.25, -.3;
@@ -1815,13 +1839,13 @@ bool RvizVisualTools::publishTests()
   publishWireframeCuboid(convertPose(pose1), min_point, max_point);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing depth/width/height Wireframe Cuboid");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing depth/width/height Wireframe Cuboid");
   double depth = 0.5, width = 0.25, height = 0.125;
   generateRandomPose(pose1);
   publishWireframeCuboid(convertPose(pose1), depth, width, height);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publishing Planes");
+  ROS_INFO_STREAM_NAMED(name_, "Publishing Planes");
   generateRandomPose(pose1);
   publishXYPlane(pose1, rviz_visual_tools::RED, 0.1);
   ros::Duration(1.0).sleep();
@@ -1830,7 +1854,7 @@ bool RvizVisualTools::publishTests()
   publishYZPlane(pose1, rviz_visual_tools::BLUE, 0.1);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED("test", "Publising Axis Cone");
+  ROS_INFO_STREAM_NAMED(name_, "Publising Axis Cone");
   generateRandomPose(pose1);
   publishCone(pose1, M_PI / 6.0, rviz_visual_tools::RAND, 0.2);
   ros::Duration(1.0).sleep();
@@ -1924,7 +1948,8 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform
 {
   if (transform6.size() != 6)
   {
-    ROS_ERROR_STREAM_NAMED("rviz_visual_tools", "Incorrect number of variables passed for 6-size transform");
+    // note: cannot use name_ var b/c this func is static
+    ROS_ERROR_STREAM_NAMED("visual_tools", "Incorrect number of variables passed for 6-size transform");
     throw;
   }
 
@@ -1989,25 +2014,25 @@ void RvizVisualTools::generateRandomPose(Eigen::Affine3d &pose, RandomPoseBounds
   // 0 <= azimuth   <= 2 * pi
   if (pose_bounds.elevation_min_ < 0)
   {
-    ROS_WARN_STREAM_NAMED("gen_random_pose", "min elevation bound < 0, setting equal to 0");
+    ROS_WARN_STREAM_NAMED(name_, "min elevation bound < 0, setting equal to 0");
     pose_bounds.elevation_min_ = 0;
   }
 
   if (pose_bounds.elevation_max_ > M_PI)
   {
-    ROS_WARN_STREAM_NAMED("gen_random_pose", "max elevation bound > pi, setting equal to pi ");
+    ROS_WARN_STREAM_NAMED(name_, "max elevation bound > pi, setting equal to pi ");
     pose_bounds.elevation_max_ = M_PI;
   }
 
   if (pose_bounds.azimuth_min_ < 0)
   {
-    ROS_WARN_STREAM_NAMED("gen_random_pose", "min azimuth bound < 0, setting equal to 0");
+    ROS_WARN_STREAM_NAMED(name_, "min azimuth bound < 0, setting equal to 0");
     pose_bounds.azimuth_min_ = 0;
   }
 
   if (pose_bounds.azimuth_max_ > 2 * M_PI)
   {
-    ROS_WARN_STREAM_NAMED("gen_random_pose", "max azimuth bound > 2 pi, setting equal to 2 pi ");
+    ROS_WARN_STREAM_NAMED(name_, "max azimuth bound > 2 pi, setting equal to 2 pi ");
     pose_bounds.azimuth_max_ = 2 * M_PI;
   }
 
@@ -2046,13 +2071,13 @@ void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose &pose)
 
 double RvizVisualTools::dRand(double dMin, double dMax)
 {
-  double d = static_cast<double>(rand() / RAND_MAX);
+  double d = static_cast<double>(rand()) / RAND_MAX;
   return dMin + d * (dMax - dMin);
 }
 
 float RvizVisualTools::fRand(float dMin, float dMax)
 {
-  float d = static_cast<float>(rand() / RAND_MAX);
+  float d = static_cast<float>(rand()) / RAND_MAX;
   return dMin + d * (dMax - dMin);
 }
 
