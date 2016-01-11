@@ -51,9 +51,9 @@ target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES} ${Boost_LIBRARIES}
 )
 
-# Test executable
-add_executable(rviz_visual_tools_test src/rviz_visual_tools_test.cpp)
-target_link_libraries(rviz_visual_tools_test
+# Demo executable
+add_executable(rviz_visual_tools_demo src/rviz_visual_tools_demo.cpp)
+target_link_libraries(rviz_visual_tools_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME}
 )
 

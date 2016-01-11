@@ -31,11 +31,11 @@ Clone this repository into a catkin workspace, then use the rosdep install tool 
 rosdep install --from-paths src --ignore-src --rosdistro indigo
 ```
 
-## Quick Start
+## Quick Start Demo
 
 To see random shapes generated in Rviz:
 
-    roslaunch rviz_visual_tools visual_tools_test.launch
+    roslaunch rviz_visual_tools visual_tools_demo.launch
 
 ## Code API
 
@@ -189,9 +189,17 @@ This tool lets you easily debug Eigen transforms in Rviz. Demo use:
     Eigen::Affine3d world_to_shelf_transform = Eigen::Affine3d::Identity(); // or whatever value
     tf_visualizer.publishTransform(world_to_shelf_transform, "world", "shelf");
 
-## Running Tests
+## Testing and Linting
 
-There is a small number of tests available. With catkin-tools installed, run:
+To run [roslint](http://wiki.ros.org/roslint), use the following command with [catkin-tools](https://catkin-tools.readthedocs.org/):
+
+    catkin build --no-status --no-deps --this --make-args roslint
+
+To run [catkin lint](https://pypi.python.org/pypi/catkin_lint), use the following command with [catkin-tools](https://catkin-tools.readthedocs.org/):
+
+    catkin lint -W2
+
+Use the following command with [catkin-tools](https://catkin-tools.readthedocs.org/) to run the small amount of available tests:
 
     catkin run_tests --no-deps --this -i
 

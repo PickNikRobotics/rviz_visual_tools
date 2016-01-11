@@ -45,7 +45,7 @@
 
 namespace rviz_visual_tools
 {
-class RvizVisualToolsTest
+class RvizVisualToolsDemo
 {
 private:
   // A shared node handle
@@ -58,12 +58,12 @@ public:
   /**
    * \brief Constructor
    */
-  RvizVisualToolsTest()
+  RvizVisualToolsDemo()
   {
     visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("base", "/rviz_visual_tools"));
 
     // Allow time to publish messages
-    ROS_INFO_STREAM_NAMED("test", "Waiting 4 seconds to start test...");
+    ROS_INFO_STREAM_NAMED("demo", "Waiting 4 seconds to start demo...");
     ros::Duration(4.0).sleep();
 
     while (ros::ok())
@@ -75,21 +75,21 @@ public:
   /**
    * \brief Destructor
    */
-  ~RvizVisualToolsTest() {}
+  ~RvizVisualToolsDemo() {}
 };  // end class
 
 }  // namespace rviz_visual_tools
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "visual_tools_test");
-  ROS_INFO_STREAM("Visual Tools Test");
+  ros::init(argc, argv, "visual_tools_demo");
+  ROS_INFO_STREAM("Visual Tools Demo");
 
   // Allow the action server to recieve and send ros messages
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
-  rviz_visual_tools::RvizVisualToolsTest tester;
+  rviz_visual_tools::RvizVisualToolsDemo demoer;
 
   ROS_INFO_STREAM("Shutting down.");
 
