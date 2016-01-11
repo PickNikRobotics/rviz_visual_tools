@@ -2,6 +2,14 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Renamed test to demo
+* Fix bug in random number generator
+* Noted a TODO
+* Documentation
+* Contributors: Dave Coleman
+
 2.0.2 (2015-12-27)
 ------------------
 * Formatting
