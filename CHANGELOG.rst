@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.3 (2016-01-10)
+------------------
 * Renamed test to demo
 * Fix bug in random number generator
 * Noted a TODO
