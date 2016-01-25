@@ -1018,10 +1018,10 @@ bool RvizVisualTools::publishYArrow(const geometry_msgs::PoseStamped &pose, cons
 }
 
 bool RvizVisualTools::publishZArrow(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
-                                    const rviz_visual_tools::scales &scale, double length)
+                                    const rviz_visual_tools::scales &scale, double length, const std::size_t &id)
 {
   Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
-  return publishArrow(convertPose(arrow_pose), color, scale, length);
+  return publishArrow(convertPose(arrow_pose), color, scale, length, id);
 }
 
 bool RvizVisualTools::publishZArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
@@ -1056,13 +1056,17 @@ bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const rviz_visua
 }
 
 bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
-                                   const rviz_visual_tools::scales &scale, double length)
+                                   const rviz_visual_tools::scales &scale, double length, const std::size_t &id)
 {
   // Set the frame ID and timestamp.
   arrow_marker_.header.stamp = ros::Time::now();
   arrow_marker_.header.frame_id = base_frame_;
 
-  arrow_marker_.id++;
+  if (id == 0)
+    arrow_marker_.id++;
+  else
+    arrow_marker_.id = id;
+
   arrow_marker_.pose = pose;
   arrow_marker_.color = getColor(color);
   arrow_marker_.scale = getScale(scale, true);

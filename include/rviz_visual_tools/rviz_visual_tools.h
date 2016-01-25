@@ -462,7 +462,7 @@ public:
    * \return true on success
    */
   bool publishZArrow(const Eigen::Affine3d &pose, const colors &color = BLUE, const scales &scale = REGULAR,
-                     double length = 0.1);
+                     double length = 0.1, const std::size_t &id = 0);
   bool publishZArrow(const geometry_msgs::Pose &pose, const colors &color = BLUE, const scales &scale = REGULAR,
                      double length = 0.1);
   bool publishZArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE, const scales &scale = REGULAR,
@@ -481,7 +481,7 @@ public:
   bool publishArrow(const Eigen::Affine3d &pose, const colors &color = BLUE, const scales &scale = REGULAR,
                     double length = 0.1);
   bool publishArrow(const geometry_msgs::Pose &pose, const colors &color = BLUE, const scales &scale = REGULAR,
-                    double length = 0.1);
+                    double length = 0.1, const std::size_t &id = 0);
   bool publishArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE, const scales &scale = REGULAR,
                     double length = 0.1, const std::size_t &id = 0);
 
