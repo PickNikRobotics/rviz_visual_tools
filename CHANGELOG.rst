@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2016-02-09)
+------------------
 * Allow publishArrow functions to specify ID
 * Contributors: Dave Coleman
 
