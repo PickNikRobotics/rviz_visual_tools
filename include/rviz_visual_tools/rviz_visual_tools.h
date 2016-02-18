@@ -177,7 +177,9 @@ public:
   /**
    * \brief Deconstructor
    */
-  ~RvizVisualTools() {}
+  ~RvizVisualTools()
+  {
+  }
 
   /**
    * \brief Tell Rviz to clear all markers on a particular display. Note: only works on ROS Indigo
@@ -220,7 +222,10 @@ public:
    * \brief Change the transparency of all markers published
    * \param alpha - value 0 - 1 where 0 is invisible
    */
-  void setAlpha(double alpha) { alpha_ = alpha; }
+  void setAlpha(double alpha)
+  {
+    alpha_ = alpha;
+  }
   /**
    * \brief Set the lifetime of markers published to rviz
    * \param lifetime seconds of how long to show markers. 0 for inifinity
@@ -245,6 +250,18 @@ public:
    * \return the RGB message of a random color
    */
   std_msgs::ColorRGBA createRandColor();
+
+  /**
+   * \brief Interpolate from [start, end] with value of size steps with current value count
+   * \return interpolated value
+   */
+  double slerp(double start, double end, double range, double value);
+
+  /**
+   * \brief Convert a value from [0,100] to a color Green->Red
+   * \return interpolated color
+   */
+  std_msgs::ColorRGBA getColorScale(int value);
 
   /**
    * \brief Get the rviz marker scale of standard sizes
@@ -275,7 +292,10 @@ public:
    * \brief Get the base frame
    * \return name of base frame
    */
-  const std::string getBaseFrame() { return base_frame_; }
+  const std::string getBaseFrame()
+  {
+    return base_frame_;
+  }
   /**
    * \brief Change the global base frame
    *        Note: this might reset all your current markers
@@ -290,11 +310,17 @@ public:
   /**
    * \brief Getter for the global scale used for changing size of all markers
    */
-  double getGlobalScale() { return global_scale_; }
+  double getGlobalScale()
+  {
+    return global_scale_;
+  }
   /**
    * \brief Setter for the global scale used for changing size of all markers
    */
-  void setGlobalScale(double global_scale) { global_scale_ = global_scale; }
+  void setGlobalScale(double global_scale)
+  {
+    global_scale_ = global_scale;
+  }
   /**
    * \brief Display a visualization_msgs Marker of a custom type. Allows reuse of the ros publisher
    * \param marker - a pre-made marker ready to be published
@@ -403,6 +429,8 @@ public:
                      const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::Pose &pose, const colors &color, const geometry_msgs::Vector3 scale,
                      const std::string &ns = "Sphere", const std::size_t &id = 0);
+  bool publishSphere(const geometry_msgs::Pose &pose, const std_msgs::ColorRGBA &color,
+                     const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color, const geometry_msgs::Vector3 scale,
                      const std::string &ns = "Sphere", const std::size_t &id = 0);
 
@@ -523,6 +551,8 @@ public:
                    const scales &scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const colors &color = BLUE,
                    const scales &scale = REGULAR);
+  bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
+                   const std_msgs::ColorRGBA &color, const scales &scale = REGULAR);
 
   /**
    * \brief Display a marker of a series of connected lines

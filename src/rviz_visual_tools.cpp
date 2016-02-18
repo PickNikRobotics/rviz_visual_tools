@@ -530,6 +530,43 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor()
   return result;
 }
 
+double RvizVisualTools::slerp(double start, double end, double range, double value)
+{
+  //std::cout << "start: " << start << " end: " << end << " range: " << range << " value: " << value << std::endl;
+  return start + (((end - start) / range) * value);
+}
+
+std_msgs::ColorRGBA RvizVisualTools::getColorScale(int value)
+{
+  // User warning
+  if (value < 0 || value > 100)
+    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is beyond range [0,100], value: " << value);
+
+  std_msgs::ColorRGBA start;
+  std_msgs::ColorRGBA end;
+
+  // For second half of color range move towards RED
+  if (value <=50)
+  {
+    start = getColor(GREEN);
+    end = getColor(YELLOW);
+  }
+  else
+  {
+    start = getColor(YELLOW);
+    end = getColor(RED);
+    value = value % 51;
+  }
+
+  std_msgs::ColorRGBA result;
+  result.r = slerp(start.r, end.r, 50, value);
+  result.g = slerp(start.g, end.g, 50, value);
+  result.b = slerp(start.b, end.b, 50, value);
+  result.a = 1.0;
+
+  return result;
+}
+
 geometry_msgs::Vector3 RvizVisualTools::getScale(const rviz_visual_tools::scales &scale, bool arrow_scale,
                                                  double marker_scale)
 {
@@ -929,6 +966,12 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_
 bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_visual_tools::colors &color,
                                     const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id)
 {
+  return publishSphere(pose, getColor(color), scale, ns, id);
+}
+
+bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const std_msgs::ColorRGBA &color,
+                                    const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id)
+{
   // Set the frame ID and timestamp
   sphere_marker_.header.stamp = ros::Time::now();
 
@@ -938,13 +981,13 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const rviz_
   else
     sphere_marker_.id = id;
 
-  sphere_marker_.color = getColor(color);
+  sphere_marker_.color = color;
   sphere_marker_.scale = scale;
   sphere_marker_.ns = ns;
 
   // Update the single point with new pose
   sphere_marker_.points[0] = pose.position;
-  sphere_marker_.colors[0] = getColor(color);
+  sphere_marker_.colors[0] = color;
 
   // Helper for publishing rviz markers
   return publishMarker(sphere_marker_);
@@ -1385,11 +1428,17 @@ bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Ve
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                                   const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
 {
+  return publishLine(point1, point2, getColor(color), scale);
+}
+
+bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
+                                  const std_msgs::ColorRGBA &color, const rviz_visual_tools::scales &scale)
+{
   // Set the timestamp
   line_marker_.header.stamp = ros::Time::now();
 
   line_marker_.id++;
-  line_marker_.color = getColor(color);
+  line_marker_.color = color;
   line_marker_.scale = getScale(scale, false, 0.1);
 
   line_marker_.points.clear();
@@ -1788,6 +1837,21 @@ bool RvizVisualTools::publishTests()
   // Create pose
   geometry_msgs::Pose pose1;
   geometry_msgs::Pose pose2;
+
+  // Test color range
+  ROS_INFO_STREAM_NAMED(name_, "Publising range of colors red->green");
+  generateRandomPose(pose1);
+  for (int i = 0; i < 100; ++i)
+  {
+    geometry_msgs::Vector3 scale = getScale(XLARGE, false, 0.1);
+    std_msgs::ColorRGBA color = getColorScale(i);
+    std::size_t id = 1;
+    publishSphere(pose1, color, scale, "Sphere", id);
+    ros::Duration(0.1).sleep();
+
+    if (!ros::ok())
+      return false;
+  }
 
   // Test all shapes ----------
 
