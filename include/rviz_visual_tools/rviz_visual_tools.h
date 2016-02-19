@@ -522,7 +522,8 @@ public:
    */
   bool publishCuboid(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE);
   bool publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                     const colors &color = BLUE);
+                     const colors &color = BLUE, const std::string &ns = "Cuboid", const std::size_t &id = 0);
+
   /**
    * \brief Display a rectangular cuboid
    * \param pose - pose of the box

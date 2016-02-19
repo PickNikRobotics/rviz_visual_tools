@@ -1346,12 +1346,18 @@ bool RvizVisualTools::publishCuboid(const Eigen::Vector3d &point1, const Eigen::
 }
 
 bool RvizVisualTools::publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                                    const rviz_visual_tools::colors &color)
+                                    const rviz_visual_tools::colors &color, const std::string &ns,
+                                    const std::size_t &id)
 {
   // Set the timestamp
   cuboid_marker_.header.stamp = ros::Time::now();
+  cuboid_marker_.ns = ns;
 
-  cuboid_marker_.id++;
+  if (id == 0)  // Provide a new id every call to this function
+    line_list_marker_.id++;
+  else  // allow marker to be overwritten
+    line_list_marker_.id = id;
+
   cuboid_marker_.color = getColor(color);
 
   // Calculate center pose
