@@ -258,10 +258,10 @@ public:
   double slerp(double start, double end, double range, double value);
 
   /**
-   * \brief Convert a value from [0,100] to a color Green->Red
+   * \brief Convert a value from [0,1] to a color Green->Red
    * \return interpolated color
    */
-  std_msgs::ColorRGBA getColorScale(int value);
+  std_msgs::ColorRGBA getColorScale(double value);
 
   /**
    * \brief Get the rviz marker scale of standard sizes

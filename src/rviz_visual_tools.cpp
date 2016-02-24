@@ -536,32 +536,36 @@ double RvizVisualTools::slerp(double start, double end, double range, double val
   return start + (((end - start) / range) * value);
 }
 
-std_msgs::ColorRGBA RvizVisualTools::getColorScale(int value)
+std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value)
 {
   // User warning
-  if (value < 0 || value > 100)
-    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is beyond range [0,100], value: " << value);
+  if (value < 0 || value > 1)
+    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is beyond range [0,1], value: " << value);
 
   std_msgs::ColorRGBA start;
   std_msgs::ColorRGBA end;
 
   // For second half of color range move towards RED
-  if (value <=50)
+  if (value == 0.0)
+    return getColor(RED);
+  else if (value == 1.0)
+    return getColor(GREEN);
+  else if (value <= 0.5)
   {
-    start = getColor(GREEN);
+    start = getColor(RED);
     end = getColor(YELLOW);
   }
   else
   {
     start = getColor(YELLOW);
-    end = getColor(RED);
-    value = value % 51;
+    end = getColor(GREEN);
+    value = fmod(value, 0.5);
   }
 
   std_msgs::ColorRGBA result;
-  result.r = slerp(start.r, end.r, 50, value);
-  result.g = slerp(start.g, end.g, 50, value);
-  result.b = slerp(start.b, end.b, 50, value);
+  result.r = slerp(start.r, end.r, 0.5, value);
+  result.g = slerp(start.g, end.g, 0.5, value);
+  result.b = slerp(start.b, end.b, 0.5, value);
   result.a = 1.0;
 
   return result;
@@ -1847,8 +1851,9 @@ bool RvizVisualTools::publishTests()
   // Test color range
   ROS_INFO_STREAM_NAMED(name_, "Publising range of colors red->green");
   generateRandomPose(pose1);
-  for (int i = 0; i < 100; ++i)
+  for (double i = 0; i < 1.0; i += 0.01)
   {
+    //std::cout << "Publishing sphere with intensity " << i << std::endl;
     geometry_msgs::Vector3 scale = getScale(XLARGE, false, 0.1);
     std_msgs::ColorRGBA color = getColorScale(i);
     std::size_t id = 1;
