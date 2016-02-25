@@ -65,7 +65,7 @@ RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::strin
 void RvizVisualTools::initialize()
 {
   marker_lifetime_ = ros::Duration(0.0);  // 0 - unlimited
-  alpha_ = 0.8;
+  alpha_ = 1.0;
   global_scale_ = 1.0;
   // Cache the reusable markers
   loadRvizMarkers();
@@ -380,36 +380,36 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.8;
       result.g = 0.1;
       result.b = 0.1;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case GREEN:
       result.r = 0.1;
       result.g = 0.8;
       result.b = 0.1;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case GREY:
       result.r = 0.9;
       result.g = 0.9;
       result.b = 0.9;
-      result.a = 1.0;
+      result.a = alpha_;
     case DARK_GREY:
       result.r = 0.6;
       result.g = 0.6;
       result.b = 0.6;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case WHITE:
       result.r = 1.0;
       result.g = 1.0;
       result.b = 1.0;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case ORANGE:
       result.r = 1.0;
       result.g = 0.5;
       result.b = 0.0;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case TRANSLUCENT_LIGHT:
       result.r = 0.1;
@@ -433,31 +433,31 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.0;
       result.g = 0.0;
       result.b = 0.0;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case YELLOW:
       result.r = 1.0;
       result.g = 1.0;
       result.b = 0.0;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case BROWN:
       result.r = 0.597;
       result.g = 0.296;
       result.b = 0.0;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case PINK:
       result.r = 1.0;
       result.g = 0.4;
       result.b = 1;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case LIME_GREEN:
       result.r = 0.6;
       result.g = 1.0;
       result.b = 0.2;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case CLEAR:
       result.r = 1.0;
@@ -469,19 +469,19 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.597;
       result.g = 0.0;
       result.b = 0.597;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case CYAN:
       result.r = 0.0;
       result.g = 1.0;
       result.b = 1.0;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case MAGENTA:
       result.r = 1.0;
       result.g = 0.0;
       result.b = 1.0;
-      result.a = 1.0;
+      result.a = alpha_;
       break;
     case RAND:
       result = createRandColor();
@@ -495,7 +495,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const rviz_visual_tools::colors &c
       result.r = 0.1;
       result.g = 0.1;
       result.b = 0.8;
-      result.a = 1.0;
+      result.a = alpha_;
   }
 
   return result;
@@ -525,7 +525,7 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor()
   } while (result.r + result.g + result.b < 1.5);  // 3 would be white
 
   // Set alpha value
-  result.a = 1.0;
+  result.a = alpha_;
 
   return result;
 }
@@ -566,7 +566,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value)
   result.r = slerp(start.r, end.r, 0.5, value);
   result.g = slerp(start.g, end.g, 0.5, value);
   result.b = slerp(start.b, end.b, 0.5, value);
-  result.a = 1.0;
+  result.a = alpha_;
 
   return result;
 }
