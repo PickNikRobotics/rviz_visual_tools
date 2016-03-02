@@ -64,7 +64,7 @@
 #include <trajectory_msgs/JointTrajectory.h>
 
 // rviz_visual_tools
-// #include <rviz_visual_tools/deprecation.h>
+//#include <rviz_visual_tools/deprecation.h>
 
 namespace rviz_visual_tools
 {
@@ -880,6 +880,8 @@ protected:
 
   // ROS publishers
   ros::Publisher pub_rviz_markers_;  // for rviz visualization markers
+  bool pub_rviz_markers_connected_;
+  bool pub_rviz_markers_waited_;
 
   // Strings
   std::string marker_topic_;  // topic to publish to rviz
@@ -906,7 +908,7 @@ protected:
   visualization_msgs::Marker mesh_marker_;
   visualization_msgs::Marker text_marker_;
   visualization_msgs::Marker cuboid_marker_;
-  visualization_msgs::Marker line_marker_;
+  visualization_msgs::Marker line_strip_marker_;
   visualization_msgs::Marker line_list_marker_;
   visualization_msgs::Marker spheres_marker_;
   visualization_msgs::Marker reset_marker_;

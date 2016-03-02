@@ -57,6 +57,8 @@ RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::strin
   , marker_topic_(marker_topic)
   , base_frame_(base_frame)
   , batch_publishing_enabled_(false)
+  , pub_rviz_markers_connected_(false)
+  , pub_rviz_markers_waited_(false)
 {
   initialize();
   double bug;
@@ -86,7 +88,7 @@ void RvizVisualTools::resetMarkerCounts()
   mesh_marker_.id++;
   text_marker_.id++;
   cuboid_marker_.id++;
-  line_marker_.id++;
+  line_strip_marker_.id++;
   line_list_marker_.id++;
   spheres_marker_.id++;
   triangle_marker_.id++;
@@ -127,16 +129,16 @@ bool RvizVisualTools::loadRvizMarkers()
 
   // Load line ----------------------------------------------------
 
-  line_marker_.header.frame_id = base_frame_;
+  line_strip_marker_.header.frame_id = base_frame_;
   // Set the namespace and id for this marker.  This serves to create a unique
   // ID
-  line_marker_.ns = "Line";
+  line_strip_marker_.ns = "Line";
   // Set the marker type.
-  line_marker_.type = visualization_msgs::Marker::LINE_STRIP;
+  line_strip_marker_.type = visualization_msgs::Marker::LINE_STRIP;
   // Set the marker action.  Options are ADD and DELETE
-  line_marker_.action = visualization_msgs::Marker::ADD;
+  line_strip_marker_.action = visualization_msgs::Marker::ADD;
   // Lifetime
-  line_marker_.lifetime = marker_lifetime_;
+  line_strip_marker_.lifetime = marker_lifetime_;
 
   // Load path ----------------------------------------------------
 
@@ -272,21 +274,16 @@ void RvizVisualTools::loadMarkerPub()
   pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED(name_, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
-  waitForSubscriber(pub_rviz_markers_);
+  //waitForSubscriber(pub_rviz_markers_);
 }
 
 bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wait_time)
 {
-  // Benchmark runtime
-  ros::Time start_time;
-  start_time = ros::Time::now();
-
-  // Will wait at most 1000 ms (1 sec)
+  // Will wait at most this amount of time
   ros::Time max_time(ros::Time::now() + ros::Duration(wait_time));
 
   // This is wrong. It returns only the number of subscribers that have already
-  // established their
-  // direct connections to this publisher
+  // established their direct connections to this publisher
   int num_existing_subscribers = pub.getNumSubscribers();
 
   // How often to check for subscribers
@@ -298,10 +295,8 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
     // Check if timed out
     if (ros::Time::now() > max_time)
     {
-      ROS_WARN_STREAM_NAMED(name_, "Topic '" << pub.getTopic()
-                                                      << "' unable to connect to any subscribers within " << wait_time
-                                                      << " seconds. It is possible initially "
-                                                         "published visual messages will be lost.");
+      ROS_WARN_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
+                            << wait_time << " sec. It is possible initially published visual messages will be lost.");
       return false;
     }
     ros::spinOnce();
@@ -311,18 +306,10 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
 
     // Check again
     num_existing_subscribers = pub.getNumSubscribers();
-    // std::cout << "num_existing_subscribers " << num_existing_subscribers <<
-    // std::endl;
+    //std::cout << "num_existing_subscribers " << num_existing_subscribers << std::endl;
   }
+  pub_rviz_markers_connected_ = true;
 
-  // Benchmark runtime
-  if (false)
-  {
-    double duration = (ros::Time::now() - start_time).toSec();
-    ROS_DEBUG_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' took " << duration
-                                                     << " seconds to connect to a subscriber. Connected to "
-                                                     << num_existing_subscribers << " total subsribers");
-  }
   return true;
 }
 
@@ -338,7 +325,7 @@ void RvizVisualTools::setLifetime(double lifetime)
   // Update cached markers
   arrow_marker_.lifetime = marker_lifetime_;
   cuboid_marker_.lifetime = marker_lifetime_;
-  line_marker_.lifetime = marker_lifetime_;
+  line_strip_marker_.lifetime = marker_lifetime_;
   sphere_marker_.lifetime = marker_lifetime_;
   block_marker_.lifetime = marker_lifetime_;
   mesh_marker_.lifetime = marker_lifetime_;
@@ -723,6 +710,16 @@ bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &mark
 {
   if (!pub_rviz_markers_)  // always check this before publishing
     loadMarkerPub();
+
+  // Check if connected to a subscriber
+  if (!pub_rviz_markers_waited_ && !pub_rviz_markers_connected_)
+  {
+    ROS_INFO_STREAM_NAMED(name_, "Waiting for subscribers before publishing markers...");
+    waitForSubscriber(pub_rviz_markers_);
+
+    // Only wait for the publisher once, after that just ignore the lack of connection
+    pub_rviz_markers_waited_ = true;
+  }
 
   pub_rviz_markers_.publish(markers);
   ros::spinOnce();
@@ -1445,18 +1442,18 @@ bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geom
                                   const std_msgs::ColorRGBA &color, const rviz_visual_tools::scales &scale)
 {
   // Set the timestamp
-  line_marker_.header.stamp = ros::Time::now();
+  line_strip_marker_.header.stamp = ros::Time::now();
 
-  line_marker_.id++;
-  line_marker_.color = color;
-  line_marker_.scale = getScale(scale, false, 0.1);
+  line_strip_marker_.id++;
+  line_strip_marker_.color = color;
+  line_strip_marker_.scale = getScale(scale, false, 0.1);
 
-  line_marker_.points.clear();
-  line_marker_.points.push_back(point1);
-  line_marker_.points.push_back(point2);
+  line_strip_marker_.points.clear();
+  line_strip_marker_.points.push_back(point1);
+  line_strip_marker_.points.push_back(point2);
 
   // Helper for publishing rviz markers
-  return publishMarker(line_marker_);
+  return publishMarker(line_strip_marker_);
 }
 
 bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const rviz_visual_tools::colors &color,
@@ -1468,6 +1465,7 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
     return true;
   }
 
+  /*
   line_list_marker_.header.stamp = ros::Time();
   line_list_marker_.ns = ns;
 
@@ -1492,6 +1490,34 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
 
   // Helper for publishing rviz markers
   return publishMarker(line_list_marker_);
+  */
+
+  line_strip_marker_.header.stamp = ros::Time();
+  line_strip_marker_.ns = ns;
+
+  // Provide a new id every call to this function
+  line_strip_marker_.id++;
+
+  std_msgs::ColorRGBA this_color = getColor(color);
+  line_strip_marker_.scale = getScale(scale, false, 0.25);
+  line_strip_marker_.color = this_color;
+  line_strip_marker_.points.clear();
+  line_strip_marker_.colors.clear();
+
+  ROS_WARN_STREAM_NAMED(name_, "Experimental publishPath change - this has not been tested yet!");
+
+  // Convert path coordinates
+  for (std::size_t i = 1; i < path.size(); ++i)
+  {
+    // Add the point pair to the line message
+    line_strip_marker_.points.push_back(path[i - 1]);
+    line_strip_marker_.points.push_back(path[i]);
+    line_strip_marker_.colors.push_back(this_color);
+    line_strip_marker_.colors.push_back(this_color);
+  }
+
+  // Helper for publishing rviz markers
+  return publishMarker(line_strip_marker_);
 }
 
 bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const rviz_visual_tools::colors &color,
