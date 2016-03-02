@@ -714,7 +714,7 @@ bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &mark
   // Check if connected to a subscriber
   if (!pub_rviz_markers_waited_ && !pub_rviz_markers_connected_)
   {
-    ROS_INFO_STREAM_NAMED(name_, "Waiting for subscribers before publishing markers...");
+    ROS_DEBUG_STREAM_NAMED(name_, "Waiting for subscribers before publishing markers...");
     waitForSubscriber(pub_rviz_markers_);
 
     // Only wait for the publisher once, after that just ignore the lack of connection
