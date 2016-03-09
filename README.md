@@ -124,6 +124,12 @@ Reset function
 
  - ``deleteAllMarkers`` - tells Rviz to clear out all current markers from being displayed.
 
+Batch publish - useful for when many markers need to be published at once to prevent buffer overflow of ROS messages.
+
+ - enableBatchPublishing()
+ - triggerBatchPublish()
+ - triggerBatchPublishAndDisable()
+
 Conversion functions
 
  - convertPose
@@ -176,7 +182,10 @@ This package helps you quickly choose colors - feel free to send PRs with more c
     XSMALL,
     SMALL,
     REGULAR,
-    LARGE, xLARGE, xxLARGE, xxxLARGE,
+    LARGE,
+    xLARGE,
+    xxLARGE,
+    xxxLARGE,
     XLARGE,
     XXLARGE
 
@@ -205,14 +214,6 @@ To run [catkin lint](https://pypi.python.org/pypi/catkin_lint), use the followin
 Use the following command with [catkin-tools](https://catkin-tools.readthedocs.org/) to run the small amount of available tests:
 
     catkin run_tests --no-deps --this -i
-
-## Developers Notes
-
-Useful notes for anyone wanting to dig in deeper:
-
- -  All poses are published with respect to the world frame e.g. /world, /odom, or maybe /base
- -  All publish() ROS topics should be followed by a ``ros::spinOnce();`` but no sleep
- -  Do not load any features/publishers until they are actually needed since this library contains so many components
 
 ## Contribute
 

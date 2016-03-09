@@ -330,9 +330,8 @@ public:
 
   /**
    * \brief Enable batch publishing - useful for when many markers need to be published at once and
-   * the ROS topic can get
-   *        overloaded. This collects all published markers into array and only publishes them with
-   * triggerBatchPublish() is called
+   * the ROS topic can get overloaded. This collects all published markers into array and only publishes
+   * them with triggerBatchPublish() is called
    */
   void enableBatchPublishing(bool enable = true);
 
