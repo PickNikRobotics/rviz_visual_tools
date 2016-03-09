@@ -1216,6 +1216,28 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
   return triggerInternalBatchPublishAndDisable();
 }
 
+bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
+                                      const colors &color, double radius, const std::string &ns)
+{
+  // Distance between two points
+  double height = (point1 - point2).lpNorm<2>();
+
+  // Find center point
+  Eigen::Vector3d pt_center = getCenterPoint(point1, point2);
+
+  // Create vector
+  Eigen::Affine3d pose;
+  pose = getVectorBetweenPoints(pt_center, point2);
+
+  // Convert pose to be normal to cylindar axis
+  Eigen::Affine3d rotation;
+  rotation = Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitY());
+  pose = pose * rotation;
+
+  // Turn into msg
+  publishCylinder(pose, color, height, radius);
+}
+
 bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, const rviz_visual_tools::colors &color,
                                       double height, double radius, const std::string &ns)
 {
@@ -1295,7 +1317,6 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
   typedef std::pair<std::size_t, std::size_t> node_ids;
   std::set<node_ids> added_edges;
   std::pair<std::set<node_ids>::iterator, bool> return_value;
-
   Eigen::Vector3d a, b;
   for (std::size_t i = 0; i < graph.nodes.size(); ++i)
   {
@@ -1313,6 +1334,7 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
         a = convertPoint(graph.nodes[i]);
         b = convertPoint(graph.nodes[graph.edges[i].node_ids[j]]);
 
+        /*
         // add other direction of edge
         added_edges.insert(node_ids(j, i));
 
@@ -1333,6 +1355,8 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
 
         // Publish individually
         publishCylinder(convertPose(pose), color, height, radius);
+        */
+        publishCylinder(a, b, color, radius);
       }
     }
   }
@@ -1355,9 +1379,9 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Point &point1, const ge
   cuboid_marker_.ns = ns;
 
   if (id == 0)  // Provide a new id every call to this function
-    line_list_marker_.id++;
+    cuboid_marker_.id++;
   else  // allow marker to be overwritten
-    line_list_marker_.id = id;
+    cuboid_marker_.id = id;
 
   cuboid_marker_.color = getColor(color);
 
@@ -1429,7 +1453,8 @@ bool RvizVisualTools::publishLine(const Eigen::Affine3d &point1, const Eigen::Af
 bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                                   const rviz_visual_tools::colors &color, const rviz_visual_tools::scales &scale)
 {
-  return publishLine(RvizVisualTools::convertPoint(point1), RvizVisualTools::convertPoint(point2), color, scale);
+  //return publishLine(RvizVisualTools::convertPoint(point1), RvizVisualTools::convertPoint(point2), color, scale);
+  return publishCylinder(point1, point2, color, 0.5 * getScale(scale, false, 0.1).x);
 }
 
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
@@ -1920,10 +1945,11 @@ bool RvizVisualTools::publishTests()
   publishLine(pose1.position, pose2.position, rviz_visual_tools::RAND);
   ros::Duration(1.0).sleep();
 
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Block");
-  generateRandomPose(pose1);
-  publishBlock(pose1, rviz_visual_tools::RAND);
-  ros::Duration(1.0).sleep();
+  // Deprecated
+  // ROS_INFO_STREAM_NAMED(name_, "Publishing Block");
+  // generateRandomPose(pose1);
+  // publishBlock(pose1, rviz_visual_tools::RAND);
+  // ros::Duration(1.0).sleep();
 
   ROS_INFO_STREAM_NAMED(name_, "Publishing Cylinder");
   generateRandomPose(pose1);

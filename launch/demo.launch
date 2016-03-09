@@ -4,16 +4,9 @@
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
-  <!-- Load Rviz -->
-  <node name="$(anon rviz)" pkg="rviz" type="rviz" respawn="false"
-	args="-d $(find rviz_visual_tools)/launch/visual_tools_demo.rviz" output="screen">
-  </node>
-
   <!-- Start demo -->
   <node name="rviz_visual_tools_demo" launch-prefix="$(arg launch_prefix)" pkg="rviz_visual_tools"
 	type="rviz_visual_tools_demo" output="screen">
   </node>
 
-  <!-- Fake transform from world origin to robot origin (base) -->
-  <node pkg="tf" type="static_transform_publisher" name="base_to_world" args="0 0 0 0 0 0 /world /base 30" />
 </launch>

@@ -64,7 +64,7 @@
 #include <trajectory_msgs/JointTrajectory.h>
 
 // rviz_visual_tools
-//#include <rviz_visual_tools/deprecation.h>
+#include <rviz_visual_tools/deprecation.h>
 
 namespace rviz_visual_tools
 {
@@ -583,8 +583,10 @@ public:
    * \param color - an enum pre-defined name of a color
    * \param size - height=width=depth=size
    * \return true on success
+   * DEPRECATED - use publishCuboid
    */
   bool publishBlock(const geometry_msgs::Pose &pose, const colors &color = BLUE, const double &block_size = 0.1);
+  RVIZ_VISUAL_TOOLS_DEPRECATED
   bool publishBlock(const Eigen::Affine3d &pose, const colors &color = BLUE, const double &block_size = 0.1);
 
   /**
@@ -655,6 +657,17 @@ public:
 
   /**
    * \brief Display a marker of a cylinder
+   * \param point1 - starting side of cylinder
+   * \param point2 - end side of cylinder
+   * \param color - an enum pre-defined name of a color
+   * \param radius - geometry of cylinder
+   * \return true on success
+   */
+  bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE,
+                       double radius = 0.01, const std::string &ns = "Cylinder");
+
+  /**
+   * \brief Display a marker of a cylinder
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
    * \param height - geometry of cylinder
@@ -713,6 +726,7 @@ public:
    * \brief Run a simple test of all visual_tool's features
    * \return true on success
    */
+  RVIZ_VISUAL_TOOLS_DEPRECATED
   bool publishTests();
 
   /**

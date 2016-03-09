@@ -1,0 +1,10 @@
+<launch>
+
+  <!-- Load Rviz -->
+  <node name="$(anon rviz)" pkg="rviz" type="rviz" respawn="false"
+	args="-d $(find rviz_visual_tools)/launch/demo.rviz" output="screen">
+  </node>
+
+  <!-- Fake transform from world origin to robot origin (base) -->
+  <node pkg="tf" type="static_transform_publisher" name="base_to_world" args="0 0 0 0 0 0 /world /base 30" />
+</launch>
