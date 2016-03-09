@@ -549,6 +549,8 @@ public:
                    const scales &scale = REGULAR);
   bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE,
                    const scales &scale = REGULAR);
+  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
+                   const std_msgs::ColorRGBA &color, const scales &scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const colors &color = BLUE,
                    const scales &scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
@@ -664,6 +666,8 @@ public:
    */
   bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE,
                        double radius = 0.01, const std::string &ns = "Cylinder");
+  bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const std_msgs::ColorRGBA &color,
+                       double radius = 0.01, const std::string &ns = "Cylinder");
 
   /**
    * \brief Display a marker of a cylinder
@@ -676,6 +680,8 @@ public:
   bool publishCylinder(const Eigen::Affine3d &pose, const colors &color = BLUE, double height = 0.1,
                        double radius = 0.01, const std::string &ns = "Cylinder");
   bool publishCylinder(const geometry_msgs::Pose &pose, const colors &color = BLUE, double height = 0.1,
+                       double radius = 0.01, const std::string &ns = "Cylinder");
+  bool publishCylinder(const geometry_msgs::Pose &pose, const std_msgs::ColorRGBA &color, double height = 0.1,
                        double radius = 0.01, const std::string &ns = "Cylinder");
 
   /**
@@ -706,7 +712,7 @@ public:
   /**
    * \brief Display a marker of a text
    * \param pose - the location to publish the marker with respect to the base frame
-   * \param text - what to display
+   * \param text - what message to display
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param static_id - if true, only one text can be published at a time
@@ -714,10 +720,10 @@ public:
    */
   bool publishText(const Eigen::Affine3d &pose, const std::string &text, const colors &color = WHITE,
                    const scales &scale = REGULAR, bool static_id = true);
-
+  bool publishText(const Eigen::Affine3d &pose, const std::string &text, const colors &color,
+                   const geometry_msgs::Vector3 scale, bool static_id = true);
   bool publishText(const geometry_msgs::Pose &pose, const std::string &text, const colors &color = WHITE,
                    const scales &scale = REGULAR, bool static_id = true);
-
   bool publishText(const geometry_msgs::Pose &pose, const std::string &text, const colors &color,
                    const geometry_msgs::Vector3 scale, bool static_id = true);
 
@@ -760,12 +766,10 @@ public:
   Eigen::Affine3d convertPoint32ToPose(const geometry_msgs::Point32 &point);
 
   /**
-   * \brief
-   * \param input - description
-   * \param input - description
-   * \return
+   * \brief Add an identity rotation matrix to make a point have a full pose
    */
   geometry_msgs::Pose convertPointToPose(const geometry_msgs::Point &point);
+  Eigen::Affine3d convertPointToPose(const Eigen::Vector3d &point);
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg point
