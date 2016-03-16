@@ -1084,9 +1084,10 @@ bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped &pose, cons
   return publishArrow(new_pose, color, scale, length, id);
 }
 
-bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const colors &color, const scales &scale, double length)
+bool RvizVisualTools::publishArrow(const Eigen::Affine3d &pose, const colors &color, const scales &scale, double length,
+                                   const std::size_t &id)
 {
-  return publishArrow(convertPose(pose), color, scale, length);
+  return publishArrow(convertPose(pose), color, scale, length, id);
 }
 
 bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, const colors &color, const scales &scale,
@@ -2173,6 +2174,21 @@ void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose &pose)
   pose.orientation.y = 0;
   pose.orientation.z = 0;
   pose.orientation.w = 1;
+}
+
+bool RvizVisualTools::posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double& threshold)
+{
+  static const std::size_t NUM_VARS = 16;  // size of eigen matrix
+
+  for (std::size_t i = 0; i < NUM_VARS; ++i)
+  {
+    if (fabs(pose1.data()[i] - pose2.data()[i]) > threshold)
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 double RvizVisualTools::dRand(double dMin, double dMax)

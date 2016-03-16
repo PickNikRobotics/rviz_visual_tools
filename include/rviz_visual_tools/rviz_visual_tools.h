@@ -506,7 +506,7 @@ public:
    * \return true on success
    */
   bool publishArrow(const Eigen::Affine3d &pose, const colors &color = BLUE, const scales &scale = REGULAR,
-                    double length = 0.1);
+                    double length = 0.1, const std::size_t &id = 0);
   bool publishArrow(const geometry_msgs::Pose &pose, const colors &color = BLUE, const scales &scale = REGULAR,
                     double length = 0.1, const std::size_t &id = 0);
   bool publishArrow(const geometry_msgs::PoseStamped &pose, const colors &color = BLUE, const scales &scale = REGULAR,
@@ -860,6 +860,15 @@ public:
    * \param Pose to fill in
    */
   void generateEmptyPose(geometry_msgs::Pose &pose);
+
+  /**
+   * \brief Test if two Eigen poses are close enough
+   * \param pose1
+   * \param pose2
+   * \param threshold - how close in value they must be in order to be considered the same
+   * \return true if equal
+   */
+  bool posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double& threshold = 0.000001);
 
   /**
    * \brief Get random between min and max
