@@ -1330,28 +1330,6 @@ bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph &graph, const
         a = convertPoint(graph.nodes[i]);
         b = convertPoint(graph.nodes[graph.edges[i].node_ids[j]]);
 
-        /*
-        // add other direction of edge
-        added_edges.insert(node_ids(j, i));
-
-        // Distance between two points
-        double height = (a - b).lpNorm<2>();
-
-        // Find center point
-        Eigen::Vector3d pt_center = getCenterPoint(a, b);
-
-        // Create vector
-        Eigen::Affine3d pose;
-        pose = getVectorBetweenPoints(pt_center, b);
-
-        // Convert pose to be normal to cylindar axis
-        Eigen::Affine3d rotation;
-        rotation = Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitY());
-        pose = pose * rotation;
-
-        // Publish individually
-        publishCylinder(convertPose(pose), color, height, radius);
-        */
         publishCylinder(a, b, color, radius);
       }
     }
@@ -1490,33 +1468,6 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
     return true;
   }
 
-  /*
-  line_list_marker_.header.stamp = ros::Time();
-  line_list_marker_.ns = ns;
-
-  // Provide a new id every call to this function
-  line_list_marker_.id++;
-
-  std_msgs::ColorRGBA this_color = getColor(color);
-  line_list_marker_.scale = getScale(scale, false, 0.25);
-  line_list_marker_.color = this_color;
-  line_list_marker_.points.clear();
-  line_list_marker_.colors.clear();
-
-  // Convert path coordinates
-  for (std::size_t i = 1; i < path.size(); ++i)
-  {
-    // Add the point pair to the line message
-    line_list_marker_.points.push_back(path[i - 1]);
-    line_list_marker_.points.push_back(path[i]);
-    line_list_marker_.colors.push_back(this_color);
-    line_list_marker_.colors.push_back(this_color);
-  }
-
-  // Helper for publishing rviz markers
-  return publishMarker(line_list_marker_);
-  */
-
   line_strip_marker_.header.stamp = ros::Time();
   line_strip_marker_.ns = ns;
 
@@ -1529,9 +1480,6 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
   line_strip_marker_.points.clear();
   line_strip_marker_.colors.clear();
 
-  ROS_WARN_STREAM_NAMED(name_, "Experimental publishPath change - this has not been tested yet!");
-
-  // Convert path coordinates
   for (std::size_t i = 1; i < path.size(); ++i)
   {
     // Add the point pair to the line message
@@ -1543,6 +1491,28 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
 
   // Helper for publishing rviz markers
   return publishMarker(line_strip_marker_);
+}
+
+bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color,
+                                  const double radius, const std::string &ns)
+{
+  if (path.size() < 2)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    return true;
+  }
+
+  // Batch publish, unless it is already enabled by user
+  enableInternalBatchPublishing(true);
+
+  // Create the cylinders
+  for (std::size_t i = 1; i < path.size(); ++i)
+  {
+    publishCylinder(path[i - 1], path[i], color, radius, ns);
+  }
+
+  // Batch publish
+  return triggerInternalBatchPublishAndDisable();
 }
 
 bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const colors &color, const scales &scale,

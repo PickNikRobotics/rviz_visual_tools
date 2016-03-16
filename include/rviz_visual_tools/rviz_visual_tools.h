@@ -567,6 +567,9 @@ public:
   bool publishPath(const std::vector<geometry_msgs::Point> &path, const colors &color = RED,
                    const scales &scale = REGULAR, const std::string &ns = "Path");
 
+  bool publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color = RED,
+                   const double radius = 0.01, const std::string &ns = "Path");
+
   /**
    * \brief Display a marker of a polygon
    * \param polygon - a series of points to connect with lines
