@@ -265,7 +265,7 @@ bool RvizVisualTools::loadRvizMarkers()
   return true;
 }
 
-void RvizVisualTools::loadMarkerPub()
+void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber)
 {
   if (pub_rviz_markers_)
     return;
@@ -274,7 +274,8 @@ void RvizVisualTools::loadMarkerPub()
   pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10);
   ROS_DEBUG_STREAM_NAMED(name_, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
-  // waitForSubscriber(pub_rviz_markers_);
+  if (wait_for_subscriber)
+    waitForSubscriber(pub_rviz_markers_);
 }
 
 bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wait_time)

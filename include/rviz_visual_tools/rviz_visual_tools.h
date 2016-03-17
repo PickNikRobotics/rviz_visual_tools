@@ -199,10 +199,16 @@ public:
    */
   bool loadRvizMarkers();
 
+  /** \brief Set marker array topic */
+  void setMarkerTopic(const std::string& topic)
+  {
+    marker_topic_ = topic;
+  }
+
   /**
    * \brief Load publishers as needed
    */
-  void loadMarkerPub();
+  void loadMarkerPub(bool wait_for_subscriber = false);
 
   /**
    * \brief Wait until at least one subscriber connects to a publisher
