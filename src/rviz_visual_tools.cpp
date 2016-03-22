@@ -503,8 +503,8 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor()
     result.r = fRand(0.0, 1.0);
     result.g = fRand(0.0, 1.0);
     result.b = fRand(0.0, 1.0);
-    ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is "
-                                      << (result.r + result.g + result.b) << " attempt #" << attempts);
+    //ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is "
+    //<< (result.r + result.g + result.b) << " attempt #" << attempts);
     attempts++;
     if (attempts > MAX_ATTEMPTS)
     {
