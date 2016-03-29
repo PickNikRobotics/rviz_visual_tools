@@ -436,6 +436,8 @@ public:
                      const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::Pose &pose, const std_msgs::ColorRGBA &color,
                      const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere", const std::size_t &id = 0);
+  bool publishSphere(const Eigen::Affine3d &pose, const std_msgs::ColorRGBA &color,
+                     const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color, const geometry_msgs::Vector3 scale,
                      const std::string &ns = "Sphere", const std::size_t &id = 0);
 

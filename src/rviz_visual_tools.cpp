@@ -962,6 +962,12 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const color
   return publishSphere(pose, getColor(color), scale, ns, id);
 }
 
+bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose, const std_msgs::ColorRGBA &color,
+                                    const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id)
+{
+  return publishSphere(convertPose(pose), color, scale, ns, id);
+}
+
 bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const std_msgs::ColorRGBA &color,
                                     const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id)
 {
