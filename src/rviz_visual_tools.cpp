@@ -528,8 +528,16 @@ double RvizVisualTools::slerp(double start, double end, double range, double val
 std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value)
 {
   // User warning
-  if (value < 0 || value > 1)
-    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is beyond range [0,1], value: " << value);
+  if (value < 0)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is below range [0,1], value: " << value);
+    value = 0;
+  }
+  else if (value > 1)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is above range [0,1], value: " << value);
+    value = 1;
+  }
 
   std_msgs::ColorRGBA start;
   std_msgs::ColorRGBA end;
