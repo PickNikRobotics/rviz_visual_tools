@@ -730,6 +730,10 @@ bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &mark
     pub_rviz_markers_waited_ = true;
   }
 
+  // Check if any actual markers exist to publish
+  if (markers.markers.empty())
+    return false;
+
   pub_rviz_markers_.publish(markers);
   ros::spinOnce();
   return true;
