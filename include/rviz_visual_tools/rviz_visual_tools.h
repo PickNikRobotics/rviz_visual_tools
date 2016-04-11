@@ -332,7 +332,7 @@ public:
    * \param marker - a pre-made marker ready to be published
    * \return true on success
    */
-  bool publishMarker(const visualization_msgs::Marker &marker);
+  bool publishMarker(visualization_msgs::Marker &marker);
 
   /**
    * \brief Enable batch publishing - useful for when many markers need to be published at once and
@@ -360,7 +360,7 @@ public:
    * \param markers
    * \return true on success
    */
-  bool publishMarkers(const visualization_msgs::MarkerArray &markers);
+  bool publishMarkers(visualization_msgs::MarkerArray &markers);
 
   /**
    * \brief Display a cone of a given angle along the x-axis
@@ -895,6 +895,18 @@ public:
    */
   static void printTransformRPY(const Eigen::Affine3d &transform);
 
+  /** \brief Getter for PsychedelicMode */
+  const bool& getPsychedelicMode() const
+  {
+    return psychedelic_mode_;
+  }
+
+  /** \brief Setter for PsychedelicMode */
+  void setPsychedelicMode(const bool& psychedelic_mode = true)
+  {
+    psychedelic_mode_ = psychedelic_mode;
+  }
+
 protected:
   /**
    * \brief Allows certain marker functions to batch publish without breaking external functinality
@@ -957,6 +969,9 @@ protected:
   geometry_msgs::Point32 shared_point32_msg_;
   Eigen::Affine3d shared_pose_eigen_;
   Eigen::Vector3d shared_point_eigen_;
+
+  // Just for fun.
+  bool psychedelic_mode_;
 };  // class
 
 typedef boost::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;

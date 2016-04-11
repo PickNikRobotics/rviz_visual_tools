@@ -682,7 +682,7 @@ Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(Eigen::Vector3d a, Eigen
   return pose;
 }
 
-bool RvizVisualTools::publishMarker(const visualization_msgs::Marker &marker)
+bool RvizVisualTools::publishMarker(visualization_msgs::Marker &marker)
 {
   // Add single marker to array
   markers_.markers.push_back(marker);
@@ -715,7 +715,7 @@ bool RvizVisualTools::triggerBatchPublishAndDisable()
   batch_publishing_enabled_ = false;
 }
 
-bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &markers)
+bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray &markers)
 {
   if (!pub_rviz_markers_)  // always check this before publishing
     loadMarkerPub();
@@ -734,6 +734,24 @@ bool RvizVisualTools::publishMarkers(const visualization_msgs::MarkerArray &mark
   if (markers.markers.empty())
     return false;
 
+  // Change all markers to be inverted in color
+  if (psychedelic_mode_)
+  {
+    for (std::size_t i = 0; i < markers.markers.size(); ++i)
+    {
+      markers.markers[i].color.r = 1.0 - markers.markers[i].color.r;
+      markers.markers[i].color.g = 1.0 - markers.markers[i].color.g;
+      markers.markers[i].color.b = 1.0 - markers.markers[i].color.b;
+      for (std::size_t j = 0; j < markers.markers[i].colors.size(); ++j)
+      {
+        markers.markers[i].colors[j].r = 1.0 - markers.markers[i].colors[j].r;
+        markers.markers[i].colors[j].g = 1.0 - markers.markers[i].colors[j].g;
+        markers.markers[i].colors[j].b = 1.0 - markers.markers[i].colors[j].b;
+      }
+    }
+  }
+
+  // Publish
   pub_rviz_markers_.publish(markers);
   ros::spinOnce();
   return true;
