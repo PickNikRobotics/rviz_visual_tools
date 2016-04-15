@@ -59,6 +59,7 @@ RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::strin
   , batch_publishing_enabled_(false)
   , pub_rviz_markers_connected_(false)
   , pub_rviz_markers_waited_(false)
+  , psychedelic_mode_(false)
 {
   initialize();
   double bug;
@@ -1472,6 +1473,16 @@ bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Ve
   return publishLine(convertPoint(point1), convertPoint(point2), color, scale);
 }
 
+bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
+                                  const std_msgs::ColorRGBA &color, const double &radius)
+{
+  geometry_msgs::Vector3 scale;
+  scale.x = radius;
+  scale.y = radius;
+  scale.z = radius;
+  return publishLine(convertPoint(point1), convertPoint(point2), color, scale);
+}
+
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                                   const colors &color, const scales &scale)
 {
@@ -1481,13 +1492,18 @@ bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geom
 bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                                   const std_msgs::ColorRGBA &color, const scales &scale)
 {
+  return publishLine(point1, point2, color, getScale(scale, false, 0.1));
+}
 
+bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
+                                  const std_msgs::ColorRGBA &color, const geometry_msgs::Vector3 &scale)
+{
   // Set the timestamp
   line_strip_marker_.header.stamp = ros::Time::now();
 
   line_strip_marker_.id++;
   line_strip_marker_.color = color;
-  line_strip_marker_.scale = getScale(scale, false, 0.1);
+  line_strip_marker_.scale = scale;
 
   line_strip_marker_.points.clear();
   line_strip_marker_.points.push_back(point1);

@@ -559,10 +559,14 @@ public:
                    const scales &scale = REGULAR);
   bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                    const std_msgs::ColorRGBA &color, const scales &scale = REGULAR);
+  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
+                   const std_msgs::ColorRGBA &color, const double &radius);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const colors &color = BLUE,
                    const scales &scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
                    const std_msgs::ColorRGBA &color, const scales &scale = REGULAR);
+  bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
+                   const std_msgs::ColorRGBA &color, const geometry_msgs::Vector3 &scale);
 
   /**
    * \brief Display a marker of a series of connected lines
