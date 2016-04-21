@@ -76,27 +76,27 @@ static const double LARGE_SCALE = 100;
 // Note: when adding new colors to colors, also add them to getRandColor() function
 enum colors
 {
-  BLACK,
-  BLUE,
-  BROWN,
-  CYAN,
-  DARK_GREY,
-  GREEN,
-  GREY,
-  LIME_GREEN,
-  MAGENTA,
-  ORANGE,
-  PINK,
-  PURPLE,
-  RED,
-  WHITE,
-  YELLOW,
-  TRANSLUCENT_LIGHT,
-  TRANSLUCENT,
-  TRANSLUCENT_DARK,
-  RAND,
-  CLEAR,
-  DEFAULT  // i.e. 'do not change default color'
+  BLACK = 0,
+  BROWN = 1,
+  BLUE = 2,
+  CYAN = 3,
+  GREY = 4,
+  DARK_GREY = 5,
+  GREEN = 6,
+  LIME_GREEN = 7,
+  MAGENTA = 8,
+  ORANGE = 9,
+  PURPLE = 10,
+  RED = 11,
+  PINK = 12,
+  WHITE = 13,
+  YELLOW = 14,
+  TRANSLUCENT = 15,
+  TRANSLUCENT_LIGHT = 16,
+  TRANSLUCENT_DARK = 17,
+  RAND = 18,
+  CLEAR = 19,
+  DEFAULT = 20 // i.e. 'do not change default color'
 };
 
 enum scales
@@ -207,6 +207,8 @@ public:
 
   /**
    * \brief Load publishers as needed
+   * \param wait_for_subscriber - whether a sleep for loop should be used to check for connectivity to an external node
+   *                              before proceeding
    */
   void loadMarkerPub(bool wait_for_subscriber = false);
 
