@@ -1210,7 +1210,7 @@ bool RvizVisualTools::publishAxisLabeled(const geometry_msgs::Pose &pose, const 
   geometry_msgs::Pose pose_shifted = pose;
   pose_shifted.position.y -= 0.05; // For avoiding overriden Axis and Text
   publishText(pose_shifted, label, color, scale,
-              false);  // TODO(davetcoleman): change size based on passed in scale
+              false);  
   return true;
 }
 
