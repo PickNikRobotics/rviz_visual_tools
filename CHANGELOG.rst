@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2016-04-28)
+------------------
 * Created much better demo, added new screenshot
 * Numbered colors so that they can be matched in OMPL
 * New publishLine() function variants
