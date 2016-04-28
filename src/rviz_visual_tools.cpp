@@ -504,7 +504,7 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor()
     result.r = fRand(0.0, 1.0);
     result.g = fRand(0.0, 1.0);
     result.b = fRand(0.0, 1.0);
-    //ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is "
+    // ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is "
     //<< (result.r + result.g + result.b) << " attempt #" << attempts);
     attempts++;
     if (attempts > MAX_ATTEMPTS)
@@ -1244,8 +1244,8 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
   return triggerInternalBatchPublishAndDisable();
 }
 
-bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                                      const colors &color, double radius, const std::string &ns)
+bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color,
+                                      double radius, const std::string &ns)
 {
   return publishCylinder(point1, point2, getColor(color), radius, ns);
 }
@@ -1549,8 +1549,8 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
   return publishMarker(line_strip_marker_);
 }
 
-bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color,
-                                  const double radius, const std::string &ns)
+bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color, const double radius,
+                                  const std::string &ns)
 {
   if (path.size() < 2)
   {
@@ -2231,7 +2231,7 @@ void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose &pose)
   pose.orientation.w = 1;
 }
 
-bool RvizVisualTools::posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double& threshold)
+bool RvizVisualTools::posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double &threshold)
 {
   static const std::size_t NUM_VARS = 16;  // size of eigen matrix
 
