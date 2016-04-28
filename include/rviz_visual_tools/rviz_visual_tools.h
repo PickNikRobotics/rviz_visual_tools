@@ -96,7 +96,7 @@ enum colors
   TRANSLUCENT_DARK = 17,
   RAND = 18,
   CLEAR = 19,
-  DEFAULT = 20 // i.e. 'do not change default color'
+  DEFAULT = 20  // i.e. 'do not change default color'
 };
 
 enum scales
@@ -200,7 +200,7 @@ public:
   bool loadRvizMarkers();
 
   /** \brief Set marker array topic */
-  void setMarkerTopic(const std::string& topic)
+  void setMarkerTopic(const std::string &topic)
   {
     marker_topic_ = topic;
   }
@@ -438,8 +438,8 @@ public:
                      const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::Pose &pose, const std_msgs::ColorRGBA &color,
                      const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere", const std::size_t &id = 0);
-  bool publishSphere(const Eigen::Affine3d &pose, const std_msgs::ColorRGBA &color,
-                     const geometry_msgs::Vector3 scale, const std::string &ns = "Sphere", const std::size_t &id = 0);
+  bool publishSphere(const Eigen::Affine3d &pose, const std_msgs::ColorRGBA &color, const geometry_msgs::Vector3 scale,
+                     const std::string &ns = "Sphere", const std::size_t &id = 0);
   bool publishSphere(const geometry_msgs::PoseStamped &pose, const colors &color, const geometry_msgs::Vector3 scale,
                      const std::string &ns = "Sphere", const std::size_t &id = 0);
 
@@ -530,8 +530,8 @@ public:
    * \return true on success
    */
   bool publishCuboid(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE);
-  bool publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
-                     const colors &color = BLUE, const std::string &ns = "Cuboid", const std::size_t &id = 0);
+  bool publishCuboid(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const colors &color = BLUE,
+                     const std::string &ns = "Cuboid", const std::size_t &id = 0);
 
   /**
    * \brief Display a rectangular cuboid
@@ -559,10 +559,10 @@ public:
                    const scales &scale = REGULAR);
   bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE,
                    const scales &scale = REGULAR);
-  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                   const std_msgs::ColorRGBA &color, const scales &scale = REGULAR);
-  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                   const std_msgs::ColorRGBA &color, const double &radius);
+  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const std_msgs::ColorRGBA &color,
+                   const scales &scale = REGULAR);
+  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const std_msgs::ColorRGBA &color,
+                   const double &radius);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2, const colors &color = BLUE,
                    const scales &scale = REGULAR);
   bool publishLine(const geometry_msgs::Point &point1, const geometry_msgs::Point &point2,
@@ -581,8 +581,8 @@ public:
   bool publishPath(const std::vector<geometry_msgs::Point> &path, const colors &color = RED,
                    const scales &scale = REGULAR, const std::string &ns = "Path");
 
-  bool publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color = RED,
-                   const double radius = 0.01, const std::string &ns = "Path");
+  bool publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color = RED, const double radius = 0.01,
+                   const std::string &ns = "Path");
 
   /**
    * \brief Display a marker of a polygon
@@ -882,7 +882,7 @@ public:
    * \param threshold - how close in value they must be in order to be considered the same
    * \return true if equal
    */
-  bool posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double& threshold = 0.000001);
+  bool posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double &threshold = 0.000001);
 
   /**
    * \brief Get random between min and max
@@ -902,13 +902,13 @@ public:
   static void printTransformRPY(const Eigen::Affine3d &transform);
 
   /** \brief Getter for PsychedelicMode */
-  const bool& getPsychedelicMode() const
+  const bool &getPsychedelicMode() const
   {
     return psychedelic_mode_;
   }
 
   /** \brief Setter for PsychedelicMode */
-  void setPsychedelicMode(const bool& psychedelic_mode = true)
+  void setPsychedelicMode(const bool &psychedelic_mode = true)
   {
     psychedelic_mode_ = psychedelic_mode;
   }

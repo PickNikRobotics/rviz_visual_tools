@@ -43,6 +43,9 @@
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.h>
 
+// C++
+#include <string>
+
 namespace rvt = rviz_visual_tools;
 
 namespace rviz_visual_tools
@@ -62,8 +65,7 @@ public:
   /**
    * \brief Constructor
    */
-  RvizVisualToolsDemo()
-    : name_("rviz_demo")
+  RvizVisualToolsDemo() : name_("rviz_demo")
   {
     visual_tools_.reset(new rvt::RvizVisualTools("base", "/rviz_visual_tools"));
 
@@ -115,12 +117,11 @@ public:
         publishLabelHelper(pose1, "Coordinate Axis");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitX())
-        * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitY())
-        * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitX()) *
+              Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitY()) *
+              Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->triggerBatchPublish();
-
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Arrows");
@@ -135,10 +136,9 @@ public:
         publishLabelHelper(pose1, "Arrows");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->triggerBatchPublish();
-
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Rectangular Cuboid");
@@ -190,7 +190,6 @@ public:
     }
     visual_tools_->triggerBatchPublish();
 
-
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Cylinder");
     pose1 = Eigen::Affine3d::Identity();
@@ -204,10 +203,9 @@ public:
         publishLabelHelper(pose1, "Cylinder");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->triggerBatchPublish();
-
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Axis Cone");
@@ -222,10 +220,9 @@ public:
         publishLabelHelper(pose1, "Cone");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->triggerBatchPublish();
-
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Wireframe Cuboid");
@@ -236,7 +233,7 @@ public:
     // TODO(davetcoleman): use generateRandomCuboid()
     Eigen::Vector3d min_point, max_point;
     min_point << -0.05, -0.05, -0.05;
-    max_point <<  0.05,  0.05,  0.05;
+    max_point << 0.05, 0.05, 0.05;
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishWireframeCuboid(pose1, min_point, max_point, rvt::RAND);
@@ -244,7 +241,7 @@ public:
         publishLabelHelper(pose1, "Wireframe Cuboid");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->triggerBatchPublish();
 
@@ -262,7 +259,7 @@ public:
         publishLabelHelper(pose1, "Wireframe Cuboid");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->triggerBatchPublish();
 
@@ -276,9 +273,9 @@ public:
     double min_plane_size = 0.01;
     for (double i = 0; i <= 1.0; i += step)
     {
-      visual_tools_->publishXYPlane(pose1, rvt::RED,   i * max_plane_size + min_plane_size);
+      visual_tools_->publishXYPlane(pose1, rvt::RED, i * max_plane_size + min_plane_size);
       visual_tools_->publishXZPlane(pose1, rvt::GREEN, i * max_plane_size + min_plane_size);
-      visual_tools_->publishYZPlane(pose1, rvt::BLUE,  i * max_plane_size + min_plane_size);
+      visual_tools_->publishYZPlane(pose1, rvt::BLUE, i * max_plane_size + min_plane_size);
       if (!i)
         publishLabelHelper(pose1, "Planes");
 
@@ -305,28 +302,27 @@ public:
         publishLabelHelper(pose1, "Graph");
 
       pose1.translation().x() += step;
-      pose1.translation().z() += visual_tools_->dRand(-0.1,0.1);
+      pose1.translation().z() += visual_tools_->dRand(-0.1, 0.1);
     }
     visual_tools_->publishGraph(graph, rvt::ORANGE, 0.005);
     visual_tools_->triggerBatchPublish();
 
-
+    // --------------------------------------------------------------------
+    // TODO(davetcoleman): publishMesh
 
     // --------------------------------------------------------------------
-    // TODO publishMesh
+    // TODO(davetcoleman): publishPolygon
 
     // --------------------------------------------------------------------
-    // TODO publishPolygon
-
-    // --------------------------------------------------------------------
-    // TODO publishAxisLabeled
-
+    // TODO(davetcoleman): publishAxisLabeled
   }
 
   /**
    * \brief Destructor
    */
-  ~RvizVisualToolsDemo() {}
+  ~RvizVisualToolsDemo()
+  {
+  }
 };  // end class
 
 }  // namespace rviz_visual_tools
