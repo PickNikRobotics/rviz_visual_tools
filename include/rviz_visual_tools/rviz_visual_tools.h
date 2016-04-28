@@ -658,8 +658,8 @@ public:
    * \param scale - size of axis
    * \return true on success
    */
-  bool publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const scales &scale = REGULAR);
-  bool publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const scales &scale = REGULAR);
+  bool publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const colors &color = WHITE, const scales &scale = SMALL);
+  bool publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const colors &color = WHITE, const scales &scale = SMALL);
 
   /**
    * \brief Display a marker of a axis

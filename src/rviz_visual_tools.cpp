@@ -1198,16 +1198,19 @@ bool RvizVisualTools::publishBlock(const Eigen::Affine3d &pose, const colors &co
   return publishBlock(convertPose(pose), color, block_size);
 }
 
-bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const scales &scale)
+bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const colors &color, const scales &scale)
 {
-  return publishAxisLabeled(convertPose(pose), label, scale);
+  return publishAxisLabeled(convertPose(pose), label, color, scale);
 }
 
-bool RvizVisualTools::publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const scales &scale)
+bool RvizVisualTools::publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const colors &color, const scales &scale)
 {
-  publishText(pose, label, rviz_visual_tools::BLACK, rviz_visual_tools::SMALL,
-              false);  // TODO(davetcoleman): change size based on passed in scale
   publishAxis(pose, 0.1, 0.01, label);
+
+  geometry_msgs::Pose pose_shifted = pose;
+  pose_shifted.position.y -= 0.05; // For avoiding overriden Axis and Text
+  publishText(pose_shifted, label, color, scale,
+              false);  // TODO(davetcoleman): change size based on passed in scale
   return true;
 }
 
