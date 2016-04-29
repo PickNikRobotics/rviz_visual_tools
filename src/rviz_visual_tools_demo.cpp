@@ -89,10 +89,11 @@ public:
 
     double space_between_rows = 0.2;
     double y = 0;
+    double step;
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying range of colors red->green");
-    double step = 0.02;
+    step = 0.02;
     for (double i = 0; i <= 1.0; i += 0.02)
     {
       geometry_msgs::Vector3 scale = visual_tools_->getScale(XLARGE, false, 0.05);
