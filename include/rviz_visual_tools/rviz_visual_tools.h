@@ -656,10 +656,13 @@ public:
    * \param pose - the location to publish the marker with respect to the base frame
    * \param label - name of axis/coordinate frame
    * \param scale - size of axis
+   * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const colors &color = WHITE, const scales &scale = SMALL);
-  bool publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const colors &color = WHITE, const scales &scale = SMALL);
+  bool publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const scales &scale = SMALL,
+                          const colors &color = WHITE);
+  bool publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const scales &scale = SMALL,
+                          const colors &color = WHITE);
 
   /**
    * \brief Display a marker of a axis

@@ -323,6 +323,7 @@ public:
     pose1.translation().x() = 0;
     y += space_between_rows;
     pose1.translation().y() = y;
+    pose1.translation().z() = 0;
     step = 0.2;
     for (double i = 0; i <= 1.0; i += step)
     {
