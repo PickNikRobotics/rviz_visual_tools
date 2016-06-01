@@ -1706,8 +1706,13 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose, const 
 }
 
 bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, const double &height, const double &width,
-                                                const colors &color, const scales &scale)
+                                                const colors &color, const scales &scale, const std::size_t &id)
 {
+  if (id == 0)  // Provide a new id every call to this function
+    line_list_marker_.id++;
+  else  // allow marker to be overwritten
+    line_list_marker_.id = id;
+
   // Extract 8 cuboid vertices
   Eigen::Vector3d p1(-width / 2.0, -height / 2.0, 0.0);
   Eigen::Vector3d p2(-width / 2.0, height / 2.0, 0.0);
@@ -1722,9 +1727,6 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, con
   // Setup marker
   line_list_marker_.header.stamp = ros::Time();
   line_list_marker_.ns = "Wireframe Rectangle";
-
-  // Provide a new id every call to this function
-  line_list_marker_.id++;
 
   std_msgs::ColorRGBA this_color = getColor(color);
   line_list_marker_.scale = getScale(scale, false, 0.25);
