@@ -234,10 +234,9 @@ bool RvizVisualTools::loadRvizMarkers()
   sphere_marker_.pose.orientation.z = 0.0;
   sphere_marker_.pose.orientation.w = 1.0;
   // Create a sphere point
-  geometry_msgs::Point point_a;
   // Add the point pair to the line message
-  sphere_marker_.points.push_back(point_a);
-  sphere_marker_.colors.push_back(getColor(BLUE));
+  sphere_marker_.points.resize(1);
+  sphere_marker_.colors.resize(1);
   // Lifetime
   sphere_marker_.lifetime = marker_lifetime_;
 
@@ -495,7 +494,7 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor()
 {
   std_msgs::ColorRGBA result;
 
-  const std::size_t MAX_ATTEMPTS = 10;  // bound the performance
+  const std::size_t MAX_ATTEMPTS = 20;  // bound the performance
   std::size_t attempts = 0;
 
   // Make sure color is not *too* dark
@@ -775,6 +774,7 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
   static const double delta_theta = M_PI / 16.0;
   double theta = 0;
 
+  triangle_marker_.points.clear();
   for (std::size_t i = 0; i < 32; i++)
   {
     p[0].x = 0;
@@ -1016,6 +1016,8 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const std_m
   sphere_marker_.ns = ns;
 
   // Update the single point with new pose
+  sphere_marker_.points.resize(1); // TODO(davetcoleman): not sure why we need to resize it, but someone was growing this vector larger
+  sphere_marker_.colors.resize(1);
   sphere_marker_.points[0] = pose.position;
   sphere_marker_.colors[0] = color;
 
@@ -1853,7 +1855,6 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
   std_msgs::ColorRGBA this_color = getColor(color);
   spheres_marker_.scale = scale;
   spheres_marker_.color = this_color;
-  // spheres_marker_.points.clear();
   spheres_marker_.colors.clear();
 
   spheres_marker_.points = points;  // straight copy
