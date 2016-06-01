@@ -630,8 +630,7 @@ public:
    * \param max_point - maximum x, y, z coordinates
    * \param color - an enum pre-defined name of a color
    * \param ns - namespace
-   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults
-   * to incremental counter
+   * \param id - unique counter that allows you to overwrite a previous marker. if 0, defaults to incremental counter
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Affine3d &pose, const Eigen::Vector3d &min_point,
@@ -644,10 +643,11 @@ public:
    * \param height
    * \param width
    * \param color - an enum pre-defined name of a color
+   * \param id - unique counter that allows you to overwrite a previous marker. if 0, defaults to incremental counter
    * \return true on success
    */
   bool publishWireframeRectangle(const Eigen::Affine3d &pose, const double &height, const double &width,
-                                 const colors &color = BLUE, const scales &scale = REGULAR);
+                                 const colors &color = BLUE, const scales &scale = REGULAR, const std::size_t &id = 0);
   bool publishWireframeRectangle(const Eigen::Affine3d &pose, const Eigen::Vector3d &p1, const Eigen::Vector3d &p2,
                                  const Eigen::Vector3d &p3, const Eigen::Vector3d &p4, const colors &color,
                                  const scales &scale);
