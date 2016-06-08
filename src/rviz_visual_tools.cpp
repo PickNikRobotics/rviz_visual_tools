@@ -266,13 +266,13 @@ bool RvizVisualTools::loadRvizMarkers()
   return true;
 }
 
-void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber)
+void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
 {
   if (pub_rviz_markers_)
     return;
 
   // Rviz marker publisher
-  pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10, true);
+  pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10, latched);
   ROS_DEBUG_STREAM_NAMED(name_, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
   if (wait_for_subscriber)

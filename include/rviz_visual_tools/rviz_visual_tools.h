@@ -210,7 +210,7 @@ public:
    * \param wait_for_subscriber - whether a sleep for loop should be used to check for connectivity to an external node
    *                              before proceeding
    */
-  void loadMarkerPub(bool wait_for_subscriber = false);
+  void loadMarkerPub(bool wait_for_subscriber = false, bool latched=false);
 
   /**
    * \brief Wait until at least one subscriber connects to a publisher
