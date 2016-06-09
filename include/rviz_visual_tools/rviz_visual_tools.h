@@ -559,6 +559,8 @@ public:
                    const scales &scale = REGULAR);
   bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE,
                    const scales &scale = REGULAR);
+  bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color,
+                   const double &radius);
   bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const std_msgs::ColorRGBA &color,
                    const scales &scale = REGULAR);
   bool publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const std_msgs::ColorRGBA &color,

@@ -1470,6 +1470,15 @@ bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Ve
 {
   return publishLine(convertPoint(point1), convertPoint(point2), color, scale);
 }
+bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color,
+                                  const double &radius)
+{
+  geometry_msgs::Vector3 scale;
+  scale.x = radius;
+  scale.y = radius;
+  scale.z = radius;
+  return publishLine(convertPoint(point1), convertPoint(point2), getColor(color), scale);
+}
 
 bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                                   const std_msgs::ColorRGBA &color, const scales &scale)
