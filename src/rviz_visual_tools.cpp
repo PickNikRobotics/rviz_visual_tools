@@ -278,7 +278,7 @@ void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
     waitForSubscriber(pub_rviz_markers_);
 }
 
-bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wait_time)
+bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double &wait_time, const bool blocking)
 {
   // Will wait at most this amount of time
   ros::Time max_time(ros::Time::now() + ros::Duration(wait_time));
@@ -290,11 +290,15 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
   // How often to check for subscribers
   ros::Rate poll_rate(200);
 
-  // Wait for subsriber
+  // Wait for subscriber
   while (num_existing_subscribers == 0)
   {
+    if (blocking)
+    {
+      ROS_WARN_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' waiting for subscriber...");
+    }
     // Check if timed out
-    if (ros::Time::now() > max_time)
+    else if (ros::Time::now() > max_time)
     {
       ROS_WARN_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
                                              << wait_time << " sec. It is possible initially published visual messages "

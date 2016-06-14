@@ -214,11 +214,12 @@ public:
 
   /**
    * \brief Wait until at least one subscriber connects to a publisher
-   * \param pub - the publisher to check for subsribers
+   * \param pub - the publisher to check for subscribers
    * \param wait_time - time to wait for subscriber to be available before throwing warning
+   * \param blocking - if true, the function loop until a subscriber is gotten
    * \return true on successful connection
    */
-  bool waitForSubscriber(const ros::Publisher &pub, const double &wait_time = 0.5);
+  bool waitForSubscriber(const ros::Publisher &pub, const double &wait_time = 0.5, const bool blocking = false);
 
   /**
    * \brief Allows an offset between base link and floor where objects are built. Default is zero
