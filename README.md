@@ -42,7 +42,7 @@ Then start demo:
 
 ## Code API
 
-See [VisualTools Class Reference](http://docs.ros.org/indigo/api/rviz_visual_tools/html/classrviz__visual__tools_1_1VisualTools.html)
+See [the Doxygen documentation](http://docs.ros.org/indigo/api/rviz_visual_tools/html/annotated.html)
 
 ## Usage
 
