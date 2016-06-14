@@ -52,18 +52,18 @@ We'll assume you will be using these helper functions within a class. Almost all
 
 Add to your includes:
 ```
-#include <rviz_visual_tools/visual_tools.h>
+#include <rviz_visual_tools/rviz_visual_tools.h>
 ```
 
 Add to your class's member variables:
 ```
 // For visualizing things in rviz
-rviz_visual_tools::VisualToolsPtr visual_tools_;
+rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
 ```
 
 In your class' constructor add:
 ```
-visual_tools_.reset(new rviz_visual_tools::VisualTools("base_frame","/rviz_visual_markers"));
+visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("base_frame","/rviz_visual_markers"));
 ```
 
 Change the first parameter to the name of your robot's base frame, and the second parameter to whatever name you'd like to use for the corresponding Rviz marker ROS topic.
