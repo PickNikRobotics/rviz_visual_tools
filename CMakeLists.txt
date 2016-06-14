@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rviz_visual_tools)
 
+# C++ 11
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
+
 find_package(catkin REQUIRED COMPONENTS
   cmake_modules
   eigen_conversions

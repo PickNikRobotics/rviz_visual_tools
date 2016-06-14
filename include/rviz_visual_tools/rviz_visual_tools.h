@@ -991,8 +991,8 @@ protected:
   bool psychedelic_mode_;
 };  // class
 
-typedef boost::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
-typedef boost::shared_ptr<const RvizVisualTools> RvizVisualToolsConstPtr;
+typedef std::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
+typedef std::shared_ptr<const RvizVisualTools> RvizVisualToolsConstPtr;
 
 }  // namespace rviz_visual_tools
 
