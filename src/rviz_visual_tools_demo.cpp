@@ -319,7 +319,25 @@ public:
     // TODO publishPolygon
 
     // --------------------------------------------------------------------
-    // TODO publishAxisLabeled
+    ROS_INFO_STREAM_NAMED(name_, "Displaying Labeled Coordinate Axis");
+    pose1.translation().x() = 0;
+    y += space_between_rows;
+    pose1.translation().y() = y;
+    pose1.translation().z() = 0;
+    step = 0.2;
+    for (double i = 0; i <= 1.0; i += step)
+    {
+      visual_tools_->publishAxisLabeled(pose1, "label of axis");
+      if (!i)
+        publishLabelHelper(pose1, "Labeled Coordinate Axis");
+
+      pose1.translation().x() += step;
+      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitX())
+        * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitY())
+        * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+    }
+    visual_tools_->triggerBatchPublish();
+
 
   }
 
