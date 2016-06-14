@@ -234,10 +234,9 @@ bool RvizVisualTools::loadRvizMarkers()
   sphere_marker_.pose.orientation.z = 0.0;
   sphere_marker_.pose.orientation.w = 1.0;
   // Create a sphere point
-  geometry_msgs::Point point_a;
   // Add the point pair to the line message
-  sphere_marker_.points.push_back(point_a);
-  sphere_marker_.colors.push_back(getColor(BLUE));
+  sphere_marker_.points.resize(1);
+  sphere_marker_.colors.resize(1);
   // Lifetime
   sphere_marker_.lifetime = marker_lifetime_;
 
@@ -495,7 +494,7 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor()
 {
   std_msgs::ColorRGBA result;
 
-  const std::size_t MAX_ATTEMPTS = 10;  // bound the performance
+  const std::size_t MAX_ATTEMPTS = 20;  // bound the performance
   std::size_t attempts = 0;
 
   // Make sure color is not *too* dark
@@ -504,7 +503,7 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor()
     result.r = fRand(0.0, 1.0);
     result.g = fRand(0.0, 1.0);
     result.b = fRand(0.0, 1.0);
-    //ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is "
+    // ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is "
     //<< (result.r + result.g + result.b) << " attempt #" << attempts);
     attempts++;
     if (attempts > MAX_ATTEMPTS)
@@ -775,6 +774,7 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
   static const double delta_theta = M_PI / 16.0;
   double theta = 0;
 
+  triangle_marker_.points.clear();
   for (std::size_t i = 0; i < 32; i++)
   {
     p[0].x = 0;
@@ -782,12 +782,12 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
     p[0].z = 0;
 
     p[1].x = scale;
-    p[1].y = scale * cos(theta);
-    p[1].z = scale * sin(theta);
+    p[1].y = scale * cos(theta) /angle;
+    p[1].z = scale * sin(theta) /angle;
 
     p[2].x = scale;
-    p[2].y = scale * cos(theta + delta_theta);
-    p[2].z = scale * sin(theta + delta_theta);
+    p[2].y = scale * cos(theta + delta_theta) /angle;
+    p[2].z = scale * sin(theta + delta_theta) /angle;
 
     triangle_marker_.points.push_back(p[0]);
     triangle_marker_.points.push_back(p[1]);
@@ -1016,6 +1016,8 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const std_m
   sphere_marker_.ns = ns;
 
   // Update the single point with new pose
+  sphere_marker_.points.resize(1); // TODO(davetcoleman): not sure why we need to resize it, but someone was growing this vector larger
+  sphere_marker_.colors.resize(1);
   sphere_marker_.points[0] = pose.position;
   sphere_marker_.colors[0] = color;
 
@@ -1242,8 +1244,8 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
   return triggerInternalBatchPublishAndDisable();
 }
 
-bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
-                                      const colors &color, double radius, const std::string &ns)
+bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color,
+                                      double radius, const std::string &ns)
 {
   return publishCylinder(point1, point2, getColor(color), radius, ns);
 }
@@ -1466,6 +1468,15 @@ bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Ve
 {
   return publishLine(convertPoint(point1), convertPoint(point2), color, scale);
 }
+bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color,
+                                  const double &radius)
+{
+  geometry_msgs::Vector3 scale;
+  scale.x = radius;
+  scale.y = radius;
+  scale.z = radius;
+  return publishLine(convertPoint(point1), convertPoint(point2), getColor(color), scale);
+}
 
 bool RvizVisualTools::publishLine(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2,
                                   const std_msgs::ColorRGBA &color, const scales &scale)
@@ -1547,8 +1558,8 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
   return publishMarker(line_strip_marker_);
 }
 
-bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color,
-                                  const double radius, const std::string &ns)
+bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color, const double radius,
+                                  const std::string &ns)
 {
   if (path.size() < 2)
   {
@@ -1704,8 +1715,13 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose, const 
 }
 
 bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, const double &height, const double &width,
-                                                const colors &color, const scales &scale)
+                                                const colors &color, const scales &scale, const std::size_t &id)
 {
+  if (id == 0)  // Provide a new id every call to this function
+    line_list_marker_.id++;
+  else  // allow marker to be overwritten
+    line_list_marker_.id = id;
+
   // Extract 8 cuboid vertices
   Eigen::Vector3d p1(-width / 2.0, -height / 2.0, 0.0);
   Eigen::Vector3d p2(-width / 2.0, height / 2.0, 0.0);
@@ -1720,9 +1736,6 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, con
   // Setup marker
   line_list_marker_.header.stamp = ros::Time();
   line_list_marker_.ns = "Wireframe Rectangle";
-
-  // Provide a new id every call to this function
-  line_list_marker_.id++;
 
   std_msgs::ColorRGBA this_color = getColor(color);
   line_list_marker_.scale = getScale(scale, false, 0.25);
@@ -1851,7 +1864,6 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
   std_msgs::ColorRGBA this_color = getColor(color);
   spheres_marker_.scale = scale;
   spheres_marker_.color = this_color;
-  // spheres_marker_.points.clear();
   spheres_marker_.colors.clear();
 
   spheres_marker_.points = points;  // straight copy
@@ -2229,7 +2241,7 @@ void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose &pose)
   pose.orientation.w = 1;
 }
 
-bool RvizVisualTools::posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double& threshold)
+bool RvizVisualTools::posesEqual(const Eigen::Affine3d &pose1, const Eigen::Affine3d &pose2, const double &threshold)
 {
   static const std::size_t NUM_VARS = 16;  // size of eigen matrix
 
