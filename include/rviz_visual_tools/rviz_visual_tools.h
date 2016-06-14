@@ -604,18 +604,6 @@ public:
                       const std::string &ns = "Polygon");
 
   /**
-   * \brief Display a marker of a block
-   * \param pose - the location to publish the marker with respect to the base frame
-   * \param color - an enum pre-defined name of a color
-   * \param size - height=width=depth=size
-   * \return true on success
-   * DEPRECATED - use publishCuboid
-   */
-  bool publishBlock(const geometry_msgs::Pose &pose, const colors &color = BLUE, const double &block_size = 0.1);
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  bool publishBlock(const Eigen::Affine3d &pose, const colors &color = BLUE, const double &block_size = 0.1);
-
-  /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
    * \param pose - cuboid vertices are transformed according to it
    * \param depth - object depth
@@ -754,13 +742,6 @@ public:
                    const scales &scale = REGULAR, bool static_id = true);
   bool publishText(const geometry_msgs::Pose &pose, const std::string &text, const colors &color,
                    const geometry_msgs::Vector3 scale, bool static_id = true);
-
-  /**
-   * \brief Run a simple test of all visual_tool's features
-   * \return true on success
-   */
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  bool publishTests();
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose
@@ -946,8 +927,8 @@ protected:
 
   // ROS publishers
   ros::Publisher pub_rviz_markers_;  // for rviz visualization markers
-  bool pub_rviz_markers_connected_;
-  bool pub_rviz_markers_waited_;
+  bool pub_rviz_markers_connected_ = false;
+  bool pub_rviz_markers_waited_ = false;
 
   // Strings
   std::string marker_topic_;  // topic to publish to rviz
@@ -957,7 +938,7 @@ protected:
   ros::Duration marker_lifetime_;
 
   // Settings
-  bool batch_publishing_enabled_;
+  bool batch_publishing_enabled_ = false;
   bool internal_batch_publishing_enabled_;  // this allows certain marker functions to batch publish
                                             // without breaking external functinality
   double alpha_;                            // opacity of all markers
@@ -988,7 +969,7 @@ protected:
   Eigen::Vector3d shared_point_eigen_;
 
   // Just for fun.
-  bool psychedelic_mode_;
+  bool psychedelic_mode_ = false;
 };  // class
 
 typedef std::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;

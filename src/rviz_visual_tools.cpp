@@ -56,13 +56,8 @@ RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::strin
   , name_("visual_tools")
   , marker_topic_(marker_topic)
   , base_frame_(base_frame)
-  , batch_publishing_enabled_(false)
-  , pub_rviz_markers_connected_(false)
-  , pub_rviz_markers_waited_(false)
-  , psychedelic_mode_(false)
 {
   initialize();
-  double bug;
 }
 
 void RvizVisualTools::initialize()
@@ -724,6 +719,7 @@ bool RvizVisualTools::triggerBatchPublishAndDisable()
 {
   triggerBatchPublish();
   batch_publishing_enabled_ = false;
+  return true;
 }
 
 bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray &markers)
@@ -1182,33 +1178,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const
   publishMarker(arrow_marker_);
 
   arrow_marker_.header.frame_id = base_frame_;  // restore default frame
-}
-
-bool RvizVisualTools::publishBlock(const geometry_msgs::Pose &pose, const colors &color, const double &block_size)
-{
-  // Set the timestamp
-  block_marker_.header.stamp = ros::Time::now();
-
-  block_marker_.id++;
-
-  // Set the pose
-  block_marker_.pose = pose;
-
-  // Set marker size
-  block_marker_.scale.x = block_size;
-  block_marker_.scale.y = block_size;
-  block_marker_.scale.z = block_size;
-
-  // Set marker color
-  block_marker_.color = getColor(color);
-
-  // Helper for publishing rviz markers
-  return publishMarker(block_marker_);
-}
-
-bool RvizVisualTools::publishBlock(const Eigen::Affine3d &pose, const colors &color, const double &block_size)
-{
-  return publishBlock(convertPose(pose), color, block_size);
+  return true;
 }
 
 bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const scales &scale, const colors &color)
@@ -1282,7 +1252,7 @@ bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen
   pose = pose * rotation;
 
   // Turn into msg
-  publishCylinder(convertPose(pose), color, height, radius);
+  return publishCylinder(convertPose(pose), color, height, radius);
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, const colors &color, double height, double radius,
@@ -1612,7 +1582,7 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, cons
   }
   points.push_back(first);  // connect first and last points for last line
 
-  publishPath(points, color, scale, ns);
+  return publishPath(points, color, scale, ns);
 }
 
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d &pose, double depth, double width, double height,
@@ -1856,13 +1826,13 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
   scale_vector.x = scale;
   scale_vector.y = scale;
   scale_vector.z = scale;
-  publishSpheres(points, color, scale_vector, ns);
+  return publishSpheres(points, color, scale_vector, ns);
 }
 
 bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color,
                                      const scales &scale, const std::string &ns)
 {
-  publishSpheres(points, color, getScale(scale, false, 0.25), ns);
+  return publishSpheres(points, color, getScale(scale, false, 0.25), ns);
 }
 
 bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color,
@@ -1936,106 +1906,6 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose &pose, const std::st
   // Restore the ID count if needed
   if (static_id)
     text_marker_.id = temp_id;
-
-  return true;
-}
-
-bool RvizVisualTools::publishTests()
-{
-  // Create pose
-  geometry_msgs::Pose pose1;
-  geometry_msgs::Pose pose2;
-
-  // Test color range
-  ROS_INFO_STREAM_NAMED(name_, "Publising range of colors red->green");
-  generateRandomPose(pose1);
-  for (double i = 0; i < 1.0; i += 0.01)
-  {
-    // std::cout << "Publishing sphere with intensity " << i << std::endl;
-    geometry_msgs::Vector3 scale = getScale(XLARGE, false, 0.1);
-    std_msgs::ColorRGBA color = getColorScale(i);
-    std::size_t id = 1;
-    publishSphere(pose1, color, scale, "Sphere", id);
-    ros::Duration(0.1).sleep();
-
-    if (!ros::ok())
-      return false;
-  }
-
-  // Test all shapes ----------
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Axis");
-  generateRandomPose(pose1);
-  publishAxis(pose1);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Arrow");
-  generateRandomPose(pose1);
-  publishArrow(pose1, rviz_visual_tools::RAND);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Sphere");
-  generateRandomPose(pose1);
-  publishSphere(pose1, rviz_visual_tools::RAND);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Rectangular Cuboid");
-  // TODO(davetcoleman): use generateRandomCuboid()
-  generateRandomPose(pose1);
-  generateRandomPose(pose2);
-  publishCuboid(pose1.position, pose2.position, rviz_visual_tools::RAND);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Line");
-  generateRandomPose(pose1);
-  generateRandomPose(pose2);
-  publishLine(pose1.position, pose2.position, rviz_visual_tools::RAND);
-  ros::Duration(1.0).sleep();
-
-  // Deprecated
-  // ROS_INFO_STREAM_NAMED(name_, "Publishing Block");
-  // generateRandomPose(pose1);
-  // publishBlock(pose1, rviz_visual_tools::RAND);
-  // ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Cylinder");
-  generateRandomPose(pose1);
-  publishCylinder(pose1, rviz_visual_tools::RAND);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Text");
-  generateRandomPose(pose1);
-  publishText(pose1, "Test", rviz_visual_tools::RAND);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Wireframe Cuboid");
-  Eigen::Vector3d min_point, max_point;
-  // TODO(davetcoleman): use generateRandomCuboid()
-  min_point << -0.1, -.25, -.3;
-  max_point << .3, .2, .1;
-  generateRandomPose(pose1);
-  publishWireframeCuboid(convertPose(pose1), min_point, max_point);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing depth/width/height Wireframe Cuboid");
-  double depth = 0.5, width = 0.25, height = 0.125;
-  generateRandomPose(pose1);
-  publishWireframeCuboid(convertPose(pose1), depth, width, height);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publishing Planes");
-  generateRandomPose(pose1);
-  publishXYPlane(pose1, rviz_visual_tools::RED, 0.1);
-  ros::Duration(1.0).sleep();
-  publishXZPlane(pose1, rviz_visual_tools::GREEN, 0.1);
-  ros::Duration(1.0).sleep();
-  publishYZPlane(pose1, rviz_visual_tools::BLUE, 0.1);
-  ros::Duration(1.0).sleep();
-
-  ROS_INFO_STREAM_NAMED(name_, "Publising Axis Cone");
-  generateRandomPose(pose1);
-  publishCone(pose1, M_PI / 6.0, rviz_visual_tools::RAND, 0.2);
-  ros::Duration(1.0).sleep();
 
   return true;
 }
