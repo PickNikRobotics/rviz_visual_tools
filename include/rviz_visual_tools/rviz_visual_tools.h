@@ -212,6 +212,11 @@ public:
    */
   void loadMarkerPub(bool wait_for_subscriber = false, bool latched=false);
 
+  /** \brief Optional blocking function to call *after* calling loadMarkerPub(). Allows you to do some intermediate
+   *         processing before wasting cycles waiting for the marker pub to find a subscriber
+   */
+  void waitForMarkerPub();
+
   /**
    * \brief Wait until at least one subscriber connects to a publisher
    * \param pub - the publisher to check for subscribers
