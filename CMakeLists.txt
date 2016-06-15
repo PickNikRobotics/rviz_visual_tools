@@ -6,7 +6,8 @@ add_definitions(-std=c++11)
 
 # Warnings
 add_definitions(-W -Wall -Wextra
-  -Wcast-qual -Wwrite-strings -Wunreachable-code -Wpointer-arith
+  #-Wcast-qual
+  -Wwrite-strings -Wunreachable-code -Wpointer-arith
   -Winit-self -Wredundant-decls
   -Wno-unused-parameter -Wno-unused-function)
 
