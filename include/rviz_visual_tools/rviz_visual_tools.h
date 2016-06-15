@@ -971,6 +971,9 @@ protected:
 
   // Just for fun.
   bool psychedelic_mode_ = false;
+
+public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW // http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html
 };  // class
 
 typedef std::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
