@@ -293,7 +293,7 @@ public:
    * \param point b - x,y,z in space of a point
    * \return vector from a to b
    */
-  Eigen::Affine3d getVectorBetweenPoints(Eigen::Vector3d a, Eigen::Vector3d b);
+  Eigen::Affine3d getVectorBetweenPoints(const Eigen::Vector3d &a, const Eigen::Vector3d &b);
 
   /**
    * \brief Find the center between to points
@@ -301,7 +301,7 @@ public:
    * \param point b - x,y,z in space of a point
    * \return center point
    */
-  Eigen::Vector3d getCenterPoint(Eigen::Vector3d a, Eigen::Vector3d b);
+  Eigen::Vector3d getCenterPoint(const Eigen::Vector3d &a, const Eigen::Vector3d &b);
 
   /**
    * \brief Get the base frame
