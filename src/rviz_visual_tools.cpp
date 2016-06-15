@@ -630,7 +630,7 @@ geometry_msgs::Vector3 RvizVisualTools::getScale(const scales &scale, bool arrow
   return result;
 }
 
-Eigen::Vector3d RvizVisualTools::getCenterPoint(Eigen::Vector3d a, Eigen::Vector3d b)
+Eigen::Vector3d RvizVisualTools::getCenterPoint(const Eigen::Vector3d &a, const Eigen::Vector3d &b)
 {
   Eigen::Vector3d center;
   center[0] = (a[0] + b[0]) / 2;
@@ -639,7 +639,7 @@ Eigen::Vector3d RvizVisualTools::getCenterPoint(Eigen::Vector3d a, Eigen::Vector
   return center;
 }
 
-Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(Eigen::Vector3d a, Eigen::Vector3d b)
+Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d &a, const Eigen::Vector3d &b)
 {
   // TODO(davetcoleman): handle the error case when a & b are the same point.
   // currently it returns nan for the quaternion
