@@ -457,8 +457,8 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishSpheres(const std::vector<Eigen::Vector3d> &points, const colors &color = BLUE, const double scale = 0.1,
-                      const std::string &ns = "Spheres");
+  bool publishSpheres(const std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> > &points,
+                      const colors &color = BLUE, const double scale = 0.1, const std::string &ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color = BLUE,
                       const double scale = 0.1, const std::string &ns = "Spheres");
   bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const colors &color = BLUE,
@@ -589,8 +589,8 @@ public:
   bool publishPath(const std::vector<geometry_msgs::Point> &path, const colors &color = RED,
                    const scales &scale = REGULAR, const std::string &ns = "Path");
 
-  bool publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color = RED, const double radius = 0.01,
-                   const std::string &ns = "Path");
+  bool publishPath(const std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> > &path,
+                   const colors &color = RED, const double radius = 0.01, const std::string &ns = "Path");
 
   /**
    * \brief Display a marker of a polygon

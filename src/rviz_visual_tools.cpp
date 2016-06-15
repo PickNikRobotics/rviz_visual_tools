@@ -1541,8 +1541,8 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
   return publishMarker(line_strip_marker_);
 }
 
-bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const colors &color, const double radius,
-                                  const std::string &ns)
+bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> > &path,
+                                  const colors &color, const double radius, const std::string &ns)
 {
   if (path.size() < 2)
   {
@@ -1804,8 +1804,8 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, con
   return publishMarker(line_list_marker_);
 }
 
-bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d> &points, const colors &color,
-                                     const double scale, const std::string &ns)
+bool RvizVisualTools::publishSpheres(const std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> > &points,
+                                     const colors &color, const double scale, const std::string &ns)
 {
   std::vector<geometry_msgs::Point> points_msg;
   // geometry_msgs::Point temp;
