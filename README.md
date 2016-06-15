@@ -1,13 +1,19 @@
 # Rviz Visual Tools
 
-Helper functions for displaying and debugging data in Rviz via published markers.
+C++ API wrapper for displaying shapes and meshes in Rviz via helper functions that publish markers. Useful for displaying and debugging data. For more advanced robot visualization features, see the [moveit_visual_tools](https://github.com/davetcoleman/moveit_visual_tools) which builds on this class, or [ompl_visual_tools](https://github.com/davetcoleman/ompl_visual_tools/) if you are an OMPL ROS user.
 
 This package includes:
 
+ - Easy to use helper functions for visualizing in Rviz fast
  - Basic geometric markers for Rviz
+ - More complex geometric shapes such as coordinate frames, framed boxes, planes, paths, graphs
+ - Ability to quickly choose standard colors and sizes
+ - Tools to ensure proper connection to Rviz before publishing visualizations
+ - Shortcuts to convert between different types of points and poses - ROS msgs, Eigen, tf, etc
+ - Batch publishing capabilities to reduce over throttling ROS messages
  - A tf publishing helper class
 
-Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, University of Colorado Boulder with help from Andy McEvoy and others.
+Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, University of Colorado Boulder with help from Andy McEvoy and many others.
 
  * [![Build Status](https://travis-ci.org/davetcoleman/rviz_visual_tools.svg)](https://travis-ci.org/davetcoleman/rviz_visual_tools) Travis CI
  * [![Build Status](http://build.ros.org/buildStatus/icon?job=Jsrc_uT__rviz_visual_tools__ubuntu_trusty__source)](http://build.ros.org/view/Jsrc_uT/job/Jsrc_uT__rviz_visual_tools__ubuntu_trusty__source/) ROS Buildfarm - Trusty Devel Source Build
@@ -20,14 +26,14 @@ Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, Universi
 ### Ubuntu Debian
 
 ```
-sudo apt-get install ros-indigo-rviz-visual-tools
+sudo apt-get install ros-jade-rviz-visual-tools
 ```
 
 ### Build from Source
 
 Clone this repository into a catkin workspace, then use the rosdep install tool to automatically download its dependencies. Depending on your current version of ROS, use:
 ```
-rosdep install --from-paths src --ignore-src --rosdistro indigo
+rosdep install --from-paths src --ignore-src --rosdistro jade
 ```
 
 ## Quick Start Demo
@@ -42,7 +48,7 @@ Then start demo:
 
 ## Code API
 
-See [the Doxygen documentation](http://docs.ros.org/indigo/api/rviz_visual_tools/html/annotated.html)
+See [the Doxygen documentation](http://docs.ros.org/jade/api/rviz_visual_tools/html/annotated.html)
 
 ## Usage
 
