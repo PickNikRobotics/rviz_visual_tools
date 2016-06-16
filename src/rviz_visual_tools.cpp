@@ -389,6 +389,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const colors &color)
       result.g = 0.9;
       result.b = 0.9;
       result.a = alpha_;
+      break;
     case DARK_GREY:
       result.r = 0.6;
       result.g = 0.6;
@@ -492,6 +493,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const colors &color)
       result.g = 0.1;
       result.b = 0.8;
       result.a = alpha_;
+      break;
   }
 
   return result;
