@@ -1007,6 +1007,14 @@ bool RvizVisualTools::publishSphere(const Eigen::Affine3d &pose, const std_msgs:
   return publishSphere(convertPose(pose), color, scale, ns, id);
 }
 
+bool RvizVisualTools::publishSphere(const Eigen::Vector3d &point, const std_msgs::ColorRGBA &color,
+                                    const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id)
+{
+  geometry_msgs::Pose pose_msg;
+  tf::pointEigenToMsg(point, pose_msg.position);
+  return publishSphere(pose_msg, color, scale, ns, id);
+}
+
 bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const std_msgs::ColorRGBA &color,
                                     const geometry_msgs::Vector3 scale, const std::string &ns, const std::size_t &id)
 {
