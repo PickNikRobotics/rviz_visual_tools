@@ -23,6 +23,7 @@ find_package(catkin REQUIRED COMPONENTS
   trajectory_msgs
   visualization_msgs
   roslint
+  eigen_stl_containers
 )
 
 find_package(Eigen REQUIRED)
