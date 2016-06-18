@@ -214,14 +214,19 @@ public:
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.025;
+    double angle_step = 0.1;
+    double angle = 1;
+    
     for (double i = 0; i <= 1.0; i += step)
     {
-      visual_tools_->publishCone(pose1, M_PI / 6.0, rvt::RAND, 0.05);
+	
+      visual_tools_->publishCone(pose1, M_PI / angle, rvt::RAND, 0.05);
       if (!i)
         publishLabelHelper(pose1, "Cone");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      angle +=angle_step;
     }
     visual_tools_->triggerBatchPublish();
 

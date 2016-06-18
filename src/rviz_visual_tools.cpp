@@ -792,12 +792,12 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
     p[0].z = 0;
 
     p[1].x = scale;
-    p[1].y = scale * cos(theta);
-    p[1].z = scale * sin(theta);
+    p[1].y = scale * cos(theta)/angle;
+    p[1].z = scale * sin(theta)/angle;
 
     p[2].x = scale;
-    p[2].y = scale * cos(theta + delta_theta);
-    p[2].z = scale * sin(theta + delta_theta);
+    p[2].y = scale * cos(theta + delta_theta)/angle;
+    p[2].z = scale * sin(theta + delta_theta)/angle;
 
     triangle_marker_.points.push_back(p[0]);
     triangle_marker_.points.push_back(p[1]);
