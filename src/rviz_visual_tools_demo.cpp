@@ -338,6 +338,39 @@ public:
         * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->triggerBatchPublish();
+
+    // --------------------------------------------------------------------
+    ROS_INFO_STREAM_NAMED(name_, "Displaying Multi-Color Path");
+    pose1 = Eigen::Affine3d::Identity();
+    pose2 = Eigen::Affine3d::Identity();
+    y += space_between_rows;
+    pose1.translation().y() = y;
+    step = 0.1;
+
+    std::vector<Eigen::Vector3d> path;
+    std::vector<rviz_visual_tools::colors> colors;
+    unsigned index (0);
+    for (double i = 0; i < 1.0; i += step)
+    {
+      pose1.translation().y() = y;
+      if (++index % 2 == 0)
+      {
+        pose1.translation().y() += step/2.0;
+        colors.push_back(rviz_visual_tools::WHITE);
+      }
+      else
+      {
+        pose1.translation().y() -= step/2.0;
+        colors.push_back(rviz_visual_tools::BLUE);
+      }
+      path.push_back(pose1.translation());
+      pose1.translation().x() += step;
+
+      if (!i)
+        publishLabelHelper(pose1, "Path");
+    }
+    visual_tools_->publishPath(path, colors);
+    visual_tools_->triggerBatchPublish();
   }
 
   /**

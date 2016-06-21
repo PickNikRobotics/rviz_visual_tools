@@ -1574,6 +1574,32 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const c
   return triggerInternalBatchPublishAndDisable();
 }
 
+bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors, const double radius,
+                                  const std::string &ns)
+{
+  if (path.size() < 2)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    return true;
+  }
+
+  if (path.size() != colors.size())
+  {
+    ROS_ERROR_STREAM_NAMED(name_, "Skipping path because " << path.size() << " different from " << colors.size() << ".");
+    return false;
+  }
+
+  // Batch publish, unless it is already enabled by user
+  enableInternalBatchPublishing(true);
+
+  // Create the cylinders
+  for (std::size_t i = 1; i < path.size(); ++i)
+    publishCylinder(path[i - 1], path[i], colors[i], radius, ns);
+
+  // Batch publish
+  return triggerInternalBatchPublishAndDisable();
+}
+
 bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, const colors &color, const scales &scale,
                                      const std::string &ns)
 {

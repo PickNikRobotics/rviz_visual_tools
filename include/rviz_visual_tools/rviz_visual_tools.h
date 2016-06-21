@@ -596,6 +596,17 @@ public:
                    const std::string &ns = "Path");
 
   /**
+   * \brief Display a marker of a series of connected colored lines
+   * \param path - a series of points to connect with lines
+   * \param colors - a series of colors
+   * \param radius - the thickness of the line
+   * \param ns - namespace of marker
+   * \return true on success
+   * \note path and colors vectors must be the same size
+   */  bool publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors, const double radius = 0.01,
+                   const std::string &ns = "Path");
+
+  /**
    * \brief Display a marker of a polygon
    * \param polygon - a series of points to connect with lines
    * \param color - an enum pre-defined name of a color
