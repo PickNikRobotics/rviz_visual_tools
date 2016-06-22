@@ -824,12 +824,12 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
     p[0].z = 0;
 
     p[1].x = scale;
-    p[1].y = scale * cos(theta);
-    p[1].z = scale * sin(theta);
+    p[1].y = scale * cos(theta)/angle;
+    p[1].z = scale * sin(theta)/angle;
 
     p[2].x = scale;
-    p[2].y = scale * cos(theta + delta_theta);
-    p[2].z = scale * sin(theta + delta_theta);
+    p[2].y = scale * cos(theta + delta_theta)/angle;
+    p[2].z = scale * sin(theta + delta_theta)/angle;
 
     triangle_marker_.points.push_back(p[0]);
     triangle_marker_.points.push_back(p[1]);
@@ -1601,6 +1601,32 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const c
   {
     publishCylinder(path[i - 1], path[i], color, radius, ns);
   }
+
+  // Batch publish
+  return triggerInternalBatchPublishAndDisable();
+}
+
+bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors, const double radius,
+                                  const std::string &ns)
+{
+  if (path.size() < 2)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    return true;
+  }
+
+  if (path.size() != colors.size())
+  {
+    ROS_ERROR_STREAM_NAMED(name_, "Skipping path because " << path.size() << " different from " << colors.size() << ".");
+    return false;
+  }
+
+  // Batch publish, unless it is already enabled by user
+  enableInternalBatchPublishing(true);
+
+  // Create the cylinders
+  for (std::size_t i = 1; i < path.size(); ++i)
+    publishCylinder(path[i - 1], path[i], colors[i], radius, ns);
 
   // Batch publish
   return triggerInternalBatchPublishAndDisable();
