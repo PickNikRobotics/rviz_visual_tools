@@ -499,6 +499,38 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const colors &color)
   return result;
 }
 
+/** \brief Convert a number to an rviz_visual_tools color enum */
+rviz_visual_tools::colors RvizVisualTools::intToRvizColor(std::size_t color)
+{
+  // clang-format off
+  switch (color)
+  {
+    case 0: return rviz_visual_tools::BLACK; break;
+    case 1: return rviz_visual_tools::BROWN; break;
+    case 2: return rviz_visual_tools::BLUE; break;
+    case 3: return rviz_visual_tools::CYAN; break;
+    case 4: return rviz_visual_tools::GREY; break;
+    case 5: return rviz_visual_tools::DARK_GREY; break;
+    case 6: return rviz_visual_tools::GREEN; break;
+    case 7: return rviz_visual_tools::LIME_GREEN; break;
+    case 8: return rviz_visual_tools::MAGENTA; break;
+    case 9: return rviz_visual_tools::ORANGE; break;
+    case 10: return rviz_visual_tools::PURPLE; break;
+    case 11: return rviz_visual_tools::RED; break;
+    case 12: return rviz_visual_tools::PINK; break;
+    case 13: return rviz_visual_tools::WHITE; break;
+    case 14: return rviz_visual_tools::YELLOW; break;
+    case 15: return rviz_visual_tools::TRANSLUCENT; break;
+    case 16: return rviz_visual_tools::TRANSLUCENT_LIGHT; break;
+    case 17: return rviz_visual_tools::TRANSLUCENT_DARK; break;
+    case 18: return rviz_visual_tools::RAND; break;
+    case 19: return rviz_visual_tools::CLEAR; break;
+    case 20: return rviz_visual_tools::DEFAULT; break;
+  }
+  // clang-format on
+  return rviz_visual_tools::DEFAULT;
+}
+
 std_msgs::ColorRGBA RvizVisualTools::createRandColor()
 {
   std_msgs::ColorRGBA result;

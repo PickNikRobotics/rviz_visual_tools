@@ -260,6 +260,9 @@ public:
    */
   std_msgs::ColorRGBA getColor(const colors &color);
 
+  /** \brief Used by interfaces that do not directly depend on Rviz Visual Tools, such as OMPL */
+  rviz_visual_tools::colors intToRvizColor(std::size_t color);
+
   /**
    * \brief Create a random color that is not too light
    * \return the RGB message of a random color
