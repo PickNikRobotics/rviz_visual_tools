@@ -668,45 +668,97 @@ geometry_msgs::Vector3 RvizVisualTools::getScale(const scales &scale, bool arrow
 Eigen::Vector3d RvizVisualTools::getCenterPoint(const Eigen::Vector3d &a, const Eigen::Vector3d &b)
 {
   Eigen::Vector3d center;
-  center[0] = (a[0] + b[0]) / 2;
-  center[1] = (a[1] + b[1]) / 2;
-  center[2] = (a[2] + b[2]) / 2;
+  center[0] = (a[0] + b[0]) / 2.0;
+  center[1] = (a[1] + b[1]) / 2.0;
+  center[2] = (a[2] + b[2]) / 2.0;
   return center;
 }
 
 Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d &a, const Eigen::Vector3d &b)
 {
+  bool verbose = false;
+
   // TODO(davetcoleman): handle the error case when a & b are the same point.
   // currently it returns nan for the quaternion
 
   // from
   // http://answers.ros.org/question/31006/how-can-a-vector3-axis-be-used-to-produce-a-quaternion/
 
+  // Solution pose
+  Eigen::Affine3d result_pose = Eigen::Affine3d::Identity();
+
   // Goal pose:
   Eigen::Quaterniond q;
-
   Eigen::Vector3d axis_vector = b - a;
+
+  if (verbose)
+  {
+    std::cout << std::endl;
+    std::cout << "axis_vector " << std::endl;
+    printTranslation(axis_vector);
+  }
+
   axis_vector.normalize();
+
+  if (verbose)
+  {
+    std::cout << std::endl;
+    std::cout << "axis_vector after normalize " << std::endl;
+    printTranslation(axis_vector);
+  }
 
   Eigen::Vector3d up_vector(0.0, 0.0, 1.0);
   Eigen::Vector3d right_axis_vector = axis_vector.cross(up_vector);
+
+  if (verbose)
+  {
+    std::cout << "right_axis_vector " << std::endl;
+    printTranslation(right_axis_vector);
+  }
+
+  if (right_axis_vector[0] == 0.0 && right_axis_vector[1] == 0.0 && right_axis_vector[2] == 0.0)
+  {
+    if (verbose)
+      std::cout << "right axis vector is zero " << std::endl;
+    result_pose = Eigen::AngleAxisd(-0.5 * M_PI, Eigen::Vector3d::UnitY());
+    result_pose.translation() = a;
+    return result_pose;
+  }
+
   right_axis_vector.normalized();
+
+  if (verbose)
+  {
+    std::cout << "right_axis_vector normalized " << std::endl;
+    printTranslation(right_axis_vector);
+  }
+
   double theta = axis_vector.dot(up_vector);
+  //std::cout << "theta: " << theta << std::endl;
   double angle_rotation = -1.0 * acos(theta);
+  //std::cout << "angle_rotation: " << angle_rotation << std::endl;
 
   //-------------------------------------------
   // Method 1 - TF - works
-  // Convert to TF
+
+  // Convert vector to TF format
   tf::Vector3 tf_right_axis_vector;
   tf::vectorEigenToTF(right_axis_vector, tf_right_axis_vector);
 
-  // Create quaternion
+  // Create quaternion using 'Axis angle Constructor'
+  //   axis: The axis which the rotation is around
+  //   angle: The magnitude of the rotation around the angle (Radians)
   tf::Quaternion tf_q(tf_right_axis_vector, angle_rotation);
 
   // Convert back to Eigen
   tf::quaternionTFToEigen(tf_q, q);
   //-------------------------------------------
-  // std::cout << q.toRotationMatrix() << std::endl;
+
+  if (verbose)
+  {
+    std::cout << "rotation matrix: " << std::endl;
+    std::cout << q.toRotationMatrix() << std::endl;
+  }
 
   //-------------------------------------------
   // Method 2 - Eigen - broken TODO(davetcoleman)
@@ -714,13 +766,19 @@ Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d &a
   //-------------------------------------------
   // std::cout << q.toRotationMatrix() << std::endl;
 
-  // Rotate so that vector points along line
-  Eigen::Affine3d pose;
   q.normalize();
-  pose = q * Eigen::AngleAxisd(-0.5 * M_PI, Eigen::Vector3d::UnitY());
-  pose.translation() = a;
 
-  return pose;
+  if (verbose)
+  {
+    std::cout << "rotation matrix after normalize: " << std::endl;
+    std::cout << q.toRotationMatrix() << std::endl;
+  }
+
+  // Rotate so that vector points along line
+  result_pose = q * Eigen::AngleAxisd(-0.5 * M_PI, Eigen::Vector3d::UnitY());
+  result_pose.translation() = a;
+
+  return result_pose;
 }
 
 bool RvizVisualTools::publishMarker(visualization_msgs::Marker &marker)
@@ -2250,6 +2308,13 @@ bool RvizVisualTools::triggerInternalBatchPublishAndDisable()
 
   markers_.markers.clear();  // remove all cached markers
   return result;
+}
+
+void RvizVisualTools::printTranslation(const Eigen::Vector3d &translation)
+{
+  std::cout << "translation.x: " << translation.x() << std::endl;
+  std::cout << "translation.y: " << translation.y() << std::endl;
+  std::cout << "translation.z: " << translation.z() << std::endl;
 }
 
 void RvizVisualTools::printTransform(const Eigen::Affine3d &transform)

@@ -901,6 +901,11 @@ public:
   static int iRand(int min, int max);
 
   /**
+   * \brief Display in the console the x,y,z values of a point
+   */
+  void printTranslation(const Eigen::Vector3d &point);
+
+  /**
    * \brief Display in the console a transform in quaternions
    */
   static void printTransform(const Eigen::Affine3d &transform);
