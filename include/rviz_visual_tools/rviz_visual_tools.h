@@ -102,16 +102,17 @@ enum colors
 
 enum scales
 {
-  XXSMALL,
-  XSMALL,
-  SMALL,
-  REGULAR,
-  LARGE,
-  xLARGE,
-  xxLARGE,
-  xxxLARGE,
-  XLARGE,
-  XXLARGE
+  XXSMALL = 0,
+  XSMALL = 1,
+  SMALL = 2,
+  REGULAR = 3, // deprecated as of ROS-KINETIC
+  MEDIUM = 3, // same as regular
+  LARGE = 4,
+  xLARGE = 5,
+  xxLARGE = 6,
+  xxxLARGE = 7,
+  XLARGE = 8,
+  XXLARGE = 9
 };
 
 /**
@@ -211,7 +212,7 @@ public:
    * \param wait_for_subscriber - whether a sleep for loop should be used to check for connectivity to an external node
    *                              before proceeding
    */
-  void loadMarkerPub(bool wait_for_subscriber = false, bool latched=false);
+  void loadMarkerPub(bool wait_for_subscriber = false, bool latched = false);
 
   /** \brief Optional blocking function to call *after* calling loadMarkerPub(). Allows you to do some intermediate
    *         processing before wasting cycles waiting for the marker pub to find a subscriber
@@ -262,6 +263,9 @@ public:
 
   /** \brief Used by interfaces that do not directly depend on Rviz Visual Tools, such as OMPL */
   rviz_visual_tools::colors intToRvizColor(std::size_t color);
+
+  /** \brief Used by interfaces that do not directly depend on Rviz Visual Tools, such as OMPL */
+  rviz_visual_tools::scales intToRvizScale(std::size_t scale);
 
   /**
    * \brief Create a random color that is not too light
@@ -473,6 +477,19 @@ public:
                       const geometry_msgs::Vector3 &scale, const std::string &ns = "Spheres");
 
   /**
+   * \brief Display a marker of a series of spheres, with the possibility of different colors
+   * \param spheres - where to publish them
+   * \param color - an enum pre-defined name of a color
+   * \param scale - an enum pre-defined name of a size
+   * \param ns - namespace of marker
+   * \return true on success
+   */
+  bool publishSpheres(const EigenSTL::vector_Vector3d &points, const std::vector<colors> &colors, const scales &scale,
+                      const std::string &ns = "Spheres");
+  bool publishSpheres(const std::vector<geometry_msgs::Point> &points, const std::vector<std_msgs::ColorRGBA> &colors,
+                      const geometry_msgs::Vector3 &scale, const std::string &ns = "Spheres");
+
+  /**
    * \brief Display an arrow along the x-axis of a pose
    * \param pose - the location to publish the marker with respect to the base frame
    * \param color - an enum pre-defined name of a color
@@ -585,6 +602,19 @@ public:
                    const std_msgs::ColorRGBA &color, const geometry_msgs::Vector3 &scale);
 
   /**
+   * \brief Display a marker of lines
+   * \param aPoints - x,y,z of start of line, as a vector
+   * \param bPoints - x,y,z of end of line, as a vector
+   * \param colors - an enum pre-defined name of a color
+   * \param scale - an enum pre-defined name of a size
+   * \return true on success
+   */
+  bool publishLines(const EigenSTL::vector_Vector3d &aPoints, const EigenSTL::vector_Vector3d &bPoints,
+                    const std::vector<colors> &colors, const scales &scale);
+  bool publishLines(const std::vector<geometry_msgs::Point> &aPoints, const std::vector<geometry_msgs::Point> &bPoints,
+                    const std::vector<std_msgs::ColorRGBA> &colors, const geometry_msgs::Vector3 &scale);
+
+  /**
    * \brief Display a marker of a series of connected lines
    * \param path - a series of points to connect with lines
    * \param color - an enum pre-defined name of a color
@@ -606,8 +636,8 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    * \note path and colors vectors must be the same size
-   */  bool publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors, const double radius = 0.01,
-                   const std::string &ns = "Path");
+   */ bool publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors,
+                       const double radius = 0.01, const std::string &ns = "Path");
 
   /**
    * \brief Display a marker of a polygon
@@ -697,6 +727,8 @@ public:
    * \param radius - geometry of cylinder
    * \return true on success
    */
+  bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE,
+                       const scales& scale = REGULAR, const std::string &ns = "Cylinder");
   bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color = BLUE,
                        double radius = 0.01, const std::string &ns = "Cylinder");
   bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const std_msgs::ColorRGBA &color,
@@ -994,8 +1026,8 @@ protected:
   bool psychedelic_mode_ = false;
 
 public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW // http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html
-};  // class
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW  // http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html
+};                                 // class
 
 typedef std::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
 typedef std::shared_ptr<const RvizVisualTools> RvizVisualToolsConstPtr;

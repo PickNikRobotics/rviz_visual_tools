@@ -52,10 +52,7 @@
 namespace rviz_visual_tools
 {
 RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::string &marker_topic)
-  : nh_("~")
-  , name_("visual_tools")
-  , marker_topic_(marker_topic)
-  , base_frame_(base_frame)
+  : nh_("~"), name_("visual_tools"), marker_topic_(marker_topic), base_frame_(base_frame)
 {
   initialize();
 }
@@ -95,8 +92,8 @@ bool RvizVisualTools::loadRvizMarkers()
   // Load reset marker -------------------------------------------------
   reset_marker_.header.frame_id = base_frame_;
   reset_marker_.header.stamp = ros::Time();
-  reset_marker_.ns = "deleteAllMarkers"; // helps during debugging
-  reset_marker_.action = 3;  // TODO(davetcoleman): In ROS-J set to visualization_msgs::Marker::DELETEALL;
+  reset_marker_.ns = "deleteAllMarkers";  // helps during debugging
+  reset_marker_.action = 3;               // TODO(davetcoleman): In ROS-J set to visualization_msgs::Marker::DELETEALL;
 
   // Load arrow ----------------------------------------------------
 
@@ -298,7 +295,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
   // Wait for subscriber
   while (num_existing_subscribers == 0)
   {
-    if (!blocking && ros::Time::now() > max_time) // Check if timed out
+    if (!blocking && ros::Time::now() > max_time)  // Check if timed out
     {
       ROS_WARN_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
                                              << wait_time << " sec. It is possible initially published visual messages "
@@ -312,7 +309,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, const double 
 
     // Check again
     num_existing_subscribers = pub.getNumSubscribers();
-    //std::cout << "num_existing_subscribers " << num_existing_subscribers << std::endl;
+    // std::cout << "num_existing_subscribers " << num_existing_subscribers << std::endl;
 
     if (!ros::ok())
       return false;
@@ -499,7 +496,6 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(const colors &color)
   return result;
 }
 
-/** \brief Convert a number to an rviz_visual_tools color enum */
 rviz_visual_tools::colors RvizVisualTools::intToRvizColor(std::size_t color)
 {
   // clang-format off
@@ -529,6 +525,27 @@ rviz_visual_tools::colors RvizVisualTools::intToRvizColor(std::size_t color)
   }
   // clang-format on
   return rviz_visual_tools::DEFAULT;
+}
+
+rviz_visual_tools::scales RvizVisualTools::intToRvizScale(std::size_t scale)
+{
+  // clang-format off
+  switch (scale)
+  {
+    case 1: return rviz_visual_tools::XXSMALL; break;
+    case 2: return rviz_visual_tools::XSMALL; break;
+    case 3: return rviz_visual_tools::SMALL; break;
+    case 4: return rviz_visual_tools::REGULAR; break;
+    case 5: return rviz_visual_tools::LARGE; break;
+    case 6: return rviz_visual_tools::xLARGE; break;
+    case 7: return rviz_visual_tools::xxLARGE; break;
+    case 8: return rviz_visual_tools::xxxLARGE; break;
+    case 9: return rviz_visual_tools::XLARGE; break;
+    case 10: return rviz_visual_tools::XXLARGE; break;
+    default: throw std::runtime_error("Unknown size");
+  }
+  // clang-format on
+  return rviz_visual_tools::REGULAR; // dumy value
 }
 
 std_msgs::ColorRGBA RvizVisualTools::createRandColor()
@@ -734,9 +751,7 @@ Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d &a
   }
 
   double theta = axis_vector.dot(up_vector);
-  //std::cout << "theta: " << theta << std::endl;
   double angle_rotation = -1.0 * acos(theta);
-  //std::cout << "angle_rotation: " << angle_rotation << std::endl;
 
   //-------------------------------------------
   // Method 1 - TF - works
@@ -882,12 +897,12 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose &pose, double angle,
     p[0].z = 0;
 
     p[1].x = scale;
-    p[1].y = scale * cos(theta)/angle;
-    p[1].z = scale * sin(theta)/angle;
+    p[1].y = scale * cos(theta) / angle;
+    p[1].z = scale * sin(theta) / angle;
 
     p[2].x = scale;
-    p[2].y = scale * cos(theta + delta_theta)/angle;
-    p[2].z = scale * sin(theta + delta_theta)/angle;
+    p[2].y = scale * cos(theta + delta_theta) / angle;
+    p[2].z = scale * sin(theta + delta_theta) / angle;
 
     triangle_marker_.points.push_back(p[0]);
     triangle_marker_.points.push_back(p[1]);
@@ -1124,7 +1139,8 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const std_m
   sphere_marker_.ns = ns;
 
   // Update the single point with new pose
-  sphere_marker_.points.resize(1); // TODO(davetcoleman): not sure why we need to resize it, but someone was growing this vector larger
+  sphere_marker_.points.resize(
+      1);  // TODO(davetcoleman): not sure why we need to resize it, but someone was growing this vector larger
   sphere_marker_.colors.resize(1);
   sphere_marker_.points[0] = pose.position;
   sphere_marker_.colors[0] = color;
@@ -1282,17 +1298,19 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, const
   return true;
 }
 
-bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const scales &scale, const colors &color)
+bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, const scales &scale,
+                                         const colors &color)
 {
   return publishAxisLabeled(convertPose(pose), label, scale, color);
 }
 
-bool RvizVisualTools::publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const scales &scale, const colors &color)
+bool RvizVisualTools::publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, const scales &scale,
+                                         const colors &color)
 {
   publishAxis(pose, 0.1, 0.01, label);
 
   geometry_msgs::Pose pose_shifted = pose;
-  pose_shifted.position.y -= 0.05; // For avoiding overriden Axis and Text
+  pose_shifted.position.y -= 0.05;  // For avoiding overriden Axis and Text
   publishText(pose_shifted, label, color, scale, false);
   return true;
 }
@@ -1326,6 +1344,13 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
 
   // Batch publish
   return triggerInternalBatchPublishAndDisable();
+}
+
+bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color,
+                                      const scales &scale, const std::string &ns)
+{
+  double radius = getScale(scale).x;
+  return publishCylinder(point1, point2, getColor(color), radius, ns);
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const colors &color,
@@ -1608,6 +1633,59 @@ bool RvizVisualTools::publishLine(const geometry_msgs::Point &point1, const geom
   return publishMarker(line_strip_marker_);
 }
 
+bool RvizVisualTools::publishLines(const EigenSTL::vector_Vector3d &aPoints, const EigenSTL::vector_Vector3d &bPoints,
+                                   const std::vector<colors> &colors, const scales &scale)
+{
+  BOOST_ASSERT_MSG(aPoints.size() == bPoints.size() && bPoints.size() == colors.size(), "Mismatching vector sizes: "
+                                                                                        "aPoints, bPoints, and colors");
+
+  std::vector<geometry_msgs::Point> aPoints_msg;
+  std::vector<geometry_msgs::Point> bPoints_msg;
+  std::vector<std_msgs::ColorRGBA> colors_msg;
+
+  for (std::size_t i = 0; i < aPoints.size(); ++i)
+  {
+    // Convert Eigen to ROS Msg
+    aPoints_msg.push_back(convertPoint(aPoints[i]));
+    bPoints_msg.push_back(convertPoint(bPoints[i]));
+    // Convert color to ROS Msg
+    colors_msg.push_back(getColor(colors[i]));
+  }
+  BOOST_ASSERT_MSG(aPoints_msg.size() == bPoints_msg.size() && bPoints_msg.size() == colors_msg.size(), "Mismatched vector sizes");
+
+  return publishLines(aPoints_msg, bPoints_msg, colors_msg, getScale(scale));
+}
+
+bool RvizVisualTools::publishLines(const std::vector<geometry_msgs::Point> &aPoints,
+                                   const std::vector<geometry_msgs::Point> &bPoints,
+                                   const std::vector<std_msgs::ColorRGBA> &colors, const geometry_msgs::Vector3 &scale)
+{
+  // Setup marker
+  line_list_marker_.header.stamp = ros::Time();
+  line_list_marker_.ns = "Line Array";
+
+  line_list_marker_.scale = scale;
+  //line_list_marker_.color = getColor(BLUE); // This var is not used
+
+  // Add each point pair to the line message
+  line_list_marker_.points.clear();
+  line_list_marker_.colors.clear();
+  for (std::size_t i = 0; i < aPoints.size(); ++i)
+  {
+    line_list_marker_.points.push_back(aPoints[i]);
+    line_list_marker_.points.push_back(bPoints[i]);
+    line_list_marker_.colors.push_back(colors[i]);
+    line_list_marker_.colors.push_back(colors[i]);
+  }
+
+  // Testing
+  BOOST_ASSERT_MSG(line_list_marker_.colors.size() == line_list_marker_.points.size(), "Arrays mismatch in size");
+  BOOST_ASSERT_MSG(line_list_marker_.colors.size() == aPoints.size() * 2, "Colors arrays mismatch in size");
+
+  // Helper for publishing rviz markers
+  return publishMarker(line_list_marker_);
+}
+
 bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, const colors &color,
                                   const scales &scale, const std::string &ns)
 {
@@ -1664,8 +1742,8 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const c
   return triggerInternalBatchPublishAndDisable();
 }
 
-bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors, const double radius,
-                                  const std::string &ns)
+bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors,
+                                  const double radius, const std::string &ns)
 {
   if (path.size() < 2)
   {
@@ -1675,7 +1753,8 @@ bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, cons
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(name_, "Skipping path because " << path.size() << " different from " << colors.size() << ".");
+    ROS_ERROR_STREAM_NAMED(name_, "Skipping path because " << path.size() << " different from " << colors.size()
+                                                           << ".");
     return false;
   }
 
@@ -1931,15 +2010,13 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d &pose, con
   return publishMarker(line_list_marker_);
 }
 
-bool RvizVisualTools::publishSpheres(const EigenSTL::vector_Vector3d &points, const colors &color,
-                                     const double scale, const std::string &ns)
+bool RvizVisualTools::publishSpheres(const EigenSTL::vector_Vector3d &points, const colors &color, const double scale,
+                                     const std::string &ns)
 {
   std::vector<geometry_msgs::Point> points_msg;
-  // geometry_msgs::Point temp;
 
   for (std::size_t i = 0; i < points.size(); ++i)
   {
-    // tf::pointEigenToMsg(points[i], temp);
     points_msg.push_back(convertPoint(points[i]));
   }
 
@@ -1983,6 +2060,43 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &po
   {
     spheres_marker_.colors.push_back(this_color);
   }
+
+  // Helper for publishing rviz markers
+  return publishMarker(spheres_marker_);
+}
+
+bool RvizVisualTools::publishSpheres(const EigenSTL::vector_Vector3d &points, const std::vector<colors> &colors,
+                                     const scales &scale, const std::string &ns)
+{
+  BOOST_ASSERT_MSG(points.size() == colors.size(), "Mismatching vector sizes: points and colors");
+
+  std::vector<geometry_msgs::Point> points_msg;
+  std::vector<std_msgs::ColorRGBA> colors_msg;
+
+  for (std::size_t i = 0; i < points.size(); ++i)
+  {
+    // Convert Eigen to ROS Msg
+    points_msg.push_back(convertPoint(points[i]));
+    // Convert color to ROS Msg
+    colors_msg.push_back(getColor(colors[i]));
+  }
+
+  return publishSpheres(points_msg, colors_msg, getScale(scale), ns);
+}
+
+bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point> &points,
+                                     const std::vector<std_msgs::ColorRGBA> &colors,
+                                     const geometry_msgs::Vector3 &scale, const std::string &ns)
+{
+  spheres_marker_.header.stamp = ros::Time();
+  spheres_marker_.ns = ns;
+
+  // Provide a new id every call to this function
+  spheres_marker_.id++;
+
+  spheres_marker_.scale = scale;
+  spheres_marker_.points = points;  // straight copy
+  spheres_marker_.colors = colors;  // straight copy
 
   // Helper for publishing rviz markers
   return publishMarker(spheres_marker_);
