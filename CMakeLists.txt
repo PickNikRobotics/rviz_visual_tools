@@ -26,7 +26,7 @@ find_package(catkin REQUIRED COMPONENTS
   eigen_stl_containers
 )
 
-find_package(Eigen REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED thread system)
 
 catkin_package(
@@ -40,6 +40,8 @@ catkin_package(
     trajectory_msgs
   INCLUDE_DIRS include
 )
+
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
 
 include_directories(
   include
