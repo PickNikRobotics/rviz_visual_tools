@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.0 (2016-06-29)
+------------------
 * Improve Travis script
 * Upgrade to Eigen3 per ROS Kinetic requirements
 * New screenshot
