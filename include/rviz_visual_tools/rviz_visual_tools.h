@@ -604,6 +604,17 @@ public:
                     const std::vector<std_msgs::ColorRGBA> &colors, const geometry_msgs::Vector3 &scale);
 
   /**
+   * \brief Display a series of connected lines using the LINE_STRIP method - deprecated because visual bugs
+   * \param path - a series of points to connect with lines
+   * \param color - an enum pre-defined name of a color
+   * \param scale - an enum pre-defined name of a size
+   * \param ns - namespace of marker
+   * \return true on success
+   */
+  bool publishLineStrip(const std::vector<geometry_msgs::Point> &path, colors color = RED, scales scale = MEDIUM,
+                   const std::string &ns = "Path");
+
+  /**
    * \brief Display a marker of a series of connected lines
    * \param path - a series of points to connect with lines
    * \param color - an enum pre-defined name of a color
@@ -612,6 +623,12 @@ public:
    * \return true on success
    */
   bool publishPath(const std::vector<geometry_msgs::Point> &path, colors color = RED, scales scale = MEDIUM,
+                   const std::string &ns = "Path");
+  bool publishPath(const EigenSTL::vector_Affine3d &path, colors color = RED, scales scale = MEDIUM,
+                   const std::string &ns = "Path");
+  bool publishPath(const EigenSTL::vector_Vector3d &path, colors color = RED, scales scale = MEDIUM,
+                   const std::string &ns = "Path");
+  bool publishPath(const std::vector<geometry_msgs::Point> &path, colors color = RED, double radius = 0.01,
                    const std::string &ns = "Path");
   bool publishPath(const EigenSTL::vector_Vector3d &path, colors color = RED, double radius = 0.01,
                    const std::string &ns = "Path");
@@ -700,20 +717,13 @@ public:
    * \brief Display a red/green/blue coordinate axis
    * \param pose - the location to publish the marker with respect to the base frame
    * \param scale - size of axis
-   * \param ns - namespace
-   * \return true on success
-   */
-  bool publishAxis(const geometry_msgs::Pose &pose, scales scale = MEDIUM, const std::string &ns = "Axis");
-  bool publishAxis(const Eigen::Affine3d &pose, scales scale = MEDIUM, const std::string &ns = "Axis");
-
-  /**
-   * \brief Display a red/green/blue coordinate axis
-   * \param pose - the location to publish the marker with respect to the base frame
    * \param length - geometry of cylinder
    * \param radius - geometry of cylinder
    * \param ns - namespace
    * \return true on success
    */
+  bool publishAxis(const geometry_msgs::Pose &pose, scales scale = MEDIUM, const std::string &ns = "Axis");
+  bool publishAxis(const Eigen::Affine3d &pose, scales scale = MEDIUM, const std::string &ns = "Axis");
   bool publishAxis(const geometry_msgs::Pose &pose, double length = 0.1, double radius = 0.01,
                    const std::string &ns = "Axis");
   bool publishAxis(const Eigen::Affine3d &pose, double length, double radius = 0.01, const std::string &ns = "Axis");
@@ -739,6 +749,8 @@ public:
    * \param ns - namespace
    * \return true on success
    */
+  bool publishAxisPath(const EigenSTL::vector_Affine3d &path, scales scale = MEDIUM,
+                       const std::string &ns = "Axis Path");
   bool publishAxisPath(const EigenSTL::vector_Affine3d &path, double length = 0.1, double radius = 0.01,
                        const std::string &ns = "Axis Path");
 

@@ -841,7 +841,7 @@ void RvizVisualTools::enableBatchPublishing(bool enable)
 bool RvizVisualTools::triggerBatchPublish()
 {
   if (!batch_publishing_enabled_)
-    ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled");
+    ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled (unnecessary function call)");
 
   bool result = publishMarkers(markers_);
 
@@ -1399,6 +1399,22 @@ bool RvizVisualTools::publishAxisInternal(const Eigen::Affine3d &pose, double le
   return true;
 }
 
+bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, scales scale, const std::string &ns)
+{
+  // Batch publish, unless it is already enabled by user
+  enableInternalBatchPublishing(true);
+
+  // Create the cylinders
+  for (std::size_t i = 0; i < path.size(); ++i)
+  {
+    double radius = getScale(scale).x;
+    publishAxisInternal(path[i], radius * 10.0, radius, ns);
+  }
+
+  // Batch publish
+  return triggerInternalBatchPublishAndDisable();
+}
+
 bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, double length, double radius,
                                       const std::string &ns)
 {
@@ -1759,8 +1775,8 @@ bool RvizVisualTools::publishLines(const std::vector<geometry_msgs::Point> &aPoi
   return publishMarker(line_list_marker_);
 }
 
-bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, colors color, scales scale,
-                                  const std::string &ns)
+bool RvizVisualTools::publishLineStrip(const std::vector<geometry_msgs::Point> &path, colors color, scales scale,
+                                       const std::string &ns)
 {
   if (path.size() < 2)
   {
@@ -1791,6 +1807,46 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
 
   // Helper for publishing rviz markers
   return publishMarker(line_strip_marker_);
+}
+
+bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, colors color, scales scale,
+                                  const std::string &ns)
+{
+  return publishPath(path, color, getScale(scale).x, ns);
+}
+
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Affine3d &path, colors color, scales scale,
+                                  const std::string &ns)
+{
+  return publishPath(path, color, getScale(scale).x, ns);
+}
+
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, colors color, scales scale,
+                                  const std::string &ns)
+{
+  return publishPath(path, color, getScale(scale).x, ns);
+}
+
+bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, colors color, double radius,
+                                  const std::string &ns)
+{
+  if (path.size() < 2)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    return true;
+  }
+
+  // Batch publish, unless it is already enabled by user
+  enableInternalBatchPublishing(true);
+
+  // Create the cylinders
+  for (std::size_t i = 1; i < path.size(); ++i)
+  {
+    publishCylinder(convertPoint(path[i - 1]), convertPoint(path[i]), color, radius, ns);
+  }
+
+  // Batch publish
+  return triggerInternalBatchPublishAndDisable();
 }
 
 bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, colors color, double radius,
