@@ -81,11 +81,13 @@ public:
     visual_tools_->publishText(pose_copy, label, rvt::WHITE, rvt::XXLARGE, false);
   }
 
-  void testRows()
+  void testRows(double &x_location)
   {
     // Create pose
     Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
     Eigen::Affine3d pose2 = Eigen::Affine3d::Identity();
+
+    pose1.translation().x() = x_location;
 
     double space_between_rows = 0.2;
     double y = 0;
@@ -96,7 +98,7 @@ public:
     step = 0.02;
     for (double i = 0; i <= 1.0; i += 0.02)
     {
-      geometry_msgs::Vector3 scale = visual_tools_->getScale(XLARGE, 0.05);
+      geometry_msgs::Vector3 scale = visual_tools_->getScale(MEDIUM);
       std_msgs::ColorRGBA color = visual_tools_->getColorScale(i);
       visual_tools_->publishSphere(visual_tools_->convertPose(pose1), color, scale, "Sphere");
       if (!i)
@@ -347,7 +349,7 @@ public:
     pose1.translation().y() = y;
     step = 0.1;
 
-    std::vector<Eigen::Vector3d> path;
+    EigenSTL::vector_Vector3d path;
     std::vector<rviz_visual_tools::colors> colors;
     unsigned index (0);
     for (double i = 0; i < 1.0; i += step)
@@ -371,10 +373,13 @@ public:
     }
     visual_tools_->publishPath(path, colors);
     visual_tools_->triggerBatchPublish();
+
+    // Set x location for next visualization function
+    x_location += 1.25;
   }
 
   /** \brief Compare sizes of markers using all MEDIUM-scale markers */
-  void testMedium()
+  void testSize(double &x_location, scales scale)
   {
     // Create pose
     Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
@@ -389,12 +394,11 @@ public:
     EigenSTL::vector_Vector3d points1;
     EigenSTL::vector_Vector3d points2;
 
-    double step = 0.1; // space between each row
-    double x_location = 1.25;
+    double step = 0.25; // space between each row
 
     // Show test label
     pose1.translation().x() = x_location - 0.1;
-    visual_tools_->publishText(pose1, "Testing consistency of MEDIUM marker scale", WHITE, XLARGE, false);
+    visual_tools_->publishText(pose1, "Testing consistency of " + visual_tools_->scaleToString(scale) + " marker scale", WHITE, XLARGE, false);
 
     pose1.translation().x() = x_location;
 
@@ -404,7 +408,7 @@ public:
     // TODO publishYZPlane() - no scale version available
 
     // Sphere
-    visual_tools_->publishSphere(pose1);
+    visual_tools_->publishSphere(pose1, BLUE, scale);
     pose1.translation().y() += step;
 
     // Spheres
@@ -412,7 +416,7 @@ public:
     points1.push_back(pose1.translation());
     pose1.translation().x() += step;
     points1.push_back(pose1.translation());
-    visual_tools_->publishSpheres(points1);
+    visual_tools_->publishSpheres(points1, BLUE, scale);
     pose1.translation().x() = x_location; // reset
     pose1.translation().y() += step;
 
@@ -421,38 +425,30 @@ public:
     points1.push_back(pose1.translation());
     pose1.translation().x() += step;
     points1.push_back(pose1.translation());
-    visual_tools_->publishSpheres(points1, colors);
+    visual_tools_->publishSpheres(points1, colors, scale);
     pose1.translation().x() = x_location; // reset
     pose1.translation().y() += step;
 
     // YArrow
-    visual_tools_->publishYArrow(pose1);
+    visual_tools_->publishYArrow(pose1, BLUE, scale);
     pose1.translation().y() += step;
 
     // ZArrow
-    visual_tools_->publishZArrow(pose1);
+    visual_tools_->publishZArrow(pose1, GREEN, scale);
     pose1.translation().y() += step;
 
     // XArrow
-    visual_tools_->publishXArrow(pose1);
+    visual_tools_->publishXArrow(pose1, RED, scale);
     pose1.translation().y() += step;
 
     // Arrow (x arrow)
-    visual_tools_->publishArrow(pose1);
-    pose1.translation().y() += step;
-
-    // Cuboid
-    pose2 = pose1;
-    pose2.translation().x() += step / 2.0;
-    pose2.translation().y() += step / 2.0;
-    pose2.translation().z() += step / 2.0;
-    visual_tools_->publishCuboid(pose1.translation(), pose2.translation());
+    visual_tools_->publishArrow(pose1, RED, scale);
     pose1.translation().y() += step;
 
     // Line
     pose2 = pose1;
     pose2.translation().x() += step / 2.0;
-    visual_tools_->publishLine(pose1, pose2);
+    visual_tools_->publishLine(pose1, pose2, PURPLE, scale);
     pose1.translation().y() += step;
 
     // Lines
@@ -468,8 +464,8 @@ public:
     // points1.push_back(pose1.translation());
     // points2.push_back(pose2.translation());
     colors.clear(); // temp
-    colors.push_back(GREEN);
-    visual_tools_->publishLines(points1, points2, colors);
+    colors.push_back(ORANGE);
+    visual_tools_->publishLines(points1, points2, colors, scale);
     pose1.translation().x() = x_location; // reset
     pose1.translation().y() += step;
 
@@ -479,7 +475,11 @@ public:
     // TODO publishWireframeRectangle
 
     // Axis Labeled
-    visual_tools_->publishAxisLabeled(pose1, "Axis");
+    visual_tools_->publishAxisLabeled(pose1, "Axis", scale);
+    pose1.translation().y() += step;
+
+    // Axis
+    visual_tools_->publishAxis(pose1, scale);
     pose1.translation().y() += step;
 
     // TODO publishAxis
@@ -487,7 +487,7 @@ public:
     // Cylinder
     pose2 = pose1;
     pose2.translation().x() += step / 2.0;
-    visual_tools_->publishCylinder(pose1.translation(), pose2.translation());
+    visual_tools_->publishCylinder(pose1.translation(), pose2.translation(), BLUE, scale);
     pose1.translation().y() += step;
 
     // TODO publishMesh
@@ -495,23 +495,24 @@ public:
     // TODO publishGraph
 
     // Text
-    visual_tools_->publishText(pose1, "Text", WHITE, MEDIUM, false);
+    visual_tools_->publishText(pose1, "Text", WHITE, scale, false);
     pose1.translation().y() += step;
 
     // Display test
     visual_tools_->triggerBatchPublish();
+
+    // Set x location for next visualization function
+    x_location += 0.5;
   }
 
   /** \brief Compare every size range */
-  void testSizes()
+  void testSizes(double &x_location)
   {
     ROS_INFO_STREAM_NAMED(name_, "Testing sizes of marker scale");
 
     // Create pose
     Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
     Eigen::Affine3d pose2;
-
-    double x_location = 1.5;
 
     // Show test label
     pose1.translation().x() = x_location - 0.1;
@@ -527,18 +528,21 @@ public:
         visual_tools_->publishSphere(pose1, GREEN, scale);
       else
         visual_tools_->publishSphere(pose1, GREY, scale);
-      visual_tools_->publishText(pose2, "Size " + std::to_string(scale), WHITE, scale, false);
+      visual_tools_->publishText(pose2, "Size " + visual_tools_->scaleToString(scale), WHITE, scale, false);
 
       scale = static_cast<scales>(static_cast<int>(scale) + 1);
-      pose1.translation().y() += visual_tools_->getScale(scale).x * 2.0;
+      pose1.translation().y() += visual_tools_->getScale(scale).x + 0.1;
 
       // Text location
       pose2.translation().y() = pose1.translation().y();
-      pose2.translation().x() = x_location + visual_tools_->getScale(scale).x * 2.0;
+      pose2.translation().x() = x_location + visual_tools_->getScale(scale).x * 1.3;
     }
 
     // Display test
     visual_tools_->triggerBatchPublish();
+
+    // Set x location for next visualization function
+    x_location += 0.5;
   }
 
 };  // end class
@@ -555,9 +559,12 @@ int main(int argc, char** argv)
   spinner.start();
 
   rviz_visual_tools::RvizVisualToolsDemo demo;
-  demo.testRows();
-  demo.testMedium();
-  demo.testSizes();
+
+  double x_location = 0;
+  demo.testRows(x_location);
+  demo.testSize(x_location, rviz_visual_tools::MEDIUM);
+  demo.testSize(x_location, rviz_visual_tools::LARGE);
+  demo.testSizes(x_location);
 
   ROS_INFO_STREAM("Shutting down.");
 

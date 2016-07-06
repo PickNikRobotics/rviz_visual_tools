@@ -19,7 +19,7 @@ Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, Universi
  * [![Build Status](http://build.ros.org/buildStatus/icon?job=Jsrc_uT__rviz_visual_tools__ubuntu_trusty__source)](http://build.ros.org/view/Jsrc_uT/job/Jsrc_uT__rviz_visual_tools__ubuntu_trusty__source/) ROS Buildfarm - Trusty Devel Source Build
  * [![Build Status](http://build.ros.org/buildStatus/icon?job=Jbin_uT64__rviz_visual_tools__ubuntu_trusty_amd64__binary)](http://build.ros.org/view/Jbin_uT64/job/Jbin_uT64__rviz_visual_tools__ubuntu_trusty_amd64__binary/) ROS Buildfarm - AMD64 Trusty Debian Build
 
-![](resources/screenshot1.png)
+![](resources/screenshot.png)
 
 ## Install
 

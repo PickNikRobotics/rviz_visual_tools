@@ -495,57 +495,79 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(colors color)
   return result;
 }
 
-rviz_visual_tools::colors RvizVisualTools::intToRvizColor(std::size_t color)
+colors RvizVisualTools::intToRvizColor(std::size_t color)
 {
   // clang-format off
   switch (color)
   {
-    case 0: return rviz_visual_tools::BLACK; break;
-    case 1: return rviz_visual_tools::BROWN; break;
-    case 2: return rviz_visual_tools::BLUE; break;
-    case 3: return rviz_visual_tools::CYAN; break;
-    case 4: return rviz_visual_tools::GREY; break;
-    case 5: return rviz_visual_tools::DARK_GREY; break;
-    case 6: return rviz_visual_tools::GREEN; break;
-    case 7: return rviz_visual_tools::LIME_GREEN; break;
-    case 8: return rviz_visual_tools::MAGENTA; break;
-    case 9: return rviz_visual_tools::ORANGE; break;
-    case 10: return rviz_visual_tools::PURPLE; break;
-    case 11: return rviz_visual_tools::RED; break;
-    case 12: return rviz_visual_tools::PINK; break;
-    case 13: return rviz_visual_tools::WHITE; break;
-    case 14: return rviz_visual_tools::YELLOW; break;
-    case 15: return rviz_visual_tools::TRANSLUCENT; break;
-    case 16: return rviz_visual_tools::TRANSLUCENT_LIGHT; break;
-    case 17: return rviz_visual_tools::TRANSLUCENT_DARK; break;
-    case 18: return rviz_visual_tools::RAND; break;
-    case 19: return rviz_visual_tools::CLEAR; break;
-    case 20: return rviz_visual_tools::DEFAULT; break;
+    case 0: return BLACK; break;
+    case 1: return BROWN; break;
+    case 2: return BLUE; break;
+    case 3: return CYAN; break;
+    case 4: return GREY; break;
+    case 5: return DARK_GREY; break;
+    case 6: return GREEN; break;
+    case 7: return LIME_GREEN; break;
+    case 8: return MAGENTA; break;
+    case 9: return ORANGE; break;
+    case 10: return PURPLE; break;
+    case 11: return RED; break;
+    case 12: return PINK; break;
+    case 13: return WHITE; break;
+    case 14: return YELLOW; break;
+    case 15: return TRANSLUCENT; break;
+    case 16: return TRANSLUCENT_LIGHT; break;
+    case 17: return TRANSLUCENT_DARK; break;
+    case 18: return RAND; break;
+    case 19: return CLEAR; break;
+    case 20: return DEFAULT; break;
   }
   // clang-format on
-  return rviz_visual_tools::DEFAULT;
+  return DEFAULT;
 }
 
-rviz_visual_tools::scales RvizVisualTools::intToRvizScale(std::size_t scale)
+scales RvizVisualTools::intToRvizScale(std::size_t scale)
 {
   // clang-format off
   switch (scale)
   {
-    case 1: return rviz_visual_tools::XXXXSMALL; break;
-    case 2: return rviz_visual_tools::XXXSMALL; break;
-    case 3: return rviz_visual_tools::XXSMALL; break;
-    case 4: return rviz_visual_tools::XSMALL; break;
-    case 5: return rviz_visual_tools::SMALL; break;
-    case 6: return rviz_visual_tools::MEDIUM; break;
-    case 7: return rviz_visual_tools::LARGE; break;
-    case 8: return rviz_visual_tools::XLARGE; break;
-    case 9: return rviz_visual_tools::XXLARGE; break;
-    case 10: return rviz_visual_tools::XXXLARGE; break;
-    case 11: return rviz_visual_tools::XXXXLARGE; break;
+    case 1: return XXXXSMALL; break;
+    case 2: return XXXSMALL; break;
+    case 3: return XXSMALL; break;
+    case 4: return XSMALL; break;
+    case 5: return SMALL; break;
+    case 6: return MEDIUM; break;
+    case 7: return LARGE; break;
+    case 8: return XLARGE; break;
+    case 9: return XXLARGE; break;
+    case 10: return XXXLARGE; break;
+    case 11: return XXXXLARGE; break;
     default: throw std::runtime_error("Unknown size");
   }
   // clang-format on
-  return rviz_visual_tools::MEDIUM;  // dumy value
+  return MEDIUM;  // dumy value
+}
+
+std::string RvizVisualTools::scaleToString(scales scale)
+{
+  // clang-format off
+  switch (scale)
+  {
+    case XXXXSMALL: return "XXXXSMALL"; break;
+    case XXXSMALL: return "XXXSMALL"; break;
+    case XXSMALL: return "XXSMALL"; break;
+    case XSMALL: return "XSMALL"; break;
+    case SMALL: return "SMALL"; break;
+    case MEDIUM: return "MEDIUM"; break;
+    case LARGE: return "LARGE"; break;
+    case XLARGE: return "XLARGE"; break;
+    case XXLARGE: return "XXLARGE"; break;
+    case XXXLARGE: return "XXXLARGE"; break;
+    case XXXXLARGE: return "XXXXLARGE"; break;
+    default: throw std::runtime_error("Unknown size");
+  }
+  // clang-format on
+  return "MEDIUM";  // dumy value
 }
 
 std_msgs::ColorRGBA RvizVisualTools::createRandColor()
@@ -818,6 +840,9 @@ void RvizVisualTools::enableBatchPublishing(bool enable)
 
 bool RvizVisualTools::triggerBatchPublish()
 {
+  if (!batch_publishing_enabled_)
+    ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled");
+
   bool result = publishMarkers(markers_);
 
   markers_.markers.clear();  // remove all cached markers
@@ -1264,7 +1289,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose &pose, colors color
   arrow_marker_.scale = getScale(scale);
 
   // override previous x scale specified
-  if (length == 0) // auto set the scale
+  if (length == 0)  // auto set the scale
     arrow_marker_.scale.x *= 10.0;
   else
     arrow_marker_.scale.x = length;
@@ -1289,7 +1314,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, color
   arrow_marker_.scale = getScale(scale);
 
   // override previous x scale specified
-  if (length == 0) // auto set the scale
+  if (length == 0)  // auto set the scale
     arrow_marker_.scale.x *= 10.0;
   else
     arrow_marker_.scale.x = length;
@@ -1310,12 +1335,27 @@ bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std:
 bool RvizVisualTools::publishAxisLabeled(const geometry_msgs::Pose &pose, const std::string &label, scales scale,
                                          colors color)
 {
-  publishAxis(pose, 0.1, 0.01, label);
+  publishAxis(pose, scale, label);
 
+  // For avoiding overriden Axis and Text
   geometry_msgs::Pose pose_shifted = pose;
-  pose_shifted.position.y -= 0.05;  // For avoiding overriden Axis and Text
+  pose_shifted.position.x -= 0.05;
+  pose_shifted.position.y -= 0.05;
+  pose_shifted.position.z -= 0.05;
   publishText(pose_shifted, label, color, static_cast<scales>(static_cast<int>(scale) + 1), false);
   return true;
+}
+
+bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, scales scale, const std::string &ns)
+{
+  double radius = getScale(scale).x;
+  return publishAxis(pose, radius * 10.0, radius, ns);
+}
+
+bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, scales scale, const std::string &ns)
+{
+  double radius = getScale(scale).x;
+  return publishAxis(pose, radius * 10.0, radius, ns);
 }
 
 bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length, double radius, const std::string &ns)
@@ -1328,22 +1368,48 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
   // Batch publish, unless it is already enabled by user
   enableInternalBatchPublishing(true);
 
+  // Use an internal function that will not actually publish anything, so that other makers can combine with an axis
+  // without publishing
+  publishAxisInternal(pose, length, radius, ns);
+
+  // Batch publish
+  return triggerInternalBatchPublishAndDisable();
+}
+
+bool RvizVisualTools::publishAxisInternal(const Eigen::Affine3d &pose, double length, double radius,
+                                          const std::string &ns)
+{
   // Publish x axis
   Eigen::Affine3d x_pose =
       Eigen::Translation3d(length / 2.0, 0, 0) * Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
   x_pose = pose * x_pose;
-  publishCylinder(x_pose, rviz_visual_tools::RED, length, radius, ns);
+  publishCylinder(x_pose, RED, length, radius, ns);
 
   // Publish y axis
   Eigen::Affine3d y_pose =
       Eigen::Translation3d(0, length / 2.0, 0) * Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
   y_pose = pose * y_pose;
-  publishCylinder(y_pose, rviz_visual_tools::GREEN, length, radius, ns);
+  publishCylinder(y_pose, GREEN, length, radius, ns);
 
   // Publish z axis
   Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) * Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
   z_pose = pose * z_pose;
-  publishCylinder(z_pose, rviz_visual_tools::BLUE, length, radius, ns);
+  publishCylinder(z_pose, BLUE, length, radius, ns);
+
+  return true;
+}
+
+bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, double length, double radius,
+                                      const std::string &ns)
+{
+  // Batch publish, unless it is already enabled by user
+  enableInternalBatchPublishing(true);
+
+  // Create the cylinders
+  for (std::size_t i = 0; i < path.size(); ++i)
+  {
+    publishAxisInternal(path[i], length, radius, ns);
+  }
 
   // Batch publish
   return triggerInternalBatchPublishAndDisable();
@@ -1668,6 +1734,9 @@ bool RvizVisualTools::publishLines(const std::vector<geometry_msgs::Point> &aPoi
   line_list_marker_.header.stamp = ros::Time();
   line_list_marker_.ns = "Line Array";
 
+  // Provide a new id every call to this function
+  line_list_marker_.id++;
+
   line_list_marker_.scale = scale;
   // line_list_marker_.color = getColor(BLUE); // This var is not used
 
@@ -1746,7 +1815,29 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, colors 
   return triggerInternalBatchPublishAndDisable();
 }
 
-bool RvizVisualTools::publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors,
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Affine3d &path, colors color, double radius,
+                                  const std::string &ns)
+{
+  if (path.size() < 2)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    return true;
+  }
+
+  // Batch publish, unless it is already enabled by user
+  enableInternalBatchPublishing(true);
+
+  // Create the cylinders
+  for (std::size_t i = 1; i < path.size(); ++i)
+  {
+    publishCylinder(path[i - 1].translation(), path[i].translation(), color, radius, ns);
+  }
+
+  // Batch publish
+  return triggerInternalBatchPublishAndDisable();
+}
+
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const std::vector<colors> &colors,
                                   double radius, const std::string &ns)
 {
   if (path.size() < 2)

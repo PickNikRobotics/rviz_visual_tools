@@ -107,7 +107,7 @@ enum scales
   XXSMALL = 3,
   XSMALL = 4,
   SMALL = 5,
-  MEDIUM = 6,   // same as REGULAR
+  MEDIUM = 6,  // same as REGULAR
   LARGE = 7,
   XLARGE = 8,
   XXLARGE = 9,
@@ -267,6 +267,9 @@ public:
 
   /** \brief Used by interfaces that do not directly depend on Rviz Visual Tools, such as OMPL */
   rviz_visual_tools::scales intToRvizScale(std::size_t scale);
+
+  /** \brief Convert an enum to its string name equivalent */
+  std::string scaleToString(scales scale);
 
   /**
    * \brief Create a random color that is not too light
@@ -610,8 +613,9 @@ public:
    */
   bool publishPath(const std::vector<geometry_msgs::Point> &path, colors color = RED, scales scale = MEDIUM,
                    const std::string &ns = "Path");
-
   bool publishPath(const EigenSTL::vector_Vector3d &path, colors color = RED, double radius = 0.01,
+                   const std::string &ns = "Path");
+  bool publishPath(const EigenSTL::vector_Affine3d &path, colors color = RED, double radius = 0.01,
                    const std::string &ns = "Path");
 
   /**
@@ -622,8 +626,9 @@ public:
    * \param ns - namespace of marker
    * \return true on success
    * \note path and colors vectors must be the same size
-   */ bool publishPath(const std::vector<Eigen::Vector3d> &path, const std::vector<colors> &colors,
-                       double radius = 0.01, const std::string &ns = "Path");
+   */
+  bool publishPath(const EigenSTL::vector_Vector3d &path, const std::vector<colors> &colors, double radius = 0.01,
+                   const std::string &ns = "Path");
 
   /**
    * \brief Display a marker of a polygon
@@ -692,16 +697,50 @@ public:
                           colors color = WHITE);
 
   /**
-   * \brief Display a marker of a axis
+   * \brief Display a red/green/blue coordinate axis
+   * \param pose - the location to publish the marker with respect to the base frame
+   * \param scale - size of axis
+   * \param ns - namespace
+   * \return true on success
+   */
+  bool publishAxis(const geometry_msgs::Pose &pose, scales scale = MEDIUM, const std::string &ns = "Axis");
+  bool publishAxis(const Eigen::Affine3d &pose, scales scale = MEDIUM, const std::string &ns = "Axis");
+
+  /**
+   * \brief Display a red/green/blue coordinate axis
    * \param pose - the location to publish the marker with respect to the base frame
    * \param length - geometry of cylinder
    * \param radius - geometry of cylinder
+   * \param ns - namespace
    * \return true on success
    */
   bool publishAxis(const geometry_msgs::Pose &pose, double length = 0.1, double radius = 0.01,
                    const std::string &ns = "Axis");
-  bool publishAxis(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01,
-                   const std::string &ns = "Axis");
+  bool publishAxis(const Eigen::Affine3d &pose, double length, double radius = 0.01, const std::string &ns = "Axis");
+
+private:
+  /**
+   * \brief Display a red/green/blue coordinate axis - the 'internal' version does not do a batch publish
+   * \param pose - the location to publish the marker with respect to the base frame
+   * \param length - geometry of cylinder
+   * \param radius - geometry of cylinder
+   * \param ns - namespace
+   * \return true on success
+   */
+  bool publishAxisInternal(const Eigen::Affine3d &pose, double length = 0.1, double radius = 0.01,
+                           const std::string &ns = "Axis");
+
+public:
+  /**
+   * \brief Display a series of red/green/blue coordinate axis along a path
+   * \param path - the location to publish each marker with respect to the base frame
+   * \param length - geometry of cylinder
+   * \param radius - geometry of cylinder
+   * \param ns - namespace
+   * \return true on success
+   */
+  bool publishAxisPath(const EigenSTL::vector_Affine3d &path, double length = 0.1, double radius = 0.01,
+                       const std::string &ns = "Axis Path");
 
   /**
    * \brief Display a marker of a cylinder
@@ -713,8 +752,8 @@ public:
    */
   bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, colors color = BLUE,
                        scales scale = MEDIUM, const std::string &ns = "Cylinder");
-  bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, colors color,
-                       double radius = 0.01, const std::string &ns = "Cylinder");
+  bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, colors color, double radius = 0.01,
+                       const std::string &ns = "Cylinder");
   bool publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, const std_msgs::ColorRGBA &color,
                        double radius = 0.01, const std::string &ns = "Cylinder");
 
