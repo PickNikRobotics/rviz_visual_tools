@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.1.0 (2016-07-06)
+------------------
 * Switched publishPath() to use cylinders
 * Added new publishLineStrip() function
 * Added new publishPath() functions
