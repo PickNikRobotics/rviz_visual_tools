@@ -2,6 +2,26 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Switched publishPath() to use cylinders
+* Added new publishLineStrip() function
+* Added new publishPath() functions
+* Added new publishAxis() functions
+* Update screenshot
+* Broke publishPath() API for recent addition - incorrect Eigen vector used
+* New publishPath() function for Affine3d
+* New publishAxis() functions that use scale
+* New publishAxisInternal() function for more efficient publishing
+* New publishAxisPath() function for showing a series of coordinate axis
+* Added warning for batch publishing when not enabled
+* Bug fix in publishLines() for id incrementing
+* New scaleToString() function
+* Bug fix for scaling in coordinate axis
+* Improved demo to have multiple scales visualized
+* Revert "Remove graph msgs"
+* Contributors: Dave Coleman
+
 3.0.0 (2016-06-29)
 ------------------
 * Improve Travis script
