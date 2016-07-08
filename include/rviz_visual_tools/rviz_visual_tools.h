@@ -113,7 +113,14 @@ enum scales
   XXLARGE = 9,
   XXXLARGE = 10,
   XXXXLARGE = 11,
-  REGULAR = 12  // deprecated as of ROS-KINETIC
+  REGULAR = 12  // deprecated as of ROS-KINETIC (remove in ROS-L)
+};
+
+enum EulerConvention
+{
+  XYZ = 0,
+  ZYX,
+  ZXZ
 };
 
 /**
@@ -612,7 +619,7 @@ public:
    * \return true on success
    */
   bool publishLineStrip(const std::vector<geometry_msgs::Point> &path, colors color = RED, scales scale = MEDIUM,
-                   const std::string &ns = "Path");
+                        const std::string &ns = "Path");
 
   /**
    * \brief Display a marker of a series of connected lines
@@ -917,8 +924,24 @@ public:
    *        R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
    * \return 4x4 matrix in form of affine3d
    */
+  // TODO: RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw);
+  // TODO: RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);
+
+  /**
+  @brief Converts scalar translations and rotations to an Eigen Frame.  This is achieved by chaining a
+  translation with individual euler rotations in ZYX order (this is equivalent to fixed rotatins XYZ)
+  http://en.wikipedia.org/wiki/Euler_angles#Conversion_between_intrinsic_and_extrinsic_rotations
+  Euler conversion code sourced from Descartes, Copyright (c) 2014, Southwest Research Institute
+
+  @param tx, ty, tz - translations in x, y, z respectively
+  @param rx, ry, rz - rotations about x, y, z, respectively
+  */
+  static Eigen::Affine3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
+                                           EulerConvention convention);
+
+  // TODO: add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
 
   /**
    * \brief Convert an affine3d to xyz rpy components

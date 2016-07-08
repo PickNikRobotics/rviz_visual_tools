@@ -103,7 +103,10 @@ public:
 RVTTest base;
 
 /* Run tests ------------------------------------------------------------------------------ */
-TEST(RVTTest, initialize) { ASSERT_TRUE(base.initialize()); }
+TEST(RVTTest, initialize)
+{
+  ASSERT_TRUE(base.initialize());
+}
 
 // Test rpy conversion
 TEST(RVTTest, test_rpy_conversions)
@@ -125,6 +128,7 @@ TEST(RVTTest, test_rpy_conversions)
   Eigen::Affine3d expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy);
   EXPECT_TRUE(base.testAffine3d("Identity convert back", expected_affine, expected_affine2));
 
+  // -------------------------------------------------------------------
   // Translation conversions to RPY
   expected_affine.translation().x() = 1;
   expected_affine.translation().y() = 2;
@@ -139,14 +143,37 @@ TEST(RVTTest, test_rpy_conversions)
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy);
   EXPECT_TRUE(base.testAffine3d("123 convert back", expected_affine, expected_affine2));
 
-  // Rotation conversions to RPY
-  expected_vector[3] = 1;
-  expected_vector[4] = 1.5;
-  expected_vector[5] = 2;
+  // Translation convertion back to Eigen via long function
+  expected_affine2 =
+      base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5]);
+  EXPECT_TRUE(base.testAffine3d("123 convert back long", expected_affine, expected_affine2));
 
-  expected_affine2 = base.visual_tools_->convertFromXYZRPY(expected_vector);
-  base.visual_tools_->convertToXYZRPY(expected_affine2, xyzrpy);
-  EXPECT_TRUE(base.testVector("Rotation", expected_vector, xyzrpy));
+  // Translation convertion back to Eigen via NEW long function
+  expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
+                                                           xyzrpy[5], rviz_visual_tools::XYZ);
+  EXPECT_TRUE(base.testAffine3d("123 convert back new long", expected_affine, expected_affine2));
+
+  // -------------------------------------------------------------------
+  // Rotation conversions to RPY
+  expected_affine = expected_affine
+    * Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX())
+    * Eigen::AngleAxisd(0.5*M_PI, Eigen::Vector3d::UnitZ())
+    * Eigen::AngleAxisd(-0.5*M_PI, Eigen::Vector3d::UnitX());
+  base.visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
+
+  // Rotation convertion back to Eigen
+  expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy);
+  EXPECT_TRUE(base.testAffine3d("123 convert back", expected_affine, expected_affine2));
+
+  // Rotation convertion back to Eigen via long function
+  expected_affine2 =
+      base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5]);
+  EXPECT_TRUE(base.testAffine3d("123 convert back long", expected_affine, expected_affine2));
+
+  // Rotation convertion back to Eigen via NEW long function
+  expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
+                                                           xyzrpy[5], rviz_visual_tools::XYZ);
+  EXPECT_TRUE(base.testAffine3d("123 convert back new long", expected_affine, expected_affine2));
 }
 
 /* Main  ------------------------------------------------------------------------------------- */

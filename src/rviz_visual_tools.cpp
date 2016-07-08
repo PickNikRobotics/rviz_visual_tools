@@ -2427,6 +2427,36 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double x, double y, double z,
   return Eigen::Translation3d(x, y, z) * quaternion;
 }
 
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
+                                                   EulerConvention convention)
+{
+  Eigen::Affine3d result;
+
+  switch (convention)
+  {
+    case XYZ:
+      result = Eigen::Translation3d(tx, ty, tz) * Eigen::AngleAxisd(rx, Eigen::Vector3d::UnitX()) *
+               Eigen::AngleAxisd(ry, Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(rz, Eigen::Vector3d::UnitZ());
+      break;
+
+    case ZYX:
+      result = Eigen::Translation3d(tx, ty, tz) * Eigen::AngleAxisd(rz, Eigen::Vector3d::UnitZ()) *
+               Eigen::AngleAxisd(ry, Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(rx, Eigen::Vector3d::UnitX());
+      break;
+
+    case ZXZ:
+      result = Eigen::Translation3d(tx, ty, tz) * Eigen::AngleAxisd(rz, Eigen::Vector3d::UnitZ()) *
+               Eigen::AngleAxisd(rx, Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(rz, Eigen::Vector3d::UnitZ());
+      break;
+
+    default:
+      ROS_ERROR_STREAM("Invalid euler convention entry " << convention);
+      break;
+  }
+
+  return result;
+}
+
 void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d &pose, std::vector<double> &xyzrpy)
 {
   xyzrpy.resize(6);
@@ -2604,9 +2634,10 @@ void RvizVisualTools::printTransform(const Eigen::Affine3d &transform)
 
 void RvizVisualTools::printTransformRPY(const Eigen::Affine3d &transform)
 {
-  double x, y, z, r, p, yaw;
-  convertToXYZRPY(transform, x, y, z, r, p, yaw);
-  std::cout << "transform: [" << x << ", " << y << ", " << z << ", " << r << ", " << p << ", " << yaw << "]\n";
+  // R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
+  Eigen::Vector3d vec = transform.rotation().eulerAngles(0, 1, 2);
+  std::cout << "transform: [" << transform.translation().x() << ", " << transform.translation().y() << ", " << transform.translation().z()
+            << ", " << vec[0] << ", " << vec[1] << ", " << vec[2] << "]\n";
 }
 
 }  // namespace rviz_visual_tools
