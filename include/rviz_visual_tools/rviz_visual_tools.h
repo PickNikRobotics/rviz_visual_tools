@@ -551,6 +551,18 @@ public:
                     double length = 0.0, std::size_t id = 0);
 
   /**
+     * \brief Display an arrow from an origin point toward an orientation
+     * \param origin - the origin point to publish the marker with respect to the base frame
+     * \param end_point - the end point of the arrow to publish
+     * \param color - an enum pre-defined name of a color
+     * \param scale - an enum pre-defined name of a size
+     * \param length - how long the arrow tail should be. if zero, will auto set with scale
+     * \return true on success
+     */
+  bool publishArrow(const Eigen::Vector3d origin, const Eigen::Vector3d end_point, colors color = BLUE,
+                    scales scale = MEDIUM, std::size_t id = 0);
+
+  /**
    * \brief Display a rectangular cuboid
    * \param point1 - x,y,z top corner location of box
    * \param point2 - x,y,z bottom opposite corner location of box
