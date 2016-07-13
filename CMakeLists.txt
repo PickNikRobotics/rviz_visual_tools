@@ -22,10 +22,12 @@ catkin_package(
   LIBRARIES
     ${PROJECT_NAME}
   CATKIN_DEPENDS
+    eigen_conversions
     geometry_msgs
     visualization_msgs
     graph_msgs
     std_msgs
+    tf_conversions
     trajectory_msgs
   INCLUDE_DIRS include
 )
