@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.2.0 (2016-07-14)
+------------------
 * Catkin depend on eigen and tf conversions
 * New warning
 * Added EulerConvention enum
