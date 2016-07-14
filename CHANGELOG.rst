@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2016-07-14)
+------------------
 * Latched publisher
 * publishAxisLabeled arguments
 * publishAxisLabeled arguments order
