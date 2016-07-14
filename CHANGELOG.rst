@@ -2,6 +2,42 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Latched publisher
+* publishAxisLabeled arguments
+* publishAxisLabeled arguments order
+* Remove TODO msg
+* Adds Publish Labeled Axis
+* Numbered colors so that they can be matched in OMPL
+* New publishLine() function variants
+* Psychedelic mode
+* Prevent publishing empty marker arrays
+* Improved warning and error correction
+* New publishSphere function
+* Hide debug message
+* Ability to set marker topic after constructor
+* Ability to force waiting for topic to connect
+* Added new posesEqual() function
+* Updated publishArrow() function
+* New publishPath function
+* New publishLine function
+* New publishCylinder that accepts two points
+* New publishText function
+* Removed redundant namespace names
+* New convertPointToPose function
+* README
+* Created much better demo, added new screenshot
+* Reduced output
+* Renamed line_marker\_ to line_strip_marker\_
+* Faster method for waiting for subscriber thread
+* Untested publishPath() modification
+* Fix to correctly use optional alpha color property
+* Change getColorScale to work from 0->1 instead of 0->100
+* Additional parameters to publishCuboid()
+* New color scale function for generated interpolated colors from RED->GREEN (1->100)
+* Contributors: Dave Coleman, Enrique Fernandez, Naveed Usmani
+
 2.1.0 (2016-02-09)
 ------------------
 * Allow publishArrow functions to specify ID
