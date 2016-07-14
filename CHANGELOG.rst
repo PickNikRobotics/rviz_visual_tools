@@ -2,7 +2,7 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.2.0 (2016-07-14)
+2.2.1 (2016-07-14)
 ------------------
 * Latched publisher
 * publishAxisLabeled arguments
