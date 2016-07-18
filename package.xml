@@ -2,7 +2,7 @@
 <package>
   <name>rviz_visual_tools</name>
   <version>3.2.0</version>
-  <description>Helper functions for displaying and debugging data in Rviz via published markers</description>
+  <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
 
   <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
   <maintainer email="mcevoy.andy@gmail.com">Andy McEvoy</maintainer>
