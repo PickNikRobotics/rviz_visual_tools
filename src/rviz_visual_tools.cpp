@@ -222,7 +222,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // ID
   sphere_marker_.ns = "Sphere";
   // Set the marker type.
-  sphere_marker_.type = visualization_msgs::Marker::SPHERE_LIST;
+  sphere_marker_.type = visualization_msgs::Marker::SPHERE;
   // Set the marker action.  Options are ADD and DELETE
   sphere_marker_.action = visualization_msgs::Marker::ADD;
   // Marker group position and orientation
@@ -1011,13 +1011,10 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose &pose, const std_m
   else
     sphere_marker_.id = id;
 
+  sphere_marker_.pose = pose;
   sphere_marker_.color = color;
   sphere_marker_.scale = scale;
   sphere_marker_.ns = ns;
-
-  // Update the single point with new pose
-  sphere_marker_.points[0] = pose.position;
-  sphere_marker_.colors[0] = color;
 
   // Helper for publishing rviz markers
   return publishMarker(sphere_marker_);
@@ -1034,13 +1031,10 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::PoseStamped &pose, cons
   else
     sphere_marker_.id = id;
 
+  sphere_marker_.pose = pose.pose;
   sphere_marker_.color = getColor(color);
   sphere_marker_.scale = scale;
   sphere_marker_.ns = ns;
-
-  // Update the single point with new pose
-  sphere_marker_.points[0] = pose.pose.position;
-  sphere_marker_.colors[0] = getColor(color);
 
   // Helper for publishing rviz markers
   publishMarker(sphere_marker_);
