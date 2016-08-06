@@ -2,6 +2,11 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Clarified docs
+* Contributors: Dave Coleman
+
 2.3.0 (2016-08-06)
 ------------------
 * Added Docker for Indigo
