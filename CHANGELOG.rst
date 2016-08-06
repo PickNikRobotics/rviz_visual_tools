@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.0 (2016-08-06)
+------------------
 * Added Docker for Indigo
 * Added delay to demo to allow rviz to load in Docker
 * Change the sphere marker type from SPHERE_LIST to SPHERE. (`#47 <https://github.com/davetcoleman/rviz_visual_tools/issues/47>`_)
