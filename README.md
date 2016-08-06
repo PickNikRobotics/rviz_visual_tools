@@ -225,13 +225,13 @@ Use the following command with [catkin-tools](https://catkin-tools.readthedocs.o
 
 To build the docker image for this repo:
 
-    docker build -t davetcoleman/rviz_visual_tools:indigo .
+    docker build -t davetcoleman/rviz_visual_tools:jade .
 
 To run with GUI:
 
     # This is not the safest way however, as you then compromise the access control to X server on your host
     xhost +local:root # for the lazy and reckless
-    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" davetcoleman/rviz_visual_tools:indigo
+    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" davetcoleman/rviz_visual_tools:jade
     export containerId=$(docker ps -l -q)
     # Close security hole:
     xhost -local:root
