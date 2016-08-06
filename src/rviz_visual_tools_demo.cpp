@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2015, University of Colorado, Boulder
+ *  Copyright (c) 2016, University of Colorado, Boulder
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,9 @@ public:
   RvizVisualToolsDemo() : name_("rviz_demo")
   {
     visual_tools_.reset(new rvt::RvizVisualTools("base", "/rviz_visual_tools"));
+
+    ROS_INFO("Sleeping 5 seconds before running demo");
+    ros::Duration(5.0).sleep();
 
     // Clear messages
     visual_tools_->deleteAllMarkers();
