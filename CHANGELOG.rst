@@ -2,6 +2,14 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added Docker for Indigo
+* Added delay to demo to allow rviz to load in Docker
+* Change the sphere marker type from SPHERE_LIST to SPHERE. (`#47 <https://github.com/davetcoleman/rviz_visual_tools/issues/47>`_)
+  This makes irregularly scaled spheres (i.e. ellipsoids) to be rendered correctly.
+* Contributors: Dave Coleman, Miguel Prada
+
 2.2.1 (2016-07-14)
 ------------------
 * Latched publisher
