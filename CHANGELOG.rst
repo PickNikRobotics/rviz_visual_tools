@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.1 (2016-08-06)
+------------------
 * Clarified docs
 * Contributors: Dave Coleman
 
