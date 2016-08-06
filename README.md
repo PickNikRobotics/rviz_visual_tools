@@ -40,6 +40,10 @@ Then start demo:
 
     roslaunch rviz_visual_tools demo.launch
 
+Or used combined roslaunch file:
+
+    roslaunch rviz_visual_tools demo_combined.launch
+
 ## Code API
 
 See [VisualTools Class Reference](http://docs.ros.org/indigo/api/rviz_visual_tools/html/classrviz__visual__tools_1_1VisualTools.html)
