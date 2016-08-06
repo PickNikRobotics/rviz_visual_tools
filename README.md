@@ -215,6 +215,21 @@ Use the following command with [catkin-tools](https://catkin-tools.readthedocs.o
 
     catkin run_tests --no-deps --this -i
 
+## Docker Image
+
+To build the docker image for this repo:
+
+    docker build -t davetcoleman/rviz_visual_tools:indigo .
+
+To run with GUI:
+
+    # This is not the safest way however, as you then compromise the access control to X server on your host
+    xhost +local:root # for the lazy and reckless
+    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" davetcoleman/rviz_visual_tools:indigo
+    export containerId=$(docker ps -l -q)
+    # Close security hole:
+    xhost -local:root
+
 ## Contribute
 
 Please send PRs for new helper functions, fixes, etc!
