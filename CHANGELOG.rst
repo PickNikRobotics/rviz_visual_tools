@@ -2,6 +2,15 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.2.0 (2016-07-14)
+------------------
+* Catkin depend on eigen and tf conversions
+* New warning
+* Added EulerConvention enum
+* Added new convertFromXYZRPY() function
+* Added new tests
+* Contributors: Dave Coleman, Enrique Fernandez
+
 3.1.0 (2016-07-06)
 ------------------
 * Switched publishPath() to use cylinders

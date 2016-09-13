@@ -221,6 +221,21 @@ Use the following command with [catkin-tools](https://catkin-tools.readthedocs.o
 
     catkin run_tests --no-deps --this -i
 
+## Docker Image
+
+[Dockerhub](https://hub.docker.com/r/davetcoleman/rviz_visual_tools/builds/) automatically creates a Docker for this repo. To run with GUI:
+
+    # This is not the safest way however, as you then compromise the access control to X server on your host
+    xhost +local:root # for the lazy and reckless
+    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" davetcoleman/rviz_visual_tools:kinetic
+    export containerId=$(docker ps -l -q)
+    # Close security hole:
+    xhost -local:root
+
+(Optional) To build the docker image locally for this repo, run in base of package:
+
+    docker build -t davetcoleman/rviz_visual_tools:kinetic .
+
 ## Contribute
 
 Please send PRs for new helper functions, fixes, etc!

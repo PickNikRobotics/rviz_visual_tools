@@ -69,6 +69,9 @@ public:
   {
     visual_tools_.reset(new rvt::RvizVisualTools("base", "/rviz_visual_tools"));
 
+    ROS_INFO("Sleeping 5 seconds before running demo");
+    ros::Duration(5.0).sleep();
+
     // Clear messages
     visual_tools_->deleteAllMarkers();
     visual_tools_->enableBatchPublishing();
