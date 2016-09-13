@@ -1468,7 +1468,7 @@ bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen
   pose = pose * rotation;
 
   // Turn into msg
-  return publishCylinder(convertPose(pose), color, height, radius);
+  return publishCylinder(std::move(convertPose(std::move(pose))), color, height, radius);
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Affine3d &pose, colors color, double height, double radius,
