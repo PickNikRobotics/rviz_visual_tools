@@ -1017,24 +1017,12 @@ public:
   }
 
 protected:
-  /**
-   * \brief Allows certain marker functions to batch publish without breaking external functinality
-   */
-  void enableInternalBatchPublishing(bool enable);
-
-  /**
-   * \brief Trigger the publish function to send out all collected markers. Also then turns off the
-   * batch mode. This is safer
-   *        incase programmer forgets. This is the internal version
-   * \return true on success
-   */
-  bool triggerInternalBatchPublishAndDisable();
 
   // A shared node handle
   ros::NodeHandle nh_;
 
   // Short name for this class
-  std::string name_;
+  std::string name_ = "visual_tools";
 
   // ROS publishers
   ros::Publisher pub_rviz_markers_;  // for rviz visualization markers
@@ -1049,9 +1037,7 @@ protected:
   ros::Duration marker_lifetime_;
 
   // Settings
-  bool batch_publishing_enabled_ = false;
-  bool internal_batch_publishing_enabled_;  // this allows certain marker functions to batch publish
-                                            // without breaking external functinality
+  bool batch_publishing_enabled_ = true;;
   double alpha_;                            // opacity of all markers
   double global_scale_;                     // allow all markers to be increased by a constanct factor
 

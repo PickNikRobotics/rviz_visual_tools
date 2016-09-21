@@ -52,7 +52,7 @@
 namespace rviz_visual_tools
 {
 RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::string &marker_topic)
-  : nh_("~"), name_("visual_tools"), marker_topic_(marker_topic), base_frame_(base_frame)
+  : nh_("~"), marker_topic_(marker_topic), base_frame_(base_frame)
 {
   initialize();
 }
@@ -825,7 +825,7 @@ bool RvizVisualTools::publishMarker(visualization_msgs::Marker &marker)
   markers_.markers.push_back(marker);
 
   // Determine if we should publish now
-  if (!batch_publishing_enabled_ && !internal_batch_publishing_enabled_)
+  if (!batch_publishing_enabled_)
   {
     return triggerBatchPublish();
   }
@@ -1361,15 +1361,11 @@ bool RvizVisualTools::publishAxis(const geometry_msgs::Pose &pose, double length
 
 bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, double radius, const std::string &ns)
 {
-  // Batch publish, unless it is already enabled by user
-  enableInternalBatchPublishing(true);
-
   // Use an internal function that will not actually publish anything, so that other makers can combine with an axis
   // without publishing
   publishAxisInternal(pose, length, radius, ns);
 
-  // Batch publish
-  return triggerInternalBatchPublishAndDisable();
+return true;
 }
 
 bool RvizVisualTools::publishAxisInternal(const Eigen::Affine3d &pose, double length, double radius,
@@ -1397,9 +1393,6 @@ bool RvizVisualTools::publishAxisInternal(const Eigen::Affine3d &pose, double le
 
 bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, scales scale, const std::string &ns)
 {
-  // Batch publish, unless it is already enabled by user
-  enableInternalBatchPublishing(true);
-
   // Create the cylinders
   for (std::size_t i = 0; i < path.size(); ++i)
   {
@@ -1407,24 +1400,19 @@ bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, sca
     publishAxisInternal(path[i], radius * 10.0, radius, ns);
   }
 
-  // Batch publish
-  return triggerInternalBatchPublishAndDisable();
+  return true;
 }
 
 bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, double length, double radius,
                                       const std::string &ns)
 {
-  // Batch publish, unless it is already enabled by user
-  enableInternalBatchPublishing(true);
-
   // Create the cylinders
   for (std::size_t i = 0; i < path.size(); ++i)
   {
     publishAxisInternal(path[i], length, radius, ns);
   }
 
-  // Batch publish
-  return triggerInternalBatchPublishAndDisable();
+  return true;
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Vector3d &point1, const Eigen::Vector3d &point2, colors color,
@@ -1832,17 +1820,13 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path,
     return true;
   }
 
-  // Batch publish, unless it is already enabled by user
-  enableInternalBatchPublishing(true);
-
   // Create the cylinders
   for (std::size_t i = 1; i < path.size(); ++i)
   {
     publishCylinder(convertPoint(path[i - 1]), convertPoint(path[i]), color, radius, ns);
   }
 
-  // Batch publish
-  return triggerInternalBatchPublishAndDisable();
+  return true;
 }
 
 bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, colors color, double radius,
@@ -1854,17 +1838,13 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, colors 
     return true;
   }
 
-  // Batch publish, unless it is already enabled by user
-  enableInternalBatchPublishing(true);
-
   // Create the cylinders
   for (std::size_t i = 1; i < path.size(); ++i)
   {
     publishCylinder(path[i - 1], path[i], color, radius, ns);
   }
 
-  // Batch publish
-  return triggerInternalBatchPublishAndDisable();
+  return true;
 }
 
 bool RvizVisualTools::publishPath(const EigenSTL::vector_Affine3d &path, colors color, double radius,
@@ -1876,17 +1856,13 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Affine3d &path, colors 
     return true;
   }
 
-  // Batch publish, unless it is already enabled by user
-  enableInternalBatchPublishing(true);
-
   // Create the cylinders
   for (std::size_t i = 1; i < path.size(); ++i)
   {
     publishCylinder(path[i - 1].translation(), path[i].translation(), color, radius, ns);
   }
 
-  // Batch publish
-  return triggerInternalBatchPublishAndDisable();
+  return true;
 }
 
 bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const std::vector<colors> &colors,
@@ -1905,15 +1881,11 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const s
     return false;
   }
 
-  // Batch publish, unless it is already enabled by user
-  enableInternalBatchPublishing(true);
-
   // Create the cylinders
   for (std::size_t i = 1; i < path.size(); ++i)
     publishCylinder(path[i - 1], path[i], colors[i], radius, ns);
 
-  // Batch publish
-  return triggerInternalBatchPublishAndDisable();
+  return true;
 }
 
 bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, colors color, scales scale,
@@ -2591,26 +2563,6 @@ int RvizVisualTools::iRand(int min, int max)
     x = rand();
   } while (x >= RAND_MAX - remainder);
   return min + x % n;
-}
-
-void RvizVisualTools::enableInternalBatchPublishing(bool enable)
-{
-  // Don't interfere with external batch publishing
-  if (batch_publishing_enabled_)
-  {
-    return;
-  }
-  internal_batch_publishing_enabled_ = true;
-}
-
-bool RvizVisualTools::triggerInternalBatchPublishAndDisable()
-{
-  internal_batch_publishing_enabled_ = false;
-
-  bool result = publishMarkers(markers_);
-
-  markers_.markers.clear();  // remove all cached markers
-  return result;
 }
 
 void RvizVisualTools::printTranslation(const Eigen::Vector3d &translation)
