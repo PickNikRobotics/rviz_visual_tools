@@ -226,6 +226,7 @@ public:
    *         processing before wasting cycles waiting for the marker pub to find a subscriber
    */
   void waitForMarkerPub();
+  void waitForMarkerPub(double wait_time);
 
   /**
    * \brief Wait until at least one subscriber connects to a publisher

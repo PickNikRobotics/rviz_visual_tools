@@ -277,6 +277,12 @@ void RvizVisualTools::waitForMarkerPub()
   waitForSubscriber(pub_rviz_markers_, 0, blocking);
 }
 
+void RvizVisualTools::waitForMarkerPub(double wait_time)
+{
+  bool blocking = false;
+  waitForSubscriber(pub_rviz_markers_, wait_time, blocking);
+}
+
 bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, double wait_time, bool blocking)
 {
   // Will wait at most this amount of time
