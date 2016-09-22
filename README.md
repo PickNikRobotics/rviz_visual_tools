@@ -54,6 +54,8 @@ See [the Doxygen documentation](http://docs.ros.org/kinetic/api/rviz_visual_tool
 
 We'll assume you will be using these helper functions within a class. Almost all of the functions assume you are publishing transforms in the world frame (whatever you call that e.g. /odom).
 
+**Note: a recent change requires that all publishing must now be triggered by ``triggerBatchPublish()``**
+
 ### Initialize
 
 Add to your includes:
@@ -93,6 +95,8 @@ In the following snippet we create a pose at xyz (0.1, 0.1, 0.1) and rotate the 
     ROS_INFO_STREAM_NAMED("test","Publishing Arrow");
     visual_tools_->publishArrow(pose, rviz_visual_tools::RED, rviz_visual_tools::LARGE);
 
+    // Don't forget to trigger the publisher!
+    visual_tools_->triggerBatchPublish();
 
 ### Basic Publishing Functions
 
