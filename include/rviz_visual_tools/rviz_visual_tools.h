@@ -369,6 +369,15 @@ public:
   void enableBatchPublishing(bool enable = true);
 
   /**
+   * \brief Trigger the publish function to send out all collected markers IF there are at leats
+   *        queueSize number of markers ready to be published.
+   *        Warning: when using this in a loop be sure to call triggerBatchPublish() at end of loop
+   *        in case there are any remainder markers in the queue
+   * \return true on success
+   */
+  bool triggerEvery(std::size_t queueSize);
+
+  /**
    * \brief Trigger the publish function to send out all collected markers
    * \return true on success
    */

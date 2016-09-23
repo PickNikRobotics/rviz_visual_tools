@@ -844,13 +844,20 @@ void RvizVisualTools::enableBatchPublishing(bool enable)
   batch_publishing_enabled_ = enable;
 }
 
+bool RvizVisualTools::triggerEvery(std::size_t queueSize)
+{
+  if (markers_.markers.size() >= queueSize || queueSize == 0)
+    return triggerBatchPublish();
+  return false;
+}
+
 bool RvizVisualTools::triggerBatchPublish()
 {
   if (!batch_publishing_enabled_)
     ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled (unnecessary function call)");
   if (markers_.markers.empty())
   {
-    ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but queue is empty (unnecessary function call)");
+    //ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but queue is empty (unnecessary function call)");
     return false;
   }
 
