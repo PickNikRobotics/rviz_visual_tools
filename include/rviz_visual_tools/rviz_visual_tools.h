@@ -364,14 +364,14 @@ public:
   /**
    * \brief Enable batch publishing - useful for when many markers need to be published at once and
    * the ROS topic can get overloaded. This collects all published markers into array and only publishes
-   * them with triggerBatchPublish() is called
+   * them with trigger() is called
    */
   void enableBatchPublishing(bool enable = true);
 
   /**
    * \brief Trigger the publish function to send out all collected markers IF there are at leats
    *        queueSize number of markers ready to be published.
-   *        Warning: when using this in a loop be sure to call triggerBatchPublish() at end of loop
+a   *        Warning: when using this in a loop be sure to call trigger() at end of loop
    *        in case there are any remainder markers in the queue
    * \return true on success
    */
@@ -381,7 +381,13 @@ public:
    * \brief Trigger the publish function to send out all collected markers
    * \return true on success
    */
-  bool triggerBatchPublish();
+  RVIZ_VISUAL_TOOLS_DEPRECATED
+  bool triggerBatchPublish()
+  {
+    return trigger();
+  }
+
+  bool trigger();
 
   /**
    * \brief Trigger the publish function to send out all collected markers. Also then turns off the
@@ -389,7 +395,8 @@ public:
    *        incase programmer forgets
    * \return true on success
    */
-  bool triggerBatchPublishAndDisable();
+  RVIZ_VISUAL_TOOLS_DEPRECATED
+  bool triggerAndDisable();
 
   /**
    * \brief Display an array of markers, allows reuse of the ROS publisher

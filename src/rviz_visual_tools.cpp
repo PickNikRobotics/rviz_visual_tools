@@ -833,7 +833,7 @@ bool RvizVisualTools::publishMarker(visualization_msgs::Marker &marker)
   // Determine if we should publish now
   if (!batch_publishing_enabled_)
   {
-    return triggerBatchPublish();
+    return trigger();
   }
 
   return true;
@@ -847,11 +847,11 @@ void RvizVisualTools::enableBatchPublishing(bool enable)
 bool RvizVisualTools::triggerEvery(std::size_t queueSize)
 {
   if (markers_.markers.size() >= queueSize || queueSize == 0)
-    return triggerBatchPublish();
+    return trigger();
   return false;
 }
 
-bool RvizVisualTools::triggerBatchPublish()
+bool RvizVisualTools::trigger()
 {
   if (!batch_publishing_enabled_)
     ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled (unnecessary function call)");
@@ -867,9 +867,9 @@ bool RvizVisualTools::triggerBatchPublish()
   return result;
 }
 
-bool RvizVisualTools::triggerBatchPublishAndDisable()
+bool RvizVisualTools::triggerAndDisable()
 {
-  triggerBatchPublish();
+  trigger();
   batch_publishing_enabled_ = false;
   return true;
 }
