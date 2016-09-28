@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.3.0 (2016-09-28)
+------------------
 * BREAKING CHANGE: Make batch publishing enabled by default
 * Removed enableInternalBatchPublishing()
 * Removed triggerInternalBatchPublishAndDisable()
