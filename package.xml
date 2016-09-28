@@ -5,7 +5,6 @@
   <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
 
   <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
-  <maintainer email="mcevoy.andy@gmail.com">Andy McEvoy</maintainer>
 
   <license>BSD</license>
 
@@ -29,9 +28,6 @@
   <build_depend>roslint</build_depend>
   <build_depend>eigen_stl_containers</build_depend>
 
-  <test_depend>rostest</test_depend>
-  <test_depend>rosunit</test_depend>
-
   <run_depend>eigen_conversions</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>tf_conversions</run_depend>
@@ -39,5 +35,8 @@
   <run_depend>graph_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>trajectory_msgs</run_depend>
+
+  <test_depend>rostest</test_depend>
+  <test_depend>rosunit</test_depend>
 
 </package>

@@ -1,5 +1,7 @@
 # Rviz Visual Tools
 
+**Note: a recent change (Sept 28, 2016) requires that all publishing must now be triggered by ``trigger()``**
+
 C++ API wrapper for displaying shapes and meshes in Rviz via helper functions that publish markers. Useful for displaying and debugging data. For more advanced robot visualization features, see the [moveit_visual_tools](https://github.com/davetcoleman/moveit_visual_tools) which builds on this class, or [ompl_visual_tools](https://github.com/davetcoleman/ompl_visual_tools/) if you are an OMPL ROS user.
 
 This package includes:
@@ -53,8 +55,6 @@ See [the Doxygen documentation](http://docs.ros.org/kinetic/api/rviz_visual_tool
 ## Usage
 
 We'll assume you will be using these helper functions within a class. Almost all of the functions assume you are publishing transforms in the world frame (whatever you call that e.g. /odom).
-
-**Note: a recent change requires that all publishing must now be triggered by ``trigger()``**
 
 ### Initialize
 
