@@ -15,10 +15,9 @@ Forthcoming
 * Added Docker for Kinetic
 * Added delay to demo to allow rviz to load in Docker
 * Change the sphere marker type from SPHERE_LIST to SPHERE - This makes irregularly scaled spheres (i.e. ellipsoids) to be rendered correctly.
-* Update description (`#46 <https://github.com/davetcoleman/rviz_visual_tools/issues/46>`_)
 * Contributors: Dave Coleman, Miguel Prada
 
-  3.2.0 (2016-07-14)
+3.2.0 (2016-07-14)
 ------------------
 * Catkin depend on eigen and tf conversions
 * New warning
