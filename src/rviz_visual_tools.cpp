@@ -2580,9 +2580,7 @@ int RvizVisualTools::iRand(int min, int max)
 
 void RvizVisualTools::printTranslation(const Eigen::Vector3d &translation)
 {
-  std::cout << "translation.x: " << translation.x() << std::endl;
-  std::cout << "translation.y: " << translation.y() << std::endl;
-  std::cout << "translation.z: " << translation.z() << std::endl;
+  std::cout << "T.xyz = [" << translation.x() << ", " << translation.y() << ", " << translation.z() << "]" << std::endl;
 }
 
 void RvizVisualTools::printTransform(const Eigen::Affine3d &transform)
