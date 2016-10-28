@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>rviz_visual_tools</name>
   <version>3.3.0</version>
   <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
@@ -16,27 +16,24 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>eigen_conversions</build_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>tf_conversions</build_depend>
-  <build_depend>visualization_msgs</build_depend>
-  <build_depend>graph_msgs</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>trajectory_msgs</build_depend>
-  <build_depend>cmake_modules</build_depend>
-  <build_depend>roslint</build_depend>
-  <build_depend>eigen_stl_containers</build_depend>
-
-  <run_depend>eigen_conversions</run_depend>
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>tf_conversions</run_depend>
-  <run_depend>visualization_msgs</run_depend>
-  <run_depend>graph_msgs</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>trajectory_msgs</run_depend>
+  <depend>rviz</depend>
+  <depend>sensor_msgs</depend>
+  <depend>eigen_conversions</depend>
+  <depend>geometry_msgs</depend>
+  <depend>roscpp</depend>
+  <depend>tf_conversions</depend>
+  <depend>visualization_msgs</depend>
+  <depend>graph_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>trajectory_msgs</depend>
+  <depend>roslint</depend>
+  <depend>eigen_stl_containers</depend>
 
   <test_depend>rostest</test_depend>
   <test_depend>rosunit</test_depend>
+
+  <export>
+    <rviz plugin="${prefix}/plugin_description.xml"/>
+  </export>
 
 </package>

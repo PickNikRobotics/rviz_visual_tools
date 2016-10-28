@@ -2,10 +2,12 @@
 
 **Note: a recent change (Sept 28, 2016) requires that all publishing must now be triggered by ``trigger()``**
 
-C++ API wrapper for displaying shapes and meshes in Rviz via helper functions that publish markers. Useful for displaying and debugging data. For more advanced robot visualization features, see the [moveit_visual_tools](https://github.com/davetcoleman/moveit_visual_tools) which builds on this class, or [ompl_visual_tools](https://github.com/davetcoleman/ompl_visual_tools/) if you are an OMPL ROS user.
+C++ API wrapper for displaying shapes and meshes in Rviz via helper functions that publish markers. Useful for displaying and debugging data. For more advanced robot visualization features, see the [moveit_visual_tools](https://github.com/davetcoleman/moveit_visual_tools) which builds on this class.
 
 This package includes:
 
+ - Rviz Panel GUI to step through your code for debugging and testing
+ - Rviz-based keyboard control for stepping through application
  - Easy to use helper functions for visualizing in Rviz fast
  - Basic geometric markers for Rviz
  - More complex geometric shapes such as coordinate frames, framed boxes, planes, paths, graphs
@@ -18,8 +20,8 @@ This package includes:
 Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, University of Colorado Boulder with help from Andy McEvoy and many others.
 
  * [![Build Status](https://travis-ci.org/davetcoleman/rviz_visual_tools.svg)](https://travis-ci.org/davetcoleman/rviz_visual_tools) Travis CI
- * [![Build Status](http://build.ros.org/buildStatus/icon?job=Jsrc_uT__rviz_visual_tools__ubuntu_trusty__source)](http://build.ros.org/view/Jsrc_uT/job/Jsrc_uT__rviz_visual_tools__ubuntu_trusty__source/) ROS Buildfarm - Trusty Devel Source Build
- * [![Build Status](http://build.ros.org/buildStatus/icon?job=Jbin_uT64__rviz_visual_tools__ubuntu_trusty_amd64__binary)](http://build.ros.org/view/Jbin_uT64/job/Jbin_uT64__rviz_visual_tools__ubuntu_trusty_amd64__binary/) ROS Buildfarm - AMD64 Trusty Debian Build
+ * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary)](http://build.ros.org/view/Kbin_uX64/job/Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary/) ROS Buildfarm - AMD64 Xenial Debian Build
+ * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdev__rviz_visual_tools__ubuntu_xenial_amd64)](http://build.ros.org/view/Kdev/job/Kdev__rviz_visual_tools__ubuntu_xenial_amd64/) ROS Buildfarm - AMD64 Xenial Debian Build
 
 ![](resources/screenshot.png)
 
@@ -98,9 +100,38 @@ In the following snippet we create a pose at xyz (0.1, 0.1, 0.1) and rotate the 
     // Don't forget to trigger the publisher!
     visual_tools_->trigger();
 
+## Rviz GUI Usage
+
+Publishes on the topic of ``/rviz_visual_tools_gui``
+
+The buttons in the [Joy](http://docs.ros.org/api/sensor_msgs/html/msg/Joy.html) message correspond to the following:
+
+```
+1 - Next
+2 - Continue
+3 - Break
+4 - Stop
+```
+
+Note: only Next is fully implemented
+
+### Mouse-Based Control
+
+![](resources/dashboard_screenshot.png)
+
+Use the Rviz panel called "RvizVisualToolsGui" to step through your program.
+
+### Keyboard-Based Control
+
+![](resources/keytool_screenshot.png)
+
+Switch to the "KeyTool" in the top of the Rviz window and used keyboard commands "n" and "a" for next and auto, respectively.
+
+## API
+
 ### Basic Publishing Functions
 
-See ``visual_tools.h`` for more details and documentation on the following functions:
+See ``rviz_visual_tools.h`` for more details and documentation on the following functions:
 
  - publishSphere
  - publishSpheres
@@ -132,7 +163,7 @@ And more...
 
 Reset function
 
- - ``deleteAllMarkers`` - tells Rviz to clear out all current markers from being displayed.
+ - ``deleteAllMarkers()`` - tells Rviz to clear out all current markers from being displayed.
 
 All markers must be triggered after being published, by calling the ``trigger()`` function. This allows batch publishing to be achieved by only calling after several markers have been created, greatly increasing the speed of your application. You can even explicitly tell ``rviz_visual_tools`` how often to publish via the ``triggerEvery(NUM_MARKERS)`` command:
 
@@ -187,16 +218,17 @@ This package helps you quickly choose colors - feel free to send PRs with more c
 
 ### Available Marker Sizes
 
+    XXXXSMALL,
+    XXXSMALL,
     XXSMALL,
     XSMALL,
     SMALL,
-    REGULAR,
+    MEDIUM,
     LARGE,
-    xLARGE,
-    xxLARGE,
-    xxxLARGE,
     XLARGE,
-    XXLARGE
+    XXLARGE,
+    XXXLARGE,
+    XXXXLARGE,
 
 ## TF Visual Tools
 
@@ -205,6 +237,8 @@ This tool lets you easily debug Eigen transforms in Rviz. Demo use:
     rviz_visual_tools::TFVisualTools tf_visualizer;
     Eigen::Affine3d world_to_shelf_transform = Eigen::Affine3d::Identity(); // or whatever value
     tf_visualizer.publishTransform(world_to_shelf_transform, "world", "shelf");
+
+*Note: this is a work in progress*
 
 ## Testing and Linting
 
