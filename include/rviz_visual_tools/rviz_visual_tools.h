@@ -66,6 +66,7 @@
 
 // rviz_visual_tools
 #include <rviz_visual_tools/deprecation.h>
+#include <rviz_visual_tools/remote_control.h>
 
 namespace rviz_visual_tools
 {
@@ -646,6 +647,8 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param ns - namespace of marker
    * \return true on success
    */
+  bool publishPath(const std::vector<geometry_msgs::Pose> &path, colors color = RED, scales scale = MEDIUM,
+                   const std::string &ns = "Path");
   bool publishPath(const std::vector<geometry_msgs::Point> &path, colors color = RED, scales scale = MEDIUM,
                    const std::string &ns = "Path");
   bool publishPath(const EigenSTL::vector_Affine3d &path, colors color = RED, scales scale = MEDIUM,
@@ -1033,13 +1036,24 @@ public:
     psychedelic_mode_ = psychedelic_mode;
   }
 
-protected:
+  /** \brief Wait for user feedback i.e. through a button or joystick */
+  void prompt(const std::string &msg);
 
+  /** \brief Ability to load remote control on the fly */
+  RemoteControlPtr &getRemoteControl();
+
+  /** \brief Pre-load remote control */
+  void loadRemoteControl();
+
+protected:
   // A shared node handle
   ros::NodeHandle nh_;
 
   // Short name for this class
   std::string name_ = "visual_tools";
+
+  // Optional remote control
+  RemoteControlPtr remote_control_;
 
   // ROS publishers
   ros::Publisher pub_rviz_markers_;  // for rviz visualization markers
@@ -1054,9 +1068,10 @@ protected:
   ros::Duration marker_lifetime_;
 
   // Settings
-  bool batch_publishing_enabled_ = true;;
-  double alpha_;                            // opacity of all markers
-  double global_scale_;                     // allow all markers to be increased by a constanct factor
+  bool batch_publishing_enabled_ = true;
+  ;
+  double alpha_;         // opacity of all markers
+  double global_scale_;  // allow all markers to be increased by a constanct factor
 
   // Cached Rviz Marker Array
   visualization_msgs::MarkerArray markers_;

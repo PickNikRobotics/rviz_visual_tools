@@ -857,7 +857,7 @@ bool RvizVisualTools::trigger()
     ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled (unnecessary function call)");
   if (markers_.markers.empty())
   {
-    //ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but queue is empty (unnecessary function call)");
+    // ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but queue is empty (unnecessary function call)");
     return false;
   }
 
@@ -1378,7 +1378,7 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d &pose, double length, do
   // without publishing
   publishAxisInternal(pose, length, radius, ns);
 
-return true;
+  return true;
 }
 
 bool RvizVisualTools::publishAxisInternal(const Eigen::Affine3d &pose, double length, double radius,
@@ -1804,6 +1804,16 @@ bool RvizVisualTools::publishLineStrip(const std::vector<geometry_msgs::Point> &
 
   // Helper for publishing rviz markers
   return publishMarker(line_strip_marker_);
+}
+
+bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Pose> &path, colors color, scales scale,
+                                  const std::string &ns)
+{
+  std::vector<geometry_msgs::Point> point_path(path.size());
+  for (std::size_t i = 0; i < path.size(); ++i)
+    point_path[i] = path[i].position;
+
+  return publishPath(point_path, color, getScale(scale).x, ns);
 }
 
 bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point> &path, colors color, scales scale,
@@ -2595,8 +2605,29 @@ void RvizVisualTools::printTransformRPY(const Eigen::Affine3d &transform)
 {
   // R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
   Eigen::Vector3d vec = transform.rotation().eulerAngles(0, 1, 2);
-  std::cout << "transform: [" << transform.translation().x() << ", " << transform.translation().y() << ", " << transform.translation().z()
-            << ", " << vec[0] << ", " << vec[1] << ", " << vec[2] << "]\n";
+  std::cout << "transform: [" << transform.translation().x() << ", " << transform.translation().y() << ", "
+            << transform.translation().z() << ", " << vec[0] << ", " << vec[1] << ", " << vec[2] << "]\n";
+}
+
+void RvizVisualTools::prompt(const std::string &msg)
+{
+  getRemoteControl()->waitForNextStep(msg);
+}
+
+RemoteControlPtr &RvizVisualTools::getRemoteControl()
+{
+  loadRemoteControl();
+  return remote_control_;
+}
+
+void RvizVisualTools::loadRemoteControl()
+{
+  // Load remote
+  if (!remote_control_)
+  {
+    remote_control_ = std::make_shared<RemoteControl>(nh_);
+    ros::spinOnce();
+  }
 }
 
 }  // namespace rviz_visual_tools

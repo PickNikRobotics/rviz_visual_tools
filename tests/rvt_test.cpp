@@ -155,10 +155,9 @@ TEST(RVTTest, test_rpy_conversions)
 
   // -------------------------------------------------------------------
   // Rotation conversions to RPY
-  expected_affine = expected_affine
-    * Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX())
-    * Eigen::AngleAxisd(0.5*M_PI, Eigen::Vector3d::UnitZ())
-    * Eigen::AngleAxisd(-0.5*M_PI, Eigen::Vector3d::UnitX());
+  expected_affine = expected_affine * Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX()) *
+                    Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitZ()) *
+                    Eigen::AngleAxisd(-0.5 * M_PI, Eigen::Vector3d::UnitX());
   base.visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
 
   // Rotation convertion back to Eigen

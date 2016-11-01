@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rviz_visual_tools)
 
-# C++ 11
 add_definitions(-std=c++11)
 
 # Warnings
@@ -12,7 +11,6 @@ add_definitions(-W -Wall -Wextra
   -Wno-unused-parameter -Wno-unused-function)
 
 find_package(catkin REQUIRED COMPONENTS
-  cmake_modules
   eigen_conversions
   geometry_msgs
   graph_msgs
@@ -24,14 +22,44 @@ find_package(catkin REQUIRED COMPONENTS
   visualization_msgs
   roslint
   eigen_stl_containers
+  rviz
+  sensor_msgs
 )
 
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED thread system)
 
+# Qt 4 or 5
+if(rviz_QT_VERSION VERSION_LESS "5")
+  find_package(Qt4 ${rviz_QT_VERSION} REQUIRED QtCore QtGui)
+  include(${QT_USE_FILE})
+  macro(qt_wrap_ui)
+    qt4_wrap_ui(${ARGN})
+  endmacro()
+  macro(qt_wrap_cpp)
+    qt4_wrap_cpp(${ARGN})
+  endmacro()
+else()
+  find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
+  set(QT_LIBRARIES Qt5::Widgets)
+  macro(qt_wrap_ui)
+    qt5_wrap_ui(${ARGN})
+  endmacro()
+  macro(qt_wrap_cpp)
+    qt5_wrap_cpp(${ARGN})
+  endmacro()
+endif()
+## Prefer the Qt signals and slots to avoid defining "emit", "slots",
+## etc because they can conflict with boost signals, so define QT_NO_KEYWORDS here.
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+add_definitions(-DQT_NO_KEYWORDS)
+
 catkin_package(
   LIBRARIES
     ${PROJECT_NAME}
+    ${PROJECT_NAME}_gui
+    ${PROJECT_NAME}_remote_control
   CATKIN_DEPENDS
     eigen_conversions
     geometry_msgs
@@ -40,7 +68,9 @@ catkin_package(
     std_msgs
     tf_conversions
     trajectory_msgs
-  INCLUDE_DIRS include
+    sensor_msgs
+  INCLUDE_DIRS
+    include
 )
 
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
@@ -54,21 +84,42 @@ include_directories(
 ## Build ##
 ###########
 
+## specify which header files need to be run through "moc",
+## Qt's meta-object compiler.
+qt_wrap_cpp(MOC_FILES
+  src/rviz_visual_tools_gui.h
+  src/key_tool.h
+)
+
+## specify the list of source files, including the output of
+## the previous command which is stored in ``${MOC_FILES}``.
+set(SOURCE_FILES
+  src/rviz_visual_tools_gui.cpp
+  src/key_tool.cpp
+)
+
+# Rviz GUI library
+add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
+target_link_libraries(${PROJECT_NAME}_gui ${rviz_DEFAULT_PLUGIN_LIBRARIES} ${QT_LIBRARIES} ${catkin_LIBRARIES})
+
+# Remote control library
+add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
+target_link_libraries(${PROJECT_NAME}_remote_control ${catkin_LIBRARIES})
+
 # Visualization Tools Library
 add_library(${PROJECT_NAME}
   src/rviz_visual_tools.cpp
   src/tf_visual_tools.cpp
 )
-
-add_dependencies(${PROJECT_NAME} graph_msgs_generate_messages_cpp)
-
 target_link_libraries(${PROJECT_NAME}
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES}
+  ${PROJECT_NAME}_remote_control
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
 )
 
 # Demo executable
-add_executable(rviz_visual_tools_demo src/rviz_visual_tools_demo.cpp)
-target_link_libraries(rviz_visual_tools_demo
+add_executable(${PROJECT_NAME}_demo src/rviz_visual_tools_demo.cpp)
+target_link_libraries(${PROJECT_NAME}_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME}
 )
 
@@ -95,8 +146,14 @@ roslint_cpp()
 #############
 
 # Install libraries
-install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+install(
+  TARGETS
+    ${PROJECT_NAME}
+    ${PROJECT_NAME}_gui
+    ${PROJECT_NAME}_remote_control
+  LIBRARY DESTINATION
+    ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
 
 # Install header files
 install(DIRECTORY include/${PROJECT_NAME}/   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
@@ -104,3 +161,15 @@ install(DIRECTORY include/${PROJECT_NAME}/   DESTINATION ${CATKIN_PACKAGE_INCLUD
 # Install shared resources
 install(DIRECTORY launch    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(DIRECTORY resources DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+# Install xml plugin config
+install(FILES
+  plugin_description.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+# Install executables
+install(TARGETS ${PROJECT_NAME}_demo
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

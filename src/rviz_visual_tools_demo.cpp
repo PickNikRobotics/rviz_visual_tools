@@ -77,7 +77,7 @@ public:
     visual_tools_->enableBatchPublishing();
   }
 
-  void publishLabelHelper(const Eigen::Affine3d& pose, const std::string& label)
+  void publishLabelHelper(const Eigen::Affine3d &pose, const std::string &label)
   {
     Eigen::Affine3d pose_copy = pose;
     pose_copy.translation().x() -= 0.2;
@@ -224,14 +224,13 @@ public:
 
     for (double i = 0; i <= 1.0; i += step)
     {
-
       visual_tools_->publishCone(pose1, M_PI / angle, rvt::RAND, 0.05);
       if (!i)
         publishLabelHelper(pose1, "Cone");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
-      angle +=angle_step;
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
+      angle += angle_step;
     }
     visual_tools_->trigger();
 
@@ -338,9 +337,9 @@ public:
         publishLabelHelper(pose1, "Labeled Axis");
 
       pose1.translation().x() += step;
-      pose1 = pose1 * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitX())
-        * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitY())
-        * Eigen::AngleAxisd(step*2*M_PI, Eigen::Vector3d::UnitZ());
+      pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitX()) *
+              Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitY()) *
+              Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
     }
     visual_tools_->trigger();
 
@@ -354,18 +353,18 @@ public:
 
     EigenSTL::vector_Vector3d path;
     std::vector<rviz_visual_tools::colors> colors;
-    unsigned index (0);
+    unsigned index(0);
     for (double i = 0; i < 1.0; i += step)
     {
       pose1.translation().y() = y;
       if (++index % 2 == 0)
       {
-        pose1.translation().y() += step/2.0;
+        pose1.translation().y() += step / 2.0;
         colors.push_back(rviz_visual_tools::WHITE);
       }
       else
       {
-        pose1.translation().y() -= step/2.0;
+        pose1.translation().y() -= step / 2.0;
         colors.push_back(rviz_visual_tools::BLUE);
       }
       path.push_back(pose1.translation());
@@ -397,11 +396,12 @@ public:
     EigenSTL::vector_Vector3d points1;
     EigenSTL::vector_Vector3d points2;
 
-    double step = 0.25; // space between each row
+    double step = 0.25;  // space between each row
 
     // Show test label
     pose1.translation().x() = x_location - 0.1;
-    visual_tools_->publishText(pose1, "Testing consistency of " + visual_tools_->scaleToString(scale) + " marker scale", WHITE, XLARGE, false);
+    visual_tools_->publishText(pose1, "Testing consistency of " + visual_tools_->scaleToString(scale) + " marker scale",
+                               WHITE, XLARGE, false);
 
     pose1.translation().x() = x_location;
 
@@ -420,7 +420,7 @@ public:
     pose1.translation().x() += step;
     points1.push_back(pose1.translation());
     visual_tools_->publishSpheres(points1, BLUE, scale);
-    pose1.translation().x() = x_location; // reset
+    pose1.translation().x() = x_location;  // reset
     pose1.translation().y() += step;
 
     // Spheres with colors
@@ -429,7 +429,7 @@ public:
     pose1.translation().x() += step;
     points1.push_back(pose1.translation());
     visual_tools_->publishSpheres(points1, colors, scale);
-    pose1.translation().x() = x_location; // reset
+    pose1.translation().x() = x_location;  // reset
     pose1.translation().y() += step;
 
     // YArrow
@@ -461,15 +461,16 @@ public:
     pose2.translation().x() += step / 2.0;
     points1.push_back(pose1.translation());
     points2.push_back(pose2.translation());
-    pose1.translation().x() += step / 2.0;;
+    pose1.translation().x() += step / 2.0;
+    ;
     pose2 = pose1;
     pose2.translation().x() += step / 2.0;
     // points1.push_back(pose1.translation());
     // points2.push_back(pose2.translation());
-    colors.clear(); // temp
+    colors.clear();  // temp
     colors.push_back(ORANGE);
     visual_tools_->publishLines(points1, points2, colors, scale);
-    pose1.translation().x() = x_location; // reset
+    pose1.translation().x() = x_location;  // reset
     pose1.translation().y() += step;
 
     // TODO publishPath
@@ -552,7 +553,7 @@ public:
 
 }  // namespace rviz_visual_tools
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
   ros::init(argc, argv, "visual_tools_demo");
   ROS_INFO_STREAM("Visual Tools Demo");
