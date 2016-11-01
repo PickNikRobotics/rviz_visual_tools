@@ -96,7 +96,7 @@ RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent) : rviz::Panel(parent)
 
 void RvizVisualToolsGui::moveNext()
 {
-  ROS_INFO_STREAM_NAMED("rviz_visual_tools", "Next");
+  ROS_INFO_STREAM_NAMED("gui", "Next");
 
   sensor_msgs::Joy msg;
   msg.buttons.resize(9);
@@ -106,7 +106,7 @@ void RvizVisualToolsGui::moveNext()
 
 void RvizVisualToolsGui::moveAuto()
 {
-  ROS_INFO_STREAM_NAMED("rviz_visual_tools", "Continue");
+  ROS_INFO_STREAM_NAMED("gui", "Continue");
 
   sensor_msgs::Joy msg;
   msg.buttons.resize(9);
@@ -116,7 +116,7 @@ void RvizVisualToolsGui::moveAuto()
 
 void RvizVisualToolsGui::moveFullAuto()
 {
-  ROS_INFO_STREAM_NAMED("rviz_visual_tools", "Break");
+  ROS_INFO_STREAM_NAMED("gui", "Break (not implemented yet)");
 
   sensor_msgs::Joy msg;
   msg.buttons.resize(9);
@@ -126,7 +126,7 @@ void RvizVisualToolsGui::moveFullAuto()
 
 void RvizVisualToolsGui::moveStop()
 {
-  ROS_INFO_STREAM_NAMED("rviz_visual_tools", "Stop");
+  ROS_INFO_STREAM_NAMED("gui", "Stop (not implemented yet)");
 
   sensor_msgs::Joy msg;
   msg.buttons.resize(9);
