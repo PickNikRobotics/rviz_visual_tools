@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.4.0 (2016-11-02)
+------------------
 * Consolidated publishing into RemoteReciever class
 * Improve console output
 * Add RvizGui and KeyTool
