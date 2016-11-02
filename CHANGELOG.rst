@@ -2,6 +2,16 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Consolidated publishing into RemoteReciever class
+* Improve console output
+* Add RvizGui and KeyTool
+* Enable remote control from withing rviz_visual_tools
+* New publishPath() function
+* Shorten number of lines printTranslation() requires
+* Contributors: Dave Coleman
+
 3.3.0 (2016-09-28)
 ------------------
 * BREAKING CHANGE: Make batch publishing enabled by default
