@@ -125,7 +125,11 @@ Use the Rviz panel called "RvizVisualToolsGui" to step through your program.
 
 ![](resources/keytool_screenshot.png)
 
-Switch to the "KeyTool" in the top of the Rviz window and used keyboard commands "n" and "a" for next and auto, respectively.
+Switch to the "KeyTool" in the top of the Rviz window and use the following keyboard commands:
+ - n: next
+ - c or a: continue
+ - b: break
+ - s: stop
 
 ## API
 

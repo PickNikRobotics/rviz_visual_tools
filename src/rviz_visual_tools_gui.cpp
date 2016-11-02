@@ -47,8 +47,6 @@
 #include <QGroupBox>
 #include <QSpinBox>
 
-#include <sensor_msgs/Joy.h>
-
 #include "rviz_visual_tools_gui.h"
 
 namespace rviz_visual_tools
@@ -87,8 +85,6 @@ RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent) : rviz::Panel(parent)
   layout->addLayout(hlayout1);
   setLayout(layout);
 
-  joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("/rviz_visual_tools_gui", 1);
-
   btn_next_->setEnabled(true);
   btn_auto_->setEnabled(true);
   btn_full_auto_->setEnabled(true);
@@ -96,60 +92,34 @@ RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent) : rviz::Panel(parent)
 
 void RvizVisualToolsGui::moveNext()
 {
-  ROS_INFO_STREAM_NAMED("gui", "Next");
-
-  sensor_msgs::Joy msg;
-  msg.buttons.resize(9);
-  msg.buttons[1] = 1;
-  joy_publisher_.publish(msg);
+  remote_reciever_.publishNext();
 }
 
 void RvizVisualToolsGui::moveAuto()
 {
-  ROS_INFO_STREAM_NAMED("gui", "Continue");
-
-  sensor_msgs::Joy msg;
-  msg.buttons.resize(9);
-  msg.buttons[2] = 1;
-  joy_publisher_.publish(msg);
+  remote_reciever_.publishContinue();
 }
 
 void RvizVisualToolsGui::moveFullAuto()
 {
-  ROS_INFO_STREAM_NAMED("gui", "Break (not implemented yet)");
-
-  sensor_msgs::Joy msg;
-  msg.buttons.resize(9);
-  msg.buttons[3] = 1;
-  joy_publisher_.publish(msg);
+  remote_reciever_.publishBreak();
 }
 
 void RvizVisualToolsGui::moveStop()
 {
-  ROS_INFO_STREAM_NAMED("gui", "Stop (not implemented yet)");
-
-  sensor_msgs::Joy msg;
-  msg.buttons.resize(9);
-  msg.buttons[4] = 1;
-  joy_publisher_.publish(msg);
+  remote_reciever_.publishStop();
 }
 
-// Save all configuration data from this panel to the given
-// Config object.  It is important here that you call save()
-// on the parent class so the class id and panel name get saved.
 void RvizVisualToolsGui::save(rviz::Config config) const
 {
   rviz::Panel::save(config);
 }
-// Load all configuration data for this panel from the given Config object.
+
 void RvizVisualToolsGui::load(const rviz::Config& config)
 {
   rviz::Panel::load(config);
 }
 }  // end namespace rviz_visual_tools
 
-// Tell pluginlib about this class.  Every class which should be
-// loadable by pluginlib::ClassLoader must have these two lines
-// compiled in its .cpp file, outside of any namespace scope.
 #include <pluginlib/class_list_macros.h>
 PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::RvizVisualToolsGui, rviz::Panel)

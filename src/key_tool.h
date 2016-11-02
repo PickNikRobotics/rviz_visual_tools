@@ -31,8 +31,6 @@
 #define RVIZ_VISUAL_TOOLS_KEY_TOOL_H
 
 #ifndef Q_MOC_RUN  // See: https://bugreports.qt-project.org/browse/QTBUG-22829
-#include <ros/node_handle.h>
-#include <ros/publisher.h>
 
 #include <rviz/tool.h>
 #include <rviz/default_plugin/tools/move_tool.h>
@@ -41,10 +39,11 @@
 #include <QObject>
 #endif
 
+#include <rviz_visual_tools/remote_reciever.h>
+
 namespace rviz_visual_tools
 {
-//! The Point Tool allows the user to click on a point which
-//! gets published as a Joy message.
+
 class KeyTool : public rviz::Tool
 {
   Q_OBJECT
@@ -56,8 +55,6 @@ public:
 
   virtual void activate();
   virtual void deactivate();
-  void moveNext();
-  void moveAuto();
 
   virtual int processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel);
   virtual int processMouseEvent(rviz::ViewportMouseEvent& event);
@@ -65,9 +62,8 @@ public:
 public Q_SLOTS:
 
 protected:
-  ros::NodeHandle nh_;
-  ros::Publisher joy_publisher_;
   rviz::MoveTool move_tool_;
+  RemoteReciever remote_reciever_;
 };
 }
 

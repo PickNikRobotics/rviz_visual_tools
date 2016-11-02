@@ -33,15 +33,10 @@
 // Rviz
 #include <rviz/viewport_mouse_event.h>
 #include <rviz/load_resource.h>
-//#include <rviz/render_panel.h>
 #include <rviz/display_context.h>
-//#include <rviz/selection/selection_manager.h>
 #include <rviz/view_controller.h>
 #include <rviz/properties/bool_property.h>
 #include <rviz/properties/string_property.h>
-
-// ROS
-#include <sensor_msgs/Joy.h>
 
 // this package
 #include "key_tool.h"
@@ -53,7 +48,6 @@ namespace rviz_visual_tools
 {
 KeyTool::KeyTool() : Tool()
 {
-  joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("rviz_visual_tools_gui", 1);
 }
 
 KeyTool::~KeyTool()
@@ -73,38 +67,23 @@ void KeyTool::deactivate()
 {
 }
 
-void KeyTool::moveNext()
-{
-  ROS_INFO_STREAM_NAMED("rviz_visual_tools", "Move to next step");
-
-  sensor_msgs::Joy msg;
-  msg.buttons.resize(9);
-  msg.buttons[1] = 1;
-  joy_publisher_.publish(msg);
-}
-
-void KeyTool::moveAuto()
-{
-  ROS_INFO_STREAM_NAMED("rviz_visual_tools", "Running auto step");
-
-  sensor_msgs::Joy msg;
-  msg.buttons.resize(9);
-  msg.buttons[2] = 1;
-  joy_publisher_.publish(msg);
-}
-
 int KeyTool::processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel)
 {
-  // std::cout << "event->key(): " << event->key() << std::endl;
-
   // move forward / backward
   switch (event->key())
   {
     case Qt::Key_N:
-      moveNext();
+      remote_reciever_.publishNext();
       return 1;
     case Qt::Key_A:
-      moveAuto();
+    case Qt::Key_C:
+      remote_reciever_.publishContinue();
+      return 1;
+    case Qt::Key_B:
+      remote_reciever_.publishBreak();
+      return 1;
+    case Qt::Key_S:
+      remote_reciever_.publishStop();
       return 1;
   }
 
