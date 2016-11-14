@@ -21,7 +21,7 @@ Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, Universi
 
  * [![Build Status](https://travis-ci.org/davetcoleman/rviz_visual_tools.svg)](https://travis-ci.org/davetcoleman/rviz_visual_tools) Travis CI
  * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary)](http://build.ros.org/view/Kbin_uX64/job/Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary/) ROS Buildfarm - AMD64 Xenial Debian Build
- * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdev__rviz_visual_tools__ubuntu_xenial_amd64)](http://build.ros.org/view/Kdev/job/Kdev__rviz_visual_tools__ubuntu_xenial_amd64/) ROS Buildfarm - AMD64 Xenial Debian Build
+ * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdev__rviz_visual_tools__ubuntu_xenial_amd64)](http://build.ros.org/view/Kdev/job/Kdev__rviz_visual_tools__ubuntu_xenial_amd64/) ROS Buildfarm - AMD64 Xenial Devel Build
 
 ![](resources/screenshot.png)
 
