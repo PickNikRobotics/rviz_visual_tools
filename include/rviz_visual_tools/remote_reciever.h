@@ -58,7 +58,7 @@ public:
 
   void publishNext()
   {
-    ROS_INFO_STREAM_NAMED("gui", "Next");
+    ROS_DEBUG_STREAM_NAMED("gui", "Next");
     sensor_msgs::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[1] = 1;
@@ -67,7 +67,7 @@ public:
 
   void publishContinue()
   {
-    ROS_INFO_STREAM_NAMED("gui", "Continue");
+    ROS_DEBUG_STREAM_NAMED("gui", "Continue");
     sensor_msgs::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[2] = 1;
@@ -76,7 +76,7 @@ public:
 
   void publishBreak()
   {
-    ROS_INFO_STREAM_NAMED("gui", "Break (not implemented yet)");
+    ROS_DEBUG_STREAM_NAMED("gui", "Break (not implemented yet)");
 
     sensor_msgs::Joy msg;
     msg.buttons.resize(9);
@@ -86,7 +86,7 @@ public:
 
   void publishStop()
   {
-    ROS_INFO_STREAM_NAMED("gui", "Stop (not implemented yet)");
+    ROS_DEBUG_STREAM_NAMED("gui", "Stop (not implemented yet)");
 
     sensor_msgs::Joy msg;
     msg.buttons.resize(9);
