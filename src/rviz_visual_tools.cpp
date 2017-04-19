@@ -1335,6 +1335,44 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped &pose, color
   return true;
 }
 
+bool RvizVisualTools::publishArrow(const Eigen::Vector3d origin, const Eigen::Vector3d end_point, colors color,
+                                   scales scale, std::size_t id)
+{
+  // Set the frame ID and timestamp.
+  arrow_marker_.header.stamp = ros::Time::now();
+  arrow_marker_.header.frame_id = base_frame_;
+
+  if (id == 0)
+    arrow_marker_.id++;
+  else
+    arrow_marker_.id = id;
+
+  geometry_msgs::Point start;
+  start.x = origin[0];
+  start.y = origin[1];
+  start.z = origin[2];
+
+  geometry_msgs::Point end;
+  end.x = end_point[0];
+  end.y = end_point[1];
+  end.z = end_point[2];
+
+  arrow_marker_.points.push_back(start);
+  arrow_marker_.points.push_back(end);
+
+  arrow_marker_.color = getColor(color);
+  geometry_msgs::Vector3 scale_values = getScale(scale);
+  arrow_marker_.scale.x = scale_values.x;
+  arrow_marker_.scale.y = 2*scale_values.y;
+  arrow_marker_.scale.z = (1/10) * (end_point - origin).norm();
+
+  // Helper for publishing rviz markers
+  publishMarker(arrow_marker_);
+
+  arrow_marker_.header.frame_id = base_frame_;  // restore default frame
+  return true;
+}
+
 bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d &pose, const std::string &label, scales scale,
                                          colors color)
 {
