@@ -64,6 +64,7 @@ void RvizVisualTools::initialize()
   global_scale_ = 1.0;
   // Cache the reusable markers
   loadRvizMarkers();
+  loadMarkerPub();
 }
 
 bool RvizVisualTools::deleteAllMarkers()
