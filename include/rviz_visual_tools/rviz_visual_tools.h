@@ -640,8 +640,8 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
                         const std::string &ns = "Path");
 
   /**
-   * \brief Display a marker of a series of connected lines
-   * \param path - a series of points to connect with lines
+   * \brief Display a marker of a series of connected cylinders
+   * \param path - a series of points to connect with cylinders
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param ns - namespace of marker
@@ -663,16 +663,19 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
                    const std::string &ns = "Path");
 
   /**
-   * \brief Display a marker of a series of connected colored lines
-   * \param path - a series of points to connect with lines
+   * \brief Display a marker of a series of connected colored cylinders
+   * \param path - a series of points to connect with cylinders
    * \param colors - a series of colors
-   * \param radius - the thickness of the line
+   * \param radius - the radius of the cylinders
    * \param ns - namespace of marker
    * \return true on success
    * \note path and colors vectors must be the same size
    */
   bool publishPath(const EigenSTL::vector_Vector3d &path, const std::vector<colors> &colors, double radius = 0.01,
                    const std::string &ns = "Path");
+
+  bool publishPath(const EigenSTL::vector_Vector3d &path, const std::vector<std_msgs::ColorRGBA> &colors,
+                   double radius, const std::string &ns = "Path");
 
   /**
    * \brief Display a marker of a polygon
