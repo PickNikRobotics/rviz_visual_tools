@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.4.1 (2017-06-20)
+------------------
 * Add dependency on QT5 for Ubuntu Zesty/Lunar support
 * Allow publishPath with std_msgs::ColorRGBA
 * Make INFO msg DEBUG
