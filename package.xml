@@ -29,6 +29,11 @@
   <depend>roslint</depend>
   <depend>eigen_stl_containers</depend>
 
+  <!-- Something changed in ROS Lunar / Ubuntu Zesty that requires extra QT5 dependency-->
+  <!-- I suspect this depend is more than needed, but was the only dependency available -->
+  <!-- from the rosdep list that worked: https://github.com/ros/rosdistro/blob/master/rosdep/base.yaml -->
+  <depend>libqt5x11extras5-dev</depend>
+
   <test_depend>rostest</test_depend>
   <test_depend>rosunit</test_depend>
 
