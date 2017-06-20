@@ -1911,6 +1911,29 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const s
   return true;
 }
 
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d &path, const std::vector<std_msgs::ColorRGBA> &colors,
+                                  double radius, const std::string &ns)
+{
+  if (path.size() < 2)
+  {
+    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    return true;
+  }
+
+  if (path.size() != colors.size())
+  {
+    ROS_ERROR_STREAM_NAMED(name_, "Skipping path because " << path.size() << " different from " << colors.size()
+                                                           << ".");
+    return false;
+  }
+
+  // Create the cylinders
+  for (std::size_t i = 1; i < path.size(); ++i)
+    publishCylinder(path[i - 1], path[i], colors[i], radius, ns);
+
+  return true;
+}
+
 bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon &polygon, colors color, scales scale,
                                      const std::string &ns)
 {
