@@ -67,7 +67,8 @@ public:
    */
   RvizVisualToolsDemo() : name_("rviz_demo")
   {
-    visual_tools_.reset(new rvt::RvizVisualTools("base", "/rviz_visual_tools"));
+    visual_tools_.reset(new rvt::RvizVisualTools("world", "/rviz_visual_tools"));
+    visual_tools_->loadMarkerPub(); // create publisher before waiting
 
     ROS_INFO("Sleeping 5 seconds before running demo");
     ros::Duration(5.0).sleep();

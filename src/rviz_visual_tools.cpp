@@ -295,6 +295,9 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher &pub, double wait_t
   // How often to check for subscribers
   ros::Rate poll_rate(200);
 
+  if (pub.getTopic().empty())
+    ROS_ERROR_STREAM_NAMED(name_, "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
+
   if (blocking && num_existing_subscribers == 0)
     ROS_INFO_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' waiting for subscriber...");
 

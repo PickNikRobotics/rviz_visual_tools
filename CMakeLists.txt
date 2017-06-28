@@ -69,6 +69,7 @@ catkin_package(
     tf_conversions
     trajectory_msgs
     sensor_msgs
+    roscpp
   INCLUDE_DIRS
     include
 )

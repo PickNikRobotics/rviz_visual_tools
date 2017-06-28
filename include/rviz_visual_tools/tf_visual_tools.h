@@ -66,8 +66,9 @@ class TFVisualTools
 public:
   /**
    * \brief Constructor
+   * \param loop_hz - how often tf is published
    */
-  TFVisualTools();
+  TFVisualTools( double loop_hz = 2);
 
   /**
    * \brief Visualize transforms in Rviz, etc
@@ -77,6 +78,8 @@ public:
 
   /**
    * \brief At a certain frequency update the tf transforms that we are tracking
+   *        This is called internally by a clock, you should not need to use this
+   *        TODO: make private in next release?
    */
   void publishAllTransforms(const ros::TimerEvent& e);
 

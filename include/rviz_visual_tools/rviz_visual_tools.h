@@ -120,7 +120,7 @@ enum scales
 enum EulerConvention
 {
   XYZ = 0,
-  ZYX,
+  ZYX,  // This is the ROS standard: http://www.ros.org/reps/rep-0103.html
   ZXZ
 };
 
@@ -946,10 +946,11 @@ public:
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler
    *        R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
    * \return 4x4 matrix in form of affine3d
+   * Use new function, below:
    */
-  // TODO: RVIZ_VISUAL_TOOLS_DEPRECATED
+  RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw);
-  // TODO: RVIZ_VISUAL_TOOLS_DEPRECATED
+  RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);
 
   /**
@@ -962,7 +963,7 @@ public:
   @param rx, ry, rz - rotations about x, y, z, respectively
   */
   static Eigen::Affine3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
-                                           EulerConvention convention);
+                                           EulerConvention convention); // ZYX is ROS standard
 
   // TODO: add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
 
