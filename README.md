@@ -1,7 +1,5 @@
 # Rviz Visual Tools
 
-**Note: a recent change (Sept 28, 2016) requires that all publishing must now be triggered by ``trigger()``**
-
 C++ API wrapper for displaying shapes and meshes in Rviz via helper functions that publish markers. Useful for displaying and debugging data. For more advanced robot visualization features, see the [moveit_visual_tools](https://github.com/davetcoleman/moveit_visual_tools) which builds on this class.
 
 This package includes:
@@ -18,6 +16,8 @@ This package includes:
  - A tf publishing helper class
 
 Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, University of Colorado Boulder with help from Andy McEvoy and many others.
+
+<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#46b798', 'A7182AMW');kofiwidget2.draw();</script> 
 
  * [![Build Status](https://travis-ci.org/davetcoleman/rviz_visual_tools.svg)](https://travis-ci.org/davetcoleman/rviz_visual_tools) Travis CI
  * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary)](http://build.ros.org/view/Kbin_uX64/job/Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary/) ROS Buildfarm - AMD64 Xenial Debian Build
