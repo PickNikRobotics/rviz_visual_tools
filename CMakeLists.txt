@@ -60,6 +60,7 @@ catkin_package(
     ${PROJECT_NAME}
     ${PROJECT_NAME}_gui
     ${PROJECT_NAME}_remote_control
+    ${PROJECT_NAME}_imarker_simple
   CATKIN_DEPENDS
     eigen_conversions
     geometry_msgs
@@ -118,6 +119,15 @@ target_link_libraries(${PROJECT_NAME}
   ${Boost_LIBRARIES}
 )
 
+# Library
+add_library(${PROJECT_NAME}_imarker_simple
+  src/imarker_simple.cpp
+)
+target_link_libraries(${PROJECT_NAME}_imarker_simple
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+)
+
 # Demo executable
 add_executable(${PROJECT_NAME}_demo src/rviz_visual_tools_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_demo
@@ -152,6 +162,7 @@ install(
     ${PROJECT_NAME}
     ${PROJECT_NAME}_gui
     ${PROJECT_NAME}_remote_control
+    ${PROJECT_NAME}_imarker_simple
   LIBRARY DESTINATION
     ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
