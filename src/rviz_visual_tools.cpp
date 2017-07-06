@@ -2430,7 +2430,7 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform
     throw;
   }
 
-  return convertFromXYZRPY(transform6[0], transform6[1], transform6[2], transform6[3], transform6[4], transform6[5]);
+  return convertFromXYZRPY(transform6[0], transform6[1], transform6[2], transform6[3], transform6[4], transform6[5], XYZ);
 }
 
 Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw)

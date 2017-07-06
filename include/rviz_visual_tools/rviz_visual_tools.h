@@ -946,12 +946,14 @@ public:
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler
    *        R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
    * \return 4x4 matrix in form of affine3d
-   * Use new function, below:
+   * Use new function (below) instead, that specifies what type of convention. The drop in replacement
+   * for this function is:
+   *     convertFromXYZRPY(x, y, z, roll, pitch, yaw, rviz_visual_tools::XYZ);
    */
   RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw);
   RVIZ_VISUAL_TOOLS_DEPRECATED
-  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);
+  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6); // TODO: add new version of this function
 
   /**
   @brief Converts scalar translations and rotations to an Eigen Frame.  This is achieved by chaining a
