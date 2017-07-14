@@ -64,6 +64,18 @@ bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform, const std
   geometry_msgs::TransformStamped tf2_msg;
   tf2_msg.header.stamp = ros::Time::now();
   tf::transformEigenToMsg(transform, tf2_msg.transform);
+  double quatNorm;
+
+  // Normalizing the Quaternion
+  quatNorm = 1 / sqrt(tf2_msg.transform.rotation.x * tf2_msg.transform.rotation.x +
+                      tf2_msg.transform.rotation.y * tf2_msg.transform.rotation.y +
+                      tf2_msg.transform.rotation.z * tf2_msg.transform.rotation.z +
+                      tf2_msg.transform.rotation.w * tf2_msg.transform.rotation.w);
+
+  tf2_msg.transform.rotation.x *= quatNorm;
+  tf2_msg.transform.rotation.y *= quatNorm;
+  tf2_msg.transform.rotation.z *= quatNorm;
+  tf2_msg.transform.rotation.w *= quatNorm;
   tf2_msg.header.frame_id = from_frame;
   tf2_msg.child_frame_id = to_frame;
 
