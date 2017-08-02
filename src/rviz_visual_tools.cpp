@@ -831,6 +831,7 @@ Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d &a
 bool RvizVisualTools::publishMarker(visualization_msgs::Marker &marker)
 {
   // Add single marker to array
+  marker.frame_locked = frame_locking_enabled_;
   markers_.markers.push_back(marker);
 
   // Determine if we should publish now
@@ -845,6 +846,11 @@ bool RvizVisualTools::publishMarker(visualization_msgs::Marker &marker)
 void RvizVisualTools::enableBatchPublishing(bool enable)
 {
   batch_publishing_enabled_ = enable;
+}
+
+void RvizVisualTools::enableFrameLocking(bool enable)
+{
+  frame_locking_enabled_ = enable;
 }
 
 bool RvizVisualTools::triggerEvery(std::size_t queueSize)

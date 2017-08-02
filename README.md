@@ -194,6 +194,12 @@ Convenience functions
  - getCenterPoint
  - getVectorBetweenPoints
 
+Frame locking
+
+![](resources/frame_locking.gif)
+
+This allows the markers to be automatically updated as the base frame moves without having to republish. You can enable it via ``enableFrameLocking()`` (this is not enabled by default).
+
 ### Available Colors
 
 This package helps you quickly choose colors - feel free to send PRs with more colors as needed

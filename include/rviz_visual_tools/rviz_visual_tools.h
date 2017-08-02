@@ -370,6 +370,12 @@ public:
   void enableBatchPublishing(bool enable = true);
 
   /**
+   * \brief Enable frame locking - useful for when the markers is attached to a moving TF, the marker will be
+   * re-transformed into its frame every time-step
+   */
+  void enableFrameLocking(bool enable = true);
+
+  /**
    * \brief Trigger the publish function to send out all collected markers IF there are at leats
    *        queueSize number of markers ready to be published.
 a   *        Warning: when using this in a loop be sure to call trigger() at end of loop
@@ -1080,7 +1086,7 @@ protected:
 
   // Settings
   bool batch_publishing_enabled_ = true;
-  ;
+  bool frame_locking_enabled_ = false;
   double alpha_;         // opacity of all markers
   double global_scale_;  // allow all markers to be increased by a constanct factor
 
