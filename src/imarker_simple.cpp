@@ -37,23 +37,24 @@
 */
 
 #include <rviz_visual_tools/imarker_simple.h>
+#include <rviz_visual_tools/rviz_visual_tools.h>
 
 namespace rviz_visual_tools
 {
-  IMarkerSimple::IMarkerSimple()
+  IMarkerSimple::IMarkerSimple(const std::string &name, double scale)
     : nh_("~")
   {
     // Create Marker Server
-    const std::string imarker_topic = nh_.getNamespace() + "/imarker";
+    const std::string imarker_topic = nh_.getNamespace() + "/" + name;
     imarker_server_.reset(new interactive_markers::InteractiveMarkerServer(imarker_topic, "", false));
 
     // Initialize Pose
-    latest_pose_.orientation.w = 0;
+    latest_pose_.orientation.w = 1;
 
-    ros::Duration(2.0).sleep();
+    //ros::Duration(2.0).sleep();
 
     // Create imarker
-    make6DofMarker(latest_pose_);
+    make6DofMarker(latest_pose_, scale);
 
     // Apply
     imarker_server_->applyChanges();
@@ -62,6 +63,19 @@ namespace rviz_visual_tools
   geometry_msgs::Pose& IMarkerSimple::getPose()
   {
     return latest_pose_;
+  }
+
+  void IMarkerSimple::setPose(const Eigen::Affine3d& pose)
+  {
+    geometry_msgs::Pose pose_msg;
+    rviz_visual_tools::RvizVisualTools::convertPoseSafe(pose, pose_msg);
+    setPose(pose_msg);
+  }
+
+  void IMarkerSimple::setPose(const geometry_msgs::Pose& pose)
+  {
+    latest_pose_ = pose;
+    sendUpdatedIMarkerPose();
   }
 
   void IMarkerSimple::iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback)
@@ -79,13 +93,13 @@ namespace rviz_visual_tools
     imarker_server_->applyChanges();
   }
 
-  void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose &pose)
+  void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose &pose, double scale)
   {
     ROS_INFO_STREAM_NAMED(name_, "Making 6dof interactive marker named " << name_);
 
     int_marker_.header.frame_id = "world";
     int_marker_.pose = pose;
-    int_marker_.scale = 0.2;
+    int_marker_.scale = scale;
 
     int_marker_.name = name_;
 

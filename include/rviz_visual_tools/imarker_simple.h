@@ -52,51 +52,55 @@
 
 namespace rviz_visual_tools
 {
-using visualization_msgs::InteractiveMarkerFeedback;
-using visualization_msgs::InteractiveMarkerControl;
+  using visualization_msgs::InteractiveMarkerFeedback;
+  using visualization_msgs::InteractiveMarkerControl;
 
-typedef std::function<void(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &, const Eigen::Affine3d &)>
-IMarkerCallback;
+  typedef std::function<void(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &, const Eigen::Affine3d &)>
+  IMarkerCallback;
 
-class IMarkerSimple
-{
-public:
+  class IMarkerSimple
+  {
+  public:
 
-/** \brief Constructor */
-IMarkerSimple();
+    /** \brief Constructor */
+    IMarkerSimple(const std::string &name = "imarker", double scale = 0.2);
 
-geometry_msgs::Pose& getPose();
+    geometry_msgs::Pose& getPose();
 
-void iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback);
+    void setPose(const Eigen::Affine3d& pose);
 
-void sendUpdatedIMarkerPose();
+    void setPose(const geometry_msgs::Pose& pose);
 
-void make6DofMarker(const geometry_msgs::Pose &pose);
+    void iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback);
 
-private:
+    void sendUpdatedIMarkerPose();
 
-// --------------------------------------------------------
+    void make6DofMarker(const geometry_msgs::Pose &pose, double scale = 0.2);
 
-// The short name of this class
-std::string name_ = "imarker_simple";
+  private:
 
-// A shared node handle
-ros::NodeHandle nh_;
+    // --------------------------------------------------------
 
-geometry_msgs::Pose latest_pose_;
+    // The short name of this class
+    std::string name_ = "imarker_simple";
 
-// Interactive markers
-std::shared_ptr<interactive_markers::InteractiveMarkerServer> imarker_server_;
+    // A shared node handle
+    ros::NodeHandle nh_;
 
-// Interactive markers
-// interactive_markers::MenuHandler menu_handler_;
-visualization_msgs::InteractiveMarker int_marker_;
+    geometry_msgs::Pose latest_pose_;
 
-}; // end class
+    // Interactive markers
+    std::shared_ptr<interactive_markers::InteractiveMarkerServer> imarker_server_;
 
-// Create std pointers for this class
-typedef std::shared_ptr<IMarkerSimple> IMarkerSimplePtr;
-typedef std::shared_ptr<const IMarkerSimple> IMarkerSimpleConstPtr;
+    // Interactive markers
+    // interactive_markers::MenuHandler menu_handler_;
+    visualization_msgs::InteractiveMarker int_marker_;
+
+  }; // end class
+
+  // Create std pointers for this class
+  typedef std::shared_ptr<IMarkerSimple> IMarkerSimplePtr;
+  typedef std::shared_ptr<const IMarkerSimple> IMarkerSimpleConstPtr;
 
 } // namespace rviz_visual_tools
 #endif  // RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_H
