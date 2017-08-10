@@ -1030,6 +1030,11 @@ public:
    */
   static void printTransformRPY(const Eigen::Affine3d &transform);
 
+  /**
+   * \brief Display in the console a transform with full 3x3 rotation matrix
+   */
+  static void printTransformFull(const Eigen::Affine3d &transform);
+
   /** \brief Getter for PsychedelicMode */
   bool getPsychedelicMode() const
   {

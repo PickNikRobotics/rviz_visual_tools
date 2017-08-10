@@ -2635,6 +2635,12 @@ void RvizVisualTools::printTransformRPY(const Eigen::Affine3d &transform)
             << transform.translation().z() << ", " << vec[0] << ", " << vec[1] << ", " << vec[2] << "]\n";
 }
 
+void RvizVisualTools::printTransformFull(const Eigen::Affine3d &transform)
+{
+  std::cout << "T.xyz = [" << transform.translation().x() << ", " << transform.translation().y() << ", "
+            << transform.translation().z() << "], R = \n" << transform.rotation() << "\n";
+}
+
 void RvizVisualTools::prompt(const std::string &msg)
 {
   getRemoteControl()->waitForNextStep(msg);
