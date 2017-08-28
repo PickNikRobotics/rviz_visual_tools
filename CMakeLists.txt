@@ -75,12 +75,7 @@ catkin_package(
     include
 )
 
-include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
-
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
+include_directories(SYSTEM include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
 
 ###########
 ## Build ##
@@ -126,6 +121,7 @@ add_library(${PROJECT_NAME}_imarker_simple
 target_link_libraries(${PROJECT_NAME}_imarker_simple
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
+  ${PROJECT_NAME}
 )
 
 # Demo executable
