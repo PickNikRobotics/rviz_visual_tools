@@ -193,8 +193,7 @@ public:
   }
 
   /**
-   * \brief Tell Rviz to clear all markers on a particular display. Note: only works on ROS Indigo
-   * and newer
+   * \brief Tell Rviz to clear all markers on a particular display.
    */
   bool deleteAllMarkers();
 
@@ -737,7 +736,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
   bool publishWireframeRectangle(const Eigen::Affine3d &pose, const Eigen::Vector3d &p1, const Eigen::Vector3d &p2,
                                  const Eigen::Vector3d &p3, const Eigen::Vector3d &p4, colors color, scales scale);
   /**
-   * \brief Display a marker of a axis with a text label describing it
+   * \brief Display a marker of a coordinate frame axis with a text label describing it
    * \param pose - the location to publish the marker with respect to the base frame
    * \param label - name of axis/coordinate frame
    * \param scale - size of axis
@@ -750,7 +749,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
                           colors color = WHITE);
 
   /**
-   * \brief Display a red/green/blue coordinate axis
+   * \brief Display a red/green/blue coordinate frame axis
    * \param pose - the location to publish the marker with respect to the base frame
    * \param scale - size of axis
    * \param length - geometry of cylinder
@@ -969,9 +968,11 @@ public:
 
   @param tx, ty, tz - translations in x, y, z respectively
   @param rx, ry, rz - rotations about x, y, z, respectively
+  @param convention - default is rviz_visual_tools::XYZ
   */
   static Eigen::Affine3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
                                            EulerConvention convention); // ZYX is ROS standard
+  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6, EulerConvention convention); // ZYX is ROS standard
 
   // TODO: add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
 
@@ -1067,7 +1068,7 @@ protected:
   ros::NodeHandle nh_;
 
   // Short name for this class
-  std::string name_ = "visual_tools";
+  static const std::string name_;
 
   // Optional remote control
   RemoteControlPtr remote_control_;

@@ -51,6 +51,9 @@
 
 namespace rviz_visual_tools
 {
+
+const std::string RvizVisualTools::name_ = "visual_tools";
+
 RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::string &marker_topic)
   : nh_("~"), marker_topic_(marker_topic), base_frame_(base_frame)
 {
@@ -2429,14 +2432,7 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 
 Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6)
 {
-  if (transform6.size() != 6)
-  {
-    // note: cannot use name_ var b/c this func is static
-    ROS_ERROR_STREAM_NAMED("visual_tools", "Incorrect number of variables passed for 6-size transform");
-    throw;
-  }
-
-  return convertFromXYZRPY(transform6[0], transform6[1], transform6[2], transform6[3], transform6[4], transform6[5], XYZ);
+  return convertFromXYZRPY(transform6, XYZ);
 }
 
 Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw)
@@ -2478,6 +2474,17 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double 
   }
 
   return result;
+}
+
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6, EulerConvention convention)
+{
+  if (transform6.size() != 6)
+  {
+    ROS_ERROR_STREAM_NAMED(name_, "Incorrect number of variables passed for 6-size transform");
+    throw;
+  }
+
+  return convertFromXYZRPY(transform6[0], transform6[1], transform6[2], transform6[3], transform6[4], transform6[5], convention);
 }
 
 void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d &pose, std::vector<double> &xyzrpy)
@@ -2654,7 +2661,8 @@ void RvizVisualTools::prompt(const std::string &msg)
 
 RemoteControlPtr &RvizVisualTools::getRemoteControl()
 {
-  loadRemoteControl();
+  if (!remote_control_)
+    loadRemoteControl();
   return remote_control_;
 }
 
