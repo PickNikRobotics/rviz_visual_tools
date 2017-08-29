@@ -2358,6 +2358,11 @@ Eigen::Affine3d RvizVisualTools::convertPose(const geometry_msgs::Pose &pose)
   return shared_pose_eigen_;
 }
 
+void RvizVisualTools::convertPoseSafe(const geometry_msgs::Pose &pose_msg, Eigen::Affine3d &pose)
+{
+  tf::poseMsgToEigen(pose_msg, pose);
+}
+
 Eigen::Affine3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point32 &point)
 {
   shared_pose_eigen_ = Eigen::Affine3d::Identity();

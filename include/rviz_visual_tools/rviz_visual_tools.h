@@ -872,18 +872,25 @@ public:
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose - thread safe
-   * \param input pose
-   * \param output converted pose
+   * \param Eigen pose - input
+   * \param ROS msg pose - output
    */
   static void convertPoseSafe(const Eigen::Affine3d &pose, geometry_msgs::Pose &pose_msg);
 
   /**
    * \brief Convert a geometry_msg pose to an Eigen pose
    *        Note: Not thread safe but very convenient
-   * \param pose
+   * \param ROS msg pose
    * \return converted pose
    */
   Eigen::Affine3d convertPose(const geometry_msgs::Pose &pose);
+
+  /**
+   * \brief Convert a geometry_msg pose to an Eigen pose - thread safe
+   * \param ROS msg pose - input
+   * \param Eigen pose - output
+   */
+  static void convertPoseSafe(const geometry_msgs::Pose &pose_msg, Eigen::Affine3d &pose);
 
   /**
    * \brief Convert a geometry_msg point (32bit) to an Eigen pose
