@@ -733,8 +733,9 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    */
   bool publishWireframeRectangle(const Eigen::Affine3d& pose, double height, double width, colors color = BLUE,
                                  scales scale = MEDIUM, std::size_t id = 0);
-  bool publishWireframeRectangle(const Eigen::Affine3d& pose, const Eigen::Vector3d& p1_in, const Eigen::Vector3d& p2_in,
-                                 const Eigen::Vector3d& p3_in, const Eigen::Vector3d& p4_in, colors color, scales scale);
+  bool publishWireframeRectangle(const Eigen::Affine3d& pose, const Eigen::Vector3d& p1_in,
+                                 const Eigen::Vector3d& p2_in, const Eigen::Vector3d& p3_in,
+                                 const Eigen::Vector3d& p4_in, colors color, scales scale);
   /**
    * \brief Display a marker of a coordinate frame axis with a text label describing it
    * \param pose - the location to publish the marker with respect to the base frame

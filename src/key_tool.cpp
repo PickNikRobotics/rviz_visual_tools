@@ -46,8 +46,7 @@
 
 namespace rviz_visual_tools
 {
-KeyTool::KeyTool()
-= default;
+KeyTool::KeyTool() = default;
 
 KeyTool::~KeyTool() = default;
 

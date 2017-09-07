@@ -82,7 +82,7 @@ bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform, const std
   return true;
 }
 
-void TFVisualTools::publishAllTransforms(const ros::TimerEvent&  /*e*/)
+void TFVisualTools::publishAllTransforms(const ros::TimerEvent& /*e*/)
 {
   ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transforms");
 

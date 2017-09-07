@@ -51,7 +51,6 @@
 
 namespace rviz_visual_tools
 {
-
 const std::string RvizVisualTools::name_ = "visual_tools";
 
 RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic)
@@ -262,17 +261,19 @@ bool RvizVisualTools::loadRvizMarkers()
 
 void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
 {
-  if (pub_rviz_markers_ != nullptr) {
+  if (pub_rviz_markers_ != nullptr)
+  {
     return;
-}
+  }
 
   // Rviz marker publisher
   pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10, latched);
   ROS_DEBUG_STREAM_NAMED(name_, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
-  if (wait_for_subscriber) {
+  if (wait_for_subscriber)
+  {
     waitForSubscriber(pub_rviz_markers_);
-}
+  }
 }
 
 void RvizVisualTools::waitForMarkerPub()
@@ -299,13 +300,15 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
   // How often to check for subscribers
   ros::Rate poll_rate(200);
 
-  if (pub.getTopic().empty()) {
+  if (pub.getTopic().empty())
+  {
     ROS_ERROR_STREAM_NAMED(name_, "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
-}
+  }
 
-  if (blocking && num_existing_subscribers == 0) {
+  if (blocking && num_existing_subscribers == 0)
+  {
     ROS_INFO_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' waiting for subscriber...");
-}
+  }
 
   // Wait for subscriber
   while (num_existing_subscribers == 0)
@@ -325,16 +328,17 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
     // Check again
     num_existing_subscribers = pub.getNumSubscribers();
 
-    if (!ros::ok()) {
+    if (!ros::ok())
+    {
       return false;
-}
+    }
   }
   pub_rviz_markers_connected_ = true;
 
   return true;
 }
 
-void RvizVisualTools::setFloorToBaseHeight(double  /*floor_to_base_height*/)
+void RvizVisualTools::setFloorToBaseHeight(double /*floor_to_base_height*/)
 {
   ROS_WARN_STREAM_NAMED(name_, "Deperecated function");
 }
@@ -638,11 +642,15 @@ std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value)
   std_msgs::ColorRGBA end;
 
   // For second half of color range move towards RED
-  if (value == 0.0) {
+  if (value == 0.0)
+  {
     return getColor(RED);
-  } else if (value == 1.0) {
+  }
+  else if (value == 1.0)
+  {
     return getColor(GREEN);
-  } else if (value <= 0.5)
+  }
+  else if (value <= 0.5)
   {
     start = getColor(RED);
     end = getColor(YELLOW);
@@ -774,9 +782,10 @@ Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d& a
 
   if (right_axis_vector[0] == 0.0 && right_axis_vector[1] == 0.0 && right_axis_vector[2] == 0.0)
   {
-    if (verbose) {
+    if (verbose)
+    {
       std::cout << "right axis vector is zero " << std::endl;
-}
+    }
     result_pose = Eigen::AngleAxisd(-0.5 * M_PI, Eigen::Vector3d::UnitY());
     result_pose.translation() = a;
     return result_pose;
@@ -863,17 +872,19 @@ void RvizVisualTools::enableFrameLocking(bool enable)
 
 bool RvizVisualTools::triggerEvery(std::size_t queueSize)
 {
-  if (markers_.markers.size() >= queueSize || queueSize == 0) {
+  if (markers_.markers.size() >= queueSize || queueSize == 0)
+  {
     return trigger();
-}
+  }
   return false;
 }
 
 bool RvizVisualTools::trigger()
 {
-  if (!batch_publishing_enabled_) {
+  if (!batch_publishing_enabled_)
+  {
     ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled (unnecessary function call)");
-}
+  }
   if (markers_.markers.empty())
   {
     // ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but queue is empty (unnecessary function call)");
@@ -895,9 +906,10 @@ bool RvizVisualTools::triggerAndDisable()
 
 bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
 {
-  if (pub_rviz_markers_ == nullptr) {  // always check this before publishing
+  if (pub_rviz_markers_ == nullptr)
+  {  // always check this before publishing
     loadMarkerPub();
-}
+  }
 
   // Check if connected to a subscriber
   if (!pub_rviz_markers_waited_ && !pub_rviz_markers_connected_)
@@ -910,9 +922,10 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
   }
 
   // Check if any actual markers exist to publish
-  if (markers.markers.empty()) {
+  if (markers.markers.empty())
+  {
     return false;
-}
+  }
 
   // Change all markers to be inverted in color
   if (psychedelic_mode_)
@@ -922,7 +935,7 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
       marker.color.r = 1.0 - marker.color.r;
       marker.color.g = 1.0 - marker.color.g;
       marker.color.b = 1.0 - marker.color.b;
-      for (auto & color : marker.colors)
+      for (auto& color : marker.colors)
       {
         color.r = 1.0 - color.r;
         color.g = 1.0 - color.g;
@@ -1194,11 +1207,14 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose& pose, const std_m
   sphere_marker_.header.stamp = ros::Time::now();
 
   // Overwrite ID or increment?
-  if (id == 0) {
+  if (id == 0)
+  {
     sphere_marker_.id++;
-  } else {
+  }
+  else
+  {
     sphere_marker_.id = id;
-}
+  }
 
   sphere_marker_.pose = pose;
   sphere_marker_.color = color;
@@ -1215,11 +1231,14 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::PoseStamped& pose, colo
   // Set the frame ID and timestamp
   sphere_marker_.header = pose.header;
 
-  if (id == 0) {
+  if (id == 0)
+  {
     sphere_marker_.id++;
-  } else {
+  }
+  else
+  {
     sphere_marker_.id = id;
-}
+  }
 
   sphere_marker_.pose = pose.pose;
   sphere_marker_.color = getColor(color);
@@ -1311,22 +1330,28 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Pose& pose, colors color
   arrow_marker_.header.stamp = ros::Time::now();
   arrow_marker_.header.frame_id = base_frame_;
 
-  if (id == 0) {
+  if (id == 0)
+  {
     arrow_marker_.id++;
-  } else {
+  }
+  else
+  {
     arrow_marker_.id = id;
-}
+  }
 
   arrow_marker_.pose = pose;
   arrow_marker_.color = getColor(color);
   arrow_marker_.scale = getScale(scale);
 
   // override previous x scale specified
-  if (length == 0) {  // auto set the scale
+  if (length == 0)
+  {  // auto set the scale
     arrow_marker_.scale.x *= 10.0;
-  } else {
+  }
+  else
+  {
     arrow_marker_.scale.x = length;
-}
+  }
 
   // Helper for publishing rviz markers
   return publishMarker(arrow_marker_);
@@ -1338,22 +1363,28 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped& pose, color
   // Set the frame ID and timestamp.
   arrow_marker_.header = pose.header;
 
-  if (id == 0) {
+  if (id == 0)
+  {
     arrow_marker_.id++;
-  } else {
+  }
+  else
+  {
     arrow_marker_.id = id;
-}
+  }
 
   arrow_marker_.pose = pose.pose;
   arrow_marker_.color = getColor(color);
   arrow_marker_.scale = getScale(scale);
 
   // override previous x scale specified
-  if (length == 0) {  // auto set the scale
+  if (length == 0)
+  {  // auto set the scale
     arrow_marker_.scale.x *= 10.0;
-  } else {
+  }
+  else
+  {
     arrow_marker_.scale.x = length;
-}
+  }
 
   // Helper for publishing rviz markers
   publishMarker(arrow_marker_);
@@ -1469,7 +1500,7 @@ bool RvizVisualTools::publishCylinder(const Eigen::Vector3d& point1, const Eigen
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2,
-                                      const std_msgs::ColorRGBA& color, double radius, const std::string&  /*ns*/)
+                                      const std_msgs::ColorRGBA& color, double radius, const std::string& /*ns*/)
 {
   // Distance between two points
   double height = (point1 - point2).lpNorm<2>();
@@ -1537,11 +1568,14 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const std::st
   // Set the timestamp
   mesh_marker_.header.stamp = ros::Time::now();
 
-  if (id == 0) {
+  if (id == 0)
+  {
     mesh_marker_.id++;
-  } else {
+  }
+  else
+  {
     mesh_marker_.id = id;
-}
+  }
 
   // Set the mesh
   mesh_marker_.mesh_resource = file_name;
@@ -1610,11 +1644,14 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Point& point1, const ge
   cuboid_marker_.header.stamp = ros::Time::now();
   cuboid_marker_.ns = ns;
 
-  if (id == 0) {  // Provide a new id every call to this function
+  if (id == 0)
+  {  // Provide a new id every call to this function
     cuboid_marker_.id++;
-  } else {  // allow marker to be overwritten
+  }
+  else
+  {  // allow marker to be overwritten
     cuboid_marker_.id = id;
-}
+  }
 
   cuboid_marker_.color = getColor(color);
 
@@ -1631,15 +1668,18 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Point& point1, const ge
   cuboid_marker_.scale.z = fabs(point1.z - point2.z);
 
   // Prevent scale from being zero
-  if (cuboid_marker_.scale.x == 0.0) {
+  if (cuboid_marker_.scale.x == 0.0)
+  {
     cuboid_marker_.scale.x = SMALL_SCALE;
-}
-  if (cuboid_marker_.scale.y == 0.0) {
+  }
+  if (cuboid_marker_.scale.y == 0.0)
+  {
     cuboid_marker_.scale.y = SMALL_SCALE;
-}
-  if (cuboid_marker_.scale.z == 0.0) {
+  }
+  if (cuboid_marker_.scale.z == 0.0)
+  {
     cuboid_marker_.scale.z = SMALL_SCALE;
-}
+  }
 
   // Helper for publishing rviz markers
   return publishMarker(cuboid_marker_);
@@ -1662,23 +1702,32 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose& pose, double dept
   cuboid_marker_.pose = pose;
 
   // Prevent scale from being zero
-  if (depth <= 0) {
+  if (depth <= 0)
+  {
     cuboid_marker_.scale.x = SMALL_SCALE;
-  } else {
+  }
+  else
+  {
     cuboid_marker_.scale.x = depth;
-}
+  }
 
-  if (width <= 0) {
+  if (width <= 0)
+  {
     cuboid_marker_.scale.y = SMALL_SCALE;
-  } else {
+  }
+  else
+  {
     cuboid_marker_.scale.y = width;
-}
+  }
 
-  if (height <= 0) {
+  if (height <= 0)
+  {
     cuboid_marker_.scale.z = SMALL_SCALE;
-  } else {
+  }
+  else
+  {
     cuboid_marker_.scale.z = height;
-}
+  }
 
   return publishMarker(cuboid_marker_);
 }
@@ -1845,9 +1894,10 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Pose>& path, 
                                   const std::string& ns)
 {
   std::vector<geometry_msgs::Point> point_path(path.size());
-  for (std::size_t i = 0; i < path.size(); ++i) {
+  for (std::size_t i = 0; i < path.size(); ++i)
+  {
     point_path[i] = path[i].position;
-}
+  }
 
   return publishPath(point_path, color, getScale(scale).x, ns);
 }
@@ -1941,9 +1991,10 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
   }
 
   // Create the cylinders
-  for (std::size_t i = 1; i < path.size(); ++i) {
+  for (std::size_t i = 1; i < path.size(); ++i)
+  {
     publishCylinder(path[i - 1], path[i], colors[i], radius, ns);
-}
+  }
 
   return true;
 }
@@ -1965,9 +2016,10 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
   }
 
   // Create the cylinders
-  for (std::size_t i = 1; i < path.size(); ++i) {
+  for (std::size_t i = 1; i < path.size(); ++i)
+  {
     publishCylinder(path[i - 1], path[i], colors[i], radius, ns);
-}
+  }
 
   return true;
 }
@@ -1985,9 +2037,10 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon& polygon, colo
     temp.x = polygon.points[i].x;
     temp.y = polygon.points[i].y;
     temp.z = polygon.points[i].z;
-    if (i == 0) {
+    if (i == 0)
+    {
       first = temp;
-}
+    }
     points.push_back(temp);
   }
   points.push_back(first);  // connect first and last points for last line
@@ -2031,11 +2084,14 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d& pose, const 
   line_list_marker_.header.stamp = ros::Time();
   line_list_marker_.ns = ns;
 
-  if (id == 0) {  // Provide a new id every call to this function
+  if (id == 0)
+  {  // Provide a new id every call to this function
     line_list_marker_.id++;
-  } else {  // allow marker to be overwritten
+  }
+  else
+  {  // allow marker to be overwritten
     line_list_marker_.id = id;
-}
+  }
 
   std_msgs::ColorRGBA this_color = getColor(color);
   line_list_marker_.scale = getScale(XXSMALL);
@@ -2111,11 +2167,14 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d& pose, const 
 bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d& pose, double height, double width, colors color,
                                                 scales scale, std::size_t id)
 {
-  if (id == 0) {  // Provide a new id every call to this function
+  if (id == 0)
+  {  // Provide a new id every call to this function
     line_list_marker_.id++;
-  } else {  // allow marker to be overwritten
+  }
+  else
+  {  // allow marker to be overwritten
     line_list_marker_.id = id;
-}
+  }
 
   // Extract 8 cuboid vertices
   Eigen::Vector3d p1(-width / 2.0, -height / 2.0, 0.0);
@@ -2364,9 +2423,10 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose& pose, const std::st
   publishMarker(text_marker_);
 
   // Restore the ID count if needed
-  if (static_id) {
+  if (static_id)
+  {
     text_marker_.id = temp_id;
-}
+  }
 
   return true;
 }
@@ -2698,9 +2758,10 @@ void RvizVisualTools::prompt(const std::string& msg)
 
 RemoteControlPtr& RvizVisualTools::getRemoteControl()
 {
-  if (!remote_control_) {
+  if (!remote_control_)
+  {
     loadRemoteControl();
-}
+  }
   return remote_control_;
 }
 
