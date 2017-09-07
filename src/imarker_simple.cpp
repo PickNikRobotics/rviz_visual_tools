@@ -80,8 +80,9 @@ void IMarkerSimple::setPose(const geometry_msgs::Pose& pose)
 void IMarkerSimple::iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback)
 {
   // Ignore if not pose update
-  if (feedback->event_type != visualization_msgs::InteractiveMarkerFeedback::POSE_UPDATE)
+  if (feedback->event_type != visualization_msgs::InteractiveMarkerFeedback::POSE_UPDATE) {
     return;
+}
 
   latest_pose_ = feedback->pose;
 }

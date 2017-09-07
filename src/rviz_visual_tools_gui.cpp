@@ -38,14 +38,14 @@
 
 #include <cstdio>
 
-#include <QPainter>
-#include <QLineEdit>
-#include <QVBoxLayout>
+#include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QTimer>
-#include <QGroupBox>
+#include <QLineEdit>
+#include <QPainter>
 #include <QSpinBox>
+#include <QTimer>
+#include <QVBoxLayout>
 
 #include "rviz_visual_tools_gui.h"
 

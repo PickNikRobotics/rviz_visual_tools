@@ -31,12 +31,12 @@
 #include <OgreVector3.h>
 
 // Rviz
-#include <rviz/viewport_mouse_event.h>
-#include <rviz/load_resource.h>
 #include <rviz/display_context.h>
-#include <rviz/view_controller.h>
+#include <rviz/load_resource.h>
 #include <rviz/properties/bool_property.h>
 #include <rviz/properties/string_property.h>
+#include <rviz/view_controller.h>
+#include <rviz/viewport_mouse_event.h>
 
 // this package
 #include "key_tool.h"
@@ -46,9 +46,8 @@
 
 namespace rviz_visual_tools
 {
-KeyTool::KeyTool() : Tool()
-{
-}
+KeyTool::KeyTool()
+= default;
 
 KeyTool::~KeyTool() = default;
 
@@ -98,7 +97,7 @@ int KeyTool::processMouseEvent(rviz::ViewportMouseEvent& event)
   return flags;
 }
 
-}  // end class
+}  // namespace rviz_visual_tools
 
 #include <pluginlib/class_list_macros.h>
 PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::KeyTool, rviz::Tool)

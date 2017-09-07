@@ -64,16 +64,17 @@ RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_(nh)
 
 void RemoteControl::rvizDashboardCallback(const sensor_msgs::Joy::ConstPtr& msg)
 {
-  if (msg->buttons[1])
+  if (msg->buttons[1] != 0) {
     setReadyForNextStep();
-  else if (msg->buttons[2])
+  } else if (msg->buttons[2] != 0) {
     setAutonomous();
-  else if (msg->buttons[3])
+  } else if (msg->buttons[3] != 0) {
     setFullAutonomous();
-  else if (msg->buttons[4])
+  } else if (msg->buttons[4] != 0) {
     setStop();
-  else
+  } else {
     ROS_ERROR_STREAM_NAMED(name_, "Unknown input button");
+}
 }
 
 bool RemoteControl::setReadyForNextStep()
@@ -128,15 +129,17 @@ bool RemoteControl::getFullAutonomous()
 bool RemoteControl::waitForNextStep(const std::string& caption)
 {
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !autonomous_ && ros::ok()))
+  if (!(!next_step_ready_ && !autonomous_ && ros::ok())) {
     return true;
+}
 
   // Show message
   std::cout << std::endl;
   std::cout << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET << std::flush;
 
-  if (displayWaitingState_)
+  if (displayWaitingState_) {
     displayWaitingState_(true);
+}
 
   is_waiting_ = true;
   // Wait until next step is ready
@@ -145,30 +148,34 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
     ros::Duration(0.25).sleep();
     ros::spinOnce();
   }
-  if (!ros::ok())
+  if (!ros::ok()) {
     exit(0);
+}
 
   next_step_ready_ = false;
   is_waiting_ = false;
   std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
 
-  if (displayWaitingState_)
+  if (displayWaitingState_) {
     displayWaitingState_(false);
+}
   return true;
 }
 
 bool RemoteControl::waitForNextFullStep(const std::string& caption)
 {
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !full_autonomous_ && ros::ok()))
+  if (!(!next_step_ready_ && !full_autonomous_ && ros::ok())) {
     return true;
+}
 
   // Show message
   std::cout << std::endl;
   std::cout << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET << std::flush;
 
-  if (displayWaitingState_)
+  if (displayWaitingState_) {
     displayWaitingState_(true);
+}
 
   is_waiting_ = true;
   // Wait until next step is ready
@@ -177,15 +184,17 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
     ros::Duration(0.25).sleep();
     ros::spinOnce();
   }
-  if (!ros::ok())
+  if (!ros::ok()) {
     exit(0);
+}
 
   next_step_ready_ = false;
   is_waiting_ = false;
   std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
 
-  if (displayWaitingState_)
+  if (displayWaitingState_) {
     displayWaitingState_(false);
+}
   return true;
 }
 

@@ -40,8 +40,8 @@
 #include <string>
 #include <vector>
 
-#include <ros/ros.h>
 #include <gtest/gtest.h>
+#include <ros/ros.h>
 
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.h>

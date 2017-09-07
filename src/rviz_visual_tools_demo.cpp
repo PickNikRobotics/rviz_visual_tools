@@ -105,8 +105,9 @@ public:
       geometry_msgs::Vector3 scale = visual_tools_->getScale(MEDIUM);
       std_msgs::ColorRGBA color = visual_tools_->getColorScale(i);
       visual_tools_->publishSphere(visual_tools_->convertPose(pose1), color, scale, "Sphere");
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Sphere Color Range");
+}
       pose1.translation().x() += step;
     }
     visual_tools_->trigger();
@@ -120,8 +121,9 @@ public:
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishAxis(pose1);
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Coordinate Axis");
+}
 
       pose1.translation().x() += step;
       pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitX()) *
@@ -139,8 +141,9 @@ public:
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishArrow(pose1, rvt::RAND);
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Arrows");
+}
 
       pose1.translation().x() += step;
       pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
@@ -165,8 +168,9 @@ public:
       pose2.translation().z() += i * cuboid_max_size + cuboid_min_size;
       visual_tools_->publishCuboid(pose1.translation(), pose2.translation(), rvt::RAND);
 
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Cuboid");
+}
 
       pose1.translation().x() += step;
     }
@@ -190,8 +194,9 @@ public:
       pose2.translation().z() += i * line_max_size + line_min_size;
       visual_tools_->publishLine(pose1.translation(), pose2.translation(), rvt::RAND);
 
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Line");
+}
 
       pose1.translation().x() += step;
     }
@@ -206,8 +211,9 @@ public:
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishCylinder(pose1, rvt::RAND);
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Cylinder");
+}
 
       pose1.translation().x() += step;
       pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
@@ -226,8 +232,9 @@ public:
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishCone(pose1, M_PI / angle, rvt::RAND, 0.05);
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Cone");
+}
 
       pose1.translation().x() += step;
       pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
@@ -248,8 +255,9 @@ public:
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishWireframeCuboid(pose1, min_point, max_point, rvt::RAND);
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Wireframe Cuboid");
+}
 
       pose1.translation().x() += step;
       pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
@@ -266,8 +274,9 @@ public:
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishWireframeCuboid(pose1, depth, width, height, rvt::RAND);
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Wireframe Cuboid");
+}
 
       pose1.translation().x() += step;
       pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitZ());
@@ -287,8 +296,9 @@ public:
       visual_tools_->publishXYPlane(pose1, rvt::RED, i * max_plane_size + min_plane_size);
       visual_tools_->publishXZPlane(pose1, rvt::GREEN, i * max_plane_size + min_plane_size);
       visual_tools_->publishYZPlane(pose1, rvt::BLUE, i * max_plane_size + min_plane_size);
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Planes");
+}
 
       pose1.translation().x() += step;
     }
@@ -305,12 +315,14 @@ public:
     {
       graph.nodes.push_back(visual_tools_->convertPose(pose1).position);
       graph_msgs::Edges edges;
-      if (i > 0)
+      if (i > 0) {
         edges.node_ids.push_back(0);
+}
       graph.edges.push_back(edges);
 
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Graph");
+}
 
       pose1.translation().x() += step;
       pose1.translation().z() += visual_tools_->dRand(-0.1, 0.1);
@@ -334,8 +346,9 @@ public:
     for (double i = 0; i <= 1.0; i += step)
     {
       visual_tools_->publishAxisLabeled(pose1, "label of axis");
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Labeled Axis");
+}
 
       pose1.translation().x() += step;
       pose1 = pose1 * Eigen::AngleAxisd(step * 2 * M_PI, Eigen::Vector3d::UnitX()) *
@@ -371,8 +384,9 @@ public:
       path.emplace_back(pose1.translation());
       pose1.translation().x() += step;
 
-      if (!i)
+      if (i == 0.0) {
         publishLabelHelper(pose1, "Path");
+}
     }
     visual_tools_->publishPath(path, colors);
     visual_tools_->trigger();
@@ -406,10 +420,10 @@ public:
 
     pose1.translation().x() = x_location;
 
-    // TODO publishCone() - no scale version available
-    // TODO publishXYPlane() - no scale version available
-    // TODO publishXZPlane() - no scale version available
-    // TODO publishYZPlane() - no scale version available
+    // TODO(dave): publishCone() - no scale version available
+    // TODO(dave): publishXYPlane() - no scale version available
+    // TODO(dave): publishXZPlane() - no scale version available
+    // TODO(dave): publishYZPlane() - no scale version available
 
     // Sphere
     visual_tools_->publishSphere(pose1, BLUE, scale);
@@ -474,10 +488,10 @@ public:
     pose1.translation().x() = x_location;  // reset
     pose1.translation().y() += step;
 
-    // TODO publishPath
-    // TODO publishPolygon
-    // TODO publishWireframeCuboid
-    // TODO publishWireframeRectangle
+    // TODO(dave): publishPath
+    // TODO(dave): publishPolygon
+    // TODO(dave): publishWireframeCuboid
+    // TODO(dave): publishWireframeRectangle
 
     // Axis Labeled
     visual_tools_->publishAxisLabeled(pose1, "Axis", scale);
@@ -487,7 +501,7 @@ public:
     visual_tools_->publishAxis(pose1, scale);
     pose1.translation().y() += step;
 
-    // TODO publishAxis
+    // TODO(dave): publishAxis
 
     // Cylinder
     pose2 = pose1;
@@ -495,9 +509,9 @@ public:
     visual_tools_->publishCylinder(pose1.translation(), pose2.translation(), BLUE, scale);
     pose1.translation().y() += step;
 
-    // TODO publishMesh
+    // TODO(dave): publishMesh
 
-    // TODO publishGraph
+    // TODO(dave): publishGraph
 
     // Text
     visual_tools_->publishText(pose1, "Text", WHITE, scale, false);
@@ -529,10 +543,11 @@ public:
     // Sphere
     for (scales scale = XXXXSMALL; scale <= XXXXLARGE; /*inline*/)
     {
-      if (scale == MEDIUM)
+      if (scale == MEDIUM) {
         visual_tools_->publishSphere(pose1, GREEN, scale);
-      else
+      } else {
         visual_tools_->publishSphere(pose1, GREY, scale);
+}
       visual_tools_->publishText(pose2, "Size " + visual_tools_->scaleToString(scale), WHITE, scale, false);
 
       scale = static_cast<scales>(static_cast<int>(scale) + 1);

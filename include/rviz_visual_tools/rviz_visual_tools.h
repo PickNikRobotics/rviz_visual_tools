@@ -733,8 +733,8 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    */
   bool publishWireframeRectangle(const Eigen::Affine3d& pose, double height, double width, colors color = BLUE,
                                  scales scale = MEDIUM, std::size_t id = 0);
-  bool publishWireframeRectangle(const Eigen::Affine3d& pose, const Eigen::Vector3d& p1, const Eigen::Vector3d& p2,
-                                 const Eigen::Vector3d& p3, const Eigen::Vector3d& p4, colors color, scales scale);
+  bool publishWireframeRectangle(const Eigen::Affine3d& pose, const Eigen::Vector3d& p1_in, const Eigen::Vector3d& p2_in,
+                                 const Eigen::Vector3d& p3_in, const Eigen::Vector3d& p4_in, colors color, scales scale);
   /**
    * \brief Display a marker of a coordinate frame axis with a text label describing it
    * \param pose - the location to publish the marker with respect to the base frame
@@ -1033,7 +1033,7 @@ public:
   /**
    * \brief Display in the console the x,y,z values of a point
    */
-  void printTranslation(const Eigen::Vector3d& point);
+  void printTranslation(const Eigen::Vector3d& translation);
 
   /**
    * \brief Display in the console a transform in quaternions
@@ -1096,8 +1096,8 @@ protected:
   // Settings
   bool batch_publishing_enabled_ = true;
   bool frame_locking_enabled_ = false;
-  double alpha_;         // opacity of all markers
-  double global_scale_;  // allow all markers to be increased by a constanct factor
+  double alpha_ = 1.0;         // opacity of all markers
+  double global_scale_ = 1.0;  // allow all markers to be increased by a constanct factor
 
   // Cached Rviz Marker Array
   visualization_msgs::MarkerArray markers_;
