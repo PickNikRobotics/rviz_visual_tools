@@ -68,7 +68,7 @@ public:
   RvizVisualToolsDemo() : name_("rviz_demo")
   {
     visual_tools_.reset(new rvt::RvizVisualTools("world", "/rviz_visual_tools"));
-    visual_tools_->loadMarkerPub(); // create publisher before waiting
+    visual_tools_->loadMarkerPub();  // create publisher before waiting
 
     ROS_INFO("Sleeping 5 seconds before running demo");
     ros::Duration(5.0).sleep();
@@ -78,14 +78,14 @@ public:
     visual_tools_->enableBatchPublishing();
   }
 
-  void publishLabelHelper(const Eigen::Affine3d &pose, const std::string &label)
+  void publishLabelHelper(const Eigen::Affine3d& pose, const std::string& label)
   {
     Eigen::Affine3d pose_copy = pose;
     pose_copy.translation().x() -= 0.2;
     visual_tools_->publishText(pose_copy, label, rvt::WHITE, rvt::XXLARGE, false);
   }
 
-  void testRows(double &x_location)
+  void testRows(double& x_location)
   {
     // Create pose
     Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
@@ -382,7 +382,7 @@ public:
   }
 
   /** \brief Compare sizes of markers using all MEDIUM-scale markers */
-  void testSize(double &x_location, scales scale)
+  void testSize(double& x_location, scales scale)
   {
     // Create pose
     Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
@@ -511,7 +511,7 @@ public:
   }
 
   /** \brief Compare every size range */
-  void testSizes(double &x_location)
+  void testSizes(double& x_location)
   {
     ROS_INFO_STREAM_NAMED(name_, "Testing sizes of marker scale");
 
@@ -554,7 +554,7 @@ public:
 
 }  // namespace rviz_visual_tools
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "visual_tools_demo");
   ROS_INFO_STREAM("Visual Tools Demo");

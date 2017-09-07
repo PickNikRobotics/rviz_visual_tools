@@ -67,7 +67,7 @@ bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform, const std
   tf2_msg.child_frame_id = to_frame;
 
   // Check if this transform has already been added
-  for (auto & transform : transforms_)
+  for (auto& transform : transforms_)
   {
     if (transform.child_frame_id == to_frame && transform.header.frame_id == from_frame)
     {
@@ -87,7 +87,7 @@ void TFVisualTools::publishAllTransforms(const ros::TimerEvent& e)
   ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transforms");
 
   // Update timestamps
-  for (auto & transform : transforms_)
+  for (auto& transform : transforms_)
   {
     transform.header.stamp = ros::Time::now();
   }

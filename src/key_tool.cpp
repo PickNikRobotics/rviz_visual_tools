@@ -50,8 +50,7 @@ KeyTool::KeyTool() : Tool()
 {
 }
 
-KeyTool::~KeyTool()
-= default;
+KeyTool::~KeyTool() = default;
 
 void KeyTool::onInitialize()
 {

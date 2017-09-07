@@ -43,7 +43,6 @@
 
 namespace rviz_visual_tools
 {
-
 class KeyTool : public rviz::Tool
 {
   Q_OBJECT

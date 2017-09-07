@@ -39,18 +39,14 @@
 #ifndef RVIZ_VISUAL_TOOLS__REMOTE_RECIEVER_H
 #define RVIZ_VISUAL_TOOLS__REMOTE_RECIEVER_H
 
-
 #include <sensor_msgs/Joy.h>
 #include <ros/ros.h>
 
 namespace rviz_visual_tools
 {
-
 class RemoteReciever
 {
-
 public:
-
   RemoteReciever()
   {
     joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("/rviz_visual_tools_gui", 1);
@@ -95,7 +91,6 @@ public:
   }
 
 protected:
-
   // The ROS publishers
   ros::Publisher joy_publisher_;
 

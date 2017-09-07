@@ -58,15 +58,13 @@ class QSpinBox;
 
 namespace rviz_visual_tools
 {
-
 class RvizVisualToolsGui : public rviz::Panel
 {
   Q_OBJECT
 public:
+  RvizVisualToolsGui(QWidget* parent = 0);
 
-  RvizVisualToolsGui(QWidget *parent = 0);
-
-  virtual void load(const rviz::Config &config);
+  virtual void load(const rviz::Config& config);
   virtual void save(rviz::Config config) const;
 
 public Q_SLOTS:
@@ -82,10 +80,10 @@ protected Q_SLOTS:
   void moveStop();
 
 protected:
-  QPushButton *btn_next_;
-  QPushButton *btn_auto_;
-  QPushButton *btn_full_auto_;
-  QPushButton *btn_stop_;
+  QPushButton* btn_next_;
+  QPushButton* btn_auto_;
+  QPushButton* btn_full_auto_;
+  QPushButton* btn_stop_;
 
   RemoteReciever remote_reciever_;
 };

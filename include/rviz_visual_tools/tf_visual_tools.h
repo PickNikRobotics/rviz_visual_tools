@@ -68,7 +68,7 @@ public:
    * \brief Constructor
    * \param loop_hz - how often tf is published
    */
-  TFVisualTools( double loop_hz = 2);
+  TFVisualTools(double loop_hz = 2);
 
   /**
    * \brief Visualize transforms in Rviz, etc
