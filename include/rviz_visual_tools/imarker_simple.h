@@ -50,6 +50,9 @@
 #include <interactive_markers/menu_handler.h>
 #include <Eigen/Geometry>
 
+// C++
+#include <string>
+
 namespace rviz_visual_tools
 {
 using visualization_msgs::InteractiveMarkerFeedback;
@@ -62,7 +65,7 @@ class IMarkerSimple
 {
 public:
   /** \brief Constructor */
-  IMarkerSimple(const std::string& name = "imarker", double scale = 0.2);
+  explicit IMarkerSimple(const std::string& name = "imarker", double scale = 0.2);
 
   geometry_msgs::Pose& getPose();
 
@@ -93,7 +96,6 @@ private:
   // Interactive markers
   // interactive_markers::MenuHandler menu_handler_;
   visualization_msgs::InteractiveMarker int_marker_;
-
 };  // end class
 
 // Create std pointers for this class

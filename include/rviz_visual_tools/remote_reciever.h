@@ -36,8 +36,8 @@
    Desc:   Object for wrapping remote control functionality
 */
 
-#ifndef RVIZ_VISUAL_TOOLS__REMOTE_RECIEVER_H
-#define RVIZ_VISUAL_TOOLS__REMOTE_RECIEVER_H
+#ifndef RVIZ_VISUAL_TOOLS_REMOTE_RECIEVER_H
+#define RVIZ_VISUAL_TOOLS_REMOTE_RECIEVER_H
 
 #include <sensor_msgs/Joy.h>
 #include <ros/ros.h>
@@ -100,4 +100,4 @@ protected:
 
 }  // end namespace rviz_visual_tools
 
-#endif  // RVIZ_VISUAL_TOOLS__REMOTE_RECIEVER_H
+#endif  // RVIZ_VISUAL_TOOLS_REMOTE_RECIEVER_H

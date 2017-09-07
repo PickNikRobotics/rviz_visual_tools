@@ -36,7 +36,7 @@
    Desc:   Rviz display panel for controlling and debugging ROS applications
 */
 
-// TODO: convert to flow layout:
+// TODO(dave): convert to flow layout:
 // http://doc.qt.io/qt-5/qtwidgets-layouts-flowlayout-example.html
 
 #ifndef RVIZ_VISUAL_TOOLS__RVIZ_VISUAL_TOOLS_GUI_H
@@ -62,7 +62,7 @@ class RvizVisualToolsGui : public rviz::Panel
 {
   Q_OBJECT
 public:
-  RvizVisualToolsGui(QWidget* parent = 0);
+  explicit RvizVisualToolsGui(QWidget* parent = 0);
 
   virtual void load(const rviz::Config& config);
   virtual void save(rviz::Config config) const;

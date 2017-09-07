@@ -38,6 +38,7 @@
 
 #include <rviz_visual_tools/imarker_simple.h>
 #include <rviz_visual_tools/rviz_visual_tools.h>
+#include <string>
 
 namespace rviz_visual_tools
 {

@@ -131,7 +131,6 @@ private:
 
   // Callback to visualize waiting state
   DisplayWaitingState displayWaitingState_;
-
 };  // end class
 
 typedef std::shared_ptr<RemoteControl> RemoteControlPtr;

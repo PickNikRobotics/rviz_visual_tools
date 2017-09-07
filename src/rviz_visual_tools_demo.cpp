@@ -45,6 +45,7 @@
 
 // C++
 #include <string>
+#include <vector>
 
 namespace rvt = rviz_visual_tools;
 
@@ -491,7 +492,7 @@ public:
     points1.emplace_back(pose1.translation());
     points2.emplace_back(pose2.translation());
     pose1.translation().x() += step / 2.0;
-    ;
+
     pose2 = pose1;
     pose2.translation().x() += step / 2.0;
     // points1.push_back(pose1.translation());
@@ -581,7 +582,6 @@ public:
     // Set x location for next visualization function
     x_location += 0.5;
   }
-
 };  // end class
 
 }  // namespace rviz_visual_tools

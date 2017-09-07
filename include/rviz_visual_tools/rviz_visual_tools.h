@@ -238,12 +238,6 @@ public:
   bool waitForSubscriber(const ros::Publisher& pub, double wait_time = 0.5, bool blocking = false);
 
   /**
-   * \brief Allows an offset between base link and floor where objects are built. Default is zero
-   * \param floor_to_base_height - the offset
-   */
-  void setFloorToBaseHeight(double floor_to_base_height);
-
-  /**
    * \brief Change the transparency of all markers published
    * \param alpha - value 0 - 1 where 0 is invisible
    */
@@ -966,7 +960,7 @@ public:
   RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw);
   RVIZ_VISUAL_TOOLS_DEPRECATED
-  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);  // TODO: add new version of this function
+  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);  // TODO(davetcoleman): add new version of this function
 
   /**
   @brief Converts scalar translations and rotations to an Eigen Frame.  This is achieved by chaining a
@@ -983,7 +977,7 @@ public:
   static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6,
                                            EulerConvention convention);  // ZYX is ROS standard
 
-  // TODO: add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
+  // TODO(davetcoleman): add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
 
   /**
    * \brief Convert an affine3d to xyz rpy components

@@ -338,11 +338,6 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
   return true;
 }
 
-void RvizVisualTools::setFloorToBaseHeight(double /*floor_to_base_height*/)
-{
-  ROS_WARN_STREAM_NAMED(name_, "Deperecated function");
-}
-
 void RvizVisualTools::setLifetime(double lifetime)
 {
   marker_lifetime_ = ros::Duration(lifetime);
