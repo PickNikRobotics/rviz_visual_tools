@@ -58,7 +58,7 @@ public:
   /**
    * \brief Constructor
    */
-  explicit RemoteControl(ros::NodeHandle nh);
+  explicit RemoteControl(const ros::NodeHandle& nh);
 
   /**
    * \brief Callback from ROS topic

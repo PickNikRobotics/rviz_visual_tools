@@ -67,12 +67,12 @@ bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform, const std
   tf2_msg.child_frame_id = to_frame;
 
   // Check if this transform has already been added
-  for (std::size_t i = 0; i < transforms_.size(); ++i)
+  for (auto & transform : transforms_)
   {
-    if (transforms_[i].child_frame_id == to_frame && transforms_[i].header.frame_id == from_frame)
+    if (transform.child_frame_id == to_frame && transform.header.frame_id == from_frame)
     {
       // ROS_WARN_STREAM_NAMED("tf_visual_tools", "This transform has already been added, updating");
-      transforms_[i].transform = tf2_msg.transform;
+      transform.transform = tf2_msg.transform;
       return true;
     }
   }
@@ -87,9 +87,9 @@ void TFVisualTools::publishAllTransforms(const ros::TimerEvent& e)
   ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transforms");
 
   // Update timestamps
-  for (std::size_t i = 0; i < transforms_.size(); ++i)
+  for (auto & transform : transforms_)
   {
-    transforms_[i].header.stamp = ros::Time::now();
+    transform.header.stamp = ros::Time::now();
   }
   // Publish
   tf_pub_.sendTransform(transforms_);

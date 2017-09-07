@@ -50,7 +50,7 @@ namespace rviz_visual_tools
 /**
  * \brief Constructor
  */
-RemoteControl::RemoteControl(ros::NodeHandle nh) : nh_(nh)
+RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_(nh)
 {
   std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
 

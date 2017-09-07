@@ -3,6 +3,8 @@ project(rviz_visual_tools)
 
 add_definitions(-std=c++11)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Warnings
 add_definitions(-W -Wall -Wextra
   #-Wcast-qual

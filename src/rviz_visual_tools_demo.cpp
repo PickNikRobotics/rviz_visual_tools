@@ -368,7 +368,7 @@ public:
         pose1.translation().y() -= step / 2.0;
         colors.push_back(rviz_visual_tools::BLUE);
       }
-      path.push_back(pose1.translation());
+      path.emplace_back(pose1.translation());
       pose1.translation().x() += step;
 
       if (!i)
@@ -417,18 +417,18 @@ public:
 
     // Spheres
     points1.clear();
-    points1.push_back(pose1.translation());
+    points1.emplace_back(pose1.translation());
     pose1.translation().x() += step;
-    points1.push_back(pose1.translation());
+    points1.emplace_back(pose1.translation());
     visual_tools_->publishSpheres(points1, BLUE, scale);
     pose1.translation().x() = x_location;  // reset
     pose1.translation().y() += step;
 
     // Spheres with colors
     points1.clear();
-    points1.push_back(pose1.translation());
+    points1.emplace_back(pose1.translation());
     pose1.translation().x() += step;
-    points1.push_back(pose1.translation());
+    points1.emplace_back(pose1.translation());
     visual_tools_->publishSpheres(points1, colors, scale);
     pose1.translation().x() = x_location;  // reset
     pose1.translation().y() += step;
@@ -460,8 +460,8 @@ public:
     points2.clear();
     pose2 = pose1;
     pose2.translation().x() += step / 2.0;
-    points1.push_back(pose1.translation());
-    points2.push_back(pose2.translation());
+    points1.emplace_back(pose1.translation());
+    points2.emplace_back(pose2.translation());
     pose1.translation().x() += step / 2.0;
     ;
     pose2 = pose1;

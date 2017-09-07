@@ -184,7 +184,7 @@ public:
    * \param base_frame - common base for all visualization markers, usually "/world" or "/odom"
    * \param marker_topic - rostopic to publish markers to - your Rviz display should match
    */
-  explicit RvizVisualTools(const std::string &base_frame, const std::string &marker_topic = RVIZ_MARKER_TOPIC);
+  explicit RvizVisualTools(std::string base_frame, std::string marker_topic = RVIZ_MARKER_TOPIC);
   /**
    * \brief Deconstructor
    */

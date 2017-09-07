@@ -36,7 +36,7 @@
    Desc:   Rviz display panel for controlling and debugging ROS applications
 */
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <QPainter>
 #include <QLineEdit>
@@ -74,14 +74,14 @@ RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent) : rviz::Panel(parent)
   connect(btn_stop_, SIGNAL(clicked()), this, SLOT(moveStop()));
 
   // Horizontal Layout
-  QHBoxLayout* hlayout1 = new QHBoxLayout;
+  auto* hlayout1 = new QHBoxLayout;
   hlayout1->addWidget(btn_next_);
   hlayout1->addWidget(btn_auto_);
   hlayout1->addWidget(btn_full_auto_);
   hlayout1->addWidget(btn_stop_);
 
   // Verticle layout
-  QVBoxLayout* layout = new QVBoxLayout;
+  auto* layout = new QVBoxLayout;
   layout->addLayout(hlayout1);
   setLayout(layout);
 

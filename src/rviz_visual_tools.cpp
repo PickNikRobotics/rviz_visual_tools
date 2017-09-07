@@ -54,8 +54,8 @@ namespace rviz_visual_tools
 
 const std::string RvizVisualTools::name_ = "visual_tools";
 
-RvizVisualTools::RvizVisualTools(const std::string &base_frame, const std::string &marker_topic)
-  : nh_("~"), marker_topic_(marker_topic), base_frame_(base_frame)
+RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic)
+  : nh_("~"), marker_topic_(std::move(marker_topic)), base_frame_(std::move(base_frame))
 {
   initialize();
 }
@@ -908,16 +908,16 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray &markers)
   // Change all markers to be inverted in color
   if (psychedelic_mode_)
   {
-    for (std::size_t i = 0; i < markers.markers.size(); ++i)
+    for (auto & marker : markers.markers)
     {
-      markers.markers[i].color.r = 1.0 - markers.markers[i].color.r;
-      markers.markers[i].color.g = 1.0 - markers.markers[i].color.g;
-      markers.markers[i].color.b = 1.0 - markers.markers[i].color.b;
-      for (std::size_t j = 0; j < markers.markers[i].colors.size(); ++j)
+      marker.color.r = 1.0 - marker.color.r;
+      marker.color.g = 1.0 - marker.color.g;
+      marker.color.b = 1.0 - marker.color.b;
+      for (std::size_t j = 0; j < marker.colors.size(); ++j)
       {
-        markers.markers[i].colors[j].r = 1.0 - markers.markers[i].colors[j].r;
-        markers.markers[i].colors[j].g = 1.0 - markers.markers[i].colors[j].g;
-        markers.markers[i].colors[j].b = 1.0 - markers.markers[i].colors[j].b;
+        marker.colors[j].r = 1.0 - marker.colors[j].r;
+        marker.colors[j].g = 1.0 - marker.colors[j].g;
+        marker.colors[j].b = 1.0 - marker.colors[j].b;
       }
     }
   }
@@ -1419,10 +1419,10 @@ bool RvizVisualTools::publishAxisInternal(const Eigen::Affine3d &pose, double le
 bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, scales scale, const std::string &ns)
 {
   // Create the cylinders
-  for (std::size_t i = 0; i < path.size(); ++i)
+  for (const auto & i : path)
   {
     double radius = getScale(scale).x;
-    publishAxisInternal(path[i], radius * 10.0, radius, ns);
+    publishAxisInternal(i, radius * 10.0, radius, ns);
   }
 
   return true;
@@ -1432,9 +1432,9 @@ bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d &path, dou
                                       const std::string &ns)
 {
   // Create the cylinders
-  for (std::size_t i = 0; i < path.size(); ++i)
+  for (const auto & i : path)
   {
-    publishAxisInternal(path[i], length, radius, ns);
+    publishAxisInternal(i, length, radius, ns);
   }
 
   return true;
@@ -2192,9 +2192,9 @@ bool RvizVisualTools::publishSpheres(const EigenSTL::vector_Vector3d &points, co
 {
   std::vector<geometry_msgs::Point> points_msg;
 
-  for (std::size_t i = 0; i < points.size(); ++i)
+  for (const auto & point : points)
   {
-    points_msg.push_back(convertPoint(points[i]));
+    points_msg.push_back(convertPoint(point));
   }
 
   return publishSpheres(points_msg, color, scale, ns);
@@ -2205,9 +2205,9 @@ bool RvizVisualTools::publishSpheres(const EigenSTL::vector_Vector3d &points, co
 {
   std::vector<geometry_msgs::Point> points_msg;
 
-  for (std::size_t i = 0; i < points.size(); ++i)
+  for (const auto & point : points)
   {
-    points_msg.push_back(convertPoint(points[i]));
+    points_msg.push_back(convertPoint(point));
   }
 
   return publishSpheres(points_msg, color, scale, ns);
@@ -2437,7 +2437,7 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d &point)
 
 Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6)
 {
-  return convertFromXYZRPY(transform6, XYZ);
+  return convertFromXYZRPY(std::move(transform6), XYZ);
 }
 
 Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw)
