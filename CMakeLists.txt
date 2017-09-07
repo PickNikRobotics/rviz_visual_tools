@@ -91,14 +91,14 @@ include_directories(
 ## specify which header files need to be run through "moc",
 ## Qt's meta-object compiler.
 qt_wrap_cpp(MOC_FILES
-  src/rviz_visual_tools_gui.h
+  src/${PROJECT_NAME}_gui.h
   src/key_tool.h
 )
 
 ## specify the list of source files, including the output of
 ## the previous command which is stored in ``${MOC_FILES}``.
 set(SOURCE_FILES
-  src/rviz_visual_tools_gui.cpp
+  src/${PROJECT_NAME}_gui.cpp
   src/key_tool.cpp
 )
 
@@ -112,7 +112,7 @@ target_link_libraries(${PROJECT_NAME}_remote_control ${catkin_LIBRARIES})
 
 # Visualization Tools Library
 add_library(${PROJECT_NAME}
-  src/rviz_visual_tools.cpp
+  src/${PROJECT_NAME}.cpp
   src/tf_visual_tools.cpp
 )
 target_link_libraries(${PROJECT_NAME}
@@ -131,7 +131,7 @@ target_link_libraries(${PROJECT_NAME}_imarker_simple
 )
 
 # Demo executable
-add_executable(${PROJECT_NAME}_demo src/rviz_visual_tools_demo.cpp)
+add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME}
 )
