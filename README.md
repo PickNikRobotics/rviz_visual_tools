@@ -264,6 +264,10 @@ Use the following command with [catkin-tools](https://catkin-tools.readthedocs.o
 
     catkin run_tests --no-deps --this -i
 
+Run with clang-tidy:
+
+    run-clang-tidy-4.0.py -clang-tidy-binary=/usr/lib/llvm-4.0/bin/clang-tidy -fix -p=/home/dave/ros/current/ws_moveit/build/rviz_visual_tools .
+
 ## Docker Image
 
 [Dockerhub](https://hub.docker.com/r/davetcoleman/rviz_visual_tools/builds/) automatically creates a Docker for this repo. To run with GUI:
