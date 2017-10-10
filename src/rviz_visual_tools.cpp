@@ -1388,6 +1388,39 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::PoseStamped& pose, color
   return true;
 }
 
+bool RvizVisualTools::publishArrow(const geometry_msgs::Point& start, const geometry_msgs::Point& end, colors color,
+                                   scales scale, std::size_t id)
+{
+  // Set the frame ID and timestamp.
+  arrow_marker_.header.stamp = ros::Time::now();
+  arrow_marker_.header.frame_id = base_frame_;
+
+  if (id == 0)
+  {
+    arrow_marker_.id++;
+  }
+  else
+  {
+    arrow_marker_.id = id;
+  }
+
+  arrow_marker_.points.clear();
+  arrow_marker_.points.push_back(start);
+  arrow_marker_.points.push_back(end);
+  arrow_marker_.color = getColor(color);
+  arrow_marker_.scale = getScale(scale);
+
+  // override previous y & z scale specified
+  // scale.x is the shaft diameter
+  // scale.y is the head diameter
+  // scale.z it specifies the head length.
+  arrow_marker_.scale.y *= 2.0;
+  arrow_marker_.scale.z *= 3.0;
+  
+  // Helper for publishing rviz markers
+  return publishMarker(arrow_marker_);  
+}
+
 bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d& pose, const std::string& label, scales scale,
                                          colors color)
 {
