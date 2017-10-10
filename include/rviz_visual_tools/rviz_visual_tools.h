@@ -558,6 +558,8 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param length - how long the arrow tail should be. if zero, will auto set with scale
+   * \param start - the starting point of the arrow
+   * \param end - the ending point of the arrow
    * \return true on success
    */
   bool publishArrow(const Eigen::Affine3d& pose, colors color = BLUE, scales scale = MEDIUM, double length = 0.0,
@@ -566,6 +568,8 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
                     std::size_t id = 0);
   bool publishArrow(const geometry_msgs::PoseStamped& pose, colors color = BLUE, scales scale = MEDIUM,
                     double length = 0.0, std::size_t id = 0);
+  bool publishArrow(const geometry_msgs::Point& start, const geometry_msgs::Point& end, colors color = BLUE,
+                    scales scale = MEDIUM, std::size_t id = 0);
 
   /**
    * \brief Display a rectangular cuboid
