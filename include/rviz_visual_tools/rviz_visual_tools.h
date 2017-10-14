@@ -758,7 +758,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    */
   bool publishAxis(const geometry_msgs::Pose& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
   bool publishAxis(const Eigen::Affine3d& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
-  bool publishAxis(const geometry_msgs::Pose& pose, double length = 0.1, double radius = 0.01,
+  bool publishAxis(const geometry_msgs::Pose& pose, double length, double radius = 0.01,
                    const std::string& ns = "Axis");
   bool publishAxis(const Eigen::Affine3d& pose, double length, double radius = 0.01, const std::string& ns = "Axis");
 
