@@ -276,7 +276,7 @@ Forthcoming
 * New publishMesh function
 * Added Brown, Pink, and Lime Green colors
 * Copyright year
-* Contributors: Dave Coleman, Andy McEvoy, Jorge Cañardo Alastuey
+* Contributors: Dave Coleman, Andy McEvoy, Jorge Canardo Alastuey
 
 1.5.0 (2015-01-07)
 ------------------
