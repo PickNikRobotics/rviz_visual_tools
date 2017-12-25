@@ -2,6 +2,31 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Normalize quaternion before storage
+* Fix for ambiguous function call to publishAxis
+* Add linking to visualization tools library for imarker\_simple
+* Added arrow pub to take two points
+* Document clang-tidy
+* catkin lint
+* roslint applied
+* Clang-format again
+* Clang-tidy ALL
+* C++11 optimizations
+* Fix deprecated calls to convertFromXYZRPY
+* Add new convertPoseSafe() function
+* New convertFromXYZRPY() function to avoid deprecation warning
+* Allow to enable frame locking in the markers/markers arrays
+* Update license year
+* IMarkerSimple: set name and pose
+* New printTransformFull() function
+* Removed deprecated warning
+* New class for easily using 6dof imarkers
+* More options to tf\_visual\_tools
+* Update README.md
+* Contributors: Andy McEvoy, Dave Coleman, Fadri Furrer, Victor Lamoine
+
 3.4.1 (2017-06-20)
 ------------------
 * Add dependency on QT5 for Ubuntu Zesty/Lunar support
