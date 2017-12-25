@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.5.0 (2017-12-25)
+------------------
 * Normalize quaternion before storage
 
 3.4.1 (2017-06-20)
