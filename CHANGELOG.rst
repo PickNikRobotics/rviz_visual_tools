@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.5.1 (2017-12-25)
+------------------
 * Normalize quaternion before storage
 * Fix for ambiguous function call to publishAxis
 * Add linking to visualization tools library for imarker\_simple
