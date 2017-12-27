@@ -185,8 +185,7 @@ public:
    * \param marker_topic - rostopic to publish markers to - your Rviz display should match
    * \param nh - optional ros node handle - defaults to "~"
    */
-  explicit RvizVisualTools(std::string base_frame, std::string marker_topic = RVIZ_MARKER_TOPIC,
-    ros::NodeHandle nh = ros::NodeHandle("~"));
+  explicit RvizVisualTools(std::string base_frame, std::string marker_topic = RVIZ_MARKER_TOPIC, ros::NodeHandle nh = ros::NodeHandle("~"));
   /**
    * \brief Deconstructor
    */

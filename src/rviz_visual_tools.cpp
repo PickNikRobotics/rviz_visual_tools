@@ -53,8 +53,7 @@ namespace rviz_visual_tools
 {
 const std::string RvizVisualTools::name_ = "visual_tools";
 
-RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic,
-  ros::NodeHandle nh)
+RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, ros::NodeHandle nh)
   : nh_(nh), marker_topic_(std::move(marker_topic)), base_frame_(std::move(base_frame))
 {
   initialize();
