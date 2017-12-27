@@ -964,7 +964,7 @@ public:
   RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw);
   RVIZ_VISUAL_TOOLS_DEPRECATED
-  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6);  // TODO(davetcoleman): add new version of this function
+  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double> &transform6);  // TODO(davetcoleman): add new version of this function
 
   /**
   @brief Converts scalar translations and rotations to an Eigen Frame.  This is achieved by chaining a
@@ -978,7 +978,7 @@ public:
   */
   static Eigen::Affine3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
                                            EulerConvention convention);  // ZYX is ROS standard
-  static Eigen::Affine3d convertFromXYZRPY(std::vector<double> transform6,
+  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double> &transform6,
                                            EulerConvention convention);  // ZYX is ROS standard
 
   // TODO(davetcoleman): add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);

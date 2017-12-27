@@ -1416,9 +1416,9 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Point& start, const geom
   // scale.z it specifies the head length.
   arrow_marker_.scale.y *= 2.0;
   arrow_marker_.scale.z *= 3.0;
-  
+
   // Helper for publishing rviz markers
-  return publishMarker(arrow_marker_);  
+  return publishMarker(arrow_marker_);
 }
 
 bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d& pose, const std::string& label, scales scale,
@@ -2553,7 +2553,7 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d& point)
   return shared_point_msg_;
 }
 
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6)
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const std::vector<double> &transform6)
 {
   return convertFromXYZRPY(std::move(transform6), XYZ);
 }
@@ -2599,7 +2599,7 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double 
   return result;
 }
 
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6, EulerConvention convention)
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const std::vector<double> &transform6, EulerConvention convention)
 {
   if (transform6.size() != 6)
   {
