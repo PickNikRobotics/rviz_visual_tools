@@ -130,6 +130,12 @@ target_link_libraries(${PROJECT_NAME}_imarker_simple
 add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME}
+  )
+
+# Demo executable
+add_executable(imarker_simple_demo src/imarker_simple_demo.cpp)
+target_link_libraries(imarker_simple_demo
+  ${catkin_LIBRARIES} ${PROJECT_NAME} ${PROJECT_NAME}_imarker_simple
 )
 
 ##########
@@ -179,7 +185,7 @@ install(FILES
 )
 
 # Install executables
-install(TARGETS ${PROJECT_NAME}_demo
+install(TARGETS ${PROJECT_NAME}_demo imarker_simple_demo
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

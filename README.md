@@ -14,6 +14,7 @@ This package includes:
  - Shortcuts to convert between different types of points and poses - ROS msgs, Eigen, tf, etc
  - Batch publishing capabilities to reduce over throttling ROS messages
  - A tf publishing helper class
+ - An interactive marker helper class
 
 Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, University of Colorado Boulder with help from Andy McEvoy and many others.
 
@@ -239,6 +240,13 @@ This package helps you quickly choose colors - feel free to send PRs with more c
     XXLARGE,
     XXXLARGE,
     XXXXLARGE,
+
+## Interactive Marker Helper Class
+
+This class quickly gives you basic 6dof pose interactive marker funcitonality. A demo is available:
+
+    roslaunch rviz_visual_tools demo_rviz.launch
+    rosrun rviz_visual_tools imarker_simple_demo
 
 ## TF Visual Tools
 
