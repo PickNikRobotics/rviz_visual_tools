@@ -255,41 +255,41 @@ public:
    * \brief Get a random color from the list of hardcoded enum color types
    * \return Random color from colors
    */
-  colors getRandColor();
+  static colors getRandColor();
 
   /**
    * \brief Get the RGB value of standard colors
    * \param color - an enum pre-defined name of a color
    * \return the RGB message equivalent
    */
-  std_msgs::ColorRGBA getColor(colors color);
+  std_msgs::ColorRGBA getColor(colors color) const;
 
   /** \brief Used by interfaces that do not directly depend on Rviz Visual Tools, such as OMPL */
-  colors intToRvizColor(std::size_t color);
+  static colors intToRvizColor(std::size_t color);
 
   /** \brief Used by interfaces that do not directly depend on Rviz Visual Tools, such as OMPL */
-  rviz_visual_tools::scales intToRvizScale(std::size_t scale);
+  static rviz_visual_tools::scales intToRvizScale(std::size_t scale);
 
   /** \brief Convert an enum to its string name equivalent */
-  std::string scaleToString(scales scale);
+  static std::string scaleToString(scales scale);
 
   /**
    * \brief Create a random color that is not too light
    * \return the RGB message of a random color
    */
-  std_msgs::ColorRGBA createRandColor();
+  std_msgs::ColorRGBA createRandColor() const;
 
   /**
    * \brief Interpolate from [start, end] with value of size steps with current value count
    * \return interpolated value
    */
-  double slerp(double start, double end, double range, double value);
+  static double slerp(double start, double end, double range, double value);
 
   /**
    * \brief Convert a value from [0,1] to a color Green->Red
    * \return interpolated color
    */
-  std_msgs::ColorRGBA getColorScale(double value);
+  std_msgs::ColorRGBA getColorScale(double value) const;
 
   /**
    * \brief Get the rviz marker scale of standard sizes
@@ -297,7 +297,7 @@ public:
    * \param marker_scale - amount to scale the scale for accounting for different types of markers
    * \return vector of 3 scales
    */
-  geometry_msgs::Vector3 getScale(scales scale, double marker_scale = 1.0);
+  geometry_msgs::Vector3 getScale(scales scale, double marker_scale = 1.0) const;
 
   /**
    * \brief Create a vector that points from point a to point b
@@ -305,7 +305,7 @@ public:
    * \param point b - x,y,z in space of a point
    * \return vector from a to b
    */
-  Eigen::Affine3d getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b);
+  Eigen::Affine3d getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const;
 
   /**
    * \brief Find the center between to points
@@ -313,13 +313,13 @@ public:
    * \param point b - x,y,z in space of a point
    * \return center point
    */
-  Eigen::Vector3d getCenterPoint(const Eigen::Vector3d& a, const Eigen::Vector3d& b);
+  Eigen::Vector3d getCenterPoint(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const;
 
   /**
    * \brief Get the base frame
    * \return name of base frame
    */
-  const std::string getBaseFrame()
+  const std::string getBaseFrame() const
   {
     return base_frame_;
   }
@@ -337,7 +337,7 @@ public:
   /**
    * \brief Getter for the global scale used for changing size of all markers
    */
-  double getGlobalScale()
+  double getGlobalScale() const
   {
     return global_scale_;
   }
@@ -863,11 +863,10 @@ public:
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose
-   *        Note: Not thread safe but very convenient
    * \param pose
    * \return converted pose
    */
-  geometry_msgs::Pose convertPose(const Eigen::Affine3d& pose);
+  static geometry_msgs::Pose convertPose(const Eigen::Affine3d& pose);
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose - thread safe
@@ -882,7 +881,7 @@ public:
    * \param ROS msg pose
    * \return converted pose
    */
-  Eigen::Affine3d convertPose(const geometry_msgs::Pose& pose);
+  static Eigen::Affine3d convertPose(const geometry_msgs::Pose& pose);
 
   /**
    * \brief Convert a geometry_msg pose to an Eigen pose - thread safe
@@ -897,13 +896,13 @@ public:
    * \param pose
    * \return converted point with default rotation matrix
    */
-  Eigen::Affine3d convertPoint32ToPose(const geometry_msgs::Point32& point);
+  static Eigen::Affine3d convertPoint32ToPose(const geometry_msgs::Point32& point);
 
   /**
    * \brief Add an identity rotation matrix to make a point have a full pose
    */
-  geometry_msgs::Pose convertPointToPose(const geometry_msgs::Point& point);
-  Eigen::Affine3d convertPointToPose(const Eigen::Vector3d& point);
+  static geometry_msgs::Pose convertPointToPose(const geometry_msgs::Point& point);
+  static Eigen::Affine3d convertPointToPose(const Eigen::Vector3d& point);
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg point
@@ -911,7 +910,7 @@ public:
    * \param pose
    * \return converted point with orientation discarded
    */
-  geometry_msgs::Point convertPoseToPoint(const Eigen::Affine3d& pose);
+  static geometry_msgs::Point convertPoseToPoint(const Eigen::Affine3d& pose);
 
   /**
    * \brief Convert a geometry_msg point to an Eigen point
@@ -919,7 +918,7 @@ public:
    * \param point
    * \return converted pose
    */
-  Eigen::Vector3d convertPoint(const geometry_msgs::Point& point);
+  static Eigen::Vector3d convertPoint(const geometry_msgs::Point& point);
 
   /**
    * \brief Convert a geometry_msg point to an Eigen point
@@ -927,7 +926,7 @@ public:
    * \param point
    * \return converted pose
    */
-  Eigen::Vector3d convertPoint32(const geometry_msgs::Point32& point);
+  static Eigen::Vector3d convertPoint32(const geometry_msgs::Point32& point);
 
   /**
    * \brief Convert an Eigen point to a 32 bit geometry_msg point
@@ -935,7 +934,7 @@ public:
    * \param point
    * \return converted pose
    */
-  geometry_msgs::Point32 convertPoint32(const Eigen::Vector3d& point);
+  static geometry_msgs::Point32 convertPoint32(const Eigen::Vector3d& point);
 
   /**
    * \brief Convert a Vector3 to a geometry_msg Point
@@ -943,7 +942,7 @@ public:
    * \param point
    * \return converted point
    */
-  geometry_msgs::Point convertPoint(const geometry_msgs::Vector3& point);
+  static geometry_msgs::Point convertPoint(const geometry_msgs::Vector3& point);
 
   /**
    * \brief Convert a Eigen point to a geometry_msg Point
@@ -951,7 +950,7 @@ public:
    * \param point
    * \return converted point
    */
-  geometry_msgs::Point convertPoint(const Eigen::Vector3d& point);
+  static geometry_msgs::Point convertPoint(const Eigen::Vector3d& point);
 
   /**
    * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler
@@ -964,7 +963,8 @@ public:
   RVIZ_VISUAL_TOOLS_DEPRECATED
   static Eigen::Affine3d convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw);
   RVIZ_VISUAL_TOOLS_DEPRECATED
-  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double> &transform6);  // TODO(davetcoleman): add new version of this function
+  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double>& transform6);  // TODO(davetcoleman): add new
+                                                                                    // version of this function
 
   /**
   @brief Converts scalar translations and rotations to an Eigen Frame.  This is achieved by chaining a
@@ -978,7 +978,7 @@ public:
   */
   static Eigen::Affine3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
                                            EulerConvention convention);  // ZYX is ROS standard
-  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double> &transform6,
+  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double>& transform6,
                                            EulerConvention convention);  // ZYX is ROS standard
 
   // TODO(davetcoleman): add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
@@ -997,21 +997,21 @@ public:
    * \param Pose to fill in
    * \parma options bounds on the pose to generate
    */
-  void generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
-  void generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
+  static void generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
+  static void generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
 
   /**
    * \brief Create a random rectangular cuboid of some shape
    */
-  void generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height,
-                            RandomPoseBounds pose_bounds = RandomPoseBounds(),
-                            RandomCuboidBounds cuboid_bounds = RandomCuboidBounds());
+  static void generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width, double& height,
+                                   RandomPoseBounds pose_bounds = RandomPoseBounds(),
+                                   RandomCuboidBounds cuboid_bounds = RandomCuboidBounds());
 
   /**
    * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
    * \param Pose to fill in
    */
-  void generateEmptyPose(geometry_msgs::Pose& pose);
+  static void generateEmptyPose(geometry_msgs::Pose& pose);
 
   /**
    * \brief Test if two Eigen poses are close enough
@@ -1020,7 +1020,7 @@ public:
    * \param threshold - how close in value they must be in order to be considered the same
    * \return true if equal
    */
-  bool posesEqual(const Eigen::Affine3d& pose1, const Eigen::Affine3d& pose2, double threshold = 0.000001);
+  static bool posesEqual(const Eigen::Affine3d& pose1, const Eigen::Affine3d& pose2, double threshold = 0.000001);
 
   /**
    * \brief Get random between min and max
@@ -1032,7 +1032,7 @@ public:
   /**
    * \brief Display in the console the x,y,z values of a point
    */
-  void printTranslation(const Eigen::Vector3d& translation);
+  static void printTranslation(const Eigen::Vector3d& translation);
 
   /**
    * \brief Display in the console a transform in quaternions
@@ -1115,15 +1115,11 @@ protected:
   visualization_msgs::Marker reset_marker_;
   visualization_msgs::Marker triangle_marker_;
 
-  // Cached geometry variables used for conversion
-  geometry_msgs::Pose shared_pose_msg_;
-  geometry_msgs::Point shared_point_msg_;
-  geometry_msgs::Point32 shared_point32_msg_;
-  Eigen::Affine3d shared_pose_eigen_;
-  Eigen::Vector3d shared_point_eigen_;
-
   // Just for fun.
   bool psychedelic_mode_ = false;
+
+  // Chose random colors from this list
+  static const std::array<colors, 14> all_rand_colors_;
 
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW  // http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html

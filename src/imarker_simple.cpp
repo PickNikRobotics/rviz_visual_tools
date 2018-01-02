@@ -42,13 +42,14 @@
 
 namespace rviz_visual_tools
 {
-IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::Pose& initial_pose) : nh_("~"), latest_pose_(initial_pose)
+IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::Pose& initial_pose)
+  : nh_("~"), latest_pose_(initial_pose)
 {
   // Create Marker Server
   const std::string imarker_topic = nh_.getNamespace() + "/" + name;
   imarker_server_.reset(new interactive_markers::InteractiveMarkerServer(imarker_topic, "", false));
 
-  //ros::Duration(2.0).sleep();
+  // ros::Duration(2.0).sleep();
 
   // Create imarker
   make6DofMarker(latest_pose_, scale);
