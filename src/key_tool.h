@@ -64,6 +64,6 @@ protected:
   rviz::MoveTool move_tool_;
   RemoteReciever remote_reciever_;
 };
-} // namespace rviz_visual_tools
+}  // namespace rviz_visual_tools
 
 #endif

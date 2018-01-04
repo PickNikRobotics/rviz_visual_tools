@@ -73,8 +73,8 @@ geometry_msgs::Pose getIdentityPose()
 class IMarkerSimple
 {
 public:
-
-  explicit IMarkerSimple(const std::string& name = "imarker", double scale = 0.2, const geometry_msgs::Pose& initial_pose = getIdentityPose());
+  explicit IMarkerSimple(const std::string& name = "imarker", double scale = 0.2,
+                         const geometry_msgs::Pose& initial_pose = getIdentityPose());
 
   geometry_msgs::Pose& getPose();
 
@@ -90,7 +90,6 @@ public:
   }
 
 private:
-
   void sendUpdatedIMarkerPose();
 
   void make6DofMarker(const geometry_msgs::Pose& pose, double scale = 0.2);

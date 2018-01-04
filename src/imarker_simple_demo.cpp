@@ -46,14 +46,11 @@
 
 namespace rviz_visual_tools
 {
-
 class IMarkerSimpleDemo
 {
 public:
-
   /** \brief Constructor */
-  IMarkerSimpleDemo()
-    : nh_("~")
+  IMarkerSimpleDemo() : nh_("~")
   {
     visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("world", "/rviz_visual_tools"));
     visual_tools_->loadMarkerPub();
@@ -69,7 +66,7 @@ public:
     // Add callback to this class
     imarker_simple_->setIMarkerCallback(std::bind(&IMarkerSimpleDemo::processIMarkerPose, this, std::placeholders::_1));
 
-    ROS_INFO_STREAM_NAMED(name_,"IMarkerSimpleDemo Ready.");
+    ROS_INFO_STREAM_NAMED(name_, "IMarkerSimpleDemo Ready.");
   }
 
   void processIMarkerPose(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback)
@@ -80,7 +77,6 @@ public:
   }
 
 private:
-
   // --------------------------------------------------------
 
   // The short name of this class
@@ -92,13 +88,13 @@ private:
   rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
   rviz_visual_tools::IMarkerSimplePtr imarker_simple_;
 
-}; // end class
+};  // end class
 
 // Create std pointers for this class
 typedef std::shared_ptr<IMarkerSimpleDemo> IMarkerSimpleDemoPtr;
 typedef std::shared_ptr<const IMarkerSimpleDemo> IMarkerSimpleDemoConstPtr;
 
-} // namespace rviz_visual_tools
+}  // namespace rviz_visual_tools
 #endif  // RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_DEMO_H
 
 int main(int argc, char** argv)
@@ -108,7 +104,7 @@ int main(int argc, char** argv)
   ROS_INFO_STREAM_NAMED("main", "Starting IMarkerSimpleDemo...");
 
   // Seed random number generator
-  //srand (time(NULL));
+  // srand (time(NULL));
 
   // Allow the action server to recieve and send ros messages
   ros::AsyncSpinner spinner(2);
