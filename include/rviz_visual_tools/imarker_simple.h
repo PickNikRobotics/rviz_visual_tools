@@ -58,14 +58,23 @@ namespace rviz_visual_tools
 using visualization_msgs::InteractiveMarkerFeedback;
 using visualization_msgs::InteractiveMarkerControl;
 
-typedef std::function<void(const visualization_msgs::InteractiveMarkerFeedbackConstPtr&, const Eigen::Affine3d&)>
-    IMarkerCallback;
+typedef std::function<void(const visualization_msgs::InteractiveMarkerFeedbackConstPtr&)> IMarkerCallback;
+
+namespace
+{
+geometry_msgs::Pose getIdentityPose()
+{
+  geometry_msgs::Pose pose;
+  pose.orientation.w = 1.0;
+  return pose;
+}
+}
 
 class IMarkerSimple
 {
 public:
-  /** \brief Constructor */
-  explicit IMarkerSimple(const std::string& name = "imarker", double scale = 0.2);
+  explicit IMarkerSimple(const std::string& name = "imarker", double scale = 0.2,
+                         const geometry_msgs::Pose& initial_pose = getIdentityPose());
 
   geometry_msgs::Pose& getPose();
 
@@ -75,11 +84,16 @@ public:
 
   void iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
 
+  void setIMarkerCallback(IMarkerCallback callback)
+  {
+    imarker_callback_ = callback;
+  }
+
+private:
   void sendUpdatedIMarkerPose();
 
   void make6DofMarker(const geometry_msgs::Pose& pose, double scale = 0.2);
 
-private:
   // --------------------------------------------------------
 
   // The short name of this class
@@ -96,6 +110,9 @@ private:
   // Interactive markers
   // interactive_markers::MenuHandler menu_handler_;
   visualization_msgs::InteractiveMarker int_marker_;
+
+  // Hook to parent class
+  IMarkerCallback imarker_callback_;
 };  // end class
 
 // Create std pointers for this class

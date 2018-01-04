@@ -53,6 +53,10 @@ namespace rviz_visual_tools
 {
 const std::string RvizVisualTools::name_ = "visual_tools";
 
+const std::array<colors, 14> RvizVisualTools::all_rand_colors_ = { RED,        GREEN,  BLUE,   GREY,   DARK_GREY,
+                                                                   WHITE,      ORANGE, YELLOW, BROWN,  PINK,
+                                                                   LIME_GREEN, PURPLE, CYAN,   MAGENTA };
+
 RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, ros::NodeHandle nh)
   : nh_(nh), marker_topic_(std::move(marker_topic)), base_frame_(std::move(base_frame))
 {
@@ -95,6 +99,7 @@ bool RvizVisualTools::loadRvizMarkers()
   reset_marker_.header.stamp = ros::Time();
   reset_marker_.ns = "deleteAllMarkers";  // helps during debugging
   reset_marker_.action = 3;               // TODO(davetcoleman): In ROS-J set to visualization_msgs::Marker::DELETEALL;
+  reset_marker_.pose.orientation.w = 1;
 
   // Load arrow ----------------------------------------------------
 
@@ -355,29 +360,11 @@ void RvizVisualTools::setLifetime(double lifetime)
 
 colors RvizVisualTools::getRandColor()
 {
-  std::vector<colors> all_colors;
-
-  all_colors.push_back(RED);
-  all_colors.push_back(GREEN);
-  all_colors.push_back(BLUE);
-  all_colors.push_back(GREY);
-  all_colors.push_back(DARK_GREY);
-  all_colors.push_back(WHITE);
-  all_colors.push_back(ORANGE);
-  // all_colors.push_back(BLACK);
-  all_colors.push_back(YELLOW);
-  all_colors.push_back(BROWN);
-  all_colors.push_back(PINK);
-  all_colors.push_back(LIME_GREEN);
-  all_colors.push_back(PURPLE);
-  all_colors.push_back(CYAN);
-  all_colors.push_back(MAGENTA);
-
-  int rand_num = iRand(0, all_colors.size() - 1);
-  return all_colors[rand_num];
+  const int rand_num = iRand(0, all_rand_colors_.size() - 1);
+  return all_rand_colors_[rand_num];
 }
 
-std_msgs::ColorRGBA RvizVisualTools::getColor(colors color)
+std_msgs::ColorRGBA RvizVisualTools::getColor(colors color) const
 {
   std_msgs::ColorRGBA result;
 
@@ -585,7 +572,7 @@ std::string RvizVisualTools::scaleToString(scales scale)
   return "MEDIUM";  // dumy value
 }
 
-std_msgs::ColorRGBA RvizVisualTools::createRandColor()
+std_msgs::ColorRGBA RvizVisualTools::createRandColor() const
 {
   std_msgs::ColorRGBA result;
 
@@ -619,7 +606,7 @@ double RvizVisualTools::slerp(double start, double end, double range, double val
   return start + (((end - start) / range) * value);
 }
 
-std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value)
+std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value) const
 {
   // User warning
   if (value < 0)
@@ -666,7 +653,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value)
   return result;
 }
 
-geometry_msgs::Vector3 RvizVisualTools::getScale(scales scale, double marker_scale)
+geometry_msgs::Vector3 RvizVisualTools::getScale(scales scale, double marker_scale) const
 {
   if (scale == REGULAR)
   {
@@ -724,7 +711,7 @@ geometry_msgs::Vector3 RvizVisualTools::getScale(scales scale, double marker_sca
   return result;
 }
 
-Eigen::Vector3d RvizVisualTools::getCenterPoint(const Eigen::Vector3d& a, const Eigen::Vector3d& b)
+Eigen::Vector3d RvizVisualTools::getCenterPoint(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const
 {
   Eigen::Vector3d center;
   center[0] = (a[0] + b[0]) / 2.0;
@@ -733,7 +720,7 @@ Eigen::Vector3d RvizVisualTools::getCenterPoint(const Eigen::Vector3d& a, const 
   return center;
 }
 
-Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b)
+Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const
 {
   bool verbose = false;
 
@@ -1416,9 +1403,9 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Point& start, const geom
   // scale.z it specifies the head length.
   arrow_marker_.scale.y *= 2.0;
   arrow_marker_.scale.z *= 3.0;
-  
+
   // Helper for publishing rviz markers
-  return publishMarker(arrow_marker_);  
+  return publishMarker(arrow_marker_);
 }
 
 bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d& pose, const std::string& label, scales scale,
@@ -2461,8 +2448,9 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose& pose, const std::st
 
 geometry_msgs::Pose RvizVisualTools::convertPose(const Eigen::Affine3d& pose)
 {
-  tf::poseEigenToMsg(pose, shared_pose_msg_);
-  return shared_pose_msg_;
+  geometry_msgs::Pose pose_msg;
+  tf::poseEigenToMsg(pose, pose_msg);
+  return pose_msg;
 }
 
 void RvizVisualTools::convertPoseSafe(const Eigen::Affine3d& pose, geometry_msgs::Pose& pose_msg)
@@ -2472,6 +2460,7 @@ void RvizVisualTools::convertPoseSafe(const Eigen::Affine3d& pose, geometry_msgs
 
 Eigen::Affine3d RvizVisualTools::convertPose(const geometry_msgs::Pose& pose)
 {
+  Eigen::Affine3d shared_pose_eigen_;
   tf::poseMsgToEigen(pose, shared_pose_eigen_);
   return shared_pose_eigen_;
 }
@@ -2483,6 +2472,7 @@ void RvizVisualTools::convertPoseSafe(const geometry_msgs::Pose& pose_msg, Eigen
 
 Eigen::Affine3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point32& point)
 {
+  Eigen::Affine3d shared_pose_eigen_;
   shared_pose_eigen_ = Eigen::Affine3d::Identity();
   shared_pose_eigen_.translation().x() = point.x;
   shared_pose_eigen_.translation().y() = point.y;
@@ -2492,16 +2482,18 @@ Eigen::Affine3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point
 
 geometry_msgs::Pose RvizVisualTools::convertPointToPose(const geometry_msgs::Point& point)
 {
-  shared_pose_msg_.orientation.x = 0.0;
-  shared_pose_msg_.orientation.y = 0.0;
-  shared_pose_msg_.orientation.z = 0.0;
-  shared_pose_msg_.orientation.w = 1.0;
-  shared_pose_msg_.position = point;
-  return shared_pose_msg_;
+  geometry_msgs::Pose pose_msg;
+  pose_msg.orientation.x = 0.0;
+  pose_msg.orientation.y = 0.0;
+  pose_msg.orientation.z = 0.0;
+  pose_msg.orientation.w = 1.0;
+  pose_msg.position = point;
+  return pose_msg;
 }
 
 Eigen::Affine3d RvizVisualTools::convertPointToPose(const Eigen::Vector3d& point)
 {
+  Eigen::Affine3d shared_pose_eigen_;
   shared_pose_eigen_ = Eigen::Affine3d::Identity();
   shared_pose_eigen_.translation() = point;
   return shared_pose_eigen_;
@@ -2509,51 +2501,57 @@ Eigen::Affine3d RvizVisualTools::convertPointToPose(const Eigen::Vector3d& point
 
 geometry_msgs::Point RvizVisualTools::convertPoseToPoint(const Eigen::Affine3d& pose)
 {
-  tf::poseEigenToMsg(pose, shared_pose_msg_);
-  return shared_pose_msg_.position;
+  geometry_msgs::Pose pose_msg;
+  tf::poseEigenToMsg(pose, pose_msg);
+  return pose_msg.position;
 }
 
 Eigen::Vector3d RvizVisualTools::convertPoint(const geometry_msgs::Point& point)
 {
-  shared_point_eigen_[0] = point.x;
-  shared_point_eigen_[1] = point.y;
-  shared_point_eigen_[2] = point.z;
-  return shared_point_eigen_;
+  Eigen::Vector3d point_eigen;
+  point_eigen[0] = point.x;
+  point_eigen[1] = point.y;
+  point_eigen[2] = point.z;
+  return point_eigen;
 }
 
 Eigen::Vector3d RvizVisualTools::convertPoint32(const geometry_msgs::Point32& point)
 {
-  shared_point_eigen_[0] = point.x;
-  shared_point_eigen_[1] = point.y;
-  shared_point_eigen_[2] = point.z;
-  return shared_point_eigen_;
+  Eigen::Vector3d point_eigen;
+  point_eigen[0] = point.x;
+  point_eigen[1] = point.y;
+  point_eigen[2] = point.z;
+  return point_eigen;
 }
 
 geometry_msgs::Point32 RvizVisualTools::convertPoint32(const Eigen::Vector3d& point)
 {
-  shared_point32_msg_.x = point[0];
-  shared_point32_msg_.y = point[1];
-  shared_point32_msg_.z = point[2];
-  return shared_point32_msg_;
+  geometry_msgs::Point32 point32_msg;
+  point32_msg.x = point[0];
+  point32_msg.y = point[1];
+  point32_msg.z = point[2];
+  return point32_msg;
 }
 
 geometry_msgs::Point RvizVisualTools::convertPoint(const geometry_msgs::Vector3& point)
 {
-  shared_point_msg_.x = point.x;
-  shared_point_msg_.y = point.y;
-  shared_point_msg_.z = point.z;
-  return shared_point_msg_;
+  geometry_msgs::Point point_msg;
+  point_msg.x = point.x;
+  point_msg.y = point.y;
+  point_msg.z = point.z;
+  return point_msg;
 }
 
 geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d& point)
 {
-  shared_point_msg_.x = point.x();
-  shared_point_msg_.y = point.y();
-  shared_point_msg_.z = point.z();
-  return shared_point_msg_;
+  geometry_msgs::Point point_msg;
+  point_msg.x = point.x();
+  point_msg.y = point.y();
+  point_msg.z = point.z();
+  return point_msg;
 }
 
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6)
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& transform6)
 {
   return convertFromXYZRPY(std::move(transform6), XYZ);
 }
@@ -2599,7 +2597,7 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double 
   return result;
 }
 
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(std::vector<double> transform6, EulerConvention convention)
+Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& transform6, EulerConvention convention)
 {
   if (transform6.size() != 6)
   {
@@ -2633,8 +2631,9 @@ void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d& pose, double& x, do
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
-  generateRandomPose(shared_pose_eigen_, pose_bounds);
-  pose = convertPose(shared_pose_eigen_);
+  Eigen::Affine3d pose_eigen;
+  generateRandomPose(pose_eigen, pose_bounds);
+  pose = convertPose(pose_eigen);
 }
 
 void RvizVisualTools::generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, double& depth, double& width,
