@@ -42,21 +42,18 @@
 
 namespace rviz_visual_tools
 {
-IMarkerSimple::IMarkerSimple(const std::string& name, double scale) : nh_("~")
+IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::Pose& initial_pose) : nh_("~"), latest_pose_(initial_pose)
 {
   // Create Marker Server
   const std::string imarker_topic = nh_.getNamespace() + "/" + name;
   imarker_server_.reset(new interactive_markers::InteractiveMarkerServer(imarker_topic, "", false));
 
-  // Initialize Pose
-  latest_pose_.orientation.w = 1;
-
-  // ros::Duration(2.0).sleep();
+  //ros::Duration(2.0).sleep();
 
   // Create imarker
   make6DofMarker(latest_pose_, scale);
 
-  // Apply
+  // Send imarker to Rviz
   imarker_server_->applyChanges();
 }
 
@@ -87,6 +84,10 @@ void IMarkerSimple::iMarkerCallback(const visualization_msgs::InteractiveMarkerF
   }
 
   latest_pose_ = feedback->pose;
+
+  // Redirect to base class
+  if (imarker_callback_)
+    imarker_callback_(feedback);
 }
 
 void IMarkerSimple::sendUpdatedIMarkerPose()
