@@ -2,6 +2,16 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Addresses Issue #49 - Default Constructor Not Nodelet Friendly
+* Added option to pass in a node handle in the constructor that defaults to
+* Reset marker should publish initialized quaternion
+* Improve code quality - add const, static, C++11 features, clang-format
+* Create demo executable for IMarkerSimple
+* Improve memory efficiency of functions
+* Contributors: Dave Coleman, Geoffrey Chiou, Victor Lamoine
+
 3.5.1 (2017-12-25)
 ------------------
 * Normalize quaternion before storage
