@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.6.0 (2018-01-15)
+------------------
 * Addresses Issue #49 - Default Constructor Not Nodelet Friendly
 * Added option to pass in a node handle in the constructor that defaults to
 * Reset marker should publish initialized quaternion
