@@ -38,17 +38,11 @@ if(rviz_QT_VERSION VERSION_LESS "5")
   macro(qt_wrap_ui)
     qt4_wrap_ui(${ARGN})
   endmacro()
-  macro(qt_wrap_cpp)
-    qt4_wrap_cpp(${ARGN})
-  endmacro()
 else()
   find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
   set(QT_LIBRARIES Qt5::Widgets)
   macro(qt_wrap_ui)
     qt5_wrap_ui(${ARGN})
-  endmacro()
-  macro(qt_wrap_cpp)
-    qt5_wrap_cpp(${ARGN})
   endmacro()
 endif()
 ## Prefer the Qt signals and slots to avoid defining "emit", "slots",
@@ -83,22 +77,13 @@ include_directories(SYSTEM include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS}
 ## Build ##
 ###########
 
-## specify which header files need to be run through "moc",
-## Qt's meta-object compiler.
-qt_wrap_cpp(MOC_FILES
-  src/${PROJECT_NAME}_gui.h
-  src/key_tool.h
-)
-
-## specify the list of source files, including the output of
-## the previous command which is stored in ``${MOC_FILES}``.
 set(SOURCE_FILES
   src/${PROJECT_NAME}_gui.cpp
   src/key_tool.cpp
 )
 
 # Rviz GUI library
-add_library(${PROJECT_NAME}_gui ${MOC_FILES} ${SOURCE_FILES} src/remote_control.cpp)
+add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
 target_link_libraries(${PROJECT_NAME}_gui ${rviz_DEFAULT_PLUGIN_LIBRARIES} ${QT_LIBRARIES} ${catkin_LIBRARIES})
 
 # Remote control library
