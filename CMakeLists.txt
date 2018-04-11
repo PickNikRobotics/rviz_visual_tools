@@ -98,7 +98,7 @@ set(SOURCE_FILES
 )
 
 # Rviz GUI library
-add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
+add_library(${PROJECT_NAME}_gui ${MOC_FILES} ${SOURCE_FILES} src/remote_control.cpp)
 target_link_libraries(${PROJECT_NAME}_gui ${rviz_DEFAULT_PLUGIN_LIBRARIES} ${QT_LIBRARIES} ${catkin_LIBRARIES})
 
 # Remote control library
