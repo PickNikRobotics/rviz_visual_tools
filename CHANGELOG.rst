@@ -2,6 +2,11 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Actually link qt code into the gui library (`#74 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/74>`_)
+* Contributors: Michael Goerner
+
 3.6.0 (2018-01-15)
 ------------------
 * Addresses Issue #49 - Default Constructor Not Nodelet Friendly
