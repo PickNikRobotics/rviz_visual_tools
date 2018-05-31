@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.6.1 (2018-05-31)
+------------------
 * Actually link qt code into the gui library (`#74 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/74>`_)
 * Contributors: Michael Goerner
 
