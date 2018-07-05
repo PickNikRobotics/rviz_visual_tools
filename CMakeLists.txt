@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.6)
 project(rviz_visual_tools)
 
 add_definitions(-std=c++11)
