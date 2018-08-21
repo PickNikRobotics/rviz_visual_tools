@@ -655,12 +655,6 @@ std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value) const
 
 geometry_msgs::Vector3 RvizVisualTools::getScale(scales scale, double marker_scale) const
 {
-  if (scale == REGULAR)
-  {
-    ROS_WARN_STREAM_ONCE_NAMED(name_, "Scale size 'REGULAR' is deprecated, please switch to 'MEDIUM'");
-    scale = MEDIUM;
-  }
-
   geometry_msgs::Vector3 result;
   double val(0.0);
   switch (scale)
@@ -877,13 +871,6 @@ bool RvizVisualTools::trigger()
 
   markers_.markers.clear();  // remove all cached markers
   return result;
-}
-
-bool RvizVisualTools::triggerAndDisable()
-{
-  trigger();
-  batch_publishing_enabled_ = false;
-  return true;
 }
 
 bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
@@ -2549,22 +2536,6 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d& point)
   point_msg.y = point.y();
   point_msg.z = point.z();
   return point_msg;
-}
-
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& transform6)
-{
-  return convertFromXYZRPY(std::move(transform6), XYZ);
-}
-
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw)
-{
-  // R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
-  Eigen::AngleAxisd roll_angle(roll, Eigen::Vector3d::UnitX());
-  Eigen::AngleAxisd pitch_angle(pitch, Eigen::Vector3d::UnitY());
-  Eigen::AngleAxisd yaw_angle(yaw, Eigen::Vector3d::UnitZ());
-  Eigen::Quaternion<double> quaternion = roll_angle * pitch_angle * yaw_angle;
-
-  return Eigen::Translation3d(x, y, z) * quaternion;
 }
 
 Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
