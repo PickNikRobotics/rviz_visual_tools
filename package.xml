@@ -28,6 +28,7 @@
   <depend>trajectory_msgs</depend>
   <depend>roslint</depend>
   <depend>eigen_stl_containers</depend>
+  <depend>libogre-dev</depend>
 
   <!-- Something changed in ROS Lunar / Ubuntu Zesty that requires extra QT5 dependency-->
   <!-- I suspect this depend is more than needed, but was the only dependency available -->

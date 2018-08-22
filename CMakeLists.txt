@@ -30,6 +30,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED thread system)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(OGRE_OV OGRE)
 
 # Qt 4 or 5
 if(rviz_QT_VERSION VERSION_LESS "5")
@@ -69,9 +71,10 @@ catkin_package(
     roscpp
   INCLUDE_DIRS
     include
+    ${OGRE_OV_INCLUDE_DIRS}
 )
 
-include_directories(SYSTEM include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
+include_directories(SYSTEM include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS} ${OGRE_OV_INCLUDE_DIRS})
 
 ###########
 ## Build ##
