@@ -114,7 +114,6 @@ enum scales
   XXLARGE = 9,
   XXXLARGE = 10,
   XXXXLARGE = 11,
-  REGULAR = 12  // deprecated as of ROS-KINETIC (remove in ROS-L)
 };
 
 enum EulerConvention
@@ -382,22 +381,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \brief Trigger the publish function to send out all collected markers
    * \return true on success
    */
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  bool triggerBatchPublish()
-  {
-    return trigger();
-  }
-
   bool trigger();
-
-  /**
-   * \brief Trigger the publish function to send out all collected markers. Also then turns off the
-   * batch mode. This is safer
-   *        incase programmer forgets
-   * \return true on success
-   */
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  bool triggerAndDisable();
 
   /**
    * \brief Display an array of markers, allows reuse of the ROS publisher
@@ -952,20 +936,6 @@ public:
    * \return converted point
    */
   static geometry_msgs::Point convertPoint(const Eigen::Vector3d& point);
-
-  /**
-   * \brief Convert a 6-vector of x,y,z, roll,pitch,yall to an Affine3d with quaternion using Euler
-   *        R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
-   * \return 4x4 matrix in form of affine3d
-   * Use new function (below) instead, that specifies what type of convention. The drop in replacement
-   * for this function is:
-   *     convertFromXYZRPY(x, y, z, roll, pitch, yaw, rviz_visual_tools::XYZ);
-   */
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  static Eigen::Affine3d convertFromXYZRPY(double x, double y, double z, double roll, double pitch, double yaw);
-  RVIZ_VISUAL_TOOLS_DEPRECATED
-  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double>& transform6);  // TODO(davetcoleman): add new
-                                                                                    // version of this function
 
   /**
   @brief Converts scalar translations and rotations to an Eigen Frame.  This is achieved by chaining a
