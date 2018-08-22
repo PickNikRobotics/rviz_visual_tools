@@ -14,18 +14,18 @@ add_definitions(-W -Wall -Wextra
 
 find_package(catkin REQUIRED COMPONENTS
   eigen_conversions
+  eigen_stl_containers
   geometry_msgs
   graph_msgs
   roscpp
+  roslint
   rostest
+  rviz
+  sensor_msgs
   std_msgs
   tf_conversions
   trajectory_msgs
   visualization_msgs
-  roslint
-  eigen_stl_containers
-  rviz
-  sensor_msgs
 )
 
 find_package(Eigen3 REQUIRED)
@@ -34,7 +34,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(OGRE_OV OGRE)
 
 # Qt 4 or 5
-if(rviz_QT_VERSION VERSION_LESS "5")
+if("${rviz_QT_VERSION}" VERSION_LESS "5")
   find_package(Qt4 ${rviz_QT_VERSION} REQUIRED QtCore QtGui)
   include(${QT_USE_FILE})
   macro(qt_wrap_ui)
@@ -62,13 +62,13 @@ catkin_package(
   CATKIN_DEPENDS
     eigen_conversions
     geometry_msgs
-    visualization_msgs
     graph_msgs
+    roscpp
+    sensor_msgs
     std_msgs
     tf_conversions
     trajectory_msgs
-    sensor_msgs
-    roscpp
+    visualization_msgs
   INCLUDE_DIRS
     include
     ${OGRE_OV_INCLUDE_DIRS}
@@ -153,8 +153,8 @@ install(
   TARGETS
     ${PROJECT_NAME}
     ${PROJECT_NAME}_gui
-    ${PROJECT_NAME}_remote_control
     ${PROJECT_NAME}_imarker_simple
+    ${PROJECT_NAME}_remote_control
   LIBRARY DESTINATION
     ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
