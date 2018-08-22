@@ -116,12 +116,18 @@ add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME}
   )
+if(NOT rviz_QT_VERSION VERSION_LESS "5")
+  qt5_use_modules(${PROJECT_NAME}_demo Widgets)
+endif()
 
 # Demo executable
 add_executable(imarker_simple_demo src/imarker_simple_demo.cpp)
 target_link_libraries(imarker_simple_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME} ${PROJECT_NAME}_imarker_simple
 )
+if(NOT rviz_QT_VERSION VERSION_LESS "5")
+  qt5_use_modules(imarker_simple_demo Widgets)
+endif()
 
 ##########
 ## TEST ##
