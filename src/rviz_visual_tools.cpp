@@ -915,7 +915,6 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
 
   // Publish
   pub_rviz_markers_.publish(markers);
-  ros::spinOnce();
   return true;
 }
 
