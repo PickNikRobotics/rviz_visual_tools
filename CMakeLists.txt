@@ -51,6 +51,7 @@ endif()
 ## etc because they can conflict with boost signals, so define QT_NO_KEYWORDS here.
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC_COMPILER_PREDEFINES OFF)
 add_definitions(-DQT_NO_KEYWORDS)
 
 catkin_package(
