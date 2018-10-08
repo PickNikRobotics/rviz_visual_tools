@@ -119,12 +119,22 @@ target_link_libraries(${PROJECT_NAME}_imarker_simple
 add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME}
-  )
+)
+set_target_properties(${PROJECT_NAME}_demo
+  PROPERTIES
+  OUTPUT_NAME
+  demo PREFIX ""
+)
 
 # Demo executable
-add_executable(imarker_simple_demo src/imarker_simple_demo.cpp)
-target_link_libraries(imarker_simple_demo
+add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
+target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
   ${catkin_LIBRARIES} ${PROJECT_NAME} ${PROJECT_NAME}_imarker_simple
+)
+set_target_properties(${PROJECT_NAME}_imarker_simple_demo
+  PROPERTIES
+  OUTPUT_NAME
+  imarker_simple_demo PREFIX ""
 )
 
 ##########
@@ -174,7 +184,7 @@ install(FILES
 )
 
 # Install executables
-install(TARGETS ${PROJECT_NAME}_demo imarker_simple_demo
+install(TARGETS ${PROJECT_NAME}_demo ${PROJECT_NAME}_imarker_simple_demo
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
