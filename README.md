@@ -294,3 +294,5 @@ Run with clang-tidy:
 ## Contribute
 
 Please send PRs for new helper functions, fixes, etc!
+
+When a pull request is opened, a reviewer is randomly assigned from the reviewer list using the [Auto Assign Github Bot](https://probot.github.io/apps/auto-assign/)
