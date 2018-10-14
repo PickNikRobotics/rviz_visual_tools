@@ -100,6 +100,8 @@ In the following snippet we create a pose at xyz (0.1, 0.1, 0.1) and rotate the 
 
     // Don't forget to trigger the publisher!
     visual_tools_->trigger();
+    
+For more example code see [rviz_visual_tools_demo.cpp](https://github.com/PickNikRobotics/rviz_visual_tools/blob/melodic-devel/src/rviz_visual_tools_demo.cpp)
 
 ## Rviz GUI Usage
 
@@ -158,7 +160,6 @@ See ``rviz_visual_tools.h`` for more details and documentation on the following 
  - publishAxisLabeled
  - publishCylinder
  - publishMesh
- - publishMesh
  - publishText
  - publishTest
 
@@ -206,7 +207,7 @@ This allows the markers to be automatically updated as the base frame moves with
 This package helps you quickly choose colors - feel free to send PRs with more colors as needed
 
     BLACK,
-	BLUE,
+    BLUE,
     BROWN,
     CYAN,
     DARK_GREY,
@@ -224,7 +225,7 @@ This package helps you quickly choose colors - feel free to send PRs with more c
     TRANSLUCENT,
     TRANSLUCENT_DARK,
     RAND,
-	CLEAR,
+    CLEAR,
     DEFAULT // i.e. 'do not change default color'
 
 ### Available Marker Sizes
