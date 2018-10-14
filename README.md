@@ -31,14 +31,14 @@ Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, Universi
 ### Ubuntu Debian
 
 ```
-sudo apt-get install ros-kinetic-rviz-visual-tools
+sudo apt-get install ros-melodic-rviz-visual-tools
 ```
 
 ### Build from Source
 
 Clone this repository into a catkin workspace, then use the rosdep install tool to automatically download its dependencies. Depending on your current version of ROS, use:
 ```
-rosdep install --from-paths src --ignore-src --rosdistro kinetic
+rosdep install --from-paths src --ignore-src --rosdistro melodic
 ```
 
 ## Quick Start Demo
@@ -53,7 +53,7 @@ Then start demo:
 
 ## Code API
 
-See [the Doxygen documentation](http://docs.ros.org/kinetic/api/rviz_visual_tools/html/annotated.html)
+See [the Doxygen documentation](http://docs.ros.org/melodic/api/rviz_visual_tools/html/annotated.html)
 
 ## Usage
 
@@ -282,14 +282,14 @@ Run with clang-tidy:
 
     # This is not the safest way however, as you then compromise the access control to X server on your host
     xhost +local:root # for the lazy and reckless
-    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" davetcoleman/rviz_visual_tools:kinetic
+    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" davetcoleman/rviz_visual_tools:melodic
     export containerId=$(docker ps -l -q)
     # Close security hole:
     xhost -local:root
 
 (Optional) To build the docker image locally for this repo, run in base of package:
 
-    docker build -t davetcoleman/rviz_visual_tools:kinetic .
+    docker build -t davetcoleman/rviz_visual_tools:melodic .
 
 ## Contribute
 
