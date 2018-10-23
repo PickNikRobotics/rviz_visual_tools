@@ -260,8 +260,6 @@ This tool lets you easily debug Eigen transforms in Rviz. Demo use:
     Eigen::Affine3d world_to_shelf_transform = Eigen::Affine3d::Identity(); // or whatever value
     tf_visualizer.publishTransform(world_to_shelf_transform, "world", "shelf");
 
-*Note: this is a work in progress*
-
 ## Testing and Linting
 
 To run [roslint](http://wiki.ros.org/roslint), use the following command with [catkin-tools](https://catkin-tools.readthedocs.org/):
