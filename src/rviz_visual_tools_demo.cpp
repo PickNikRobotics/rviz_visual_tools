@@ -79,9 +79,9 @@ public:
     visual_tools_->enableBatchPublishing();
   }
 
-  void publishLabelHelper(const Eigen::Affine3d& pose, const std::string& label)
+  void publishLabelHelper(const Eigen::Isometry3d& pose, const std::string& label)
   {
-    Eigen::Affine3d pose_copy = pose;
+    Eigen::Isometry3d pose_copy = pose;
     pose_copy.translation().x() -= 0.2;
     visual_tools_->publishText(pose_copy, label, rvt::WHITE, rvt::XXLARGE, false);
   }
@@ -89,8 +89,8 @@ public:
   void testRows(double& x_location)
   {
     // Create pose
-    Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
-    Eigen::Affine3d pose2 = Eigen::Affine3d::Identity();
+    Eigen::Isometry3d pose1 = Eigen::Isometry3d::Identity();
+    Eigen::Isometry3d pose2 = Eigen::Isometry3d::Identity();
 
     pose1.translation().x() = x_location;
 
@@ -137,7 +137,7 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Arrows");
-    pose1 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.025;
@@ -158,8 +158,8 @@ public:
     ROS_INFO_STREAM_NAMED(name_, "Displaying Rectangular Cuboid");
     double cuboid_max_size = 0.075;
     double cuboid_min_size = 0.01;
-    pose1 = Eigen::Affine3d::Identity();
-    pose2 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
+    pose2 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     pose2.translation().y() = y;
@@ -185,8 +185,8 @@ public:
     ROS_INFO_STREAM_NAMED(name_, "Displaying Lines");
     double line_max_size = 0.075;
     double line_min_size = 0.01;
-    pose1 = Eigen::Affine3d::Identity();
-    pose2 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
+    pose2 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     pose2.translation().y() = y;
@@ -210,7 +210,7 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Cylinder");
-    pose1 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.025;
@@ -229,7 +229,7 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Axis Cone");
-    pose1 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.025;
@@ -252,7 +252,7 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Wireframe Cuboid");
-    pose1 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.1;
@@ -275,7 +275,7 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Sized Wireframe Cuboid");
-    pose1 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.1;
@@ -295,7 +295,7 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Planes");
-    pose1 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.2;
@@ -317,7 +317,7 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Graph");
-    pose1 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.1;
@@ -373,8 +373,8 @@ public:
 
     // --------------------------------------------------------------------
     ROS_INFO_STREAM_NAMED(name_, "Displaying Multi-Color Path");
-    pose1 = Eigen::Affine3d::Identity();
-    pose2 = Eigen::Affine3d::Identity();
+    pose1 = Eigen::Isometry3d::Identity();
+    pose2 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.1;
@@ -414,8 +414,8 @@ public:
   void testSize(double& x_location, scales scale)
   {
     // Create pose
-    Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
-    Eigen::Affine3d pose2 = Eigen::Affine3d::Identity();
+    Eigen::Isometry3d pose1 = Eigen::Isometry3d::Identity();
+    Eigen::Isometry3d pose2 = Eigen::Isometry3d::Identity();
 
     // Reusable vector of 2 colors
     std::vector<colors> colors;
@@ -545,8 +545,8 @@ public:
     ROS_INFO_STREAM_NAMED(name_, "Testing sizes of marker scale");
 
     // Create pose
-    Eigen::Affine3d pose1 = Eigen::Affine3d::Identity();
-    Eigen::Affine3d pose2;
+    Eigen::Isometry3d pose1 = Eigen::Isometry3d::Identity();
+    Eigen::Isometry3d pose2;
 
     // Show test label
     pose1.translation().x() = x_location - 0.1;

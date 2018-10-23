@@ -78,7 +78,7 @@ public:
 
   geometry_msgs::Pose& getPose();
 
-  void setPose(const Eigen::Affine3d& pose);
+  void setPose(const Eigen::Isometry3d& pose);
 
   void setPose(const geometry_msgs::Pose& pose);
 

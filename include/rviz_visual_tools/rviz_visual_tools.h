@@ -305,7 +305,7 @@ public:
    * \param point b - x,y,z in space of a point
    * \return vector from a to b
    */
-  Eigen::Affine3d getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const;
+  Eigen::Isometry3d getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const;
 
   /**
    * \brief Find the center between to points
@@ -397,7 +397,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param scale - size of the cone
    * \return true on success
    */
-  bool publishCone(const Eigen::Affine3d& pose, double angle, colors color = TRANSLUCENT, double scale = 1.0);
+  bool publishCone(const Eigen::Isometry3d& pose, double angle, colors color = TRANSLUCENT, double scale = 1.0);
   bool publishCone(const geometry_msgs::Pose& pose, double angle, colors color = TRANSLUCENT, double scale = 1.0);
 
   /**
@@ -407,7 +407,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishXYPlane(const Eigen::Affine3d& pose, colors color = TRANSLUCENT, double scale = 1.0);
+  bool publishXYPlane(const Eigen::Isometry3d& pose, colors color = TRANSLUCENT, double scale = 1.0);
   bool publishXYPlane(const geometry_msgs::Pose& pose, colors color = TRANSLUCENT, double scale = 1.0);
 
   /**
@@ -417,7 +417,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishXZPlane(const Eigen::Affine3d& pose, colors color = TRANSLUCENT, double scale = 1.0);
+  bool publishXZPlane(const Eigen::Isometry3d& pose, colors color = TRANSLUCENT, double scale = 1.0);
   bool publishXZPlane(const geometry_msgs::Pose& pose, colors color = TRANSLUCENT, double scale = 1.0);
 
   /**
@@ -427,7 +427,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param scale - the size of the vizualized plane
    * \return true on success
    */
-  bool publishYZPlane(const Eigen::Affine3d& pose, colors color = TRANSLUCENT, double scale = 1.0);
+  bool publishYZPlane(const Eigen::Isometry3d& pose, colors color = TRANSLUCENT, double scale = 1.0);
   bool publishYZPlane(const geometry_msgs::Pose& pose, colors color = TRANSLUCENT, double scale = 1.0);
 
   /**
@@ -440,7 +440,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * to incremental counter
    * \return true on success
    */
-  bool publishSphere(const Eigen::Affine3d& pose, colors color = BLUE, scales scale = MEDIUM,
+  bool publishSphere(const Eigen::Isometry3d& pose, colors color = BLUE, scales scale = MEDIUM,
                      const std::string& ns = "Sphere", std::size_t id = 0);
   bool publishSphere(const Eigen::Vector3d& point, colors color = BLUE, scales scale = MEDIUM,
                      const std::string& ns = "Sphere", std::size_t id = 0);
@@ -456,7 +456,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
                      const std::string& ns = "Sphere", std::size_t id = 0);
   bool publishSphere(const geometry_msgs::Pose& pose, const std_msgs::ColorRGBA& color,
                      const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere", std::size_t id = 0);
-  bool publishSphere(const Eigen::Affine3d& pose, const std_msgs::ColorRGBA& color, const geometry_msgs::Vector3 scale,
+  bool publishSphere(const Eigen::Isometry3d& pose, const std_msgs::ColorRGBA& color, const geometry_msgs::Vector3 scale,
                      const std::string& ns = "Sphere", std::size_t id = 0);
   bool publishSphere(const Eigen::Vector3d& point, const std_msgs::ColorRGBA& color, const geometry_msgs::Vector3 scale,
                      const std::string& ns = "Sphere", std::size_t id = 0);
@@ -503,7 +503,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param length - the length of the arrow tail, if zero, will auto set with scale
    * \return true on success
    */
-  bool publishXArrow(const Eigen::Affine3d& pose, colors color = RED, scales scale = MEDIUM, double length = 0.0);
+  bool publishXArrow(const Eigen::Isometry3d& pose, colors color = RED, scales scale = MEDIUM, double length = 0.0);
   bool publishXArrow(const geometry_msgs::Pose& pose, colors color = RED, scales scale = MEDIUM, double length = 0.0);
   bool publishXArrow(const geometry_msgs::PoseStamped& pose, colors color = RED, scales scale = MEDIUM,
                      double length = 0.0);
@@ -516,7 +516,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param length - the length of the arrow tail, if zero, will auto set with scale
    * \return true on success
    */
-  bool publishYArrow(const Eigen::Affine3d& pose, colors color = GREEN, scales scale = MEDIUM, double length = 0.0);
+  bool publishYArrow(const Eigen::Isometry3d& pose, colors color = GREEN, scales scale = MEDIUM, double length = 0.0);
   bool publishYArrow(const geometry_msgs::Pose& pose, colors color = GREEN, scales scale = MEDIUM, double length = 0.0);
   bool publishYArrow(const geometry_msgs::PoseStamped& pose, colors color = GREEN, scales scale = MEDIUM,
                      double length = 0.0);
@@ -529,7 +529,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param length - the length of the arrow tail, if zero, will auto set with scale
    * \return true on success
    */
-  bool publishZArrow(const Eigen::Affine3d& pose, colors color = BLUE, scales scale = MEDIUM, double length = 0.0,
+  bool publishZArrow(const Eigen::Isometry3d& pose, colors color = BLUE, scales scale = MEDIUM, double length = 0.0,
                      std::size_t id = 0);
   bool publishZArrow(const geometry_msgs::Pose& pose, colors color = BLUE, scales scale = MEDIUM, double length = 0.0);
   bool publishZArrow(const geometry_msgs::PoseStamped& pose, colors color = BLUE, scales scale = MEDIUM,
@@ -547,7 +547,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param end - the ending point of the arrow
    * \return true on success
    */
-  bool publishArrow(const Eigen::Affine3d& pose, colors color = BLUE, scales scale = MEDIUM, double length = 0.0,
+  bool publishArrow(const Eigen::Isometry3d& pose, colors color = BLUE, scales scale = MEDIUM, double length = 0.0,
                     std::size_t id = 0);
   bool publishArrow(const geometry_msgs::Pose& pose, colors color = BLUE, scales scale = MEDIUM, double length = 0.0,
                     std::size_t id = 0);
@@ -577,7 +577,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \return true on success
    */
   bool publishCuboid(const geometry_msgs::Pose& pose, double depth, double width, double height, colors color = BLUE);
-  bool publishCuboid(const Eigen::Affine3d& pose, double depth, double width, double height, colors color = BLUE);
+  bool publishCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height, colors color = BLUE);
 
   /**
    * \brief Display a marker of line
@@ -587,7 +587,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param scale - an enum pre-defined name of a size
    * \return true on success
    */
-  bool publishLine(const Eigen::Affine3d& point1, const Eigen::Affine3d& point2, colors color = BLUE,
+  bool publishLine(const Eigen::Isometry3d& point1, const Eigen::Isometry3d& point2, colors color = BLUE,
                    scales scale = MEDIUM);
   bool publishLine(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2, colors color = BLUE,
                    scales scale = MEDIUM);
@@ -639,7 +639,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
                    const std::string& ns = "Path");
   bool publishPath(const std::vector<geometry_msgs::Point>& path, colors color = RED, scales scale = MEDIUM,
                    const std::string& ns = "Path");
-  bool publishPath(const EigenSTL::vector_Affine3d& path, colors color = RED, scales scale = MEDIUM,
+  bool publishPath(const EigenSTL::vector_Isometry3d& path, colors color = RED, scales scale = MEDIUM,
                    const std::string& ns = "Path");
   bool publishPath(const EigenSTL::vector_Vector3d& path, colors color = RED, scales scale = MEDIUM,
                    const std::string& ns = "Path");
@@ -647,7 +647,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
                    const std::string& ns = "Path");
   bool publishPath(const EigenSTL::vector_Vector3d& path, colors color = RED, double radius = 0.01,
                    const std::string& ns = "Path");
-  bool publishPath(const EigenSTL::vector_Affine3d& path, colors color = RED, double radius = 0.01,
+  bool publishPath(const EigenSTL::vector_Isometry3d& path, colors color = RED, double radius = 0.01,
                    const std::string& ns = "Path");
 
   /**
@@ -688,7 +688,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * to incremental counter
    * \return true on success
    */
-  bool publishWireframeCuboid(const Eigen::Affine3d& pose, double depth, double width, double height,
+  bool publishWireframeCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height,
                               colors color = BLUE, const std::string& ns = "Wireframe Cuboid", std::size_t id = 0);
 
   /**
@@ -701,7 +701,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param id - unique counter that allows you to overwrite a previous marker. if 0, defaults to incremental counter
    * \return true on success
    */
-  bool publishWireframeCuboid(const Eigen::Affine3d& pose, const Eigen::Vector3d& min_point,
+  bool publishWireframeCuboid(const Eigen::Isometry3d& pose, const Eigen::Vector3d& min_point,
                               const Eigen::Vector3d& max_point, colors color = BLUE,
                               const std::string& ns = "Wireframe Cuboid", std::size_t id = 0);
 
@@ -714,9 +714,9 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param id - unique counter that allows you to overwrite a previous marker. if 0, defaults to incremental counter
    * \return true on success
    */
-  bool publishWireframeRectangle(const Eigen::Affine3d& pose, double height, double width, colors color = BLUE,
+  bool publishWireframeRectangle(const Eigen::Isometry3d& pose, double height, double width, colors color = BLUE,
                                  scales scale = MEDIUM, std::size_t id = 0);
-  bool publishWireframeRectangle(const Eigen::Affine3d& pose, const Eigen::Vector3d& p1_in,
+  bool publishWireframeRectangle(const Eigen::Isometry3d& pose, const Eigen::Vector3d& p1_in,
                                  const Eigen::Vector3d& p2_in, const Eigen::Vector3d& p3_in,
                                  const Eigen::Vector3d& p4_in, colors color, scales scale);
   /**
@@ -727,7 +727,7 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
-  bool publishAxisLabeled(const Eigen::Affine3d& pose, const std::string& label, scales scale = MEDIUM,
+  bool publishAxisLabeled(const Eigen::Isometry3d& pose, const std::string& label, scales scale = MEDIUM,
                           colors color = WHITE);
   bool publishAxisLabeled(const geometry_msgs::Pose& pose, const std::string& label, scales scale = MEDIUM,
                           colors color = WHITE);
@@ -742,10 +742,10 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \return true on success
    */
   bool publishAxis(const geometry_msgs::Pose& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
-  bool publishAxis(const Eigen::Affine3d& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
+  bool publishAxis(const Eigen::Isometry3d& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
   bool publishAxis(const geometry_msgs::Pose& pose, double length, double radius = 0.01,
                    const std::string& ns = "Axis");
-  bool publishAxis(const Eigen::Affine3d& pose, double length, double radius = 0.01, const std::string& ns = "Axis");
+  bool publishAxis(const Eigen::Isometry3d& pose, double length, double radius = 0.01, const std::string& ns = "Axis");
 
 private:
   /**
@@ -756,7 +756,7 @@ private:
    * \param ns - namespace
    * \return true on success
    */
-  bool publishAxisInternal(const Eigen::Affine3d& pose, double length = 0.1, double radius = 0.01,
+  bool publishAxisInternal(const Eigen::Isometry3d& pose, double length = 0.1, double radius = 0.01,
                            const std::string& ns = "Axis");
 
 public:
@@ -768,9 +768,9 @@ public:
    * \param ns - namespace
    * \return true on success
    */
-  bool publishAxisPath(const EigenSTL::vector_Affine3d& path, scales scale = MEDIUM,
+  bool publishAxisPath(const EigenSTL::vector_Isometry3d& path, scales scale = MEDIUM,
                        const std::string& ns = "Axis Path");
-  bool publishAxisPath(const EigenSTL::vector_Affine3d& path, double length = 0.1, double radius = 0.01,
+  bool publishAxisPath(const EigenSTL::vector_Isometry3d& path, double length = 0.1, double radius = 0.01,
                        const std::string& ns = "Axis Path");
 
   /**
@@ -796,7 +796,7 @@ public:
    * \param radius - geometry of cylinder
    * \return true on success
    */
-  bool publishCylinder(const Eigen::Affine3d& pose, colors color = BLUE, double height = 0.1, double radius = 0.01,
+  bool publishCylinder(const Eigen::Isometry3d& pose, colors color = BLUE, double height = 0.1, double radius = 0.01,
                        const std::string& ns = "Cylinder");
   bool publishCylinder(const geometry_msgs::Pose& pose, colors color = BLUE, double height = 0.1, double radius = 0.01,
                        const std::string& ns = "Cylinder");
@@ -814,7 +814,7 @@ public:
    * to incremental counter
    * \return true on success
    */
-  bool publishMesh(const Eigen::Affine3d& pose, const std::string& file_name, colors color = CLEAR, double scale = 1,
+  bool publishMesh(const Eigen::Isometry3d& pose, const std::string& file_name, colors color = CLEAR, double scale = 1,
                    const std::string& ns = "mesh", std::size_t id = 0);
   bool publishMesh(const geometry_msgs::Pose& pose, const std::string& file_name, colors color = CLEAR,
                    double scale = 1, const std::string& ns = "mesh", std::size_t id = 0);
@@ -837,9 +837,9 @@ public:
    * \param static_id - if true, only one text can be published at a time
    * \return true on success
    */
-  bool publishText(const Eigen::Affine3d& pose, const std::string& text, colors color = WHITE, scales scale = MEDIUM,
+  bool publishText(const Eigen::Isometry3d& pose, const std::string& text, colors color = WHITE, scales scale = MEDIUM,
                    bool static_id = true);
-  bool publishText(const Eigen::Affine3d& pose, const std::string& text, colors color,
+  bool publishText(const Eigen::Isometry3d& pose, const std::string& text, colors color,
                    const geometry_msgs::Vector3 scale, bool static_id = true);
   bool publishText(const geometry_msgs::Pose& pose, const std::string& text, colors color = WHITE,
                    scales scale = MEDIUM, bool static_id = true);
@@ -851,14 +851,14 @@ public:
    * \param pose
    * \return converted pose
    */
-  static geometry_msgs::Pose convertPose(const Eigen::Affine3d& pose);
+  static geometry_msgs::Pose convertPose(const Eigen::Isometry3d& pose);
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg pose - thread safe
    * \param Eigen pose - input
    * \param ROS msg pose - output
    */
-  static void convertPoseSafe(const Eigen::Affine3d& pose, geometry_msgs::Pose& pose_msg);
+  static void convertPoseSafe(const Eigen::Isometry3d& pose, geometry_msgs::Pose& pose_msg);
 
   /**
    * \brief Convert a geometry_msg pose to an Eigen pose
@@ -866,14 +866,14 @@ public:
    * \param ROS msg pose
    * \return converted pose
    */
-  static Eigen::Affine3d convertPose(const geometry_msgs::Pose& pose);
+  static Eigen::Isometry3d convertPose(const geometry_msgs::Pose& pose);
 
   /**
    * \brief Convert a geometry_msg pose to an Eigen pose - thread safe
    * \param ROS msg pose - input
    * \param Eigen pose - output
    */
-  static void convertPoseSafe(const geometry_msgs::Pose& pose_msg, Eigen::Affine3d& pose);
+  static void convertPoseSafe(const geometry_msgs::Pose& pose_msg, Eigen::Isometry3d& pose);
 
   /**
    * \brief Convert a geometry_msg point (32bit) to an Eigen pose
@@ -881,13 +881,13 @@ public:
    * \param pose
    * \return converted point with default rotation matrix
    */
-  static Eigen::Affine3d convertPoint32ToPose(const geometry_msgs::Point32& point);
+  static Eigen::Isometry3d convertPoint32ToPose(const geometry_msgs::Point32& point);
 
   /**
    * \brief Add an identity rotation matrix to make a point have a full pose
    */
   static geometry_msgs::Pose convertPointToPose(const geometry_msgs::Point& point);
-  static Eigen::Affine3d convertPointToPose(const Eigen::Vector3d& point);
+  static Eigen::Isometry3d convertPointToPose(const Eigen::Vector3d& point);
 
   /**
    * \brief Convert an Eigen pose to a geometry_msg point
@@ -895,7 +895,7 @@ public:
    * \param pose
    * \return converted point with orientation discarded
    */
-  static geometry_msgs::Point convertPoseToPoint(const Eigen::Affine3d& pose);
+  static geometry_msgs::Point convertPoseToPoint(const Eigen::Isometry3d& pose);
 
   /**
    * \brief Convert a geometry_msg point to an Eigen point
@@ -947,9 +947,9 @@ public:
   @param rx, ry, rz - rotations about x, y, z, respectively
   @param convention - default is rviz_visual_tools::XYZ
   */
-  static Eigen::Affine3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
+  static Eigen::Isometry3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
                                            EulerConvention convention);  // ZYX is ROS standard
-  static Eigen::Affine3d convertFromXYZRPY(const std::vector<double>& transform6,
+  static Eigen::Isometry3d convertFromXYZRPY(const std::vector<double>& transform6,
                                            EulerConvention convention);  // ZYX is ROS standard
 
   // TODO(davetcoleman): add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
@@ -960,8 +960,8 @@ public:
    * \param input Eigen pose
    * \param output vector of size 6 in order xyz rpy
    */
-  static void convertToXYZRPY(const Eigen::Affine3d& pose, std::vector<double>& xyzrpy);
-  static void convertToXYZRPY(const Eigen::Affine3d& pose, double& x, double& y, double& z, double& roll, double& pitch,
+  static void convertToXYZRPY(const Eigen::Isometry3d& pose, std::vector<double>& xyzrpy);
+  static void convertToXYZRPY(const Eigen::Isometry3d& pose, double& x, double& y, double& z, double& roll, double& pitch,
                               double& yaw);
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_
@@ -969,7 +969,7 @@ public:
    * \parma options bounds on the pose to generate
    */
   static void generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
-  static void generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
+  static void generateRandomPose(Eigen::Isometry3d& pose, RandomPoseBounds pose_bounds = RandomPoseBounds());
 
   /**
    * \brief Create a random rectangular cuboid of some shape
@@ -991,7 +991,7 @@ public:
    * \param threshold - how close in value they must be in order to be considered the same
    * \return true if equal
    */
-  static bool posesEqual(const Eigen::Affine3d& pose1, const Eigen::Affine3d& pose2, double threshold = 0.000001);
+  static bool posesEqual(const Eigen::Isometry3d& pose1, const Eigen::Isometry3d& pose2, double threshold = 0.000001);
 
   /**
    * \brief Get random between min and max
@@ -1008,17 +1008,17 @@ public:
   /**
    * \brief Display in the console a transform in quaternions
    */
-  static void printTransform(const Eigen::Affine3d& transform);
+  static void printTransform(const Eigen::Isometry3d& transform);
 
   /**
    * \brief Display in the console a transform in roll pitch yaw
    */
-  static void printTransformRPY(const Eigen::Affine3d& transform);
+  static void printTransformRPY(const Eigen::Isometry3d& transform);
 
   /**
    * \brief Display in the console a transform with full 3x3 rotation matrix
    */
-  static void printTransformFull(const Eigen::Affine3d& transform);
+  static void printTransformFull(const Eigen::Isometry3d& transform);
 
   /** \brief Getter for PsychedelicMode */
   bool getPsychedelicMode() const

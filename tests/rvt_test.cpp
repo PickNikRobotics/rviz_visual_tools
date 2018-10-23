@@ -64,7 +64,7 @@ public:
     return true;
   }
 
-  bool testAffine3d(const std::string& id, const Eigen::Affine3d& expect, const Eigen::Affine3d& actual)
+  bool testIsometry3d(const std::string& id, const Eigen::Isometry3d& expect, const Eigen::Isometry3d& actual)
   {
     static const double EPSILON = 0.000001;
     EXPECT_GT(EPSILON, fabs(expect.translation().x() - actual.translation().x()))
@@ -112,7 +112,7 @@ TEST(RVTTest, initialize)
 TEST(RVTTest, test_rpy_conversions)
 {
   // Identity conversions with RPY
-  Eigen::Affine3d expected_affine = Eigen::Affine3d::Identity();
+  Eigen::Isometry3d expected_affine = Eigen::Isometry3d::Identity();
   std::vector<double> xyzrpy;
   base.visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
   std::vector<double> expected_vector;
@@ -125,8 +125,8 @@ TEST(RVTTest, test_rpy_conversions)
   EXPECT_TRUE(base.testVector("Identity: ", expected_vector, xyzrpy));
 
   // Identity conversion back to Eigen
-  Eigen::Affine3d expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy, rviz_visual_tools::XYZ);
-  EXPECT_TRUE(base.testAffine3d("Identity convert back", expected_affine, expected_affine2));
+  Eigen::Isometry3d expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy, rviz_visual_tools::XYZ);
+  EXPECT_TRUE(base.testIsometry3d("Identity convert back", expected_affine, expected_affine2));
 
   // -------------------------------------------------------------------
   // Translation conversions to RPY
@@ -141,17 +141,17 @@ TEST(RVTTest, test_rpy_conversions)
 
   // Translation convertion back to Eigen
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy, rviz_visual_tools::XYZ);
-  EXPECT_TRUE(base.testAffine3d("123 convert back", expected_affine, expected_affine2));
+  EXPECT_TRUE(base.testIsometry3d("123 convert back", expected_affine, expected_affine2));
 
   // Translation convertion back to Eigen via long function
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
                                                            xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(base.testAffine3d("123 convert back long", expected_affine, expected_affine2));
+  EXPECT_TRUE(base.testIsometry3d("123 convert back long", expected_affine, expected_affine2));
 
   // Translation convertion back to Eigen via NEW long function
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
                                                            xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(base.testAffine3d("123 convert back new long", expected_affine, expected_affine2));
+  EXPECT_TRUE(base.testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
 
   // -------------------------------------------------------------------
   // Rotation conversions to RPY
@@ -162,17 +162,17 @@ TEST(RVTTest, test_rpy_conversions)
 
   // Rotation convertion back to Eigen
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy, rviz_visual_tools::XYZ);
-  EXPECT_TRUE(base.testAffine3d("123 convert back", expected_affine, expected_affine2));
+  EXPECT_TRUE(base.testIsometry3d("123 convert back", expected_affine, expected_affine2));
 
   // Rotation convertion back to Eigen via long function
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
                                                            xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(base.testAffine3d("123 convert back long", expected_affine, expected_affine2));
+  EXPECT_TRUE(base.testIsometry3d("123 convert back long", expected_affine, expected_affine2));
 
   // Rotation convertion back to Eigen via NEW long function
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
                                                            xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(base.testAffine3d("123 convert back new long", expected_affine, expected_affine2));
+  EXPECT_TRUE(base.testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
 }
 
 /* Main  ------------------------------------------------------------------------------------- */

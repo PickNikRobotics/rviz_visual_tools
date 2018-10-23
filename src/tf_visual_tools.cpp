@@ -54,7 +54,7 @@ TFVisualTools::TFVisualTools(double loop_hz)
   ROS_INFO_STREAM_NAMED("tf_visual_tools", "TFVisualTools Ready.");
 }
 
-bool TFVisualTools::publishTransform(const Eigen::Affine3d& transform, const std::string& from_frame,
+bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame,
                                      const std::string& to_frame)
 {
   ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transform from " << from_frame << " to " << to_frame);

@@ -714,7 +714,7 @@ Eigen::Vector3d RvizVisualTools::getCenterPoint(const Eigen::Vector3d& a, const 
   return center;
 }
 
-Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const
+Eigen::Isometry3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d& a, const Eigen::Vector3d& b) const
 {
   bool verbose = false;
 
@@ -725,7 +725,7 @@ Eigen::Affine3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d& a
   // http://answers.ros.org/question/31006/how-can-a-vector3-axis-be-used-to-produce-a-quaternion/
 
   // Solution pose
-  Eigen::Affine3d result_pose = Eigen::Affine3d::Identity();
+  Eigen::Isometry3d result_pose = Eigen::Isometry3d::Identity();
 
   // Goal pose:
   Eigen::Quaterniond q;
@@ -918,7 +918,7 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
   return true;
 }
 
-bool RvizVisualTools::publishCone(const Eigen::Affine3d& pose, double angle, colors color, double scale)
+bool RvizVisualTools::publishCone(const Eigen::Isometry3d& pose, double angle, colors color, double scale)
 {
   return publishCone(convertPose(pose), angle, color, scale);
 }
@@ -964,7 +964,7 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose& pose, double angle,
   return publishMarker(triangle_marker_);
 }
 
-bool RvizVisualTools::publishXYPlane(const Eigen::Affine3d& pose, colors color, double scale)
+bool RvizVisualTools::publishXYPlane(const Eigen::Isometry3d& pose, colors color, double scale)
 {
   return publishXYPlane(convertPose(pose), color, scale);
 }
@@ -1010,7 +1010,7 @@ bool RvizVisualTools::publishXYPlane(const geometry_msgs::Pose& pose, colors col
   return publishMarker(triangle_marker_);
 }
 
-bool RvizVisualTools::publishXZPlane(const Eigen::Affine3d& pose, colors color, double scale)
+bool RvizVisualTools::publishXZPlane(const Eigen::Isometry3d& pose, colors color, double scale)
 {
   return publishXZPlane(convertPose(pose), color, scale);
 }
@@ -1056,7 +1056,7 @@ bool RvizVisualTools::publishXZPlane(const geometry_msgs::Pose& pose, colors col
   return publishMarker(triangle_marker_);
 }
 
-bool RvizVisualTools::publishYZPlane(const Eigen::Affine3d& pose, colors color, double scale)
+bool RvizVisualTools::publishYZPlane(const Eigen::Isometry3d& pose, colors color, double scale)
 {
   return publishYZPlane(convertPose(pose), color, scale);
 }
@@ -1102,7 +1102,7 @@ bool RvizVisualTools::publishYZPlane(const geometry_msgs::Pose& pose, colors col
   return publishMarker(triangle_marker_);
 }
 
-bool RvizVisualTools::publishSphere(const Eigen::Affine3d& pose, colors color, scales scale, const std::string& ns,
+bool RvizVisualTools::publishSphere(const Eigen::Isometry3d& pose, colors color, scales scale, const std::string& ns,
                                     std::size_t id)
 {
   return publishSphere(convertPose(pose), color, scale, ns, id);
@@ -1154,7 +1154,7 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::Pose& pose, colors colo
   return publishSphere(pose, getColor(color), scale, ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const Eigen::Affine3d& pose, const std_msgs::ColorRGBA& color,
+bool RvizVisualTools::publishSphere(const Eigen::Isometry3d& pose, const std_msgs::ColorRGBA& color,
                                     const geometry_msgs::Vector3 scale, const std::string& ns, std::size_t id)
 {
   return publishSphere(convertPose(pose), color, scale, ns, id);
@@ -1220,7 +1220,7 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::PoseStamped& pose, colo
   return true;
 }
 
-bool RvizVisualTools::publishXArrow(const Eigen::Affine3d& pose, colors color, scales scale, double length)
+bool RvizVisualTools::publishXArrow(const Eigen::Isometry3d& pose, colors color, scales scale, double length)
 {
   return publishArrow(convertPose(pose), color, scale, length);
 }
@@ -1235,42 +1235,42 @@ bool RvizVisualTools::publishXArrow(const geometry_msgs::PoseStamped& pose, colo
   return publishArrow(pose, color, scale, length);
 }
 
-bool RvizVisualTools::publishYArrow(const Eigen::Affine3d& pose, colors color, scales scale, double length)
+bool RvizVisualTools::publishYArrow(const Eigen::Isometry3d& pose, colors color, scales scale, double length)
 {
-  Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
+  Eigen::Isometry3d arrow_pose = pose * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishYArrow(const geometry_msgs::Pose& pose, colors color, scales scale, double length)
 {
-  Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
+  Eigen::Isometry3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishYArrow(const geometry_msgs::PoseStamped& pose, colors color, scales scale, double length)
 {
-  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
+  Eigen::Isometry3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   geometry_msgs::PoseStamped new_pose = pose;
   new_pose.pose = convertPose(arrow_pose);
   return publishArrow(new_pose, color, scale, length);
 }
 
-bool RvizVisualTools::publishZArrow(const Eigen::Affine3d& pose, colors color, scales scale, double length,
+bool RvizVisualTools::publishZArrow(const Eigen::Isometry3d& pose, colors color, scales scale, double length,
                                     std::size_t id)
 {
-  Eigen::Affine3d arrow_pose = pose * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
+  Eigen::Isometry3d arrow_pose = pose * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length, id);
 }
 
 bool RvizVisualTools::publishZArrow(const geometry_msgs::Pose& pose, colors color, scales scale, double length)
 {
-  Eigen::Affine3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
+  Eigen::Isometry3d arrow_pose = convertPose(pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
 bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped& pose, colors color, scales scale, double length)
 {
-  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
+  Eigen::Isometry3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   geometry_msgs::PoseStamped new_pose = pose;
   new_pose.pose = convertPose(arrow_pose);
   return publishArrow(new_pose, color, scale, length);
@@ -1279,13 +1279,13 @@ bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped& pose, colo
 bool RvizVisualTools::publishZArrow(const geometry_msgs::PoseStamped& pose, colors color, scales scale, double length,
                                     std::size_t id)
 {
-  Eigen::Affine3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
+  Eigen::Isometry3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   geometry_msgs::PoseStamped new_pose = pose;
   new_pose.pose = convertPose(arrow_pose);
   return publishArrow(new_pose, color, scale, length, id);
 }
 
-bool RvizVisualTools::publishArrow(const Eigen::Affine3d& pose, colors color, scales scale, double length,
+bool RvizVisualTools::publishArrow(const Eigen::Isometry3d& pose, colors color, scales scale, double length,
                                    std::size_t id)
 {
   return publishArrow(convertPose(pose), color, scale, length, id);
@@ -1394,7 +1394,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::Point& start, const geom
   return publishMarker(arrow_marker_);
 }
 
-bool RvizVisualTools::publishAxisLabeled(const Eigen::Affine3d& pose, const std::string& label, scales scale,
+bool RvizVisualTools::publishAxisLabeled(const Eigen::Isometry3d& pose, const std::string& label, scales scale,
                                          colors color)
 {
   return publishAxisLabeled(convertPose(pose), label, scale, color);
@@ -1420,7 +1420,7 @@ bool RvizVisualTools::publishAxis(const geometry_msgs::Pose& pose, scales scale,
   return publishAxis(pose, radius * 10.0, radius, ns);
 }
 
-bool RvizVisualTools::publishAxis(const Eigen::Affine3d& pose, scales scale, const std::string& ns)
+bool RvizVisualTools::publishAxis(const Eigen::Isometry3d& pose, scales scale, const std::string& ns)
 {
   double radius = getScale(scale).x;
   return publishAxis(pose, radius * 10.0, radius, ns);
@@ -1431,7 +1431,7 @@ bool RvizVisualTools::publishAxis(const geometry_msgs::Pose& pose, double length
   return publishAxis(convertPose(pose), length, radius, ns);
 }
 
-bool RvizVisualTools::publishAxis(const Eigen::Affine3d& pose, double length, double radius, const std::string& ns)
+bool RvizVisualTools::publishAxis(const Eigen::Isometry3d& pose, double length, double radius, const std::string& ns)
 {
   // Use an internal function that will not actually publish anything, so that other makers can combine with an axis
   // without publishing
@@ -1440,30 +1440,30 @@ bool RvizVisualTools::publishAxis(const Eigen::Affine3d& pose, double length, do
   return true;
 }
 
-bool RvizVisualTools::publishAxisInternal(const Eigen::Affine3d& pose, double length, double radius,
+bool RvizVisualTools::publishAxisInternal(const Eigen::Isometry3d& pose, double length, double radius,
                                           const std::string& ns)
 {
   // Publish x axis
-  Eigen::Affine3d x_pose =
+  Eigen::Isometry3d x_pose =
       Eigen::Translation3d(length / 2.0, 0, 0) * Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());
   x_pose = pose * x_pose;
   publishCylinder(x_pose, RED, length, radius, ns);
 
   // Publish y axis
-  Eigen::Affine3d y_pose =
+  Eigen::Isometry3d y_pose =
       Eigen::Translation3d(0, length / 2.0, 0) * Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());
   y_pose = pose * y_pose;
   publishCylinder(y_pose, GREEN, length, radius, ns);
 
   // Publish z axis
-  Eigen::Affine3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) * Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
+  Eigen::Isometry3d z_pose = Eigen::Translation3d(0, 0, length / 2.0) * Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
   z_pose = pose * z_pose;
   publishCylinder(z_pose, BLUE, length, radius, ns);
 
   return true;
 }
 
-bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d& path, scales scale, const std::string& ns)
+bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Isometry3d& path, scales scale, const std::string& ns)
 {
   // Create the cylinders
   for (const auto& i : path)
@@ -1475,7 +1475,7 @@ bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d& path, sca
   return true;
 }
 
-bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Affine3d& path, double length, double radius,
+bool RvizVisualTools::publishAxisPath(const EigenSTL::vector_Isometry3d& path, double length, double radius,
                                       const std::string& ns)
 {
   // Create the cylinders
@@ -1510,11 +1510,11 @@ bool RvizVisualTools::publishCylinder(const Eigen::Vector3d& point1, const Eigen
   Eigen::Vector3d pt_center = getCenterPoint(point1, point2);
 
   // Create vector
-  Eigen::Affine3d pose;
+  Eigen::Isometry3d pose;
   pose = getVectorBetweenPoints(pt_center, point2);
 
   // Convert pose to be normal to cylindar axis
-  Eigen::Affine3d rotation;
+  Eigen::Isometry3d rotation;
   rotation = Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitY());
   pose = pose * rotation;
 
@@ -1522,7 +1522,7 @@ bool RvizVisualTools::publishCylinder(const Eigen::Vector3d& point1, const Eigen
   return publishCylinder(convertPose(pose), color, height, radius);
 }
 
-bool RvizVisualTools::publishCylinder(const Eigen::Affine3d& pose, colors color, double height, double radius,
+bool RvizVisualTools::publishCylinder(const Eigen::Isometry3d& pose, colors color, double height, double radius,
                                       const std::string& ns)
 {
   return publishCylinder(convertPose(pose), color, height, radius, ns);
@@ -1557,7 +1557,7 @@ bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose& pose, const std
   return publishMarker(cylinder_marker_);
 }
 
-bool RvizVisualTools::publishMesh(const Eigen::Affine3d& pose, const std::string& file_name, colors color, double scale,
+bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const std::string& file_name, colors color, double scale,
                                   const std::string& ns, std::size_t id)
 {
   return publishMesh(convertPose(pose), file_name, color, scale, ns, id);
@@ -1686,7 +1686,7 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Point& point1, const ge
   return publishMarker(cuboid_marker_);
 }
 
-bool RvizVisualTools::publishCuboid(const Eigen::Affine3d& pose, double depth, double width, double height,
+bool RvizVisualTools::publishCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height,
                                     colors color)
 {
   return publishCuboid(convertPose(pose), depth, width, height, color);
@@ -1733,7 +1733,7 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose& pose, double dept
   return publishMarker(cuboid_marker_);
 }
 
-bool RvizVisualTools::publishLine(const Eigen::Affine3d& point1, const Eigen::Affine3d& point2, colors color,
+bool RvizVisualTools::publishLine(const Eigen::Isometry3d& point1, const Eigen::Isometry3d& point2, colors color,
                                   scales scale)
 {
   return publishLine(convertPoseToPoint(point1), convertPoseToPoint(point2), color, scale);
@@ -1909,7 +1909,7 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point>& path,
   return publishPath(path, color, getScale(scale).x, ns);
 }
 
-bool RvizVisualTools::publishPath(const EigenSTL::vector_Affine3d& path, colors color, scales scale,
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Isometry3d& path, colors color, scales scale,
                                   const std::string& ns)
 {
   return publishPath(path, color, getScale(scale).x, ns);
@@ -1957,7 +1957,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, colors 
   return true;
 }
 
-bool RvizVisualTools::publishPath(const EigenSTL::vector_Affine3d& path, colors color, double radius,
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Isometry3d& path, colors color, double radius,
                                   const std::string& ns)
 {
   if (path.size() < 2)
@@ -2049,7 +2049,7 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon& polygon, colo
   return publishPath(points, color, scale, ns);
 }
 
-bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d& pose, double depth, double width, double height,
+bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height,
                                              colors color, const std::string& ns, std::size_t id)
 {
   Eigen::Vector3d min_point, max_point;
@@ -2058,7 +2058,7 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d& pose, double
   return publishWireframeCuboid(pose, min_point, max_point, color, ns, id);
 }
 
-bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d& pose, const Eigen::Vector3d& min_point,
+bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, const Eigen::Vector3d& min_point,
                                              const Eigen::Vector3d& max_point, colors color, const std::string& ns,
                                              std::size_t id)
 {
@@ -2165,7 +2165,7 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Affine3d& pose, const 
   return publishMarker(line_list_marker_);
 }
 
-bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d& pose, double height, double width, colors color,
+bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, double height, double width, colors color,
                                                 scales scale, std::size_t id)
 {
   if (id == 0)
@@ -2223,7 +2223,7 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d& pose, dou
   return publishMarker(line_list_marker_);
 }
 
-bool RvizVisualTools::publishWireframeRectangle(const Eigen::Affine3d& pose, const Eigen::Vector3d& p1_in,
+bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, const Eigen::Vector3d& p1_in,
                                                 const Eigen::Vector3d& p2_in, const Eigen::Vector3d& p3_in,
                                                 const Eigen::Vector3d& p4_in, colors color, scales scale)
 {
@@ -2381,13 +2381,13 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::Point>& po
   return publishMarker(spheres_marker_);
 }
 
-bool RvizVisualTools::publishText(const Eigen::Affine3d& pose, const std::string& text, colors color, scales scale,
+bool RvizVisualTools::publishText(const Eigen::Isometry3d& pose, const std::string& text, colors color, scales scale,
                                   bool static_id)
 {
   return publishText(convertPose(pose), text, color, getScale(scale), static_id);
 }
 
-bool RvizVisualTools::publishText(const Eigen::Affine3d& pose, const std::string& text, colors color,
+bool RvizVisualTools::publishText(const Eigen::Isometry3d& pose, const std::string& text, colors color,
                                   const geometry_msgs::Vector3 scale, bool static_id)
 {
   return publishText(convertPose(pose), text, color, scale, static_id);
@@ -2432,34 +2432,34 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose& pose, const std::st
   return true;
 }
 
-geometry_msgs::Pose RvizVisualTools::convertPose(const Eigen::Affine3d& pose)
+geometry_msgs::Pose RvizVisualTools::convertPose(const Eigen::Isometry3d& pose)
 {
   geometry_msgs::Pose pose_msg;
   tf::poseEigenToMsg(pose, pose_msg);
   return pose_msg;
 }
 
-void RvizVisualTools::convertPoseSafe(const Eigen::Affine3d& pose, geometry_msgs::Pose& pose_msg)
+void RvizVisualTools::convertPoseSafe(const Eigen::Isometry3d& pose, geometry_msgs::Pose& pose_msg)
 {
   tf::poseEigenToMsg(pose, pose_msg);
 }
 
-Eigen::Affine3d RvizVisualTools::convertPose(const geometry_msgs::Pose& pose)
+Eigen::Isometry3d RvizVisualTools::convertPose(const geometry_msgs::Pose& pose)
 {
-  Eigen::Affine3d shared_pose_eigen_;
+  Eigen::Isometry3d shared_pose_eigen_;
   tf::poseMsgToEigen(pose, shared_pose_eigen_);
   return shared_pose_eigen_;
 }
 
-void RvizVisualTools::convertPoseSafe(const geometry_msgs::Pose& pose_msg, Eigen::Affine3d& pose)
+void RvizVisualTools::convertPoseSafe(const geometry_msgs::Pose& pose_msg, Eigen::Isometry3d& pose)
 {
   tf::poseMsgToEigen(pose_msg, pose);
 }
 
-Eigen::Affine3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point32& point)
+Eigen::Isometry3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point32& point)
 {
-  Eigen::Affine3d shared_pose_eigen_;
-  shared_pose_eigen_ = Eigen::Affine3d::Identity();
+  Eigen::Isometry3d shared_pose_eigen_;
+  shared_pose_eigen_ = Eigen::Isometry3d::Identity();
   shared_pose_eigen_.translation().x() = point.x;
   shared_pose_eigen_.translation().y() = point.y;
   shared_pose_eigen_.translation().z() = point.z;
@@ -2477,15 +2477,15 @@ geometry_msgs::Pose RvizVisualTools::convertPointToPose(const geometry_msgs::Poi
   return pose_msg;
 }
 
-Eigen::Affine3d RvizVisualTools::convertPointToPose(const Eigen::Vector3d& point)
+Eigen::Isometry3d RvizVisualTools::convertPointToPose(const Eigen::Vector3d& point)
 {
-  Eigen::Affine3d shared_pose_eigen_;
-  shared_pose_eigen_ = Eigen::Affine3d::Identity();
+  Eigen::Isometry3d shared_pose_eigen_;
+  shared_pose_eigen_ = Eigen::Isometry3d::Identity();
   shared_pose_eigen_.translation() = point;
   return shared_pose_eigen_;
 }
 
-geometry_msgs::Point RvizVisualTools::convertPoseToPoint(const Eigen::Affine3d& pose)
+geometry_msgs::Point RvizVisualTools::convertPoseToPoint(const Eigen::Isometry3d& pose)
 {
   geometry_msgs::Pose pose_msg;
   tf::poseEigenToMsg(pose, pose_msg);
@@ -2537,10 +2537,10 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d& point)
   return point_msg;
 }
 
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
+Eigen::Isometry3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
                                                    EulerConvention convention)
 {
-  Eigen::Affine3d result;
+  Eigen::Isometry3d result;
 
   switch (convention)
   {
@@ -2567,7 +2567,7 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double 
   return result;
 }
 
-Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& transform6, EulerConvention convention)
+Eigen::Isometry3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& transform6, EulerConvention convention)
 {
   if (transform6.size() != 6)
   {
@@ -2579,13 +2579,13 @@ Eigen::Affine3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& tr
                            convention);
 }
 
-void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d& pose, std::vector<double>& xyzrpy)
+void RvizVisualTools::convertToXYZRPY(const Eigen::Isometry3d& pose, std::vector<double>& xyzrpy)
 {
   xyzrpy.resize(6);
   convertToXYZRPY(pose, xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5]);
 }
 
-void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d& pose, double& x, double& y, double& z, double& roll,
+void RvizVisualTools::convertToXYZRPY(const Eigen::Isometry3d& pose, double& x, double& y, double& z, double& roll,
                                       double& pitch, double& yaw)
 {
   x = pose(0, 3);
@@ -2601,7 +2601,7 @@ void RvizVisualTools::convertToXYZRPY(const Eigen::Affine3d& pose, double& x, do
 
 void RvizVisualTools::generateRandomPose(geometry_msgs::Pose& pose, RandomPoseBounds pose_bounds)
 {
-  Eigen::Affine3d pose_eigen;
+  Eigen::Isometry3d pose_eigen;
   generateRandomPose(pose_eigen, pose_bounds);
   pose = convertPose(pose_eigen);
 }
@@ -2619,7 +2619,7 @@ void RvizVisualTools::generateRandomCuboid(geometry_msgs::Pose& cuboid_pose, dou
   generateRandomPose(cuboid_pose, pose_bounds);
 }
 
-void RvizVisualTools::generateRandomPose(Eigen::Affine3d& pose, RandomPoseBounds pose_bounds)
+void RvizVisualTools::generateRandomPose(Eigen::Isometry3d& pose, RandomPoseBounds pose_bounds)
 {
   // Error check elevation & azimuth angles
   // 0 <= elevation <= pi
@@ -2681,7 +2681,7 @@ void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose& pose)
   pose.orientation.w = 1;
 }
 
-bool RvizVisualTools::posesEqual(const Eigen::Affine3d& pose1, const Eigen::Affine3d& pose2, double threshold)
+bool RvizVisualTools::posesEqual(const Eigen::Isometry3d& pose1, const Eigen::Isometry3d& pose2, double threshold)
 {
   static const std::size_t NUM_VARS = 16;  // size of eigen matrix
 
@@ -2725,7 +2725,7 @@ void RvizVisualTools::printTranslation(const Eigen::Vector3d& translation)
   std::cout << "T.xyz = [" << translation.x() << ", " << translation.y() << ", " << translation.z() << "]" << std::endl;
 }
 
-void RvizVisualTools::printTransform(const Eigen::Affine3d& transform)
+void RvizVisualTools::printTransform(const Eigen::Isometry3d& transform)
 {
   Eigen::Quaterniond q(transform.rotation());
   std::cout << "T.xyz = [" << transform.translation().x() << ", " << transform.translation().y() << ", "
@@ -2733,7 +2733,7 @@ void RvizVisualTools::printTransform(const Eigen::Affine3d& transform)
             << q.w() << "]" << std::endl;
 }
 
-void RvizVisualTools::printTransformRPY(const Eigen::Affine3d& transform)
+void RvizVisualTools::printTransformRPY(const Eigen::Isometry3d& transform)
 {
   // R-P-Y / X-Y-Z / 0-1-2 Euler Angle Standard
   Eigen::Vector3d vec = transform.rotation().eulerAngles(0, 1, 2);
@@ -2741,7 +2741,7 @@ void RvizVisualTools::printTransformRPY(const Eigen::Affine3d& transform)
             << transform.translation().z() << ", " << vec[0] << ", " << vec[1] << ", " << vec[2] << "]\n";
 }
 
-void RvizVisualTools::printTransformFull(const Eigen::Affine3d& transform)
+void RvizVisualTools::printTransformFull(const Eigen::Isometry3d& transform)
 {
   std::cout << "T.xyz = [" << transform.translation().x() << ", " << transform.translation().y() << ", "
             << transform.translation().z() << "], R = \n"
