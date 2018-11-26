@@ -63,7 +63,7 @@ geometry_msgs::Pose& IMarkerSimple::getPose()
   return latest_pose_;
 }
 
-void IMarkerSimple::setPose(const Eigen::Affine3d& pose)
+void IMarkerSimple::setPose(const Eigen::Isometry3d& pose)
 {
   geometry_msgs::Pose pose_msg;
   rviz_visual_tools::RvizVisualTools::convertPoseSafe(pose, pose_msg);

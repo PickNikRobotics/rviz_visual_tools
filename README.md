@@ -93,7 +93,7 @@ Start rviz and create a new marker using the 'Add' button at the bottom right. C
 In the following snippet we create a pose at xyz (0.1, 0.1, 0.1) and rotate the pose down 45 degrees along the Y axis. Then we publish the pose as a arrow for visualziation in Rviz. Make sure your Rviz fixed frame is the same as the one chosen in the code.
 
     // Create pose
-    Eigen::Affine3d pose;
+    Eigen::Isometry3d pose;
     pose = Eigen::AngleAxisd(M_PI/4, Eigen::Vector3d::UnitY()); // rotate along X axis by 45 degrees
     pose.translation() = Eigen::Vector3d( 0.1, 0.1, 0.1 ); // translate x,y,z
 
@@ -257,7 +257,7 @@ This class quickly gives you basic 6dof pose interactive marker funcitonality. A
 This tool lets you easily debug Eigen transforms in Rviz. Demo use:
 
     rviz_visual_tools::TFVisualTools tf_visualizer;
-    Eigen::Affine3d world_to_shelf_transform = Eigen::Affine3d::Identity(); // or whatever value
+    Eigen::Isometry3d world_to_shelf_transform = Eigen::Isometry3d::Identity(); // or whatever value
     tf_visualizer.publishTransform(world_to_shelf_transform, "world", "shelf");
 
 *Note: this is a work in progress*
