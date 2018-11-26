@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.7.0 (2018-11-26)
+------------------
 * Fix Eigen::Affine3d for Melodic (using Eigen::Isometry3d) (`#105 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/105>`_)
 * Improve documentation (`#100 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/100>`_)
 * Fix some catkin_lint warnings and rename targets output (`#98 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/98>`_)
