@@ -2,6 +2,23 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix Eigen::Affine3d for Melodic (using Eigen::Isometry3d) (`#105 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/105>`_)
+* Improve documentation (`#100 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/100>`_)
+* Fix some catkin_lint warnings and rename targets output (`#98 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/98>`_)
+* Update README Kinetic to Melodic (`#102 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/102>`_)
+* Add Melodic build farm badges (`#99 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/99>`_)
+* Add ccache support (`#93 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/93>`_)
+* no ros::spinOnce() (`#82 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/82>`_)
+* Deprecate old functions for ROS Melodic (`#91 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/91>`_)
+* Improve package with catkin_lint (`#89 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/89>`_)
+* Add OGRE dependency (`#88 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/88>`_)
+* Automoc requires at least cmake version 2.8.6 (`#86 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/86>`_)
+* Fix Travis badge (`#84 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/84>`_)
+* The code already uses AUTOMOC (`#76 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/76>`_)
+* Contributors: Dave Coleman, Jochen Sprickerhof, Michael Görner, Simon Schmeisser, Victor Lamoine
+
 3.6.1 (2018-05-31)
 ------------------
 * Actually link qt code into the gui library (`#74 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/74>`_)
