@@ -51,6 +51,10 @@
 
 namespace rviz_visual_tools
 {
+
+const std::string LOGNAME = "visual_tools";
+
+// DEPRECATED, remove in Melodic after Dec 2018 release or so
 const std::string RvizVisualTools::name_ = "visual_tools";
 
 const std::array<colors, 14> RvizVisualTools::all_rand_colors_ = { RED,        GREEN,  BLUE,   GREY,   DARK_GREY,
@@ -273,7 +277,7 @@ void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
 
   // Rviz marker publisher
   pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10, latched);
-  ROS_DEBUG_STREAM_NAMED(name_, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
+  ROS_DEBUG_STREAM_NAMED(LOGNAME, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
   if (wait_for_subscriber)
   {
@@ -307,12 +311,12 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
 
   if (pub.getTopic().empty())
   {
-    ROS_ERROR_STREAM_NAMED(name_, "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
+    ROS_ERROR_STREAM_NAMED(LOGNAME, "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
   }
 
   if (blocking && num_existing_subscribers == 0)
   {
-    ROS_INFO_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' waiting for subscriber...");
+    ROS_INFO_STREAM_NAMED(LOGNAME, "Topic '" << pub.getTopic() << "' waiting for subscriber...");
   }
 
   // Wait for subscriber
@@ -320,7 +324,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
   {
     if (!blocking && ros::Time::now() > max_time)  // Check if timed out
     {
-      ROS_WARN_STREAM_NAMED(name_, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
+      ROS_WARN_STREAM_NAMED(LOGNAME, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
                                              << wait_time << " sec. It is possible initially published visual messages "
                                                              "will be lost.");
       return false;
@@ -482,7 +486,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(colors color) const
       result = createRandColor();
       break;
     case DEFAULT:
-      ROS_WARN_STREAM_NAMED(name_, "The 'DEFAULT' color should probably not "
+      ROS_WARN_STREAM_NAMED(LOGNAME, "The 'DEFAULT' color should probably not "
                                    "be used with getColor(). Defaulting to "
                                    "blue.");
     case BLUE:
@@ -585,12 +589,12 @@ std_msgs::ColorRGBA RvizVisualTools::createRandColor() const
     result.r = fRand(0.0, 1.0);
     result.g = fRand(0.0, 1.0);
     result.b = fRand(0.0, 1.0);
-    // ROS_DEBUG_STREAM_NAMED(name_, "Looking for random color that is not too light, current value is "
+    // ROS_DEBUG_STREAM_NAMED(LOGNAME, "Looking for random color that is not too light, current value is "
     //<< (result.r + result.g + result.b) << " attempt #" << attempts);
     attempts++;
     if (attempts > MAX_ATTEMPTS)
     {
-      ROS_WARN_STREAM_NAMED(name_, "Unable to find appropriate random color after " << MAX_ATTEMPTS << " attempts");
+      ROS_WARN_STREAM_NAMED(LOGNAME, "Unable to find appropriate random color after " << MAX_ATTEMPTS << " attempts");
       break;
     }
   } while (result.r + result.g + result.b < 1.5);  // 3 would be white
@@ -611,12 +615,12 @@ std_msgs::ColorRGBA RvizVisualTools::getColorScale(double value) const
   // User warning
   if (value < 0)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is below range [0,1], value: " << value);
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Intensity value for color scale is below range [0,1], value: " << value);
     value = 0;
   }
   else if (value > 1)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Intensity value for color scale is above range [0,1], value: " << value);
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Intensity value for color scale is above range [0,1], value: " << value);
     value = 1;
   }
 
@@ -693,7 +697,7 @@ geometry_msgs::Vector3 RvizVisualTools::getScale(scales scale, double marker_sca
       val = 0.5;
       break;
     default:
-      ROS_ERROR_STREAM_NAMED(name_, "Not implemented yet");
+      ROS_ERROR_STREAM_NAMED(LOGNAME, "Not implemented yet");
       break;
   }
 
@@ -859,11 +863,11 @@ bool RvizVisualTools::trigger()
 {
   if (!batch_publishing_enabled_)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but it was not enabled (unnecessary function call)");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Batch publishing triggered but it was not enabled (unnecessary function call)");
   }
   if (markers_.markers.empty())
   {
-    // ROS_WARN_STREAM_NAMED(name_, "Batch publishing triggered but queue is empty (unnecessary function call)");
+    // ROS_WARN_STREAM_NAMED(LOGNAME, "Batch publishing triggered but queue is empty (unnecessary function call)");
     return false;
   }
 
@@ -883,7 +887,7 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
   // Check if connected to a subscriber
   if (!pub_rviz_markers_waited_ && !pub_rviz_markers_connected_)
   {
-    ROS_DEBUG_STREAM_NAMED(name_, "Waiting for subscribers before publishing markers...");
+    ROS_DEBUG_STREAM_NAMED(LOGNAME, "Waiting for subscribers before publishing markers...");
     waitForSubscriber(pub_rviz_markers_);
 
     // Only wait for the publisher once, after that just ignore the lack of connection
@@ -1862,7 +1866,7 @@ bool RvizVisualTools::publishLineStrip(const std::vector<geometry_msgs::Point>& 
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
     return true;
   }
 
@@ -1926,7 +1930,7 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point>& path,
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
     return true;
   }
 
@@ -1944,7 +1948,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, colors 
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
     return true;
   }
 
@@ -1962,7 +1966,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Isometry3d& path, color
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
     return true;
   }
 
@@ -1980,13 +1984,13 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
     return true;
   }
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(name_, "Skipping path because " << path.size() << " different from " << colors.size()
+    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
                                                            << ".");
     return false;
   }
@@ -2005,13 +2009,13 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(name_, "Skipping path because " << path.size() << " points passed in.");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
     return true;
   }
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(name_, "Skipping path because " << path.size() << " different from " << colors.size()
+    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
                                                            << ".");
     return false;
   }
@@ -2571,7 +2575,7 @@ Eigen::Isometry3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& 
 {
   if (transform6.size() != 6)
   {
-    ROS_ERROR_STREAM_NAMED(name_, "Incorrect number of variables passed for 6-size transform");
+    ROS_ERROR_STREAM_NAMED(LOGNAME, "Incorrect number of variables passed for 6-size transform");
     throw;
   }
 
@@ -2626,25 +2630,25 @@ void RvizVisualTools::generateRandomPose(Eigen::Isometry3d& pose, RandomPoseBoun
   // 0 <= azimuth   <= 2 * pi
   if (pose_bounds.elevation_min_ < 0)
   {
-    ROS_WARN_STREAM_NAMED(name_, "min elevation bound < 0, setting equal to 0");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "min elevation bound < 0, setting equal to 0");
     pose_bounds.elevation_min_ = 0;
   }
 
   if (pose_bounds.elevation_max_ > M_PI)
   {
-    ROS_WARN_STREAM_NAMED(name_, "max elevation bound > pi, setting equal to pi ");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "max elevation bound > pi, setting equal to pi ");
     pose_bounds.elevation_max_ = M_PI;
   }
 
   if (pose_bounds.azimuth_min_ < 0)
   {
-    ROS_WARN_STREAM_NAMED(name_, "min azimuth bound < 0, setting equal to 0");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "min azimuth bound < 0, setting equal to 0");
     pose_bounds.azimuth_min_ = 0;
   }
 
   if (pose_bounds.azimuth_max_ > 2 * M_PI)
   {
-    ROS_WARN_STREAM_NAMED(name_, "max azimuth bound > 2 pi, setting equal to 2 pi ");
+    ROS_WARN_STREAM_NAMED(LOGNAME, "max azimuth bound > 2 pi, setting equal to 2 pi ");
     pose_bounds.azimuth_max_ = 2 * M_PI;
   }
 
