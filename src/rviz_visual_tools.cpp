@@ -1515,7 +1515,7 @@ bool RvizVisualTools::publishCylinder(const Eigen::Vector3d& point1, const Eigen
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2,
-                                      const std_msgs::ColorRGBA& color, double radius, const std::string& /*ns*/)
+                                      const std_msgs::ColorRGBA& color, double radius, const std::string& ns)
 {
   // Distance between two points
   double height = (point1 - point2).lpNorm<2>();
@@ -1533,7 +1533,7 @@ bool RvizVisualTools::publishCylinder(const Eigen::Vector3d& point1, const Eigen
   pose = pose * rotation;
 
   // Turn into msg
-  return publishCylinder(convertPose(pose), color, height, radius);
+  return publishCylinder(convertPose(pose), color, height, radius, ns);
 }
 
 bool RvizVisualTools::publishCylinder(const Eigen::Affine3d& pose, colors color, double height, double radius,
