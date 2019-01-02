@@ -546,7 +546,7 @@ public:
 
     // Create pose
     Eigen::Isometry3d pose1 = Eigen::Isometry3d::Identity();
-    Eigen::Isometry3d pose2;
+    Eigen::Isometry3d pose2 = Eigen::Isometry3d::Identity();
 
     // Show test label
     pose1.translation().x() = x_location - 0.1;
