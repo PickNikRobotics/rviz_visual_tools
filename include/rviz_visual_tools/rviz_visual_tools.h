@@ -637,11 +637,11 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    */
   bool publishPath(const std::vector<geometry_msgs::Pose>& path, colors color = RED, scales scale = MEDIUM,
                    const std::string& ns = "Path");
-  bool publishPath(const std::vector<geometry_msgs::Point>& path, colors color = RED, scales scale = MEDIUM,
+  bool publishPath(const std::vector<geometry_msgs::Point>& path, colors color, scales scale = MEDIUM,
                    const std::string& ns = "Path");
-  bool publishPath(const EigenSTL::vector_Isometry3d& path, colors color = RED, scales scale = MEDIUM,
+  bool publishPath(const EigenSTL::vector_Isometry3d& path, colors color, scales scale = MEDIUM,
                    const std::string& ns = "Path");
-  bool publishPath(const EigenSTL::vector_Vector3d& path, colors color = RED, scales scale = MEDIUM,
+  bool publishPath(const EigenSTL::vector_Vector3d& path, colors color, scales scale = MEDIUM,
                    const std::string& ns = "Path");
   bool publishPath(const std::vector<geometry_msgs::Point>& path, colors color = RED, double radius = 0.01,
                    const std::string& ns = "Path");
