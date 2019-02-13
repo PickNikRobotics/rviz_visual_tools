@@ -1931,7 +1931,7 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::Point>& path,
   if (path.size() < 2)
   {
     ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
-    return true;
+    return false;
   }
 
   // Create the cylinders
@@ -1949,7 +1949,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, colors 
   if (path.size() < 2)
   {
     ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
-    return true;
+    return false;
   }
 
   // Create the cylinders
@@ -1967,7 +1967,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Isometry3d& path, color
   if (path.size() < 2)
   {
     ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
-    return true;
+    return false;
   }
 
   // Create the cylinders
@@ -1985,7 +1985,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
   if (path.size() < 2)
   {
     ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
-    return true;
+    return false;
   }
 
   if (path.size() != colors.size())
@@ -2010,7 +2010,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
   if (path.size() < 2)
   {
     ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
-    return true;
+    return false;
   }
 
   if (path.size() != colors.size())

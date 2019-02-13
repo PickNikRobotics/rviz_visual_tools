@@ -49,11 +49,6 @@
 class RVTTest
 {
 public:
-  // A shared node handle
-  // ros::NodeHandle nh_;
-
-  // For visualizing things in rviz
-  rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
 
   bool initialize()
   {
@@ -97,6 +92,13 @@ public:
 
     return true;
   }
+
+  // A shared node handle
+  // ros::NodeHandle nh_;
+
+  // For visualizing things in rviz
+  rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
+
 };  // class
 
 /* Create instance of test class ---------------------------------------------------------- */
@@ -173,6 +175,31 @@ TEST(RVTTest, test_rpy_conversions)
   expected_affine2 = base.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
                                                            xyzrpy[5], rviz_visual_tools::XYZ);
   EXPECT_TRUE(base.testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
+}
+
+TEST(RVTTest, default_arguments)
+{
+  // Check for correct number of parameters and correct size of path
+  std::vector<geometry_msgs::Point> path1;
+  EXPECT_FALSE(base.visual_tools_->publishPath(path1, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  path1.resize(1);
+  EXPECT_FALSE(base.visual_tools_->publishPath(path1, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  path1.resize(2);
+  EXPECT_TRUE(base.visual_tools_->publishPath(path1, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+
+  EigenSTL::vector_Isometry3d path2;
+  EXPECT_FALSE(base.visual_tools_->publishPath(path2, rviz_visual_tools::GREEN, rviz_visual_tools::MEDIUM));
+  path2.resize(1);
+  EXPECT_FALSE(base.visual_tools_->publishPath(path2, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  path2.resize(2);
+  EXPECT_TRUE(base.visual_tools_->publishPath(path2, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+
+  EigenSTL::vector_Vector3d path3;
+  EXPECT_FALSE(base.visual_tools_->publishPath(path3, rviz_visual_tools::BLUE, rviz_visual_tools::MEDIUM));
+  path3.resize(1);
+  EXPECT_FALSE(base.visual_tools_->publishPath(path3, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  path3.resize(2);
+  EXPECT_TRUE(base.visual_tools_->publishPath(path3, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
 }
 
 /* Main  ------------------------------------------------------------------------------------- */
