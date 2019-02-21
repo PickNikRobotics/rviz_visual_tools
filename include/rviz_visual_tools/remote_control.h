@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/* Author: Dave Coleman <dave@dav.ee>
+/* Author: Dave Coleman <dave@picknik.ai>
    Desc:   Tool for creating break points and user verification points through
            manipulation pipelines or other live robotitc tool.
            Think GDB for robots, or like, a state machine.
