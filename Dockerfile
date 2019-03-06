@@ -2,7 +2,7 @@
 # Test setup for rviz_visual_tools
 
 FROM osrf/ros:kinetic-desktop
-MAINTAINER Dave Coleman dave@dav.ee
+MAINTAINER Dave Coleman dave@picknik.ai
 
 ENV CATKIN_WS=/root/ws_catkin
 RUN mkdir -p $CATKIN_WS/src

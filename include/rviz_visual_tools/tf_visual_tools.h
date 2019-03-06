@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-/* Author: Dave Coleman <dave@dav.ee>
+/* Author: Dave Coleman <dave@picknik.ai>
    Desc:   Helps debug and visualize transforms via the TF infrastructure
    Note:   We shouldn't have to publish the transforms at interval since they are static, but we do
    because of https://github.com/ros/geometry_experimental/issues/108
