@@ -68,6 +68,18 @@
 #include <rviz_visual_tools/deprecation.h>
 #include <rviz_visual_tools/remote_control.h>
 
+// Import/export for windows dll's and visibility for gcc shared libraries.
+
+#ifdef ROS_BUILD_SHARED_LIBS // ros is being built around shared libraries
+  #ifdef rviz_visual_tools_EXPORTS // we are building a shared lib/dll
+    #define RVIZ_VISUAL_TOOLS_DECL ROS_HELPER_EXPORT
+  #else // we are using shared lib/dll
+    #define RVIZ_VISUAL_TOOLS_DECL ROS_HELPER_IMPORT
+  #endif
+#else // ros is being built around static libraries
+  #define RVIZ_VISUAL_TOOLS_DECL
+#endif
+
 namespace rviz_visual_tools
 {
 // Default constants
@@ -1046,7 +1058,7 @@ protected:
   ros::NodeHandle nh_;
 
   // Short name for this class
-  static const std::string name_;
+  static RVIZ_VISUAL_TOOLS_DECL const std::string name_;
 
   // Optional remote control
   RemoteControlPtr remote_control_;
