@@ -96,6 +96,11 @@ bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const s
   return true;
 }
 
+void TFVisualTools::clearAllTransforms()
+{
+  transforms_.clear();
+}
+
 void TFVisualTools::publishAllTransforms(const ros::TimerEvent& /*e*/)
 {
   ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transforms");
