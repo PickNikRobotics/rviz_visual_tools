@@ -57,6 +57,7 @@
 #include <boost/shared_ptr.hpp>
 
 // Messages
+#include <shape_msgs/Mesh.h>
 #include <std_msgs/ColorRGBA.h>
 #include <graph_msgs/GeometryGraph.h>
 #include <geometry_msgs/PoseArray.h>
@@ -818,6 +819,22 @@ public:
                    const std::string& ns = "mesh", std::size_t id = 0);
   bool publishMesh(const geometry_msgs::Pose& pose, const std::string& file_name, colors color = CLEAR,
                    double scale = 1, const std::string& ns = "mesh", std::size_t id = 0);
+
+  /**
+   * \brief Display a mesh from triangles and vertices
+   * \param pose - the location to publish the marker with respect to the base frame
+   * \param mesh - shape_msgs::Mesh contains the triangles and vertices
+   * \param color - an enum pre-defined name of a color
+   * \param scale - an enum pre-defined name of a size
+   * \param ns - namespace of marker
+   * \param id - unique counter of mesh that allows you to overwrite a previous mesh. if 0, defaults
+   * to incremental counter
+   * \return true on success
+   */
+  bool publishMesh(const Eigen::Isometry3d& pose, const shape_msgs::Mesh& mesh, colors color = CLEAR, double scale = 1,
+                   const std::string& ns = "mesh", std::size_t id = 0);
+  bool publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color = CLEAR, double scale = 1,
+                   const std::string& ns = "mesh", std::size_t id = 0);
 
   /**
    * \brief Display a graph

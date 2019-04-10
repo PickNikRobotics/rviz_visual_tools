@@ -1605,6 +1605,51 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const std::st
   return publishMarker(mesh_marker_);
 }
 
+bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const shape_msgs::Mesh& mesh, colors color, 
+                                  double scale, const std::string& ns, std::size_t id)
+{
+  return publishMesh(convertPose(pose), mesh, color, scale, ns, id);
+}
+
+bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color, 
+                                  double scale, const std::string& ns, std::size_t id)
+{
+  triangle_marker_.header.stamp = ros::Time::now();
+
+  if (id == 0)
+  {
+    triangle_marker_.id++;
+  }
+  else
+  {
+    triangle_marker_.id = id;
+  }
+
+  // Set the mesh
+  triangle_marker_.points.clear();
+  for (const shape_msgs::MeshTriangle& triangle : mesh.triangles)
+    for (const uint32_t & index : triangle.vertex_indices)
+      triangle_marker_.points.push_back(mesh.vertices[index]);
+
+  // Set the pose
+  triangle_marker_.pose = pose;
+
+  // Set marker size
+  triangle_marker_.scale.x = scale;
+  triangle_marker_.scale.y = scale;
+  triangle_marker_.scale.z = scale;
+
+  // Set the namespace and id for this marker.  This serves to create a unique
+  // ID
+  triangle_marker_.ns = ns;
+
+  // Set marker color
+  triangle_marker_.color = getColor(color);
+
+  // Helper for publishing rviz markers
+  return publishMarker(triangle_marker_);
+}
+
 bool RvizVisualTools::publishGraph(const graph_msgs::GeometryGraph& graph, colors color, double radius)
 {
   // Track which pairs of nodes we've already connected since graph is
