@@ -968,6 +968,44 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose& pose, double angle,
   return publishMarker(triangle_marker_);
 }
 
+bool RvizVisualTools::publishABCDPlane(const double A, const double B, const double C, std::vector<double>& center,
+                                        colors color, double x_width, double y_width)
+{
+  Eigen::Isometry3d pose;
+
+  // Graphic is centered at this point
+  Eigen::Vector3d v(center.data());
+  pose.translation() = v;
+
+  // The coefficients A,B,C give the normal to the plane.
+  // Calculate the rotation matrix from z_0 = (0,0,1) to n = (A,B,C)/|(A,B,C)|
+  // See https://www.mathworks.com/matlabcentral/answers/357494-how-to-find-rotation-matrix-from-vector-to-another
+  // _0: vector in original coordinate frame
+  // _1: unit vectors of new coordinate frame, also columns of the rotation matrix
+  Eigen::Vector3d n;
+  n << A, B, C;
+  // Normalize it to a unit vector
+  n << A / n.norm(), B / n.norm(), C / n.norm();
+
+  Eigen::Vector3d z_0;
+  z_0 << 0, 0, 1;
+
+  Eigen::Vector3d x_1 = n.cross(z_0);
+  Eigen::Vector3d y_1 = n.cross(x_1);
+  //  z_1 is equal to n
+
+  Eigen::Matrix<double,3,3> rot;
+  rot(0,0) = x_1(0);  rot(0,1) = y_1(0); rot(0,2) = n(0);
+  rot(1,0) = x_1(1); rot(1,1) = y_1(1); rot(1,2) = n(1);
+  rot(2,0) = x_1(2); rot(2,1) = y_1(2); rot(2,2) = n(2);
+  pose.linear() = rot;
+
+  double height = 0.001; // very thin
+  publishCuboid(pose, x_width, y_width, height, color);
+
+  return true;
+}
+
 bool RvizVisualTools::publishXYPlane(const Eigen::Isometry3d& pose, colors color, double scale)
 {
   return publishXYPlane(convertPose(pose), color, scale);
