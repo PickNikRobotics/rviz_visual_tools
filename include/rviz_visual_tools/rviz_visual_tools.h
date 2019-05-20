@@ -405,14 +405,14 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
    * \param A - coefficient from Ax+By+Cz+D=0
    * \param B - coefficient from Ax+By+Cz+D=0
    * \param C - coefficient from Ax+By+Cz+D=0
-   * \param center - x/y/z coordinates of the center of the graphic. Should be on the plane
+   * \param D - coefficient from Ax+By+Cz+D=0
    * \param color - the color of the plane
    * \param x_width - X-size of the vizualized plane [meters]
    * \param y_width - Y-size of the visualized plane [meters]
    * \return true on success
    */
-  bool publishABCDPlane(const double A, const double B, const double C, std::vector<double>& center, colors color=TRANSLUCENT,
-                        double x_width = 1.0, double y_width = 1.0);
+  bool publishABCDPlane(const double A, const double B, const double C, const double D,
+                        colors color=TRANSLUCENT, double x_width = 1.0, double y_width = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose

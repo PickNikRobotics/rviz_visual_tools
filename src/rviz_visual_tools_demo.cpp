@@ -415,11 +415,17 @@ public:
     pose1.translation().y() = y;
     pose1.translation().x() = width;
 
+    Eigen::Vector3d n;
+    double A, B, C, D;
+
     for (std::size_t i = 0; i < 10; ++i)
     {
-      std::vector<double> ABC = {i, 10-i, 0};
-      std::vector<double> center{pose1.translation().x() + i * step, pose1.translation().y(), pose1.translation().z()};
-      visual_tools_->publishABCDPlane(ABC[0], ABC[1], ABC[2], center, rvt::MAGENTA, x_width, y_width);
+      A = i * step;
+      B = pose1.translation().y();
+      C = 0;
+      // Set D = - |(A,B,C)| to keep a constant y-position for this row
+      D = - sqrt(A * A + B * B + C * C);
+      visual_tools_->publishABCDPlane(A, B, C, D, rvt::MAGENTA, x_width, y_width);
       x_location += step;
     }
     publishLabelHelper(pose1, "ABCD Plane");
