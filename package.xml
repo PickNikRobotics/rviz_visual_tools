@@ -21,6 +21,7 @@
   <depend>sensor_msgs</depend>
   <depend>eigen_conversions</depend>
   <depend>geometry_msgs</depend>
+  <depend>shape_msgs</depend>
   <depend>roscpp</depend>
   <depend>tf_conversions</depend>
   <depend>visualization_msgs</depend>

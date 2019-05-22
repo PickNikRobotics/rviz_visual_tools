@@ -77,6 +77,11 @@ public:
   bool publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame, const std::string& to_frame);
 
   /**
+   * \brief Clear all transforms
+   */
+  void clearAllTransforms();
+
+  /**
    * \brief At a certain frequency update the tf transforms that we are tracking
    *        This is called internally by a clock, you should not need to use this
    *        TODO: make private in next release?
