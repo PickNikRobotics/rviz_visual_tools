@@ -412,7 +412,7 @@ public:
     double y_width = 0.05;
 
     Eigen::Vector3d n;
-    double A, B, C, D;
+    double A, B, C = 0, D;
     y += space_between_rows;
     double x_plane = 0, y_plane = y;
 
@@ -427,7 +427,6 @@ public:
       pose1.translation().x() = x_plane;
       A = x_plane;
       B = y_plane;
-      C = 0;
       // D takes this value to satisfy Ax+By+D=0
       D = - (x_plane * x_plane + y_plane * y_plane);
       visual_tools_->publishABCDPlane(A, B, C, D, rvt::MAGENTA, x_width, y_width);
