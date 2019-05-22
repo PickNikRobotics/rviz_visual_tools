@@ -402,7 +402,7 @@ public:
 
   /**
    * \brief Display a plane. Vector (A, B, C) gives the normal to the plane.
-   *        sqrt(-D) gives the distance to plane along that unit normal.
+   *        D/|(A,B,C)| gives the distance to plane along that unit normal.
    * \param A - coefficient from Ax+By+Cz+D=0
    * \param B - coefficient from Ax+By+Cz+D=0
    * \param C - coefficient from Ax+By+Cz+D=0

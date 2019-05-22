@@ -975,7 +975,8 @@ bool RvizVisualTools::publishABCDPlane(const double A, const double B, const dou
   Eigen::Vector3d n(A, B, C);
 
   // Graphic is centered at this point
-  Eigen::Vector3d center = n.normalized() * sqrt(fabs(D));
+  double distance = D / n.norm();
+  Eigen::Vector3d center = - distance * n.normalized();
 
   Eigen::Isometry3d pose;
   pose.translation() = center;
