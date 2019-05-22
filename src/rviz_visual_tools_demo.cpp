@@ -428,7 +428,7 @@ public:
       A = x_plane;
       B = y_plane;
       C = 0;
-      // D takes this value to satisfy Ax+Bx+D=0
+      // D takes this value to satisfy Ax+By+D=0
       D = - (x_plane * x_plane + y_plane * y_plane);
       visual_tools_->publishABCDPlane(A, B, C, D, rvt::MAGENTA, x_width, y_width);
       x_location += step;
