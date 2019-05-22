@@ -974,12 +974,10 @@ bool RvizVisualTools::publishABCDPlane(const double A, const double B, const dou
   Eigen::Isometry3d pose;
 
   // The coefficients A,B,C give the normal to the plane.
-  Eigen::Vector3d n;
-  n << A, B, C;
+  Eigen::Vector3d n(A, B, C);
 
   // Graphic is centered at this point
-  Eigen::Vector3d center;
-  center << fabs(D) * A / n.norm(), fabs(D) * B / n.norm(), fabs(D) * C / n.norm();
+  Eigen::Vector3d center = n.normalized() * D;
 
   pose.translation() = center;
 
