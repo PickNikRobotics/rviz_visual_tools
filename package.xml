@@ -12,7 +12,8 @@
   <url type="butracker">https://github.com/davetcoleman/rviz_visual_tools/issues</url>
   <url type="repository">https://github.com/davetcoleman/rviz_visual_tools/</url>
 
-  <author email="davetcoleman@gmail.com">Dave Coleman</author>
+  <author email="dave@picknik.ai">Dave Coleman</author>
+  <author email="zelenak@picknik.ai">Andy Zelenak</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
