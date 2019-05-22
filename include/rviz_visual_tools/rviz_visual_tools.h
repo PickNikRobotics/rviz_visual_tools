@@ -369,9 +369,9 @@ public:
   void enableFrameLocking(bool enable = true);
 
   /**
-   * \brief Trigger the publish function to send out all collected markers IF there are at leats
+   * \brief Trigger the publish function to send out all collected markers IF there are at least
    *        queueSize number of markers ready to be published.
-a   *        Warning: when using this in a loop be sure to call trigger() at end of loop
+   *        Warning: when using this in a loop be sure to call trigger() at end of loop
    *        in case there are any remainder markers in the queue
    * \return true on success
    */
@@ -401,7 +401,8 @@ a   *        Warning: when using this in a loop be sure to call trigger() at end
   bool publishCone(const geometry_msgs::Pose& pose, double angle, colors color = TRANSLUCENT, double scale = 1.0);
 
   /**
-   * \brief Display a plane (a very wide, thin cuboid)
+   * \brief Display a plane. Vector (A, B, C) gives the normal to the plane.
+   *        sqrt(-D) gives the distance to plane along that unit normal.
    * \param A - coefficient from Ax+By+Cz+D=0
    * \param B - coefficient from Ax+By+Cz+D=0
    * \param C - coefficient from Ax+By+Cz+D=0

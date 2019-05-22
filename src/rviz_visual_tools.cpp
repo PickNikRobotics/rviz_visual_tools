@@ -971,14 +971,18 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose& pose, double angle,
 bool RvizVisualTools::publishABCDPlane(const double A, const double B, const double C, const double D,
                                         colors color, double x_width, double y_width)
 {
-  Eigen::Isometry3d pose;
+  if (D > 0)
+  {
+    ROS_WARN_STREAM_NAMED(LOGNAME, "For a plane equation Ax+By+Cz+D=0, D should be <=0.");
+  }
 
   // The coefficients A,B,C give the normal to the plane.
   Eigen::Vector3d n(A, B, C);
 
   // Graphic is centered at this point
-  Eigen::Vector3d center = n.normalized() * D;
+  Eigen::Vector3d center = n.normalized() * sqrt(-D);
 
+  Eigen::Isometry3d pose;
   pose.translation() = center;
 
   // Calculate the rotation matrix from the original normal z_0 = (0,0,1) to new normal n = (A,B,C)
