@@ -410,25 +410,27 @@ public:
     ROS_INFO_STREAM_NAMED(name_, "Displaying ABCD Plane");
     double x_width = 0.15;
     double y_width = 0.05;
-    pose1 = Eigen::Isometry3d::Identity();
-    y += space_between_rows;
-    pose1.translation().y() = y;
-    pose1.translation().x() = width;
 
     Eigen::Vector3d n;
-    double A, B, C, D;
+    double A, B, C = 0, D;
+    y += space_between_rows;
+    double x_plane = 0, y_plane = y;
+
+    pose1 = Eigen::Isometry3d::Identity();
+    pose1.translation().x() = x_plane;
+    pose1.translation().y() = y_plane;
+    publishLabelHelper(pose1, "ABCD Plane");
 
     for (std::size_t i = 0; i < 10; ++i)
     {
-      A = i * step;
-      B = pose1.translation().y();
-      C = 0;
-      // Set D = - |(A,B,C)| to keep a constant y-position for this row
-      D = sqrt(A * A + B * B + C * C);
+      x_plane = i * step;
+      A = x_plane;
+      B = y_plane;
+      // D takes this value to satisfy Ax+By+D=0
+      D = - (x_plane * x_plane + y_plane * y_plane);
       visual_tools_->publishABCDPlane(A, B, C, D, rvt::MAGENTA, x_width, y_width);
       x_location += step;
     }
-    publishLabelHelper(pose1, "ABCD Plane");
 
     // Set x location for next visualization function
     x_location += 1.25;
