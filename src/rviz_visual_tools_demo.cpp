@@ -424,7 +424,6 @@ public:
     for (std::size_t i = 0; i < 10; ++i)
     {
       x_plane = i * step;
-      pose1.translation().x() = x_plane;
       A = x_plane;
       B = y_plane;
       // D takes this value to satisfy Ax+By+D=0
