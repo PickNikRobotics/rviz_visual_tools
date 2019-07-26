@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 2.8.6)
 project(rviz_visual_tools)
 
-add_definitions(-std=c++11)
+if(NOT MSVC)
+  add_compile_options(-std=c++11)
+  # Warnings
+  add_definitions(-W -Wall -Wextra
+    #-Wcast-qual
+    -Wwrite-strings -Wunreachable-code -Wpointer-arith
+    -Winit-self -Wredundant-decls
+    -Wno-unused-parameter -Wno-unused-function)
+endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Warnings
-add_definitions(-W -Wall -Wextra
-  #-Wcast-qual
-  -Wwrite-strings -Wunreachable-code -Wpointer-arith
-  -Winit-self -Wredundant-decls
-  -Wno-unused-parameter -Wno-unused-function)
 
 find_package(catkin REQUIRED COMPONENTS
   eigen_conversions
@@ -170,6 +171,10 @@ install(
     ${PROJECT_NAME}_remote_control
   LIBRARY DESTINATION
     ${CATKIN_PACKAGE_LIB_DESTINATION}
+  ARCHIVE DESTINATION
+    ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION
+    ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
 # Install header files
@@ -188,5 +193,6 @@ install(FILES
 # Install executables
 install(TARGETS ${PROJECT_NAME}_demo ${PROJECT_NAME}_imarker_simple_demo
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
