@@ -2754,6 +2754,22 @@ void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose& pose)
   pose.orientation.w = 1;
 }
 
+geometry_msgs::Pose RvizVisualTools::getIdentityPose()
+{
+  geometry_msgs::Pose pose;
+  // Position
+  pose.position.x = 0;
+  pose.position.y = 0;
+  pose.position.z = 0;
+
+  // Orientation on place
+  pose.orientation.x = 0;
+  pose.orientation.y = 0;
+  pose.orientation.z = 0;
+  pose.orientation.w = 1;
+  return pose;
+}
+
 bool RvizVisualTools::posesEqual(const Eigen::Isometry3d& pose1, const Eigen::Isometry3d& pose2, double threshold)
 {
   static const std::size_t NUM_VARS = 16;  // size of eigen matrix
