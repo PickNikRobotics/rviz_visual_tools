@@ -53,9 +53,6 @@ namespace rviz_visual_tools
 {
 const std::string LOGNAME = "visual_tools";
 
-// DEPRECATED, remove in Melodic after Dec 2018 release or so
-const std::string RvizVisualTools::name_ = "visual_tools";
-
 const std::array<colors, 14> RvizVisualTools::all_rand_colors_ = { RED,        GREEN,  BLUE,   GREY,   DARK_GREY,
                                                                    WHITE,      ORANGE, YELLOW, BROWN,  PINK,
                                                                    LIME_GREEN, PURPLE, CYAN,   MAGENTA };
@@ -101,7 +98,7 @@ bool RvizVisualTools::loadRvizMarkers()
   reset_marker_.header.frame_id = base_frame_;
   reset_marker_.header.stamp = ros::Time();
   reset_marker_.ns = "deleteAllMarkers";  // helps during debugging
-  reset_marker_.action = 3;               // TODO(davetcoleman): In ROS-J set to visualization_msgs::Marker::DELETEALL;
+  reset_marker_.action = visualization_msgs::Marker::DELETEALL;
   reset_marker_.pose.orientation.w = 1;
 
   // Load arrow ----------------------------------------------------
@@ -871,13 +868,13 @@ bool RvizVisualTools::trigger()
     return false;
   }
 
-  bool result = publishMarkers(markers_);
+  bool result = publishMarkersWithoutTrigger(markers_);
 
   markers_.markers.clear();  // remove all cached markers
   return result;
 }
 
-bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
+bool RvizVisualTools::publishMarkersWithoutTrigger(visualization_msgs::MarkerArray& markers)
 {
   if (pub_rviz_markers_ == nullptr)
   {  // always check this before publishing

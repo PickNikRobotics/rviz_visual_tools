@@ -66,7 +66,6 @@
 #include <trajectory_msgs/JointTrajectory.h>
 
 // rviz_visual_tools
-#include <rviz_visual_tools/deprecation.h>
 #include <rviz_visual_tools/remote_control.h>
 
 // Import/export for windows dll's and visibility for gcc shared libraries.
@@ -399,10 +398,16 @@ public:
 
   /**
    * \brief Display an array of markers, allows reuse of the ROS publisher
-   * \param markers
+   *        This will automatically call publish(), skipping the need for trigger()
+   * \param markers: array of visualizations to display in Rviz
    * \return true on success
    */
-  bool publishMarkers(visualization_msgs::MarkerArray& markers);
+  bool publishMarkersWithoutTrigger(visualization_msgs::MarkerArray& markers);
+  // TODO(davetcoleman): Deprecated August 2019, remove in 1 year
+  [[deprecated]] bool publishMarkers(visualization_msgs::MarkerArray& markers)
+  {
+    publishMarkersWithoutTrigger(markers);
+  }
 
   /**
    * \brief Display a cone of a given angle along the x-axis
@@ -647,15 +652,16 @@ public:
                     const std::vector<std_msgs::ColorRGBA>& colors, const geometry_msgs::Vector3& scale);
 
   /**
-   * \brief Display a series of connected lines using the LINE_STRIP method - deprecated because visual bugs
+   * \brief Display a series of connected lines using the LINE_STRIP method
    * \param path - a series of points to connect with lines
    * \param color - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
    * \param ns - namespace of marker
    * \return true on success
    */
-  bool publishLineStrip(const std::vector<geometry_msgs::Point>& path, colors color = RED, scales scale = MEDIUM,
-                        const std::string& ns = "Path");
+  // TODO(davetcoleman): deprecated August 2019 because visual bugs
+  [[deprecated]] bool publishLineStrip(const std::vector<geometry_msgs::Point>& path, colors color = RED,
+                                       scales scale = MEDIUM, const std::string& ns = "Path");
 
   /**
    * \brief Display a marker of a series of connected cylinders
