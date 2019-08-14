@@ -51,7 +51,6 @@
 
 namespace rviz_visual_tools
 {
-
 const std::string LOGNAME = "visual_tools";
 
 // DEPRECATED, remove in Melodic after Dec 2018 release or so
@@ -325,8 +324,9 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
     if (!blocking && ros::Time::now() > max_time)  // Check if timed out
     {
       ROS_WARN_STREAM_NAMED(LOGNAME, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
-                                             << wait_time << " sec. It is possible initially published visual messages "
-                                                             "will be lost.");
+                                               << wait_time
+                                               << " sec. It is possible initially published visual messages "
+                                                  "will be lost.");
       return false;
     }
     ros::spinOnce();
@@ -487,8 +487,8 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(colors color) const
       break;
     case DEFAULT:
       ROS_WARN_STREAM_NAMED(LOGNAME, "The 'DEFAULT' color should probably not "
-                                   "be used with getColor(). Defaulting to "
-                                   "blue.");
+                                     "be used with getColor(). Defaulting to "
+                                     "blue.");
     case BLUE:
     default:
       result.r = 0.1;
@@ -968,15 +968,15 @@ bool RvizVisualTools::publishCone(const geometry_msgs::Pose& pose, double angle,
   return publishMarker(triangle_marker_);
 }
 
-bool RvizVisualTools::publishABCDPlane(const double A, const double B, const double C, const double D,
-                                        colors color, double x_width, double y_width)
+bool RvizVisualTools::publishABCDPlane(const double A, const double B, const double C, const double D, colors color,
+                                       double x_width, double y_width)
 {
   // The coefficients A,B,C give the normal to the plane.
   Eigen::Vector3d n(A, B, C);
 
   // Graphic is centered at this point
   double distance = D / n.norm();
-  Eigen::Vector3d center = - distance * n.normalized();
+  Eigen::Vector3d center = -distance * n.normalized();
 
   Eigen::Isometry3d pose;
   pose.translation() = center;
@@ -986,7 +986,7 @@ bool RvizVisualTools::publishABCDPlane(const double A, const double B, const dou
   Eigen::Quaterniond q = Eigen::Quaterniond::FromTwoVectors(z_0, n);
   pose.linear() = q.toRotationMatrix();
 
-  double height = 0.001; // very thin
+  double height = 0.001;  // very thin
   publishCuboid(pose, x_width, y_width, height, color);
 
   return true;
@@ -1585,8 +1585,8 @@ bool RvizVisualTools::publishCylinder(const geometry_msgs::Pose& pose, const std
   return publishMarker(cylinder_marker_);
 }
 
-bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const std::string& file_name, colors color, double scale,
-                                  const std::string& ns, std::size_t id)
+bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const std::string& file_name, colors color,
+                                  double scale, const std::string& ns, std::size_t id)
 {
   return publishMesh(convertPose(pose), file_name, color, scale, ns, id);
 }
@@ -1629,13 +1629,13 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const std::st
   return publishMarker(mesh_marker_);
 }
 
-bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const shape_msgs::Mesh& mesh, colors color, 
+bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const shape_msgs::Mesh& mesh, colors color,
                                   double scale, const std::string& ns, std::size_t id)
 {
   return publishMesh(convertPose(pose), mesh, color, scale, ns, id);
 }
 
-bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color, 
+bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color,
                                   double scale, const std::string& ns, std::size_t id)
 {
   triangle_marker_.header.stamp = ros::Time::now();
@@ -1652,7 +1652,7 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const shape_m
   // Set the mesh
   triangle_marker_.points.clear();
   for (const shape_msgs::MeshTriangle& triangle : mesh.triangles)
-    for (const uint32_t & index : triangle.vertex_indices)
+    for (const uint32_t& index : triangle.vertex_indices)
       triangle_marker_.points.push_back(mesh.vertices[index]);
 
   // Set the pose
@@ -2060,7 +2060,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
   if (path.size() != colors.size())
   {
     ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                           << ".");
+                                                             << ".");
     return false;
   }
 
@@ -2085,7 +2085,7 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
   if (path.size() != colors.size())
   {
     ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                           << ".");
+                                                             << ".");
     return false;
   }
 
@@ -2238,8 +2238,8 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, cons
   return publishMarker(line_list_marker_);
 }
 
-bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, double height, double width, colors color,
-                                                scales scale, std::size_t id)
+bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, double height, double width,
+                                                colors color, scales scale, std::size_t id)
 {
   if (id == 0)
   {  // Provide a new id every call to this function
@@ -2611,7 +2611,7 @@ geometry_msgs::Point RvizVisualTools::convertPoint(const Eigen::Vector3d& point)
 }
 
 Eigen::Isometry3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
-                                                   EulerConvention convention)
+                                                     EulerConvention convention)
 {
   Eigen::Isometry3d result;
 

@@ -49,7 +49,6 @@
 class RVTTest
 {
 public:
-
   bool initialize()
   {
     visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("base", "/rviz_visual_tools"));

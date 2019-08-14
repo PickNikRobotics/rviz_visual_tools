@@ -71,14 +71,14 @@
 
 // Import/export for windows dll's and visibility for gcc shared libraries.
 
-#ifdef ROS_BUILD_SHARED_LIBS // ros is being built around shared libraries
-  #ifdef rviz_visual_tools_EXPORTS // we are building a shared lib/dll
-    #define RVIZ_VISUAL_TOOLS_DECL ROS_HELPER_EXPORT
-  #else // we are using shared lib/dll
-    #define RVIZ_VISUAL_TOOLS_DECL ROS_HELPER_IMPORT
-  #endif
-#else // ros is being built around static libraries
-  #define RVIZ_VISUAL_TOOLS_DECL
+#ifdef ROS_BUILD_SHARED_LIBS      // ros is being built around shared libraries
+#ifdef rviz_visual_tools_EXPORTS  // we are building a shared lib/dll
+#define RVIZ_VISUAL_TOOLS_DECL ROS_HELPER_EXPORT
+#else  // we are using shared lib/dll
+#define RVIZ_VISUAL_TOOLS_DECL ROS_HELPER_IMPORT
+#endif
+#else  // ros is being built around static libraries
+#define RVIZ_VISUAL_TOOLS_DECL
 #endif
 
 namespace rviz_visual_tools
@@ -197,7 +197,8 @@ public:
    * \param marker_topic - rostopic to publish markers to - your Rviz display should match
    * \param nh - optional ros node handle - defaults to "~"
    */
-  explicit RvizVisualTools(std::string base_frame, std::string marker_topic = RVIZ_MARKER_TOPIC, ros::NodeHandle nh = ros::NodeHandle("~"));
+  explicit RvizVisualTools(std::string base_frame, std::string marker_topic = RVIZ_MARKER_TOPIC,
+                           ros::NodeHandle nh = ros::NodeHandle("~"));
   /**
    * \brief Deconstructor
    */
@@ -426,8 +427,8 @@ public:
    * \param y_width - Y-size of the visualized plane [meters]
    * \return true on success
    */
-  bool publishABCDPlane(const double A, const double B, const double C, const double D,
-                        colors color=TRANSLUCENT, double x_width = 1.0, double y_width = 1.0);
+  bool publishABCDPlane(const double A, const double B, const double C, const double D, colors color = TRANSLUCENT,
+                        double x_width = 1.0, double y_width = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
@@ -485,8 +486,8 @@ public:
                      const std::string& ns = "Sphere", std::size_t id = 0);
   bool publishSphere(const geometry_msgs::Pose& pose, const std_msgs::ColorRGBA& color,
                      const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere", std::size_t id = 0);
-  bool publishSphere(const Eigen::Isometry3d& pose, const std_msgs::ColorRGBA& color, const geometry_msgs::Vector3 scale,
-                     const std::string& ns = "Sphere", std::size_t id = 0);
+  bool publishSphere(const Eigen::Isometry3d& pose, const std_msgs::ColorRGBA& color,
+                     const geometry_msgs::Vector3 scale, const std::string& ns = "Sphere", std::size_t id = 0);
   bool publishSphere(const Eigen::Vector3d& point, const std_msgs::ColorRGBA& color, const geometry_msgs::Vector3 scale,
                      const std::string& ns = "Sphere", std::size_t id = 0);
   bool publishSphere(const geometry_msgs::PoseStamped& pose, colors color, const geometry_msgs::Vector3 scale,
@@ -668,10 +669,8 @@ public:
                    const std::string& ns = "Path");
   bool publishPath(const std::vector<geometry_msgs::Point>& path, colors color, scales scale,
                    const std::string& ns = "Path");
-  bool publishPath(const EigenSTL::vector_Isometry3d& path, colors color, scales scale,
-                   const std::string& ns = "Path");
-  bool publishPath(const EigenSTL::vector_Vector3d& path, colors color, scales scale,
-                   const std::string& ns = "Path");
+  bool publishPath(const EigenSTL::vector_Isometry3d& path, colors color, scales scale, const std::string& ns = "Path");
+  bool publishPath(const EigenSTL::vector_Vector3d& path, colors color, scales scale, const std::string& ns = "Path");
   bool publishPath(const std::vector<geometry_msgs::Point>& path, colors color = RED, double radius = 0.01,
                    const std::string& ns = "Path");
   bool publishPath(const EigenSTL::vector_Vector3d& path, colors color = RED, double radius = 0.01,
@@ -861,8 +860,8 @@ public:
    */
   bool publishMesh(const Eigen::Isometry3d& pose, const shape_msgs::Mesh& mesh, colors color = CLEAR, double scale = 1,
                    const std::string& ns = "mesh", std::size_t id = 0);
-  bool publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color = CLEAR, double scale = 1,
-                   const std::string& ns = "mesh", std::size_t id = 0);
+  bool publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color = CLEAR,
+                   double scale = 1, const std::string& ns = "mesh", std::size_t id = 0);
 
   /**
    * \brief Display a graph
@@ -993,9 +992,9 @@ public:
   @param convention - default is rviz_visual_tools::XYZ
   */
   static Eigen::Isometry3d convertFromXYZRPY(double tx, double ty, double tz, double rx, double ry, double rz,
-                                           EulerConvention convention);  // ZYX is ROS standard
+                                             EulerConvention convention);  // ZYX is ROS standard
   static Eigen::Isometry3d convertFromXYZRPY(const std::vector<double>& transform6,
-                                           EulerConvention convention);  // ZYX is ROS standard
+                                             EulerConvention convention);  // ZYX is ROS standard
 
   // TODO(davetcoleman): add opposite conversion that uses   Eigen::Vector3d rpy = pose.rotation().eulerAngles(0, 1, 2);
 
@@ -1006,8 +1005,8 @@ public:
    * \param output vector of size 6 in order xyz rpy
    */
   static void convertToXYZRPY(const Eigen::Isometry3d& pose, std::vector<double>& xyzrpy);
-  static void convertToXYZRPY(const Eigen::Isometry3d& pose, double& x, double& y, double& z, double& roll, double& pitch,
-                              double& yaw);
+  static void convertToXYZRPY(const Eigen::Isometry3d& pose, double& x, double& y, double& z, double& roll,
+                              double& pitch, double& yaw);
   /**
    * \brief Create a random pose within bounds of random_pose_bounds_
    * \param Pose to fill in
