@@ -17,7 +17,7 @@ env:
     - TEST=clang-tidy-fix
     - DOCKER_IMAGE=moveit/moveit:melodic-source
     - DOCKER_IMAGE=moveit/moveit:master-source
-    - DOCKER_IMAGE=moveit/moveit:kinetic-ci  UPSTREAM_WORKSPACE=moveit.rosinstall  TEST_BLACKLIST=moveit_ros_perception
+    - DOCKER_IMAGE=moveit/moveit:kinetic-ci  TEST_BLACKLIST=moveit_ros_perception
 
 before_script:
   - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
