@@ -1806,6 +1806,16 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose& pose, double dept
   return publishMarker(cuboid_marker_);
 }
 
+bool RvizVisualTools::publishCuboid(const Eigen::Isometry3d& pose, const Eigen::Vector3d& size, colors color)
+{
+  return publishCuboid(pose, size.x(), size.y(), size.z(), color);
+}
+
+bool RvizVisualTools::publishCuboid(const geometry_msgs::Pose& pose, const geometry_msgs::Vector3& size, colors color)
+{
+  return publishCuboid(pose, size.x, size.y, size.z, color);
+}
+
 bool RvizVisualTools::publishLine(const Eigen::Isometry3d& point1, const Eigen::Isometry3d& point2, colors color,
                                   scales scale)
 {
