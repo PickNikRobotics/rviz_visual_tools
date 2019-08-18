@@ -1629,13 +1629,13 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const std::st
   return publishMarker(mesh_marker_);
 }
 
-bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const shape_msgs::Mesh& mesh, colors color, 
+bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const shape_msgs::Mesh& mesh, colors color,
                                   double scale, const std::string& ns, std::size_t id)
 {
   return publishMesh(convertPose(pose), mesh, color, scale, ns, id);
 }
 
-bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color, 
+bool RvizVisualTools::publishMesh(const geometry_msgs::Pose& pose, const shape_msgs::Mesh& mesh, colors color,
                                   double scale, const std::string& ns, std::size_t id)
 {
   triangle_marker_.header.stamp = ros::Time::now();
