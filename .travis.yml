@@ -13,8 +13,8 @@ env:
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-function"
     - WARNINGS_OK=false
   matrix:
-    - TEST="clang-format catkin_lint"
-    - TEST=clang-tidy-fix
+    - TEST="clang-format" # TODO(davetcoleman): enable catkin_lint in the future 
+    #- TEST=clang-tidy-fix   # TODO(davetcoleman): enable in the future
     - DOCKER_IMAGE=moveit/moveit:melodic-source
     - DOCKER_IMAGE=moveit/moveit:master-source
     - DOCKER_IMAGE=moveit/moveit:kinetic-ci  TEST_BLACKLIST=moveit_ros_perception
