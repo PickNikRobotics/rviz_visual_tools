@@ -995,6 +995,7 @@ public:
    * \param Pose to fill in
    */
   static void generateEmptyPose(geometry_msgs::Pose& pose);
+  static geometry_msgs::Pose getIdentityPose();
 
   /**
    * \brief Test if two Eigen poses are close enough
