@@ -38,8 +38,7 @@
    because of https://github.com/ros/geometry_experimental/issues/108
 */
 
-#ifndef RVIZ_VISUAL_TOOLS_TF_VISUAL_TOOLS_H
-#define RVIZ_VISUAL_TOOLS_TF_VISUAL_TOOLS_H
+#pragma once
 
 // C++
 #include <vector>
@@ -107,5 +106,3 @@ typedef boost::shared_ptr<TFVisualTools> TFVisualToolsPtr;
 typedef boost::shared_ptr<const TFVisualTools> TFVisualToolsConstPtr;
 
 }  // namespace rviz_visual_tools
-
-#endif  // RVIZ_VISUAL_TOOLS_TF_VISUAL_TOOLS_H

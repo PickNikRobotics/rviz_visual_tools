@@ -36,8 +36,7 @@
    Desc:   Helper functions for displaying basic shape markers in Rviz
 */
 
-#ifndef RVIZ_VISUAL_TOOLS_RVIZ_VISUAL_TOOLS_H
-#define RVIZ_VISUAL_TOOLS_RVIZ_VISUAL_TOOLS_H
+#pragma once
 
 #include <ros/ros.h>
 
@@ -1145,5 +1144,3 @@ typedef std::shared_ptr<RvizVisualTools> RvizVisualToolsPtr;
 typedef std::shared_ptr<const RvizVisualTools> RvizVisualToolsConstPtr;
 
 }  // namespace rviz_visual_tools
-
-#endif  // RVIZ_VISUAL_TOOLS_RVIZ_VISUAL_TOOLS_H

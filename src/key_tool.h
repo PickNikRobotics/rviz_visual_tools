@@ -27,8 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RVIZ_VISUAL_TOOLS_KEY_TOOL_H
-#define RVIZ_VISUAL_TOOLS_KEY_TOOL_H
+#pragma once
 
 #ifndef Q_MOC_RUN  // See: https://bugreports.qt-project.org/browse/QTBUG-22829
 
@@ -65,5 +64,3 @@ protected:
   RemoteReciever remote_reciever_;
 };
 }  // namespace rviz_visual_tools
-
-#endif

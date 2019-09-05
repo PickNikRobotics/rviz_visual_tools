@@ -36,8 +36,7 @@
    Desc:   Use interactive markers in a C++ class
 */
 
-#ifndef RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_H
-#define RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_H
+#pragma once
 
 // ROS
 #include <ros/ros.h>
@@ -120,4 +119,3 @@ typedef std::shared_ptr<IMarkerSimple> IMarkerSimplePtr;
 typedef std::shared_ptr<const IMarkerSimple> IMarkerSimpleConstPtr;
 
 }  // namespace rviz_visual_tools
-#endif  // RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_H
