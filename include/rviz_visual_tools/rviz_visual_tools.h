@@ -1091,7 +1091,7 @@ protected:
   ros::NodeHandle nh_;
 
   // Short name for this class
-  static RVIZ_VISUAL_TOOLS_DECL const std::string name_;
+  static RVIZ_VISUAL_TOOLS_DECL const std::string NAME;
 
   // Optional remote control
   RemoteControlPtr remote_control_;
@@ -1135,7 +1135,7 @@ protected:
   bool psychedelic_mode_ = false;
 
   // Chose random colors from this list
-  static const std::array<colors, 14> all_rand_colors_;
+  static const std::array<colors, 14> ALL_RAND_COLORS;
 
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW  // http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html
