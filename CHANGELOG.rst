@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.8.0 (2019-09-18)
+------------------
 * Windows bring up. (`#116 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/116>`_)
 * Change email address (`#114 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/114>`_)
 * Fixed publishCylinder namespace (`#109 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/109>`_)
