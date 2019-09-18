@@ -2,6 +2,22 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Windows bring up. (`#116 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/116>`_)
+* Change email address (`#114 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/114>`_)
+* Fixed publishCylinder namespace (`#109 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/109>`_)
+* Remove default arguments to make function calls not ambiguous (`#112 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/112>`_)
+  * Remove default arguments to make function calls not ambiguous
+  * Remove further default values
+  * Add unit tests for publishPath() functions, make sucess return value more stringent
+* Initizalize quaternions in demo to avoid warning (`#111 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/111>`_)
+* Fix node type in demo launch files (`#110 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/110>`_)
+* Only auto-assign one reviewer (`#107 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/107>`_)
+* Use LOGNAME for logging re:moveit styel (`#106 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/106>`_)
+* Document Github Probot for Auto Assign (`#101 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/101>`_)
+* Contributors: Dave Coleman, Sean Yen, Victor Lamoine, d-walsh
+
 3.7.0 (2018-11-26)
 ------------------
 * Fix Eigen::Affine3d for Melodic (using Eigen::Isometry3d) (`#105 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/105>`_)
