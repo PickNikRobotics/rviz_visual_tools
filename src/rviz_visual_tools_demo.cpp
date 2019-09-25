@@ -412,7 +412,7 @@ public:
     double y_width = 0.05;
 
     Eigen::Vector3d n;
-    double A, B, C = 0, D;
+    double a, b, c = 0, d;
     y += space_between_rows;
     double x_plane = 0, y_plane = y;
 
@@ -424,11 +424,11 @@ public:
     for (std::size_t i = 0; i < 10; ++i)
     {
       x_plane = i * step;
-      A = x_plane;
-      B = y_plane;
+      a = x_plane;
+      b = y_plane;
       // D takes this value to satisfy Ax+By+D=0
-      D = -(x_plane * x_plane + y_plane * y_plane);
-      visual_tools_->publishABCDPlane(A, B, C, D, rvt::MAGENTA, x_width, y_width);
+      d = -(x_plane * x_plane + y_plane * y_plane);
+      visual_tools_->publishABCDPlane(a, b, c, d, rvt::MAGENTA, x_width, y_width);
       x_location += step;
     }
 

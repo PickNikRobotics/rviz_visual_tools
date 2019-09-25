@@ -38,8 +38,7 @@
            Think GDB for robots, or like, a state machine.
 */
 
-#ifndef RVIZ_VISUAL_TOOLS_REMOTE_CONTROL_H
-#define RVIZ_VISUAL_TOOLS_REMOTE_CONTROL_H
+#pragma once
 
 // C++
 #include <string>
@@ -137,5 +136,3 @@ typedef std::shared_ptr<RemoteControl> RemoteControlPtr;
 typedef std::shared_ptr<const RemoteControl> RemoteControlConstPtr;
 
 }  // namespace rviz_visual_tools
-
-#endif  // RVIZ_VISUAL_TOOLS_REMOTE_CONTROL_H

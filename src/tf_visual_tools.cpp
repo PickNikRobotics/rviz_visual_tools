@@ -65,17 +65,17 @@ bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const s
   tf::transformEigenToMsg(transform, tf2_msg.transform);
 
   // Prevent TF_DENORMALIZED_QUATERNION errors in TF2 from happening.
-  double quatNorm;
+  double quat_norm;
 
   // Normalizing the Quaternion
-  quatNorm = 1 / sqrt(tf2_msg.transform.rotation.x * tf2_msg.transform.rotation.x +
-                      tf2_msg.transform.rotation.y * tf2_msg.transform.rotation.y +
-                      tf2_msg.transform.rotation.z * tf2_msg.transform.rotation.z +
-                      tf2_msg.transform.rotation.w * tf2_msg.transform.rotation.w);
-  tf2_msg.transform.rotation.x *= quatNorm;
-  tf2_msg.transform.rotation.y *= quatNorm;
-  tf2_msg.transform.rotation.z *= quatNorm;
-  tf2_msg.transform.rotation.w *= quatNorm;
+  quat_norm = 1 / sqrt(tf2_msg.transform.rotation.x * tf2_msg.transform.rotation.x +
+                       tf2_msg.transform.rotation.y * tf2_msg.transform.rotation.y +
+                       tf2_msg.transform.rotation.z * tf2_msg.transform.rotation.z +
+                       tf2_msg.transform.rotation.w * tf2_msg.transform.rotation.w);
+  tf2_msg.transform.rotation.x *= quat_norm;
+  tf2_msg.transform.rotation.y *= quat_norm;
+  tf2_msg.transform.rotation.z *= quat_norm;
+  tf2_msg.transform.rotation.w *= quat_norm;
 
   tf2_msg.header.frame_id = from_frame;
   tf2_msg.child_frame_id = to_frame;

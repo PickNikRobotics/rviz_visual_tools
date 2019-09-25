@@ -39,8 +39,7 @@
 // TODO(dave): convert to flow layout:
 // http://doc.qt.io/qt-5/qtwidgets-layouts-flowlayout-example.html
 
-#ifndef RVIZ_VISUAL_TOOLS__RVIZ_VISUAL_TOOLS_GUI_H
-#define RVIZ_VISUAL_TOOLS__RVIZ_VISUAL_TOOLS_GUI_H
+#pragma once
 
 #ifndef Q_MOC_RUN
 #include <ros/ros.h>
@@ -89,5 +88,3 @@ protected:
 };
 
 }  // end namespace rviz_visual_tools
-
-#endif  // RVIZ_VISUAL_TOOLS__RVIZ_VISUAL_TOOLS_GUI_H
