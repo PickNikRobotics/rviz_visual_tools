@@ -116,6 +116,8 @@ bool RvizVisualTools::loadRvizMarkers()
   arrow_marker_.action = visualization_msgs::Marker::ADD;
   // Lifetime
   arrow_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(arrow_marker_.pose);
 
   // Load cuboid ----------------------------------------------------
 
@@ -129,6 +131,8 @@ bool RvizVisualTools::loadRvizMarkers()
   cuboid_marker_.action = visualization_msgs::Marker::ADD;
   // Lifetime
   cuboid_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(cuboid_marker_.pose);
 
   // Load line ----------------------------------------------------
 
@@ -142,6 +146,8 @@ bool RvizVisualTools::loadRvizMarkers()
   line_strip_marker_.action = visualization_msgs::Marker::ADD;
   // Lifetime
   line_strip_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(line_strip_marker_.pose);
 
   // Load path ----------------------------------------------------
 
@@ -156,14 +162,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   line_list_marker_.lifetime = marker_lifetime_;
   // Constants
-  line_list_marker_.pose.position.x = 0.0;
-  line_list_marker_.pose.position.y = 0.0;
-  line_list_marker_.pose.position.z = 0.0;
-
-  line_list_marker_.pose.orientation.x = 0.0;
-  line_list_marker_.pose.orientation.y = 0.0;
-  line_list_marker_.pose.orientation.z = 0.0;
-  line_list_marker_.pose.orientation.w = 1.0;
+  generateEmptyPose(line_list_marker_.pose);
 
   // Load sphers ----------------------------------------------------
 
@@ -178,14 +177,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   spheres_marker_.lifetime = marker_lifetime_;
   // Constants
-  spheres_marker_.pose.position.x = 0.0;
-  spheres_marker_.pose.position.y = 0.0;
-  spheres_marker_.pose.position.z = 0.0;
-
-  spheres_marker_.pose.orientation.x = 0.0;
-  spheres_marker_.pose.orientation.y = 0.0;
-  spheres_marker_.pose.orientation.z = 0.0;
-  spheres_marker_.pose.orientation.w = 1.0;
+  generateEmptyPose(spheres_marker_.pose);
 
   // Load Block ----------------------------------------------------
   block_marker_.header.frame_id = base_frame_;
@@ -198,6 +190,8 @@ bool RvizVisualTools::loadRvizMarkers()
   block_marker_.type = visualization_msgs::Marker::CUBE;
   // Lifetime
   block_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(block_marker_.pose);
 
   // Load Cylinder ----------------------------------------------------
   cylinder_marker_.header.frame_id = base_frame_;
@@ -207,6 +201,8 @@ bool RvizVisualTools::loadRvizMarkers()
   cylinder_marker_.type = visualization_msgs::Marker::CYLINDER;
   // Lifetime
   cylinder_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(cylinder_marker_.pose);
 
   // Load Mesh ----------------------------------------------------
   mesh_marker_.header.frame_id = base_frame_;
@@ -217,6 +213,8 @@ bool RvizVisualTools::loadRvizMarkers()
   mesh_marker_.type = visualization_msgs::Marker::MESH_RESOURCE;
   // Lifetime
   mesh_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(mesh_marker_.pose);
 
   // Load Sphere -------------------------------------------------
   sphere_marker_.header.frame_id = base_frame_;
@@ -241,6 +239,8 @@ bool RvizVisualTools::loadRvizMarkers()
   sphere_marker_.colors.resize(1);
   // Lifetime
   sphere_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(sphere_marker_.pose);
 
   // Load Text ----------------------------------------------------
   // Set the namespace and id for this marker.  This serves to create a unique
@@ -252,6 +252,8 @@ bool RvizVisualTools::loadRvizMarkers()
   text_marker_.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
   // Lifetime
   text_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(text_marker_.pose);
 
   // Load Triangle List -------------------------------------------
   // Set the namespace and id for this marker. This serves to create a unique ID
@@ -263,6 +265,8 @@ bool RvizVisualTools::loadRvizMarkers()
   triangle_marker_.type = visualization_msgs::Marker::TRIANGLE_LIST;
   // Lifetime
   triangle_marker_.lifetime = marker_lifetime_;
+  // Constants
+  generateEmptyPose(triangle_marker_.pose);
 
   return true;
 }
@@ -1864,6 +1868,8 @@ bool RvizVisualTools::publishLine(const geometry_msgs::Point& point1, const geom
   line_strip_marker_.id++;
   line_strip_marker_.color = color;
   line_strip_marker_.scale = scale;
+  line_strip_marker_.scale.y = 0;
+  line_strip_marker_.scale.z = 0;
 
   line_strip_marker_.points.clear();
   line_strip_marker_.points.push_back(point1);
@@ -1910,6 +1916,9 @@ bool RvizVisualTools::publishLines(const std::vector<geometry_msgs::Point>& aPoi
   line_list_marker_.id++;
 
   line_list_marker_.scale = scale;
+  line_list_marker_.scale.z = 0;
+  line_list_marker_.scale.y = 0;
+
   // line_list_marker_.color = getColor(BLUE); // This var is not used
 
   // Add each point pair to the line message
@@ -1948,6 +1957,8 @@ bool RvizVisualTools::publishLineStrip(const std::vector<geometry_msgs::Point>& 
 
   std_msgs::ColorRGBA this_color = getColor(color);
   line_strip_marker_.scale = getScale(scale);
+  line_strip_marker_.scale.z = 0;
+  line_strip_marker_.scale.y = 0;
   line_strip_marker_.color = this_color;
   line_strip_marker_.points.clear();
   line_strip_marker_.colors.clear();
@@ -2170,6 +2181,8 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, cons
 
   std_msgs::ColorRGBA this_color = getColor(color);
   line_list_marker_.scale = getScale(XXSMALL);
+  line_list_marker_.scale.y = 0;
+  line_list_marker_.scale.z = 0;
   line_list_marker_.color = this_color;
   line_list_marker_.points.clear();
   line_list_marker_.colors.clear();
@@ -2268,6 +2281,9 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, d
 
   std_msgs::ColorRGBA this_color = getColor(color);
   line_list_marker_.scale = getScale(scale, 0.25);
+  line_list_marker_.scale.y = 0;
+  line_list_marker_.scale.z = 0;
+
   line_list_marker_.color = this_color;
   line_list_marker_.points.clear();
   line_list_marker_.colors.clear();
@@ -2321,6 +2337,8 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, c
 
   std_msgs::ColorRGBA this_color = getColor(color);
   line_list_marker_.scale = getScale(scale, 0.25);
+  line_list_marker_.scale.y = 0;
+  line_list_marker_.scale.z = 0;
   line_list_marker_.color = this_color;
   line_list_marker_.points.clear();
   line_list_marker_.colors.clear();
@@ -2493,7 +2511,8 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose& pose, const std::st
   text_marker_.pose = pose;
   text_marker_.color = getColor(color);
   text_marker_.scale = scale;
-
+  text_marker_.scale.x = 0;
+  text_marker_.scale.y = 0;
   // Helper for publishing rviz markers
   publishMarker(text_marker_);
 
