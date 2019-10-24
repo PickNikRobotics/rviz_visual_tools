@@ -103,7 +103,7 @@ In the following snippet we create a pose at xyz (0.1, 0.1, 0.1) and rotate the 
 
     // Don't forget to trigger the publisher!
     visual_tools_->trigger();
-    
+
 For more example code see [rviz_visual_tools_demo.cpp](https://github.com/PickNikRobotics/rviz_visual_tools/blob/melodic-devel/src/rviz_visual_tools_demo.cpp)
 
 ## Rviz GUI Usage
