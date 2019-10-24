@@ -611,7 +611,7 @@ public:
   /**
    * \brief Display a rectangular cuboid
    * \param pose - pose of the box
-   * \param shape - (x, y, z) of the box
+   * \param size - (x, y, z) of the box
    * \param color - an enum pre-defined name of a color
    * \return true on success
    */
