@@ -13,7 +13,7 @@ env:
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-function"
     - WARNINGS_OK=false
   matrix:
-    - TEST="clang-format" # TODO(davetcoleman): enable catkin_lint in the future 
+    - TEST="clang-format" # TODO(davetcoleman): enable catkin_lint in the future
     - TEST=clang-tidy-fix
     - DOCKER_IMAGE=moveit/moveit:melodic-source
     - DOCKER_IMAGE=moveit/moveit:master-source
