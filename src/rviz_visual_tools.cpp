@@ -917,6 +917,29 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::MarkerArray& markers)
     }
   }
 
+  for (auto& marker : markers.markers)
+  {
+    double norm = 0;
+    norm += marker.pose.orientation.w * marker.pose.orientation.w;
+    norm += marker.pose.orientation.x * marker.pose.orientation.x;
+    norm += marker.pose.orientation.y * marker.pose.orientation.y;
+    norm += marker.pose.orientation.z * marker.pose.orientation.z;
+    norm = std::sqrt(norm);
+    if (norm < std::numeric_limits<double>::epsilon())
+    {
+      marker.pose.orientation.w = 1;
+      marker.pose.orientation.x = 0;
+      marker.pose.orientation.y = 0;
+      marker.pose.orientation.z = 0;
+    }
+    else
+    {
+      marker.pose.orientation.w = marker.pose.orientation.w / norm;
+      marker.pose.orientation.x = marker.pose.orientation.x / norm;
+      marker.pose.orientation.y = marker.pose.orientation.y / norm;
+      marker.pose.orientation.z = marker.pose.orientation.z / norm;
+    }
+  }
   // Publish
   pub_rviz_markers_.publish(markers);
   return true;
