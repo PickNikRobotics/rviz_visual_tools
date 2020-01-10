@@ -110,8 +110,8 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose& pose, double scale
   // int_marker_.controls[0].interaction_mode = InteractiveMarkerControl::MENU;
 
   InteractiveMarkerControl control;
-  control.orientation.w = 1;
-  control.orientation.x = 1;
+  control.orientation.w = 0.7071;
+  control.orientation.x = 0.7071;
   control.orientation.y = 0;
   control.orientation.z = 0;
   control.name = "rotate_x";
@@ -121,9 +121,9 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose& pose, double scale
   control.interaction_mode = InteractiveMarkerControl::MOVE_AXIS;
   int_marker_.controls.push_back(control);
 
-  control.orientation.w = 1;
+  control.orientation.w = 0.7071;
   control.orientation.x = 0;
-  control.orientation.y = 1;
+  control.orientation.y = 0.7071;
   control.orientation.z = 0;
   control.name = "rotate_z";
   control.interaction_mode = InteractiveMarkerControl::ROTATE_AXIS;
@@ -132,10 +132,10 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose& pose, double scale
   control.interaction_mode = InteractiveMarkerControl::MOVE_AXIS;
   int_marker_.controls.push_back(control);
 
-  control.orientation.w = 1;
+  control.orientation.w = 0.7071;
   control.orientation.x = 0;
   control.orientation.y = 0;
-  control.orientation.z = 1;
+  control.orientation.z = 0.7071;
   control.name = "rotate_y";
   control.interaction_mode = InteractiveMarkerControl::ROTATE_AXIS;
   int_marker_.controls.push_back(control);
