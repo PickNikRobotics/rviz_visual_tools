@@ -69,7 +69,7 @@ public:
     ROS_INFO_STREAM_NAMED(name_, "IMarkerSimpleDemo Ready.");
   }
 
-  void processIMarkerPose(const visualization_msgs::msg::InteractiveMarkerFeedbackConstPtr& feedback)
+  void processIMarkerPose(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
   {
     // Show some spheres for fun
     visual_tools_->publishSphere(feedback->pose, visual_tools_->getRandColor());

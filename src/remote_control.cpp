@@ -62,7 +62,7 @@ RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_(nh)
   ROS_INFO_STREAM_NAMED(name_, "RemoteControl Ready.");
 }
 
-void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstPtr& msg)
+void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr& msg)
 {
   if (msg->buttons[1] != 0)
   {

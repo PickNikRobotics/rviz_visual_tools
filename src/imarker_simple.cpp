@@ -79,7 +79,7 @@ void IMarkerSimple::setPose(const geometry_msgs::msg::Pose& pose)
   sendUpdatedIMarkerPose();
 }
 
-void IMarkerSimple::iMarkerCallback(const visualization_msgs::msg::InteractiveMarkerFeedbackConstPtr& feedback)
+void IMarkerSimple::iMarkerCallback(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
 {
   // Ignore if not pose update
   if (feedback->event_type != visualization_msgs::msg::InteractiveMarkerFeedback::POSE_UPDATE)

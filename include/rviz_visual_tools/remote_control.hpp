@@ -62,7 +62,7 @@ public:
   /**
    * \brief Callback from ROS topic
    */
-  void rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstPtr& msg);
+  void rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr& msg);
 
   /**
    * \brief Step to next step
