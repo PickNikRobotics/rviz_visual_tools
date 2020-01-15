@@ -33,68 +33,58 @@
  *********************************************************************/
 
 /* Author: Dave Coleman
-   Desc:   Object for wrapping remote control functionality
+   Desc:   Rviz display panel for controlling and debugging ROS applications
 */
+
+// TODO(dave): convert to flow layout:
+// http://doc.qt.io/qt-5/qtwidgets-layouts-flowlayout-example.html
 
 #pragma once
 
-#include <sensor_msgs/Joy.h>
-#include <ros/ros.h>
+#ifndef Q_MOC_RUN
+#include <rclcpp/rclcpp.hpp>
+
+#include <rviz/panel.h>
+#endif
+
+#include <QPushButton>
+#include <QComboBox>
+
+#include <rviz_visual_tools/remote_reciever.hpp>
+
+class QLineEdit;
+class QSpinBox;
 
 namespace rviz_visual_tools
 {
-class RemoteReciever
+class RvizVisualToolsGui : public rviz::Panel
 {
+  Q_OBJECT
 public:
-  RemoteReciever()
-  {
-    joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("/rviz_visual_tools_gui", 1);
-  }
+  explicit RvizVisualToolsGui(QWidget* parent = 0);
 
-  void publishNext()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "Next");
-    sensor_msgs::Joy msg;
-    msg.buttons.resize(9);
-    msg.buttons[1] = 1;
-    joy_publisher_.publish(msg);
-  }
+  virtual void load(const rviz::Config& config);
+  virtual void save(rviz::Config config) const;
 
-  void publishContinue()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "Continue");
-    sensor_msgs::Joy msg;
-    msg.buttons.resize(9);
-    msg.buttons[2] = 1;
-    joy_publisher_.publish(msg);
-  }
+public Q_SLOTS:
 
-  void publishBreak()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "Break (not implemented yet)");
+protected Q_SLOTS:
 
-    sensor_msgs::Joy msg;
-    msg.buttons.resize(9);
-    msg.buttons[3] = 1;
-    joy_publisher_.publish(msg);
-  }
+  void moveNext();
 
-  void publishStop()
-  {
-    ROS_DEBUG_STREAM_NAMED("gui", "Stop (not implemented yet)");
+  void moveAuto();
 
-    sensor_msgs::Joy msg;
-    msg.buttons.resize(9);
-    msg.buttons[4] = 1;
-    joy_publisher_.publish(msg);
-  }
+  void moveFullAuto();
+
+  void moveStop();
 
 protected:
-  // The ROS publishers
-  ros::Publisher joy_publisher_;
+  QPushButton* btn_next_;
+  QPushButton* btn_auto_;
+  QPushButton* btn_full_auto_;
+  QPushButton* btn_stop_;
 
-  // The ROS node handle.
-  ros::NodeHandle nh_;
+  RemoteReciever remote_reciever_;
 };
 
 }  // end namespace rviz_visual_tools

@@ -36,7 +36,7 @@
    Desc:   Helper functions for displaying basic shape markers in Rviz
 */
 
-#include <rviz_visual_tools/rviz_visual_tools.h>
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
 
 // Conversions
 #include <eigen_conversions/eigen_msg.h>

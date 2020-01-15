@@ -39,7 +39,7 @@
 // C++
 #include <string>
 
-#include <rviz_visual_tools/remote_control.h>
+#include <rviz_visual_tools/remote_control.hpp>
 
 #define CONSOLE_COLOR_RESET "\033[0m"
 #define CONSOLE_COLOR_CYAN "\033[96m"

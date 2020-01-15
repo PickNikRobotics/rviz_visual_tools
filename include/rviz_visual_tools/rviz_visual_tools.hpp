@@ -38,7 +38,7 @@
 
 #pragma once
 
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 
 // C++
 #include <string>
@@ -49,24 +49,24 @@
 #include <eigen_stl_containers/eigen_stl_vector_container.h>
 
 // Rviz
-#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/MarkerArray.h>
+#include <visualization_msgs/msg/Marker.hpp>
+#include <visualization_msgs/msg/MarkerArray.hpp>
 
 // Boost
 #include <boost/shared_ptr.hpp>
 
 // Messages
-#include <shape_msgs/Mesh.h>
-#include <std_msgs/ColorRGBA.h>
-#include <graph_msgs/GeometryGraph.h>
-#include <geometry_msgs/PoseArray.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/Polygon.h>
-#include <trajectory_msgs/JointTrajectory.h>
+#include <shape_msgs/msg/mesh.hpp>
+#include <std_msgs/msg/color_rgba.hpp>
+// #include <graph_msgs/msg/GeometryGraph.hpp>
+#include <geometry_msgs/msg/pose_array.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/polygon.hpp>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
 
 // rviz_visual_tools
-#include <rviz_visual_tools/deprecation.h>
-#include <rviz_visual_tools/remote_control.h>
+#include <rviz_visual_tools/deprecation.hpp>
+#include <rviz_visual_tools/remote_control.hpp>
 
 // Import/export for windows dll's and visibility for gcc shared libraries.
 

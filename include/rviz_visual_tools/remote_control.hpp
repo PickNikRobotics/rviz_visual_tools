@@ -44,8 +44,8 @@
 #include <string>
 
 // ROS
-#include <ros/ros.h>
-#include <sensor_msgs/Joy.h>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/joy.hpp>
 
 namespace rviz_visual_tools
 {

@@ -41,7 +41,7 @@
 #include <ros/ros.h>
 
 // For visualizing things in rviz
-#include <rviz_visual_tools/rviz_visual_tools.h>
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
 
 // C++
 #include <string>

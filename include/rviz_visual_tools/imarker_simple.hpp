@@ -39,14 +39,14 @@
 #pragma once
 
 // ROS
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 
-#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/msg/PoseStamped.hpp>
 
-#include <interactive_markers/interactive_marker_server.h>
-#include <visualization_msgs/InteractiveMarkerFeedback.h>
-#include <visualization_msgs/InteractiveMarker.h>
-#include <interactive_markers/menu_handler.h>
+#include <interactive_markers/interactive_marker_server.hpp>
+#include <visualization_msgs/msg/interactive_marker_feedback.hpp>
+#include <visualization_msgs/msg/interactive_marker.hpp>
+#include <interactive_markers/menu_handler.hpp>
 #include <Eigen/Geometry>
 
 // C++

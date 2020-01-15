@@ -36,10 +36,10 @@
    Desc:   Helps debug and visualize transforms via the TF infrastructure
 */
 
-#include <rviz_visual_tools/tf_visual_tools.h>
+#include <rviz_visual_tools/tf_visual_tools.hpp>
 
 // TF
-#include <eigen_conversions/eigen_msg.h>
+#include <eigen_conversions/msg/eigen_msg.h>
 
 // C++
 #include <string>

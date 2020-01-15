@@ -36,8 +36,8 @@
    Desc:   Use interactive markers in a C++ class via the external python node
 */
 
-#include <rviz_visual_tools/imarker_simple.h>
-#include <rviz_visual_tools/rviz_visual_tools.h>
+#include <rviz_visual_tools/imarker_simple.hpp>
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
 #include <string>
 
 namespace rviz_visual_tools

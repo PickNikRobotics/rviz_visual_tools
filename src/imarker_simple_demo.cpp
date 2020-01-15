@@ -41,8 +41,8 @@
 
 // ROS
 #include <ros/ros.h>
-#include <rviz_visual_tools/rviz_visual_tools.h>
-#include <rviz_visual_tools/imarker_simple.h>
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
+#include <rviz_visual_tools/imarker_simple.hpp>
 
 namespace rviz_visual_tools
 {
