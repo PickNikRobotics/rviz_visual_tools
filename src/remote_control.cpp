@@ -47,22 +47,24 @@
 
 namespace rviz_visual_tools
 {
+using namespace std::chrono_literals;
+
 /**
  * \brief Constructor
  */
-RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_(nh)
+RemoteControl::RemoteControl(const rclcpp::Node::SharedPtr& nh) : nh_(nh), logger_(nh_->get_logger().get_child("remote_control"))
 {
   std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
 
   // Subscribe to Rviz Dashboard
   const std::size_t button_queue_size = 10;
-  rviz_dashboard_sub_ = nh_.subscribe<sensor_msgs::msg::Joy>(rviz_dashboard_topic, button_queue_size,
-                                                        &RemoteControl::rvizDashboardCallback, this);
+  rviz_dashboard_sub_ = nh_->create_subscription<sensor_msgs::msg::Joy>(rviz_dashboard_topic, button_queue_size,
+                                                        std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
 
-  ROS_INFO_STREAM_NAMED(name_, "RemoteControl Ready.");
+  RCLCPP_INFO(logger_, "RemoteControl Ready.");
 }
 
-void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr& msg)
+void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::SharedPtr msg)
 {
   if (msg->buttons[1] != 0)
   {
@@ -82,7 +84,7 @@ void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstShar
   }
   else
   {
-    ROS_ERROR_STREAM_NAMED(name_, "Unknown input button");
+    RCLCPP_ERROR(logger_, "Unknown input button");
   }
 }
 
@@ -138,7 +140,7 @@ bool RemoteControl::getFullAutonomous()
 bool RemoteControl::waitForNextStep(const std::string& caption)
 {
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !autonomous_ && ros::ok()))
+  if (!(!next_step_ready_ && !autonomous_ && rclcpp::ok()))
   {
     return true;
   }
@@ -154,12 +156,12 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
 
   is_waiting_ = true;
   // Wait until next step is ready
-  while (!next_step_ready_ && !autonomous_ && ros::ok())
+  while (!next_step_ready_ && !autonomous_ && rclcpp::ok())
   {
-    ros::Duration(0.25).sleep();
-    ros::spinOnce();
+    rclcpp::sleep_for(250ms);
+    rclcpp::spin_some(nh_);
   }
-  if (!ros::ok())
+  if (!rclcpp::ok())
   {
     exit(0);
   }
@@ -178,7 +180,7 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
 bool RemoteControl::waitForNextFullStep(const std::string& caption)
 {
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !full_autonomous_ && ros::ok()))
+  if (!(!next_step_ready_ && !full_autonomous_ && rclcpp::ok()))
   {
     return true;
   }
@@ -194,12 +196,12 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
 
   is_waiting_ = true;
   // Wait until next step is ready
-  while (!next_step_ready_ && !full_autonomous_ && ros::ok())
+  while (!next_step_ready_ && !full_autonomous_ && rclcpp::ok())
   {
-    ros::Duration(0.25).sleep();
-    ros::spinOnce();
+    rclcpp::sleep_for(250ms);
+    rclcpp::spin_some(nh_);
   }
-  if (!ros::ok())
+  if (!rclcpp::ok())
   {
     exit(0);
   }

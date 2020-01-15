@@ -60,7 +60,7 @@ const std::array<colors, 14> RvizVisualTools::ALL_RAND_COLORS = { RED,        GR
                                                                   WHITE,      ORANGE, YELLOW, BROWN,  PINK,
                                                                   LIME_GREEN, PURPLE, CYAN,   MAGENTA };
 
-RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, ros::NodeHandle nh)
+RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, rclcpp::Node::SharedPtr nh)
   : nh_(nh), marker_topic_(std::move(marker_topic)), base_frame_(std::move(base_frame))
 {
   initialize();
@@ -279,7 +279,7 @@ void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
   }
 
   // Rviz marker publisher
-  pub_rviz_markers_ = nh_.advertise<visualization_msgs::msg::MarkerArray>(marker_topic_, 10, latched);
+  pub_rviz_markers_ = node_.advertise<visualization_msgs::msg::MarkerArray>(marker_topic_, 10, latched);
   ROS_DEBUG_STREAM_NAMED(LOGNAME, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
   if (wait_for_subscriber)
@@ -303,7 +303,7 @@ void RvizVisualTools::waitForMarkerPub(double wait_time)
 bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_time, bool blocking)
 {
   // Will wait at most this amount of time
-  ros::Time max_time(ros::Time::now() + ros::Duration(wait_time));
+  ros::Time max_time(node_->now() + ros::Duration(wait_time));
 
   // This is wrong. It returns only the number of subscribers that have already
   // established their direct connections to this publisher
@@ -325,7 +325,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
   // Wait for subscriber
   while (num_existing_subscribers == 0)
   {
-    if (!blocking && ros::Time::now() > max_time)  // Check if timed out
+    if (!blocking && node_->now() > max_time)  // Check if timed out
     {
       ROS_WARN_STREAM_NAMED(LOGNAME, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
                                                << wait_time
@@ -341,7 +341,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
     // Check again
     num_existing_subscribers = pub.getNumSubscribers();
 
-    if (!ros::ok())
+    if (!rclcpp::ok())
     {
       return false;
     }
@@ -956,7 +956,7 @@ bool RvizVisualTools::publishCone(const Eigen::Isometry3d& pose, double angle, c
 
 bool RvizVisualTools::publishCone(const geometry_msgs::msg::Pose& pose, double angle, colors color, double scale)
 {
-  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.header.stamp = node_->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1026,7 +1026,7 @@ bool RvizVisualTools::publishXYPlane(const Eigen::Isometry3d& pose, colors color
 
 bool RvizVisualTools::publishXYPlane(const geometry_msgs::msg::Pose& pose, colors color, double scale)
 {
-  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.header.stamp = node_->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1072,7 +1072,7 @@ bool RvizVisualTools::publishXZPlane(const Eigen::Isometry3d& pose, colors color
 
 bool RvizVisualTools::publishXZPlane(const geometry_msgs::msg::Pose& pose, colors color, double scale)
 {
-  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.header.stamp = node_->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1118,7 +1118,7 @@ bool RvizVisualTools::publishYZPlane(const Eigen::Isometry3d& pose, colors color
 
 bool RvizVisualTools::publishYZPlane(const geometry_msgs::msg::Pose& pose, colors color, double scale)
 {
-  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.header.stamp = node_->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1227,7 +1227,7 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, const 
                                     const geometry_msgs::msg::Vector3 scale, const std::string& ns, std::size_t id)
 {
   // Set the frame ID and timestamp
-  sphere_marker_.header.stamp = ros::Time::now();
+  sphere_marker_.header.stamp = node_->now();
 
   // Overwrite ID or increment?
   if (id == 0)
@@ -1350,7 +1350,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::msg::Pose& pose, colors 
                                    std::size_t id)
 {
   // Set the frame ID and timestamp.
-  arrow_marker_.header.stamp = ros::Time::now();
+  arrow_marker_.header.stamp = node_->now();
   arrow_marker_.header.frame_id = base_frame_;
 
   if (id == 0)
@@ -1420,7 +1420,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::msg::Point& start, const
                                    scales scale, std::size_t id)
 {
   // Set the frame ID and timestamp.
-  arrow_marker_.header.stamp = ros::Time::now();
+  arrow_marker_.header.stamp = node_->now();
   arrow_marker_.header.frame_id = base_frame_;
 
   if (id == 0)
@@ -1593,7 +1593,7 @@ bool RvizVisualTools::publishCylinder(const geometry_msgs::msg::Pose& pose, cons
                                       double radius, const std::string& ns)
 {
   // Set the timestamp
-  cylinder_marker_.header.stamp = ros::Time::now();
+  cylinder_marker_.header.stamp = node_->now();
   cylinder_marker_.ns = ns;
   cylinder_marker_.id++;
 
@@ -1622,7 +1622,7 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::msg::Pose& pose, const st
                                   double scale, const std::string& ns, std::size_t id)
 {
   // Set the timestamp
-  mesh_marker_.header.stamp = ros::Time::now();
+  mesh_marker_.header.stamp = node_->now();
 
   if (id == 0)
   {
@@ -1665,7 +1665,7 @@ bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const shape_msg
 bool RvizVisualTools::publishMesh(const geometry_msgs::msg::Pose& pose, const shape_msgs::msg::Mesh& mesh, colors color,
                                   double scale, const std::string& ns, std::size_t id)
 {
-  triangle_marker_.header.stamp = ros::Time::now();
+  triangle_marker_.header.stamp = node_->now();
 
   if (id == 0)
   {
@@ -1742,7 +1742,7 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Point& point1, con
                                     colors color, const std::string& ns, std::size_t id)
 {
   // Set the timestamp
-  cuboid_marker_.header.stamp = ros::Time::now();
+  cuboid_marker_.header.stamp = node_->now();
   cuboid_marker_.ns = ns;
 
   if (id == 0)
@@ -1795,7 +1795,7 @@ bool RvizVisualTools::publishCuboid(const Eigen::Isometry3d& pose, double depth,
 bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Pose& pose, double depth, double width, double height,
                                     colors color)
 {
-  cuboid_marker_.header.stamp = ros::Time::now();
+  cuboid_marker_.header.stamp = node_->now();
 
   cuboid_marker_.id++;
   cuboid_marker_.color = getColor(color);
@@ -1886,7 +1886,7 @@ bool RvizVisualTools::publishLine(const geometry_msgs::msg::Point& point1, const
                                   const std_msgs::msg::ColorRGBA& color, const geometry_msgs::msg::Vector3& scale)
 {
   // Set the timestamp
-  line_strip_marker_.header.stamp = ros::Time::now();
+  line_strip_marker_.header.stamp = node_->now();
 
   line_strip_marker_.id++;
   line_strip_marker_.color = color;
@@ -2528,7 +2528,7 @@ bool RvizVisualTools::publishText(const geometry_msgs::msg::Pose& pose, const st
     text_marker_.id++;
   }
 
-  text_marker_.header.stamp = ros::Time::now();
+  text_marker_.header.stamp = node_->now();
   text_marker_.header.frame_id = base_frame_;
   text_marker_.text = text;
   text_marker_.pose = pose;
@@ -2885,7 +2885,7 @@ void RvizVisualTools::loadRemoteControl()
   // Load remote
   if (!remote_control_)
   {
-    remote_control_ = std::make_shared<RemoteControl>(nh_);
+    remote_control_ = std::make_shared<RemoteControl>(node_);
     ros::spinOnce();
   }
 }

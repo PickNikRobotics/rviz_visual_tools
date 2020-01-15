@@ -57,12 +57,12 @@ public:
   /**
    * \brief Constructor
    */
-  explicit RemoteControl(const ros::NodeHandle& nh);
+  explicit RemoteControl(const rclcpp::Node::SharedPtr& nh);
 
   /**
    * \brief Callback from ROS topic
    */
-  void rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr& msg);
+  void rvizDashboardCallback(const sensor_msgs::msg::Joy::SharedPtr msg);
 
   /**
    * \brief Step to next step
@@ -113,13 +113,14 @@ public:
 
 private:
   // A shared node handle
-  ros::NodeHandle nh_;
+  rclcpp::Node::SharedPtr nh_;
+  rclcpp::Logger logger_;
 
   // Short name for this class
   std::string name_ = "remote_control";
 
   // Input
-  ros::Subscriber rviz_dashboard_sub_;
+  rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr rviz_dashboard_sub_;
 
   // Debug interface
   bool is_waiting_ = false;

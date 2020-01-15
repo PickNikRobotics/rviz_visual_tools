@@ -33,8 +33,8 @@ find_package(trajectory_msgs REQUIRED)
 
 find_package(eigen3_cmake_module REQUIRED)
 find_package(eigen_stl_containers REQUIRED)
-
 find_package(Eigen3 REQUIRED)
+
 find_package(Boost REQUIRED thread system)
 find_package(PkgConfig REQUIRED)
 
@@ -71,7 +71,9 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 ###########
 ## Build ##
 ###########
-include_directories(include)
+include_directories(
+  include
+  ${Eigen3_INCLUDE_DIRS})
 
 # Rviz GUI library
 # set(SOURCE_FILES
@@ -224,6 +226,8 @@ ament_export_dependencies(
   std_msgs
   trajectory_msgs
   visualization_msgs
+  eigen3_cmake_module
+  Eigen3
 )
 
 ament_package()

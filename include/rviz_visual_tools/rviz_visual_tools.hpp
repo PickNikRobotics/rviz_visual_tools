@@ -197,7 +197,7 @@ public:
    * \param nh - optional ros node handle - defaults to "~"
    */
   explicit RvizVisualTools(std::string base_frame, std::string marker_topic = RVIZ_MARKER_TOPIC,
-                           ros::NodeHandle nh = ros::NodeHandle("~"));
+                           rclcpp::Node::SharedPtr nh = std::make_shared<rclcpp::Node>("rviz_visual_tools_node", ""););
   /**
    * \brief Deconstructor
    */
@@ -1086,7 +1086,7 @@ public:
 
 protected:
   // A shared node handle
-  ros::NodeHandle nh_;
+  rclcpp::Node::SharedPtr nh_;
 
   // Short name for this class
   static RVIZ_VISUAL_TOOLS_DECL const std::string NAME;
