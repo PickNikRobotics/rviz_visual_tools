@@ -74,20 +74,18 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 include_directories(include)
 
 # Rviz GUI library
-set(SOURCE_FILES
-  src/${PROJECT_NAME}_gui.cpp
-  src/key_tool.cpp
-)
-add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
-target_include_directories(${PROJECT_NAME}_gui PUBLIC
-  ${Qt5Widgets_INCLUDE_DIRS}
-  ${OGRE_INCLUDE_DIRS}
-)
-target_link_libraries(${PROJECT_NAME}_gui Qt5::Widgets)
-ament_target_dependencies(${PROJECT_NAME}_gui
-  rclcpp
-  Qt5Widgets
-)
+# set(SOURCE_FILES
+  # src/${PROJECT_NAME}_gui.cpp
+  # src/key_tool.cpp
+# )
+# add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
+# target_include_directories(${PROJECT_NAME}_gui PUBLIC
+  # ${OGRE_INCLUDE_DIRS}
+# )
+# target_link_libraries(${PROJECT_NAME}_gui Qt5::Widgets)
+# ament_target_dependencies(${PROJECT_NAME}_gui
+  # rclcpp
+# )
 
 # Remote control library
 add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
@@ -173,7 +171,7 @@ endif()
 #############
 
 ament_export_libraries(${PROJECT_NAME})
-ament_export_libraries(${PROJECT_NAME}_gui)
+# ament_export_libraries(${PROJECT_NAME}_gui)
 ament_export_libraries(${PROJECT_NAME}_remote_control)
 ament_export_libraries(${PROJECT_NAME}_imarker_simple)
 
@@ -181,7 +179,7 @@ ament_export_libraries(${PROJECT_NAME}_imarker_simple)
 install(
   TARGETS
     ${PROJECT_NAME}
-    ${PROJECT_NAME}_gui
+    # ${PROJECT_NAME}_gui
     ${PROJECT_NAME}_imarker_simple
     ${PROJECT_NAME}_remote_control
   LIBRARY DESTINATION lib
