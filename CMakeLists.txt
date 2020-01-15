@@ -79,11 +79,22 @@ set(SOURCE_FILES
   src/key_tool.cpp
 )
 add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
+target_include_directories(${PROJECT_NAME}_gui PUBLIC
+  ${Qt5Widgets_INCLUDE_DIRS}
+  ${OGRE_INCLUDE_DIRS}
+)
 target_link_libraries(${PROJECT_NAME}_gui Qt5::Widgets)
+ament_target_dependencies(${PROJECT_NAME}_gui
+  rclcpp
+  Qt5Widgets
+)
 
 # Remote control library
 add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
 target_link_libraries(${PROJECT_NAME}_remote_control)
+ament_target_dependencies(${PROJECT_NAME}_remote_control
+  rclcpp
+)
 
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
@@ -94,6 +105,9 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_remote_control
   ${Boost_LIBRARIES}
 )
+ament_target_dependencies(${PROJECT_NAME}
+  rclcpp
+)
 
 # Library
 add_library(${PROJECT_NAME}_imarker_simple
@@ -102,6 +116,9 @@ add_library(${PROJECT_NAME}_imarker_simple
 target_link_libraries(${PROJECT_NAME}_imarker_simple
   ${PROJECT_NAME}
   ${Boost_LIBRARIES}
+)
+ament_target_dependencies(${PROJECT_NAME}_imarker_simple
+  rclcpp
 )
 
 # Demo executable
