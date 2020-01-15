@@ -34,7 +34,7 @@
 
 /* Author: Dave Coleman <dave@picknik.ai>
    Desc:   Tool for creating break points and user verification points through
-           manipulation pipelines or other live robotitc tool.
+           manipulation pipelines or other live robotic tool.
            Think GDB for robots, or like, a state machine.
 */
 
@@ -62,7 +62,7 @@ public:
   /**
    * \brief Callback from ROS topic
    */
-  void rvizDashboardCallback(const sensor_msgs::Joy::ConstPtr& msg);
+  void rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstPtr& msg);
 
   /**
    * \brief Step to next step

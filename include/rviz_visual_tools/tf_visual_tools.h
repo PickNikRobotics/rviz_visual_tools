@@ -98,7 +98,7 @@ private:
   ros::Timer non_realtime_loop_;
 
   // Collect the transfroms
-  std::vector<geometry_msgs::TransformStamped> transforms_;
+  std::vector<geometry_msgs::msg::TransformStamped> transforms_;
 };  // end class
 
 // Create boost pointers for this class

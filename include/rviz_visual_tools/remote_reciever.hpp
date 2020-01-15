@@ -48,13 +48,13 @@ class RemoteReciever
 public:
   RemoteReciever()
   {
-    joy_publisher_ = nh_.advertise<sensor_msgs::Joy>("/rviz_visual_tools_gui", 1);
+    joy_publisher_ = nh_.advertise<sensor_msgs::msg::Joy>("/rviz_visual_tools_gui", 1);
   }
 
   void publishNext()
   {
     ROS_DEBUG_STREAM_NAMED("gui", "Next");
-    sensor_msgs::Joy msg;
+    sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[1] = 1;
     joy_publisher_.publish(msg);
@@ -63,7 +63,7 @@ public:
   void publishContinue()
   {
     ROS_DEBUG_STREAM_NAMED("gui", "Continue");
-    sensor_msgs::Joy msg;
+    sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[2] = 1;
     joy_publisher_.publish(msg);
@@ -73,7 +73,7 @@ public:
   {
     ROS_DEBUG_STREAM_NAMED("gui", "Break (not implemented yet)");
 
-    sensor_msgs::Joy msg;
+    sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[3] = 1;
     joy_publisher_.publish(msg);
@@ -83,7 +83,7 @@ public:
   {
     ROS_DEBUG_STREAM_NAMED("gui", "Stop (not implemented yet)");
 
-    sensor_msgs::Joy msg;
+    sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[4] = 1;
     joy_publisher_.publish(msg);

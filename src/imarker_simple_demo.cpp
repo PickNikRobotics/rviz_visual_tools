@@ -56,7 +56,7 @@ public:
     visual_tools_->loadMarkerPub();
 
     // Create a random initial pose
-    geometry_msgs::Pose init_pose;
+    geometry_msgs::msg::Pose init_pose;
     visual_tools_->generateRandomPose(init_pose);
 
     // Create a 6DOF interactive marker
@@ -69,7 +69,7 @@ public:
     ROS_INFO_STREAM_NAMED(name_, "IMarkerSimpleDemo Ready.");
   }
 
-  void processIMarkerPose(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback)
+  void processIMarkerPose(const visualization_msgs::msg::InteractiveMarkerFeedbackConstPtr& feedback)
   {
     // Show some spheres for fun
     visual_tools_->publishSphere(feedback->pose, visual_tools_->getRandColor());

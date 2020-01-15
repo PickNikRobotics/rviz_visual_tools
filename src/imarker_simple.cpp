@@ -42,7 +42,10 @@
 
 namespace rviz_visual_tools
 {
-IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::Pose& initial_pose)
+using visualization_msgs::msg::InteractiveMarkerFeedback;
+using visualization_msgs::msg::InteractiveMarkerControl;
+
+IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::msg::Pose& initial_pose)
   : nh_("~"), latest_pose_(initial_pose)
 {
   // Create Marker Server
@@ -58,28 +61,28 @@ IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geomet
   imarker_server_->applyChanges();
 }
 
-geometry_msgs::Pose& IMarkerSimple::getPose()
+geometry_msgs::msg::Pose& IMarkerSimple::getPose()
 {
   return latest_pose_;
 }
 
 void IMarkerSimple::setPose(const Eigen::Isometry3d& pose)
 {
-  geometry_msgs::Pose pose_msg;
+  geometry_msgs::msg::Pose pose_msg;
   rviz_visual_tools::RvizVisualTools::convertPoseSafe(pose, pose_msg);
   setPose(pose_msg);
 }
 
-void IMarkerSimple::setPose(const geometry_msgs::Pose& pose)
+void IMarkerSimple::setPose(const geometry_msgs::msg::Pose& pose)
 {
   latest_pose_ = pose;
   sendUpdatedIMarkerPose();
 }
 
-void IMarkerSimple::iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback)
+void IMarkerSimple::iMarkerCallback(const visualization_msgs::msg::InteractiveMarkerFeedbackConstPtr& feedback)
 {
   // Ignore if not pose update
-  if (feedback->event_type != visualization_msgs::InteractiveMarkerFeedback::POSE_UPDATE)
+  if (feedback->event_type != visualization_msgs::msg::InteractiveMarkerFeedback::POSE_UPDATE)
   {
     return;
   }
@@ -97,7 +100,7 @@ void IMarkerSimple::sendUpdatedIMarkerPose()
   imarker_server_->applyChanges();
 }
 
-void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose& pose, double scale)
+void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale)
 {
   ROS_INFO_STREAM_NAMED(name_, "Making 6dof interactive marker named " << name_);
 

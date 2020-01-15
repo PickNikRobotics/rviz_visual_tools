@@ -56,13 +56,13 @@ RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_(nh)
 
   // Subscribe to Rviz Dashboard
   const std::size_t button_queue_size = 10;
-  rviz_dashboard_sub_ = nh_.subscribe<sensor_msgs::Joy>(rviz_dashboard_topic, button_queue_size,
+  rviz_dashboard_sub_ = nh_.subscribe<sensor_msgs::msg::Joy>(rviz_dashboard_topic, button_queue_size,
                                                         &RemoteControl::rvizDashboardCallback, this);
 
   ROS_INFO_STREAM_NAMED(name_, "RemoteControl Ready.");
 }
 
-void RemoteControl::rvizDashboardCallback(const sensor_msgs::Joy::ConstPtr& msg)
+void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstPtr& msg)
 {
   if (msg->buttons[1] != 0)
   {

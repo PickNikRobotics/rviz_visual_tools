@@ -60,7 +60,7 @@ bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const s
   ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transform from " << from_frame << " to " << to_frame);
 
   // Create transform msg
-  geometry_msgs::TransformStamped tf2_msg;
+  geometry_msgs::msg::TransformStamped tf2_msg;
   tf2_msg.header.stamp = ros::Time::now();
   tf::transformEigenToMsg(transform, tf2_msg.transform);
 
