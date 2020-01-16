@@ -41,7 +41,7 @@
 #include <vector>
 
 #include <gtest/gtest.h>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.h>
