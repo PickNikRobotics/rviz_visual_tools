@@ -52,9 +52,8 @@ using namespace std::chrono_literals;
 /**
  * \brief Constructor
  */
-RemoteControl::RemoteControl(
-    const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
-    const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
+RemoteControl::RemoteControl(const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+                             const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
   : topics_interface_(topics_interface)
   , logger_(logging_interface->get_logger().get_child("remote_control"))
   , next_step_ready_(nullptr)
@@ -64,10 +63,8 @@ RemoteControl::RemoteControl(
   const std::size_t button_queue_size = 10;
   const rclcpp::QoS update_sub_qos(button_queue_size);
   rviz_dashboard_sub_ = rclcpp::create_subscription<sensor_msgs::msg::Joy>(
-    topics_interface_,
-    rviz_dashboard_topic,
-    update_sub_qos,
-    std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
+      topics_interface_, rviz_dashboard_topic, update_sub_qos,
+      std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
 
   RCLCPP_INFO(logger_, "RemoteControl Ready.");
 }

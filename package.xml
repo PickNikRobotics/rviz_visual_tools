@@ -22,6 +22,8 @@
   <depend>rclcpp</depend>
   <depend>rviz_ogre_vendor</depend>
   <depend>tf2</depend>
+  <depend>tf2_eigen</depend>
+  <depend>tf2_geometry_msgs</depend>
 
   <!-- Something changed in ROS Lunar / Ubuntu Zesty that requires extra QT5 dependency-->
   <!-- I suspect this depend is more than needed, but was the only dependency available -->

@@ -38,6 +38,8 @@ find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED thread system)
 find_package(PkgConfig REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
@@ -91,25 +93,28 @@ include_directories(
 # )
 
 # Remote control library
-add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
-target_link_libraries(${PROJECT_NAME}_remote_control)
-ament_target_dependencies(${PROJECT_NAME}_remote_control
-  rclcpp
-)
+# add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
+# target_link_libraries(${PROJECT_NAME}_remote_control)
+# ament_target_dependencies(${PROJECT_NAME}_remote_control
+#   rclcpp
+# )
 
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
   src/${PROJECT_NAME}.cpp
+  src/remote_control.cpp
   # src/tf_visual_tools.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-  ${PROJECT_NAME}_remote_control
+  # ${PROJECT_NAME}_remote_control
   ${Boost_LIBRARIES}
 )
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   visualization_msgs
   tf2
+  tf2_eigen
+  tf2_geometry_msgs
 )
 
 # Library
@@ -151,9 +156,9 @@ ament_target_dependencies(${PROJECT_NAME}
 ## Install ##
 #############
 
-# ament_export_libraries(${PROJECT_NAME})
+ament_export_libraries(${PROJECT_NAME})
 # ament_export_libraries(${PROJECT_NAME}_gui)
-ament_export_libraries(${PROJECT_NAME}_remote_control)
+# ament_export_libraries(${PROJECT_NAME}_remote_control)
 # ament_export_libraries(${PROJECT_NAME}_imarker_simple)
 
 # Install libraries
@@ -162,7 +167,7 @@ install(
     ${PROJECT_NAME}
     # ${PROJECT_NAME}_gui
     # ${PROJECT_NAME}_imarker_simple
-    ${PROJECT_NAME}_remote_control
+    # ${PROJECT_NAME}_remote_control
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
@@ -198,19 +203,19 @@ install(
 ##########
 
 if (BUILD_TESTING)
-  # Lint
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+  # # Lint
+  # find_package(ament_lint_auto REQUIRED)
+  # ament_lint_auto_find_test_dependencies()
 
-  # Run tests
-  find_package(ament_cmake_gtest REQUIRED)
-  ament_add_gtest(${PROJECT_NAME}_rvt_test tests/rvt_test.cpp)
-  ament_target_dependencies(${PROJECT_NAME}_rvt_test
-    rclcpp
-  )
-  target_link_libraries(${PROJECT_NAME}_rvt_test
-    ${PROJECT_NAME}
-  )
+  # # Run tests
+  # find_package(ament_cmake_gtest REQUIRED)
+  # ament_add_gtest(${PROJECT_NAME}_rvt_test tests/rvt_test.cpp)
+  # ament_target_dependencies(${PROJECT_NAME}_rvt_test
+  #   rclcpp
+  # )
+  # target_link_libraries(${PROJECT_NAME}_rvt_test
+  #   ${PROJECT_NAME}
+  # )
 endif()
 
 

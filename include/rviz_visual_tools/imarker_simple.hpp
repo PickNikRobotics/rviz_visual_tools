@@ -54,7 +54,6 @@
 
 namespace rviz_visual_tools
 {
-
 typedef std::function<void(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr&)> IMarkerCallback;
 
 namespace

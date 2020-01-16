@@ -80,7 +80,6 @@ public:
    */
   void clearAllTransforms();
 
-
 private:
   /**
    * \brief At a certain frequency update the tf transforms that we are tracking

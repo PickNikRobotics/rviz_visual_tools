@@ -40,7 +40,10 @@
 
 // Conversions
 #include <tf2/convert.h>
-#include <tf_conversions/tf_eigen.h>
+#include <tf2/LinearMath/Vector3.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_eigen/tf2_eigen.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 // C++
 #include <cmath>  // for random poses
@@ -60,15 +63,32 @@ const std::array<colors, 14> RvizVisualTools::ALL_RAND_COLORS = { RED,        GR
                                                                   WHITE,      ORANGE, YELLOW, BROWN,  PINK,
                                                                   LIME_GREEN, PURPLE, CYAN,   MAGENTA };
 
-RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, rclcpp::Node::SharedPtr nh)
-  : nh_(nh), marker_topic_(std::move(marker_topic)), base_frame_(std::move(base_frame))
+template <class NodePtr>
+RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, NodePtr node)
+  : RvizVisualTools(base_frame, marker_topic, node->get_node_topics_interface(), node->get_node_graph_interface(),
+                    node->get_node_clock_interface(), node->get_node_logging_interface())
+{
+}
+
+RvizVisualTools::RvizVisualTools(const std::string& base_frame, const std::string& marker_topic,
+                                 const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+                                 const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
+                                 const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
+                                 const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
+  : topics_interface_(topics_interface)
+  , graph_interface_(graph_interface)
+  , clock_interface_(clock_interface)
+  , logging_interface_(logging_interface)
+  , logger_(logging_interface->get_logger().get_child("rviz_visual_tools"))
+  , marker_topic_(marker_topic)
+  , base_frame_(base_frame)
 {
   initialize();
 }
 
 void RvizVisualTools::initialize()
 {
-  marker_lifetime_ = ros::Duration(0.0);  // 0 - unlimited
+  marker_lifetime_ = builtin_interfaces::msg::Duration();  // 0 - unlimited
 
   // Cache the reusable markers
   loadRvizMarkers();
@@ -99,9 +119,9 @@ bool RvizVisualTools::loadRvizMarkers()
 {
   // Load reset marker -------------------------------------------------
   reset_marker_.header.frame_id = base_frame_;
-  reset_marker_.header.stamp = ros::Time();
+  reset_marker_.header.stamp = builtin_interfaces::msg::Time();
   reset_marker_.ns = "deleteAllMarkers";  // helps during debugging
-  reset_marker_.action = 3;               // TODO(davetcoleman): In ROS-J set to visualization_msgs::msg::Marker::DELETEALL;
+  reset_marker_.action = 3;  // TODO(davetcoleman): In ROS-J set to visualization_msgs::msg::Marker::DELETEALL;
   reset_marker_.pose.orientation.w = 1;
 
   // Load arrow ----------------------------------------------------
@@ -279,8 +299,13 @@ void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
   }
 
   // Rviz marker publisher
-  pub_rviz_markers_ = node_.advertise<visualization_msgs::msg::MarkerArray>(marker_topic_, 10, latched);
-  ROS_DEBUG_STREAM_NAMED(LOGNAME, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
+  const rclcpp::QoS feedback_pub_qos = rclcpp::QoS(10);
+  pub_rviz_markers_ = rclcpp::create_publisher<visualization_msgs::msg::MarkerArray>(topics_interface_, marker_topic_,
+                                                                                     feedback_pub_qos);
+
+  std::stringstream ss;
+  ss << "Publishing Rviz markers on topic " << pub_rviz_markers_->get_topic_name();
+  RCLCPP_DEBUG(logger_, ss.str().c_str());
 
   if (wait_for_subscriber)
   {
@@ -300,51 +325,54 @@ void RvizVisualTools::waitForMarkerPub(double wait_time)
   waitForSubscriber(pub_rviz_markers_, wait_time, blocking);
 }
 
-bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_time, bool blocking)
+template <class PublisherPtr>
+bool RvizVisualTools::waitForSubscriber(const PublisherPtr& pub, double wait_time, bool blocking)
 {
   // Will wait at most this amount of time
-  ros::Time max_time(node_->now() + ros::Duration(wait_time));
+  rclcpp::Time max_time(clock_interface_->get_clock()->now() + rclcpp::Duration(wait_time));
 
   // This is wrong. It returns only the number of subscribers that have already
   // established their direct connections to this publisher
-  int num_existing_subscribers = pub.getNumSubscribers();
 
   // How often to check for subscribers
-  ros::Rate poll_rate(200);
-
-  if (pub.getTopic().empty())
+  rclcpp::Duration loop_duration(1.0 / 200.0);
+  if (!pub)
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
+    RCLCPP_ERROR(logger_, "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
   }
 
+  std::string topic_name = pub->get_topic_name();
+  int num_existing_subscribers = graph_interface_->count_subscribers(topic_name);
   if (blocking && num_existing_subscribers == 0)
   {
-    ROS_INFO_STREAM_NAMED(LOGNAME, "Topic '" << pub.getTopic() << "' waiting for subscriber...");
+    std::stringstream ss;
+    ss << "Topic '" << pub->get_topic_name() << "' waiting for subscriber...";
+    RCLCPP_INFO(logger_, ss.str().c_str());
   }
 
   // Wait for subscriber
-  while (num_existing_subscribers == 0)
+  while (num_existing_subscribers == 0 && rclcpp::ok())
   {
-    if (!blocking && node_->now() > max_time)  // Check if timed out
+    if (!blocking && clock_interface_->get_clock()->now() > max_time)  // Check if timed out
     {
-      ROS_WARN_STREAM_NAMED(LOGNAME, "Topic '" << pub.getTopic() << "' unable to connect to any subscribers within "
-                                               << wait_time
-                                               << " sec. It is possible initially published visual messages "
-                                                  "will be lost.");
+      std::stringstream ss;
+      ss << "Topic '" << pub->get_topic_name() << "' unable to connect to any subscribers within " << wait_time
+         << " sec. It is possible initially published visual messages "
+            "will be lost.";
+      RCLCPP_WARN(logger_, ss.str().c_str());
       return false;
     }
-    ros::spinOnce();
 
     // Sleep
-    poll_rate.sleep();
+    rclcpp::sleep_for(std::chrono::nanoseconds(loop_duration.nanoseconds()));
 
     // Check again
-    num_existing_subscribers = pub.getNumSubscribers();
+    num_existing_subscribers = graph_interface_->count_subscribers(topic_name);
+  }
 
-    if (!rclcpp::ok())
-    {
-      return false;
-    }
+  if (!rclcpp::ok())
+  {
+    return false;
   }
   pub_rviz_markers_connected_ = true;
 
@@ -353,7 +381,9 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
 
 void RvizVisualTools::setLifetime(double lifetime)
 {
-  marker_lifetime_ = ros::Duration(lifetime);
+  marker_lifetime_ = builtin_interfaces::msg::Duration();
+  marker_lifetime_.sec = static_cast<int32_t>(floor(lifetime));
+  marker_lifetime_.nanosec = static_cast<uint32_t>(std::round((lifetime - marker_lifetime_.sec) * 1e9));
 
   // Update cached markers
   arrow_marker_.lifetime = marker_lifetime_;
@@ -376,6 +406,7 @@ std_msgs::msg::ColorRGBA RvizVisualTools::getColor(colors color) const
 {
   std_msgs::msg::ColorRGBA result;
 
+  std::stringstream ss;
   switch (color)
   {
     case RED:
@@ -490,11 +521,22 @@ std_msgs::msg::ColorRGBA RvizVisualTools::getColor(colors color) const
       result = createRandColor();
       break;
     case DEFAULT:
-      ROS_WARN_STREAM_NAMED(LOGNAME, "The 'DEFAULT' color should probably not "
-                                     "be used with getColor(). Defaulting to "
-                                     "blue.");
+      ss << "The 'DEFAULT' color should probably not be used with getColor(). Defaulting to blue.";
+      RCLCPP_WARN(logger_, ss.str().c_str());
+      // BLUE:
+      result.r = 0.1;
+      result.g = 0.1;
+      result.b = 0.8;
+      result.a = alpha_;
+      break;
     case BLUE:
+      result.r = 0.1;
+      result.g = 0.1;
+      result.b = 0.8;
+      result.a = alpha_;
+      break;
     default:
+      // BLUE:
       result.r = 0.1;
       result.g = 0.1;
       result.b = 0.8;
@@ -593,12 +635,13 @@ std_msgs::msg::ColorRGBA RvizVisualTools::createRandColor() const
     result.r = fRand(0.0, 1.0);
     result.g = fRand(0.0, 1.0);
     result.b = fRand(0.0, 1.0);
-    // ROS_DEBUG_STREAM_NAMED(LOGNAME, "Looking for random color that is not too light, current value is "
-    //<< (result.r + result.g + result.b) << " attempt #" << attempts);
+    std::stringstream ss;
     attempts++;
     if (attempts > max_attempts)
     {
-      ROS_WARN_STREAM_NAMED(LOGNAME, "Unable to find appropriate random color after " << max_attempts << " attempts");
+      std::stringstream ss;
+      ss << "Unable to find appropriate random color after " << max_attempts << " attempts";
+      RCLCPP_WARN(logger_, ss.str().c_str());
       break;
     }
   } while (result.r + result.g + result.b < 1.5);  // 3 would be white
@@ -619,12 +662,16 @@ std_msgs::msg::ColorRGBA RvizVisualTools::getColorScale(double value) const
   // User warning
   if (value < 0)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Intensity value for color scale is below range [0,1], value: " << value);
+    std::stringstream ss;
+    ss << "Intensity value for color scale is below range [0,1], value: " << value;
+    RCLCPP_WARN(logger_, ss.str().c_str());
     value = 0;
   }
   else if (value > 1)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Intensity value for color scale is above range [0,1], value: " << value);
+    std::stringstream ss;
+    ss << "Intensity value for color scale is above range [0,1], value: " << value;
+    RCLCPP_WARN(logger_, ss.str().c_str());
     value = 1;
   }
 
@@ -701,7 +748,7 @@ geometry_msgs::msg::Vector3 RvizVisualTools::getScale(scales scale, double marke
       val = 0.5;
       break;
     default:
-      ROS_ERROR_STREAM_NAMED(LOGNAME, "Not implemented yet");
+      RCLCPP_ERROR(logger_, "Not implemented yet");
       break;
   }
 
@@ -790,16 +837,16 @@ Eigen::Isometry3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d&
   // Method 1 - TF - works
 
   // Convert vector to TF format
-  tf::Vector3 tf_right_axis_vector;
-  tf::vectorEigenToTF(right_axis_vector, tf_right_axis_vector);
+  tf2::Vector3 tf_right_axis_vector(right_axis_vector.x(), right_axis_vector.y(), right_axis_vector.z());
 
   // Create quaternion using 'Axis angle Constructor'
   //   axis: The axis which the rotation is around
   //   angle: The magnitude of the rotation around the angle (Radians)
-  tf::Quaternion tf_q(tf_right_axis_vector, angle_rotation);
+  tf2::Quaternion tf_q(tf_right_axis_vector, angle_rotation);
 
   // Convert back to Eigen
-  tf::quaternionTFToEigen(tf_q, q);
+  geometry_msgs::msg::Quaternion tf_q_msg = tf2::toMsg(tf_q);
+  tf2::fromMsg(tf_q_msg, q);
   //-------------------------------------------
 
   if (verbose)
@@ -867,11 +914,10 @@ bool RvizVisualTools::trigger()
 {
   if (!batch_publishing_enabled_)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Batch publishing triggered but it was not enabled (unnecessary function call)");
+    RCLCPP_WARN(logger_, "Batch publishing triggered but it was not enabled (unnecessary function call)");
   }
   if (markers_.markers.empty())
   {
-    // ROS_WARN_STREAM_NAMED(LOGNAME, "Batch publishing triggered but queue is empty (unnecessary function call)");
     return false;
   }
 
@@ -891,7 +937,7 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::msg::MarkerArray& marke
   // Check if connected to a subscriber
   if (!pub_rviz_markers_waited_ && !pub_rviz_markers_connected_)
   {
-    ROS_DEBUG_STREAM_NAMED(LOGNAME, "Waiting for subscribers before publishing markers...");
+    RCLCPP_DEBUG(logger_, "Waiting for subscribers before publishing markers...");
     waitForSubscriber(pub_rviz_markers_);
 
     // Only wait for the publisher once, after that just ignore the lack of connection
@@ -945,7 +991,7 @@ bool RvizVisualTools::publishMarkers(visualization_msgs::msg::MarkerArray& marke
     }
   }
   // Publish
-  pub_rviz_markers_.publish(markers);
+  pub_rviz_markers_->publish(markers);
   return true;
 }
 
@@ -956,7 +1002,7 @@ bool RvizVisualTools::publishCone(const Eigen::Isometry3d& pose, double angle, c
 
 bool RvizVisualTools::publishCone(const geometry_msgs::msg::Pose& pose, double angle, colors color, double scale)
 {
-  triangle_marker_.header.stamp = node_->now();
+  triangle_marker_.header.stamp = clock_interface_->get_clock()->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1026,7 +1072,7 @@ bool RvizVisualTools::publishXYPlane(const Eigen::Isometry3d& pose, colors color
 
 bool RvizVisualTools::publishXYPlane(const geometry_msgs::msg::Pose& pose, colors color, double scale)
 {
-  triangle_marker_.header.stamp = node_->now();
+  triangle_marker_.header.stamp = clock_interface_->get_clock()->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1072,7 +1118,7 @@ bool RvizVisualTools::publishXZPlane(const Eigen::Isometry3d& pose, colors color
 
 bool RvizVisualTools::publishXZPlane(const geometry_msgs::msg::Pose& pose, colors color, double scale)
 {
-  triangle_marker_.header.stamp = node_->now();
+  triangle_marker_.header.stamp = clock_interface_->get_clock()->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1118,7 +1164,7 @@ bool RvizVisualTools::publishYZPlane(const Eigen::Isometry3d& pose, colors color
 
 bool RvizVisualTools::publishYZPlane(const geometry_msgs::msg::Pose& pose, colors color, double scale)
 {
-  triangle_marker_.header.stamp = node_->now();
+  triangle_marker_.header.stamp = clock_interface_->get_clock()->now();
   triangle_marker_.id++;
 
   triangle_marker_.color = getColor(color);
@@ -1167,15 +1213,15 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, 
                                     std::size_t id)
 {
   geometry_msgs::msg::Pose pose_msg;
-  tf::pointEigenToMsg(point, pose_msg.position);
+  pose_msg.position = tf2::toMsg(point);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
 
 bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, double scale, const std::string& ns,
                                     std::size_t id)
 {
-  geometry_msgs::Pose pose_msg = getIdentityPose();
-  tf::pointEigenToMsg(point, pose_msg.position);
+  geometry_msgs::msg::Pose pose_msg = getIdentityPose();
+  pose_msg.position = tf2::toMsg(point);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
 
@@ -1187,14 +1233,14 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Point& point, colo
   return publishSphere(pose_msg, color, scale, ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, colors color, scales scale, const std::string& ns,
-                                    std::size_t id)
+bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, colors color, scales scale,
+                                    const std::string& ns, std::size_t id)
 {
   return publishSphere(pose, color, getScale(scale), ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, colors color, double scale, const std::string& ns,
-                                    std::size_t id)
+bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, colors color, double scale,
+                                    const std::string& ns, std::size_t id)
 {
   geometry_msgs::msg::Vector3 scale_msg;
   scale_msg.x = scale * global_scale_;
@@ -1203,8 +1249,8 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, colors
   return publishSphere(pose, color, scale_msg, ns, id);
 }
 
-bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, colors color, const geometry_msgs::msg::Vector3 scale,
-                                    const std::string& ns, std::size_t id)
+bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, colors color,
+                                    const geometry_msgs::msg::Vector3 scale, const std::string& ns, std::size_t id)
 {
   return publishSphere(pose, getColor(color), scale, ns, id);
 }
@@ -1218,8 +1264,8 @@ bool RvizVisualTools::publishSphere(const Eigen::Isometry3d& pose, const std_msg
 bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, const std_msgs::msg::ColorRGBA& color,
                                     const geometry_msgs::msg::Vector3 scale, const std::string& ns, std::size_t id)
 {
-  geometry_msgs::Pose pose_msg = getIdentityPose();
-  tf::pointEigenToMsg(point, pose_msg.position);
+  geometry_msgs::msg::Pose pose_msg = getIdentityPose();
+  pose_msg.position = tf2::toMsg(point);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
 
@@ -1227,7 +1273,7 @@ bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Pose& pose, const 
                                     const geometry_msgs::msg::Vector3 scale, const std::string& ns, std::size_t id)
 {
   // Set the frame ID and timestamp
-  sphere_marker_.header.stamp = node_->now();
+  sphere_marker_.header.stamp = clock_interface_->get_clock()->now();
 
   // Overwrite ID or increment?
   if (id == 0)
@@ -1285,7 +1331,8 @@ bool RvizVisualTools::publishXArrow(const geometry_msgs::msg::Pose& pose, colors
   return publishArrow(pose, color, scale, length);
 }
 
-bool RvizVisualTools::publishXArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale, double length)
+bool RvizVisualTools::publishXArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale,
+                                    double length)
 {
   return publishArrow(pose, color, scale, length);
 }
@@ -1302,7 +1349,8 @@ bool RvizVisualTools::publishYArrow(const geometry_msgs::msg::Pose& pose, colors
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
-bool RvizVisualTools::publishYArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale, double length)
+bool RvizVisualTools::publishYArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale,
+                                    double length)
 {
   Eigen::Isometry3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(M_PI / 2, Eigen::Vector3d::UnitZ());
   geometry_msgs::msg::PoseStamped new_pose = pose;
@@ -1323,7 +1371,8 @@ bool RvizVisualTools::publishZArrow(const geometry_msgs::msg::Pose& pose, colors
   return publishArrow(convertPose(arrow_pose), color, scale, length);
 }
 
-bool RvizVisualTools::publishZArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale, double length)
+bool RvizVisualTools::publishZArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale,
+                                    double length)
 {
   Eigen::Isometry3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   geometry_msgs::msg::PoseStamped new_pose = pose;
@@ -1331,8 +1380,8 @@ bool RvizVisualTools::publishZArrow(const geometry_msgs::msg::PoseStamped& pose,
   return publishArrow(new_pose, color, scale, length);
 }
 
-bool RvizVisualTools::publishZArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale, double length,
-                                    std::size_t id)
+bool RvizVisualTools::publishZArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale,
+                                    double length, std::size_t id)
 {
   Eigen::Isometry3d arrow_pose = convertPose(pose.pose) * Eigen::AngleAxisd(-M_PI / 2, Eigen::Vector3d::UnitY());
   geometry_msgs::msg::PoseStamped new_pose = pose;
@@ -1350,7 +1399,7 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::msg::Pose& pose, colors 
                                    std::size_t id)
 {
   // Set the frame ID and timestamp.
-  arrow_marker_.header.stamp = node_->now();
+  arrow_marker_.header.stamp = clock_interface_->get_clock()->now();
   arrow_marker_.header.frame_id = base_frame_;
 
   if (id == 0)
@@ -1380,8 +1429,8 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::msg::Pose& pose, colors 
   return publishMarker(arrow_marker_);
 }
 
-bool RvizVisualTools::publishArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale, double length,
-                                   std::size_t id)
+bool RvizVisualTools::publishArrow(const geometry_msgs::msg::PoseStamped& pose, colors color, scales scale,
+                                   double length, std::size_t id)
 {
   // Set the frame ID and timestamp.
   arrow_marker_.header = pose.header;
@@ -1416,11 +1465,11 @@ bool RvizVisualTools::publishArrow(const geometry_msgs::msg::PoseStamped& pose, 
   return true;
 }
 
-bool RvizVisualTools::publishArrow(const geometry_msgs::msg::Point& start, const geometry_msgs::msg::Point& end, colors color,
-                                   scales scale, std::size_t id)
+bool RvizVisualTools::publishArrow(const geometry_msgs::msg::Point& start, const geometry_msgs::msg::Point& end,
+                                   colors color, scales scale, std::size_t id)
 {
   // Set the frame ID and timestamp.
-  arrow_marker_.header.stamp = node_->now();
+  arrow_marker_.header.stamp = clock_interface_->get_clock()->now();
   arrow_marker_.header.frame_id = base_frame_;
 
   if (id == 0)
@@ -1481,7 +1530,8 @@ bool RvizVisualTools::publishAxis(const Eigen::Isometry3d& pose, scales scale, c
   return publishAxis(pose, radius * 10.0, radius, ns);
 }
 
-bool RvizVisualTools::publishAxis(const geometry_msgs::msg::Pose& pose, double length, double radius, const std::string& ns)
+bool RvizVisualTools::publishAxis(const geometry_msgs::msg::Pose& pose, double length, double radius,
+                                  const std::string& ns)
 {
   return publishAxis(convertPose(pose), length, radius, ns);
 }
@@ -1589,11 +1639,11 @@ bool RvizVisualTools::publishCylinder(const geometry_msgs::msg::Pose& pose, colo
   return publishCylinder(pose, getColor(color), height, radius, ns);
 }
 
-bool RvizVisualTools::publishCylinder(const geometry_msgs::msg::Pose& pose, const std_msgs::msg::ColorRGBA& color, double height,
-                                      double radius, const std::string& ns)
+bool RvizVisualTools::publishCylinder(const geometry_msgs::msg::Pose& pose, const std_msgs::msg::ColorRGBA& color,
+                                      double height, double radius, const std::string& ns)
 {
   // Set the timestamp
-  cylinder_marker_.header.stamp = node_->now();
+  cylinder_marker_.header.stamp = clock_interface_->get_clock()->now();
   cylinder_marker_.ns = ns;
   cylinder_marker_.id++;
 
@@ -1622,7 +1672,7 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::msg::Pose& pose, const st
                                   double scale, const std::string& ns, std::size_t id)
 {
   // Set the timestamp
-  mesh_marker_.header.stamp = node_->now();
+  mesh_marker_.header.stamp = clock_interface_->get_clock()->now();
 
   if (id == 0)
   {
@@ -1665,7 +1715,7 @@ bool RvizVisualTools::publishMesh(const Eigen::Isometry3d& pose, const shape_msg
 bool RvizVisualTools::publishMesh(const geometry_msgs::msg::Pose& pose, const shape_msgs::msg::Mesh& mesh, colors color,
                                   double scale, const std::string& ns, std::size_t id)
 {
-  triangle_marker_.header.stamp = node_->now();
+  triangle_marker_.header.stamp = clock_interface_->get_clock()->now();
 
   if (id == 0)
   {
@@ -1701,37 +1751,38 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::msg::Pose& pose, const sh
   return publishMarker(triangle_marker_);
 }
 
-bool RvizVisualTools::publishGraph(const graph_msgs::msg::GeometryGraph& graph, colors color, double radius)
-{
-  // Track which pairs of nodes we've already connected since graph is
-  // bi-directional
-  typedef std::pair<std::size_t, std::size_t> node_ids;
-  std::set<node_ids> added_edges;
-  std::pair<std::set<node_ids>::iterator, bool> return_value;
-  Eigen::Vector3d a, b;
-  for (std::size_t i = 0; i < graph.nodes.size(); ++i)
-  {
-    for (std::size_t j = 0; j < graph.edges[i].node_ids.size(); ++j)
-    {
-      // Check if we've already added this pair of nodes (edge)
-      return_value = added_edges.insert(node_ids(i, j));
-      if (!return_value.second)
-      {
-        // Element already existed in set, so don't add a new collision object
-      }
-      else
-      {
-        // Create a cylinder from two points
-        a = convertPoint(graph.nodes[i]);
-        b = convertPoint(graph.nodes[graph.edges[i].node_ids[j]]);
+// TODO(mlautman): port graph_msgs
+// bool RvizVisualTools::publishGraph(const graph_msgs::msg::GeometryGraph& graph, colors color, double radius)
+// {
+//   // Track which pairs of nodes we've already connected since graph is
+//   // bi-directional
+//   typedef std::pair<std::size_t, std::size_t> node_ids;
+//   std::set<node_ids> added_edges;
+//   std::pair<std::set<node_ids>::iterator, bool> return_value;
+//   Eigen::Vector3d a, b;
+//   for (std::size_t i = 0; i < graph.nodes.size(); ++i)
+//   {
+//     for (std::size_t j = 0; j < graph.edges[i].node_ids.size(); ++j)
+//     {
+//       // Check if we've already added this pair of nodes (edge)
+//       return_value = added_edges.insert(node_ids(i, j));
+//       if (!return_value.second)
+//       {
+//         // Element already existed in set, so don't add a new collision object
+//       }
+//       else
+//       {
+//         // Create a cylinder from two points
+//         a = convertPoint(graph.nodes[i]);
+//         b = convertPoint(graph.nodes[graph.edges[i].node_ids[j]]);
 
-        publishCylinder(a, b, color, radius);
-      }
-    }
-  }
+//         publishCylinder(a, b, color, radius);
+//       }
+//     }
+//   }
 
-  return true;
-}
+//   return true;
+// }
 
 bool RvizVisualTools::publishCuboid(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2, colors color)
 {
@@ -1742,7 +1793,7 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Point& point1, con
                                     colors color, const std::string& ns, std::size_t id)
 {
   // Set the timestamp
-  cuboid_marker_.header.stamp = node_->now();
+  cuboid_marker_.header.stamp = clock_interface_->get_clock()->now();
   cuboid_marker_.ns = ns;
 
   if (id == 0)
@@ -1795,7 +1846,7 @@ bool RvizVisualTools::publishCuboid(const Eigen::Isometry3d& pose, double depth,
 bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Pose& pose, double depth, double width, double height,
                                     colors color)
 {
-  cuboid_marker_.header.stamp = node_->now();
+  cuboid_marker_.header.stamp = clock_interface_->get_clock()->now();
 
   cuboid_marker_.id++;
   cuboid_marker_.color = getColor(color);
@@ -1870,8 +1921,8 @@ bool RvizVisualTools::publishLine(const Eigen::Vector3d& point1, const Eigen::Ve
   return publishLine(convertPoint(point1), convertPoint(point2), color, scale);
 }
 
-bool RvizVisualTools::publishLine(const geometry_msgs::msg::Point& point1, const geometry_msgs::msg::Point& point2, colors color,
-                                  scales scale)
+bool RvizVisualTools::publishLine(const geometry_msgs::msg::Point& point1, const geometry_msgs::msg::Point& point2,
+                                  colors color, scales scale)
 {
   return publishLine(point1, point2, getColor(color), scale);
 }
@@ -1886,7 +1937,7 @@ bool RvizVisualTools::publishLine(const geometry_msgs::msg::Point& point1, const
                                   const std_msgs::msg::ColorRGBA& color, const geometry_msgs::msg::Vector3& scale)
 {
   // Set the timestamp
-  line_strip_marker_.header.stamp = node_->now();
+  line_strip_marker_.header.stamp = clock_interface_->get_clock()->now();
 
   line_strip_marker_.id++;
   line_strip_marker_.color = color;
@@ -1929,10 +1980,11 @@ bool RvizVisualTools::publishLines(const EigenSTL::vector_Vector3d& aPoints, con
 
 bool RvizVisualTools::publishLines(const std::vector<geometry_msgs::msg::Point>& aPoints,
                                    const std::vector<geometry_msgs::msg::Point>& bPoints,
-                                   const std::vector<std_msgs::msg::ColorRGBA>& colors, const geometry_msgs::msg::Vector3& scale)
+                                   const std::vector<std_msgs::msg::ColorRGBA>& colors,
+                                   const geometry_msgs::msg::Vector3& scale)
 {
   // Setup marker
-  line_list_marker_.header.stamp = ros::Time();
+  line_list_marker_.header.stamp = builtin_interfaces::msg::Time();
   line_list_marker_.ns = "Line Array";
 
   // Provide a new id every call to this function
@@ -1968,11 +2020,13 @@ bool RvizVisualTools::publishLineStrip(const std::vector<geometry_msgs::msg::Poi
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " points passed in.";
+    RCLCPP_WARN(logger_, ss.str().c_str());
     return true;
   }
 
-  line_strip_marker_.header.stamp = ros::Time();
+  line_strip_marker_.header.stamp = builtin_interfaces::msg::Time();
   line_strip_marker_.ns = ns;
 
   // Provide a new id every call to this function
@@ -2034,7 +2088,9 @@ bool RvizVisualTools::publishPath(const std::vector<geometry_msgs::msg::Point>& 
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " points passed in.";
+    RCLCPP_WARN(logger_, ss.str().c_str());
     return false;
   }
 
@@ -2052,7 +2108,9 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, colors 
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " points passed in.";
+    RCLCPP_WARN(logger_, ss.str().c_str());
     return false;
   }
 
@@ -2070,7 +2128,9 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Isometry3d& path, color
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " points passed in.";
+    RCLCPP_WARN(logger_, ss.str().c_str());
     return false;
   }
 
@@ -2088,14 +2148,17 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " points passed in.";
+    RCLCPP_WARN(logger_, ss.str().c_str());
     return false;
   }
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                             << ".");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " different from " << colors.size() << ".";
+    RCLCPP_ERROR(logger_, ss.str().c_str());
     return false;
   }
 
@@ -2108,19 +2171,23 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
   return true;
 }
 
-bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const std::vector<std_msgs::msg::ColorRGBA>& colors,
-                                  double radius, const std::string& ns)
+bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path,
+                                  const std::vector<std_msgs::msg::ColorRGBA>& colors, double radius,
+                                  const std::string& ns)
 {
   if (path.size() < 2)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " points passed in.");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " points passed in.";
+    RCLCPP_WARN(logger_, ss.str().c_str());
     return false;
   }
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                             << ".");
+    std::stringstream ss;
+    ss << "Skipping path because " << path.size() << " different from " << colors.size() << ".";
+    RCLCPP_ERROR(logger_, ss.str().c_str());
     return false;
   }
 
@@ -2139,8 +2206,8 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::msg::Polygon& polygon,
   std::vector<geometry_msgs::msg::Point> points;
   geometry_msgs::msg::Point temp;
   geometry_msgs::msg::Point first;  // remember first point because we will connect
-                               // first and last points
-                               // for last line
+                                    // first and last points
+                                    // for last line
   for (std::size_t i = 0; i < polygon.points.size(); ++i)
   {
     temp.x = polygon.points[i].x;
@@ -2190,7 +2257,7 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, cons
   p8 = pose * p8;
 
   // Setup marker
-  line_list_marker_.header.stamp = ros::Time();
+  line_list_marker_.header.stamp = builtin_interfaces::msg::Time();
   line_list_marker_.ns = ns;
 
   if (id == 0)
@@ -2299,7 +2366,7 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, d
   p4 = pose * p4;
 
   // Setup marker
-  line_list_marker_.header.stamp = ros::Time();
+  line_list_marker_.header.stamp = builtin_interfaces::msg::Time();
   line_list_marker_.ns = "Wireframe Rectangle";
 
   std_msgs::msg::ColorRGBA this_color = getColor(color);
@@ -2352,7 +2419,7 @@ bool RvizVisualTools::publishWireframeRectangle(const Eigen::Isometry3d& pose, c
   p4 = pose * p4_in;
 
   // Setup marker
-  line_list_marker_.header.stamp = ros::Time();
+  line_list_marker_.header.stamp = builtin_interfaces::msg::Time();
   line_list_marker_.ns = "Wireframe Rectangle";
 
   // Provide a new id every call to this function
@@ -2436,7 +2503,7 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::msg::Point
 bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::msg::Point>& points, colors color,
                                      const geometry_msgs::msg::Vector3& scale, const std::string& ns)
 {
-  spheres_marker_.header.stamp = ros::Time();
+  spheres_marker_.header.stamp = builtin_interfaces::msg::Time();
   spheres_marker_.ns = ns;
 
   // Provide a new id every call to this function
@@ -2482,7 +2549,7 @@ bool RvizVisualTools::publishSpheres(const std::vector<geometry_msgs::msg::Point
                                      const std::vector<std_msgs::msg::ColorRGBA>& colors,
                                      const geometry_msgs::msg::Vector3& scale, const std::string& ns)
 {
-  spheres_marker_.header.stamp = ros::Time();
+  spheres_marker_.header.stamp = builtin_interfaces::msg::Time();
   spheres_marker_.ns = ns;
 
   // Provide a new id every call to this function
@@ -2508,8 +2575,8 @@ bool RvizVisualTools::publishText(const Eigen::Isometry3d& pose, const std::stri
   return publishText(convertPose(pose), text, color, scale, static_id);
 }
 
-bool RvizVisualTools::publishText(const geometry_msgs::msg::Pose& pose, const std::string& text, colors color, scales scale,
-                                  bool static_id)
+bool RvizVisualTools::publishText(const geometry_msgs::msg::Pose& pose, const std::string& text, colors color,
+                                  scales scale, bool static_id)
 {
   return publishText(pose, text, color, getScale(scale), static_id);
 }
@@ -2528,7 +2595,7 @@ bool RvizVisualTools::publishText(const geometry_msgs::msg::Pose& pose, const st
     text_marker_.id++;
   }
 
-  text_marker_.header.stamp = node_->now();
+  text_marker_.header.stamp = clock_interface_->get_clock()->now();
   text_marker_.header.frame_id = base_frame_;
   text_marker_.text = text;
   text_marker_.pose = pose;
@@ -2550,26 +2617,25 @@ bool RvizVisualTools::publishText(const geometry_msgs::msg::Pose& pose, const st
 
 geometry_msgs::msg::Pose RvizVisualTools::convertPose(const Eigen::Isometry3d& pose)
 {
-  geometry_msgs::msg::Pose pose_msg;
-  tf::poseEigenToMsg(pose, pose_msg);
+  geometry_msgs::msg::Pose pose_msg = tf2::toMsg(pose);
   return pose_msg;
 }
 
 void RvizVisualTools::convertPoseSafe(const Eigen::Isometry3d& pose, geometry_msgs::msg::Pose& pose_msg)
 {
-  tf::poseEigenToMsg(pose, pose_msg);
+  pose_msg = tf2::toMsg(pose);
 }
 
 Eigen::Isometry3d RvizVisualTools::convertPose(const geometry_msgs::msg::Pose& pose)
 {
   Eigen::Isometry3d shared_pose_eigen;
-  tf::poseMsgToEigen(pose, shared_pose_eigen);
+  tf2::fromMsg(pose, shared_pose_eigen);
   return shared_pose_eigen;
 }
 
 void RvizVisualTools::convertPoseSafe(const geometry_msgs::msg::Pose& pose_msg, Eigen::Isometry3d& pose)
 {
-  tf::poseMsgToEigen(pose_msg, pose);
+  tf2::fromMsg(pose_msg, pose);
 }
 
 Eigen::Isometry3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::msg::Point32& point)
@@ -2603,8 +2669,7 @@ Eigen::Isometry3d RvizVisualTools::convertPointToPose(const Eigen::Vector3d& poi
 
 geometry_msgs::msg::Point RvizVisualTools::convertPoseToPoint(const Eigen::Isometry3d& pose)
 {
-  geometry_msgs::msg::Pose pose_msg;
-  tf::poseEigenToMsg(pose, pose_msg);
+  geometry_msgs::msg::Pose pose_msg = tf2::toMsg(pose);
   return pose_msg.position;
 }
 
@@ -2676,7 +2741,10 @@ Eigen::Isometry3d RvizVisualTools::convertFromXYZRPY(double tx, double ty, doubl
       break;
 
     default:
-      ROS_ERROR_STREAM("Invalid euler convention entry " << convention);
+      std::stringstream ss;
+      ss << "Invalid euler convention entry " << convention;
+      rclcpp::Node tmp_node("rviz_visual_tools");
+      RCLCPP_ERROR(tmp_node.get_logger(), ss.str().c_str());
       break;
   }
 
@@ -2687,7 +2755,10 @@ Eigen::Isometry3d RvizVisualTools::convertFromXYZRPY(const std::vector<double>& 
 {
   if (transform6.size() != 6)
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "Incorrect number of variables passed for 6-size transform");
+    rclcpp::Node tmp_node("rviz_visual_tools");
+    std::stringstream ss;
+    ss << "Incorrect number of variables passed for 6-size transform";
+    RCLCPP_ERROR(tmp_node.get_logger(), ss.str().c_str());
     throw;
   }
 
@@ -2742,25 +2813,21 @@ void RvizVisualTools::generateRandomPose(Eigen::Isometry3d& pose, RandomPoseBoun
   // 0 <= azimuth   <= 2 * pi
   if (pose_bounds.elevation_min_ < 0)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "min elevation bound < 0, setting equal to 0");
     pose_bounds.elevation_min_ = 0;
   }
 
   if (pose_bounds.elevation_max_ > M_PI)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "max elevation bound > pi, setting equal to pi ");
     pose_bounds.elevation_max_ = M_PI;
   }
 
   if (pose_bounds.azimuth_min_ < 0)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "min azimuth bound < 0, setting equal to 0");
     pose_bounds.azimuth_min_ = 0;
   }
 
   if (pose_bounds.azimuth_max_ > 2 * M_PI)
   {
-    ROS_WARN_STREAM_NAMED(LOGNAME, "max azimuth bound > 2 pi, setting equal to 2 pi ");
     pose_bounds.azimuth_max_ = 2 * M_PI;
   }
 
@@ -2885,8 +2952,7 @@ void RvizVisualTools::loadRemoteControl()
   // Load remote
   if (!remote_control_)
   {
-    remote_control_ = std::make_shared<RemoteControl>(node_);
-    ros::spinOnce();
+    remote_control_ = std::make_shared<RemoteControl>(topics_interface_, logging_interface_);
   }
 }
 
