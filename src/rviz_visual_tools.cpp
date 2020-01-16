@@ -39,7 +39,7 @@
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 
 // Conversions
-#include <eigen_conversions/eigen_msg.h>
+#include <tf2/convert.h>
 #include <tf_conversions/tf_eigen.h>
 
 // C++

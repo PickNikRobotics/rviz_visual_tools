@@ -37,6 +37,7 @@ find_package(Eigen3 REQUIRED)
 
 find_package(Boost REQUIRED thread system)
 find_package(PkgConfig REQUIRED)
+find_package(tf2 REQUIRED)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
@@ -99,7 +100,7 @@ ament_target_dependencies(${PROJECT_NAME}_remote_control
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
   src/${PROJECT_NAME}.cpp
-  src/tf_visual_tools.cpp
+  # src/tf_visual_tools.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_remote_control
@@ -107,42 +108,90 @@ target_link_libraries(${PROJECT_NAME}
 )
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
+  visualization_msgs
+  tf2
 )
 
 # Library
-add_library(${PROJECT_NAME}_imarker_simple
-  src/imarker_simple.cpp
-)
-target_link_libraries(${PROJECT_NAME}_imarker_simple
-  ${PROJECT_NAME}
-  ${Boost_LIBRARIES}
-)
-ament_target_dependencies(${PROJECT_NAME}_imarker_simple
-  rclcpp
-)
+# add_library(${PROJECT_NAME}_imarker_simple
+#   src/imarker_simple.cpp
+# )
+# target_link_libraries(${PROJECT_NAME}_imarker_simple
+#   ${PROJECT_NAME}
+#   ${Boost_LIBRARIES}
+# )
+# ament_target_dependencies(${PROJECT_NAME}_imarker_simple
+#   rclcpp
+# )
 
 # Demo executable
-add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
-target_link_libraries(${PROJECT_NAME}_demo
-  ${PROJECT_NAME}
-)
-set_target_properties(${PROJECT_NAME}_demo
-  PROPERTIES
-  OUTPUT_NAME
-  demo PREFIX ""
-)
+# add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
+# target_link_libraries(${PROJECT_NAME}_demo
+#   ${PROJECT_NAME}
+# )
+# set_target_properties(${PROJECT_NAME}_demo
+#   PROPERTIES
+#   OUTPUT_NAME
+#   demo PREFIX ""
+# )
 
 # Demo executable
-add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
-target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
-  ${PROJECT_NAME}
-  ${PROJECT_NAME}_imarker_simple
+# add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
+# target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
+#   ${PROJECT_NAME}
+#   ${PROJECT_NAME}_imarker_simple
+# )
+# set_target_properties(${PROJECT_NAME}_imarker_simple_demo
+#   PROPERTIES
+#   OUTPUT_NAME
+#   imarker_simple_demo PREFIX ""
+# )
+
+#############
+## Install ##
+#############
+
+# ament_export_libraries(${PROJECT_NAME})
+# ament_export_libraries(${PROJECT_NAME}_gui)
+ament_export_libraries(${PROJECT_NAME}_remote_control)
+# ament_export_libraries(${PROJECT_NAME}_imarker_simple)
+
+# Install libraries
+install(
+  TARGETS
+    ${PROJECT_NAME}
+    # ${PROJECT_NAME}_gui
+    # ${PROJECT_NAME}_imarker_simple
+    ${PROJECT_NAME}_remote_control
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
 )
-set_target_properties(${PROJECT_NAME}_imarker_simple_demo
-  PROPERTIES
-  OUTPUT_NAME
-  imarker_simple_demo PREFIX ""
+
+# Install executables
+install(
+  TARGETS
+    # ${PROJECT_NAME}_demo
+    # ${PROJECT_NAME}_imarker_simple_demo
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
+
+# Install shared resources
+install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY resources DESTINATION share/${PROJECT_NAME})
+
+# Install xml plugin config
+# install(FILES
+#   plugin_description.xml
+#   DESTINATION share/${PROJECT_NAME}
+# )
+
+# Install header files
+install(
+  DIRECTORY include/
+  DESTINATION include)
 
 ##########
 ## TEST ##
@@ -157,62 +206,13 @@ if (BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(${PROJECT_NAME}_rvt_test tests/rvt_test.cpp)
   ament_target_dependencies(${PROJECT_NAME}_rvt_test
-    "rclcpp"
+    rclcpp
   )
   target_link_libraries(${PROJECT_NAME}_rvt_test
     ${PROJECT_NAME}
   )
-
 endif()
 
-## Test for correct C++ source code
-# roslint_cpp()
-
-#############
-## Install ##
-#############
-
-ament_export_libraries(${PROJECT_NAME})
-# ament_export_libraries(${PROJECT_NAME}_gui)
-ament_export_libraries(${PROJECT_NAME}_remote_control)
-ament_export_libraries(${PROJECT_NAME}_imarker_simple)
-
-# Install libraries
-install(
-  TARGETS
-    ${PROJECT_NAME}
-    # ${PROJECT_NAME}_gui
-    ${PROJECT_NAME}_imarker_simple
-    ${PROJECT_NAME}_remote_control
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-
-# Install executables
-install(
-  TARGETS
-    ${PROJECT_NAME}_demo
-    ${PROJECT_NAME}_imarker_simple_demo
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION lib/${PROJECT_NAME}
-)
-
-# Install shared resources
-install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY resources DESTINATION share/${PROJECT_NAME})
-
-# Install xml plugin config
-install(FILES
-  plugin_description.xml
-  DESTINATION share/${PROJECT_NAME}
-)
-
-# Install header files
-install(
-  DIRECTORY include/
-  DESTINATION include)
 
 ament_export_include_directories(include)
 ament_export_dependencies(

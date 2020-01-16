@@ -39,7 +39,7 @@
 #include <rviz_visual_tools/tf_visual_tools.hpp>
 
 // TF
-#include <eigen_conversions/msg/eigen_msg.h>
+#include <tf2/convert.h>
 
 // C++
 #include <string>
@@ -62,7 +62,7 @@ bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const s
   // Create transform msg
   geometry_msgs::msg::TransformStamped tf2_msg;
   tf2_msg.header.stamp = ros::Time::now();
-  tf::transformEigenToMsg(transform, tf2_msg.transform);
+  tf2_msg.transform = tf2::toMsg(transform);
 
   // Prevent TF_DENORMALIZED_QUATERNION errors in TF2 from happening.
   double quat_norm;
