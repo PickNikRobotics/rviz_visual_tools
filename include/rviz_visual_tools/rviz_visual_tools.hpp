@@ -49,8 +49,8 @@
 #include <eigen_stl_containers/eigen_stl_vector_container.h>
 
 // Rviz
-#include <visualization_msgs/msg/Marker.hpp>
-#include <visualization_msgs/msg/MarkerArray.hpp>
+#include <visualization_msgs/msg/marker.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 // Boost
 #include <boost/shared_ptr.hpp>
