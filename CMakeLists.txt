@@ -93,11 +93,11 @@ include_directories(
 # )
 
 # Remote control library
-# add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
-# target_link_libraries(${PROJECT_NAME}_remote_control)
-# ament_target_dependencies(${PROJECT_NAME}_remote_control
-#   rclcpp
-# )
+add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
+target_link_libraries(${PROJECT_NAME}_remote_control)
+ament_target_dependencies(${PROJECT_NAME}_remote_control
+  rclcpp
+)
 
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
@@ -106,7 +106,6 @@ add_library(${PROJECT_NAME} SHARED
   # src/tf_visual_tools.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-  # ${PROJECT_NAME}_remote_control
   ${Boost_LIBRARIES}
 )
 ament_target_dependencies(${PROJECT_NAME}
@@ -158,7 +157,7 @@ ament_target_dependencies(${PROJECT_NAME}
 
 ament_export_libraries(${PROJECT_NAME})
 # ament_export_libraries(${PROJECT_NAME}_gui)
-# ament_export_libraries(${PROJECT_NAME}_remote_control)
+ament_export_libraries(${PROJECT_NAME}_remote_control)
 # ament_export_libraries(${PROJECT_NAME}_imarker_simple)
 
 # Install libraries
@@ -167,7 +166,7 @@ install(
     ${PROJECT_NAME}
     # ${PROJECT_NAME}_gui
     # ${PROJECT_NAME}_imarker_simple
-    # ${PROJECT_NAME}_remote_control
+    ${PROJECT_NAME}_remote_control
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
