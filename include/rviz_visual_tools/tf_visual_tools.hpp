@@ -80,14 +80,14 @@ public:
    */
   void clearAllTransforms();
 
+
+private:
   /**
    * \brief At a certain frequency update the tf transforms that we are tracking
    *        This is called internally by a clock, you should not need to use this
-   *        TODO: make private in next release?
    */
   void publishAllTransforms(const ros::TimerEvent& e);
 
-private:
   // A shared node handle
   ros::NodeHandle nh_;
 
