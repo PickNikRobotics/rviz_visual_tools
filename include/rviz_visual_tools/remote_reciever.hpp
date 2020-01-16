@@ -46,9 +46,12 @@ namespace rviz_visual_tools
 class RemoteReciever
 {
 public:
-  RemoteReciever()
+  RemoteReciever(rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface)
   {
-    joy_publisher_ = nh_.advertise<sensor_msgs::msg::Joy>("/rviz_visual_tools_gui", 1);
+    joy_publisher_ = rclcpp::create_publisher<sensor_msgs::msg::Joy>(
+      topics_interface,
+      "/rviz_visual_tools_gui",
+      rclcpp::QoS(100));
   }
 
   void publishNext()
@@ -91,10 +94,7 @@ public:
 
 protected:
   // The ROS publishers
-  ros::Publisher joy_publisher_;
-
-  // The ROS node handle.
-  ros::NodeHandle nh_;
+  rclcpp::Publisher joy_publisher_;
 };
 
 }  // end namespace rviz_visual_tools
