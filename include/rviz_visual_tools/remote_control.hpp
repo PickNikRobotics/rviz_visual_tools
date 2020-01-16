@@ -57,7 +57,8 @@ public:
   /**
    * \brief Constructor
    */
-  explicit RemoteControl(const rclcpp::Node::SharedPtr& nh);
+  explicit RemoteControl(const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+                         const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
 
   /**
    * \brief Callback from ROS topic
@@ -103,7 +104,8 @@ public:
   /** \brief Return true if debug interface is waiting for user input */
   bool isWaiting()
   {
-    return is_waiting_;
+    // if next_step_ready_ is nullptr then we are not currently waiting
+    return next_step_ready_ != nullptr;
   }
 
   void setDisplayWaitingState(DisplayWaitingState displayWaitingState)
@@ -112,8 +114,8 @@ public:
   }
 
 private:
-  // A shared node handle
-  rclcpp::Node::SharedPtr nh_;
+  // Node Interfaces
+  rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
   rclcpp::Logger logger_;
 
   // Short name for this class
@@ -122,9 +124,7 @@ private:
   // Input
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr rviz_dashboard_sub_;
 
-  // Debug interface
-  bool is_waiting_ = false;
-  bool next_step_ready_ = false;
+  std::shared_ptr<std::promise<bool>> next_step_ready_;
   bool autonomous_ = false;
   bool full_autonomous_ = false;
   bool stop_ = false;

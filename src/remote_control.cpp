@@ -52,14 +52,22 @@ using namespace std::chrono_literals;
 /**
  * \brief Constructor
  */
-RemoteControl::RemoteControl(const rclcpp::Node::SharedPtr& nh) : nh_(nh), logger_(nh_->get_logger().get_child("remote_control"))
+RemoteControl::RemoteControl(
+    const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+    const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
+  : topics_interface_(topics_interface)
+  , logger_(logging_interface->get_logger().get_child("remote_control"))
+  , next_step_ready_(nullptr)
 {
-  std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
-
   // Subscribe to Rviz Dashboard
+  std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
   const std::size_t button_queue_size = 10;
-  rviz_dashboard_sub_ = nh_->create_subscription<sensor_msgs::msg::Joy>(rviz_dashboard_topic, button_queue_size,
-                                                        std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
+  const rclcpp::QoS update_sub_qos(button_queue_size);
+  rviz_dashboard_sub_ = rclcpp::create_subscription<sensor_msgs::msg::Joy>(
+    topics_interface_,
+    rviz_dashboard_topic,
+    update_sub_qos,
+    std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
 
   RCLCPP_INFO(logger_, "RemoteControl Ready.");
 }
@@ -92,9 +100,9 @@ bool RemoteControl::setReadyForNextStep()
 {
   stop_ = false;
 
-  if (is_waiting_)
+  if (next_step_ready_)
   {
-    next_step_ready_ = true;
+    next_step_ready_->set_value(true);
   }
   return true;
 }
@@ -102,14 +110,18 @@ bool RemoteControl::setReadyForNextStep()
 void RemoteControl::setAutonomous(bool autonomous)
 {
   autonomous_ = autonomous;
+  if (next_step_ready_)
+  {
+    next_step_ready_->set_value(true);
+  }
   stop_ = false;
 }
 
 void RemoteControl::setFullAutonomous(bool autonomous)
 {
   full_autonomous_ = autonomous;
-  autonomous_ = autonomous;
-  stop_ = false;
+  if (full_autonomous_)
+    setAutonomous(full_autonomous_);
 }
 
 void RemoteControl::setStop(bool stop)
@@ -140,7 +152,7 @@ bool RemoteControl::getFullAutonomous()
 bool RemoteControl::waitForNextStep(const std::string& caption)
 {
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !autonomous_ && rclcpp::ok()))
+  if (next_step_ready_ || autonomous_ || !rclcpp::ok())
   {
     return true;
   }
@@ -154,20 +166,29 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
     displayWaitingState_(true);
   }
 
-  is_waiting_ = true;
+  next_step_ready_ = std::make_shared<std::promise<bool>>();
   // Wait until next step is ready
-  while (!next_step_ready_ && !autonomous_ && rclcpp::ok())
+  std::future<bool> future_next_step_ready = next_step_ready_->get_future();
+  std::future_status status;
+  while (!autonomous_ && rclcpp::ok() && future_next_step_ready.valid())
   {
-    rclcpp::sleep_for(250ms);
-    rclcpp::spin_some(nh_);
+    status = future_next_step_ready.wait_for(std::chrono::milliseconds(250));
+    if (status == std::future_status::ready)
+    {
+      break;
+    }
+  }
+  if (!future_next_step_ready.valid())
+  {
+    RCLCPP_ERROR(logger_, "Future became invalid");
+    return false;
   }
   if (!rclcpp::ok())
   {
     exit(0);
   }
+  next_step_ready_.reset();
 
-  next_step_ready_ = false;
-  is_waiting_ = false;
   std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
 
   if (displayWaitingState_)
@@ -180,7 +201,7 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
 bool RemoteControl::waitForNextFullStep(const std::string& caption)
 {
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !full_autonomous_ && rclcpp::ok()))
+  if (next_step_ready_ || full_autonomous_ || !rclcpp::ok())
   {
     return true;
   }
@@ -194,20 +215,29 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
     displayWaitingState_(true);
   }
 
-  is_waiting_ = true;
+  next_step_ready_ = std::make_shared<std::promise<bool>>();
   // Wait until next step is ready
-  while (!next_step_ready_ && !full_autonomous_ && rclcpp::ok())
+  std::future<bool> future_next_step_ready = next_step_ready_->get_future();
+  std::future_status status;
+  while (!full_autonomous_ && rclcpp::ok() && future_next_step_ready.valid())
   {
-    rclcpp::sleep_for(250ms);
-    rclcpp::spin_some(nh_);
+    status = future_next_step_ready.wait_for(std::chrono::milliseconds(250));
+    if (status == std::future_status::ready)
+    {
+      break;
+    }
+  }
+  if (!future_next_step_ready.valid())
+  {
+    RCLCPP_ERROR(logger_, "Future became invalid");
+    return false;
   }
   if (!rclcpp::ok())
   {
     exit(0);
   }
+  next_step_ready_.reset();
 
-  next_step_ready_ = false;
-  is_waiting_ = false;
   std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
 
   if (displayWaitingState_)
