@@ -158,7 +158,7 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
   {
     std::stringstream ss;
     ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_,ss.str().c_str());
+    RCLCPP_ERROR(logger_, ss.str().c_str());
   }
 
   if (displayWaitingState_)
@@ -196,7 +196,7 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
   {
     std::stringstream ss;
     ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_,ss.str().c_str());
+    RCLCPP_ERROR(logger_, ss.str().c_str());
   }
 
   if (displayWaitingState_)
@@ -218,7 +218,7 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
   {
     std::stringstream ss;
     ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_,ss.str().c_str());
+    RCLCPP_ERROR(logger_, ss.str().c_str());
   }
 
   if (displayWaitingState_)
@@ -255,7 +255,7 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
   {
     std::stringstream ss;
     ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_,ss.str().c_str());
+    RCLCPP_ERROR(logger_, ss.str().c_str());
   }
 
   if (displayWaitingState_)
