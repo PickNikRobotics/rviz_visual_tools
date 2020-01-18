@@ -37,6 +37,8 @@
 */
 
 #include <rviz_visual_tools/tf_visual_tools.hpp>
+#include <rclcpp/create_timer.hpp>
+#include <tf2_eigen/tf2_eigen.h>
 
 // TF
 #include <tf2/convert.h>
@@ -46,23 +48,36 @@
 
 namespace rviz_visual_tools
 {
-TFVisualTools::TFVisualTools(double loop_hz)
+template <typename NodePtr>
+TFVisualTools::TFVisualTools(NodePtr node, double loop_hz)
+  : node_base_interface_(node->get_node_base_interface())
+  , timers_interface_(node->get_node_timers_interface())
+  , clock_interface_(node->get_node_clock_interface())
+  , logger_(node->get_node_logging_interface()->get_logger().get_child("tf_visual_tools"))
 {
-  ros::Duration update_freq = ros::Duration(1.0 / loop_hz);
-  non_realtime_loop_ = nh_.createTimer(update_freq, &TFVisualTools::publishAllTransforms, this);
+  rclcpp::Duration update_period = rclcpp::Duration::from_seconds(1.0 / loop_hz);
 
-  ROS_INFO_STREAM_NAMED("tf_visual_tools", "TFVisualTools Ready.");
+  // non_realtime_loop_ = nh_.createTimer(update_freq, &TFVisualTools::publishAllTransforms, this);
+  non_realtime_loop_ =
+      rclcpp::create_timer(node_base_interface_.get(), timers_interface_.get(), clock_interface_->get_clock(),
+                           update_period, std::bind(&TFVisualTools::publishAllTransforms, this));
+  // , std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
+  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node);
+
+  RCLCPP_INFO(logger_, "TFVisualTools Ready.");
 }
 
 bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame,
                                      const std::string& to_frame)
 {
-  ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transform from " << from_frame << " to " << to_frame);
+  std::stringstream ss;
+  ss << "Publishing transform from " << from_frame << " to " << to_frame;
+  RCLCPP_DEBUG(logger_, ss.str().c_str());
 
   // Create transform msg
-  geometry_msgs::msg::TransformStamped tf2_msg;
-  tf2_msg.header.stamp = ros::Time::now();
-  tf2_msg.transform = tf2::toMsg(transform);
+  geometry_msgs::msg::TransformStamped tf2_msg = tf2::eigenToTransform(transform);
+  tf2_msg.header.stamp = clock_interface_->get_clock()->now();
 
   // Prevent TF_DENORMALIZED_QUATERNION errors in TF2 from happening.
   double quat_norm;
@@ -85,7 +100,6 @@ bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const s
   {
     if (transform.child_frame_id == to_frame && transform.header.frame_id == from_frame)
     {
-      // ROS_WARN_STREAM_NAMED("tf_visual_tools", "This transform has already been added, updating");
       transform.transform = tf2_msg.transform;
       return true;
     }
@@ -101,17 +115,17 @@ void TFVisualTools::clearAllTransforms()
   transforms_.clear();
 }
 
-void TFVisualTools::publishAllTransforms(const ros::TimerEvent& /*e*/)
+void TFVisualTools::publishAllTransforms()
 {
-  ROS_DEBUG_STREAM_NAMED("tf_visual_tools", "Publishing transforms");
+  RCLCPP_DEBUG(logger_, "Publishing transforms");
 
   // Update timestamps
   for (auto& transform : transforms_)
   {
-    transform.header.stamp = ros::Time::now();
+    transform.header.stamp = clock_interface_->get_clock()->now();
   }
   // Publish
-  tf_pub_.sendTransform(transforms_);
+  tf_broadcaster_->sendTransform(transforms_);
 }
 
 }  // namespace rviz_visual_tools

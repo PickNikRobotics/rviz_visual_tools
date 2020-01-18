@@ -106,7 +106,7 @@ ament_target_dependencies(${PROJECT_NAME}_remote_control
 add_library(${PROJECT_NAME} SHARED
   src/rviz_visual_tools.cpp
   src/remote_control.cpp
-  # src/tf_visual_tools.cpp
+  src/tf_visual_tools.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
