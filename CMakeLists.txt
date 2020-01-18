@@ -42,6 +42,8 @@ find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
+find_package(interactive_markers REQUIRED)
+
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 # pkg_check_modules(OGRE_OV OGRE)
@@ -122,16 +124,17 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 # Library
-# add_library(${PROJECT_NAME}_imarker_simple
-#   src/imarker_simple.cpp
-# )
-# target_link_libraries(${PROJECT_NAME}_imarker_simple
-#   ${PROJECT_NAME}
-#   ${Boost_LIBRARIES}
-# )
-# ament_target_dependencies(${PROJECT_NAME}_imarker_simple
-#   rclcpp
-# )
+add_library(${PROJECT_NAME}_imarker_simple
+  src/imarker_simple.cpp
+  src/rviz_visual_tools.cpp
+  src/remote_control.cpp
+)
+target_link_libraries(${PROJECT_NAME}_imarker_simple
+  ${Boost_LIBRARIES}
+)
+ament_target_dependencies(${PROJECT_NAME}_imarker_simple
+  rclcpp
+)
 
 # Demo executable
 add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
@@ -163,7 +166,7 @@ ament_target_dependencies(${PROJECT_NAME}_demo
 ament_export_libraries(${PROJECT_NAME})
 ament_export_libraries(${PROJECT_NAME}_remote_control)
 # ament_export_libraries(${PROJECT_NAME}_gui)
-# ament_export_libraries(${PROJECT_NAME}_imarker_simple)
+ament_export_libraries(${PROJECT_NAME}_imarker_simple)
 
 # Install libraries
 install(
@@ -171,7 +174,7 @@ install(
     ${PROJECT_NAME}
     ${PROJECT_NAME}_remote_control
     # ${PROJECT_NAME}_gui
-    # ${PROJECT_NAME}_imarker_simple
+    ${PROJECT_NAME}_imarker_simple
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin

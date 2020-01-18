@@ -25,6 +25,8 @@
   <depend>tf2</depend>
   <depend>tf2_eigen</depend>
   <depend>eigen_stl_containers</depend>
+  <depend>interactive_markers</depend>
+
   <depend>tf2_geometry_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>

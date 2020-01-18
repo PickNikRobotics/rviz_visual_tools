@@ -45,12 +45,26 @@ namespace rviz_visual_tools
 using visualization_msgs::msg::InteractiveMarkerFeedback;
 using visualization_msgs::msg::InteractiveMarkerControl;
 
-IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::msg::Pose& initial_pose)
-  : nh_("~"), latest_pose_(initial_pose)
+IMarkerSimple::IMarkerSimple(const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
+                             const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
+                             const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
+                             const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+                             const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
+                             const std::string& name, double scale, const geometry_msgs::msg::Pose& initial_pose)
+  : node_base_interface_(node_base_interface)
+  , clock_interface_(clock_interface)
+  , logging_interface_(logging_interface)
+  , topics_interface_(topics_interface)
+  , services_interface_(services_interface)
+  , logger_(logging_interface_->get_logger().get_child("imarker_simple"))
+  , latest_pose_(initial_pose)
 {
   // Create Marker Server
-  const std::string imarker_topic = nh_.getNamespace() + "/" + name;
-  imarker_server_.reset(new interactive_markers::InteractiveMarkerServer(imarker_topic, "", false));
+  std::string name_space = node_base_interface_->get_namespace();
+  const std::string imarker_topic = name_space + "/" + name;
+  imarker_server_ = std::make_shared<interactive_markers::InteractiveMarkerServer>(
+      imarker_topic, node_base_interface_, clock_interface_, logging_interface_, topics_interface_,
+      services_interface_);
 
   // ros::Duration(2.0).sleep();
 
@@ -102,7 +116,9 @@ void IMarkerSimple::sendUpdatedIMarkerPose()
 
 void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale)
 {
-  ROS_INFO_STREAM_NAMED(name_, "Making 6dof interactive marker named " << name_);
+  std::stringstream ss;
+  ss << "Making 6dof interactive marker named " << name_;
+  RCLCPP_INFO(logger_, ss.str().c_str());
 
   int_marker_.header.frame_id = "world";
   int_marker_.pose = pose;
@@ -147,7 +163,9 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double 
   int_marker_.controls.push_back(control);
 
   imarker_server_->insert(int_marker_);
-  imarker_server_->setCallback(int_marker_.name, boost::bind(&IMarkerSimple::iMarkerCallback, this, _1));
+  imarker_server_->setCallback(int_marker_.name,
+                               std::bind(&IMarkerSimple::iMarkerCallback, this, std::placeholders::_1));
+
   // menu_handler_.apply(*imarker_server_, int_marker_.name);
 }
 
