@@ -2928,27 +2928,30 @@ void RvizVisualTools::printTransformFull(const Eigen::Isometry3d& transform)
             << transform.rotation() << "\n";
 }
 
-void RvizVisualTools::prompt(const std::string& msg)
-{
-  getRemoteControl()->waitForNextStep(msg);
-}
+// TODO(mlautman): Uncomment once https://github.com/ros2/rclcpp/issues/520 is addressed.
+//                 Currently there is no way to spin without an executor so the remote
+//                 control is not usable until this feature is complete.
+// void RvizVisualTools::prompt(const std::string& msg)
+// {
+//   getRemoteControl()->waitForNextStep(msg);
+// }
 
-RemoteControlPtr& RvizVisualTools::getRemoteControl()
-{
-  if (!remote_control_)
-  {
-    loadRemoteControl();
-  }
-  return remote_control_;
-}
+// RemoteControlPtr& RvizVisualTools::getRemoteControl()
+// {
+//   if (!remote_control_)
+//   {
+//     loadRemoteControl();
+//   }
+//   return remote_control_;
+// }
 
-void RvizVisualTools::loadRemoteControl()
-{
-  // Load remote
-  if (!remote_control_)
-  {
-    remote_control_ = std::make_shared<RemoteControl>(topics_interface_, logging_interface_);
-  }
-}
+// void RvizVisualTools::loadRemoteControl()
+// {
+//   // Load remote
+//   if (!remote_control_)
+//   {
+//     remote_control_ = std::make_shared<RemoteControl>(topics_interface_, logging_interface_);
+//   }
+// }
 
 }  // namespace rviz_visual_tools

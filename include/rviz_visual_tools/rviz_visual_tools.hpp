@@ -1094,15 +1094,22 @@ public:
     psychedelic_mode_ = psychedelic_mode;
   }
 
+  // TODO(mlautman): Uncomment once https://github.com/ros2/rclcpp/issues/520 is addressed.
+  //                 Currently there is no way to spin without an executor so the remote
+  //                 control is not usable until this feature is complete.
   /** \brief Wait for user feedback i.e. through a button or joystick */
-  void prompt(const std::string& msg);
+  // void prompt(const std::string& msg);
 
 protected:
-  /** \brief Ability to load remote control on the fly */
-  RemoteControlPtr& getRemoteControl();
 
-  /** \brief Pre-load remote control */
-  void loadRemoteControl();
+  // TODO(mlautman): Uncomment once https://github.com/ros2/rclcpp/issues/520 is addressed.
+  //                 Currently there is no way to spin without an executor so the remote
+  //                 control is not usable until this feature is complete.
+  // /** \brief Ability to load remote control on the fly */
+  // RemoteControlPtr& getRemoteControl();
+  //
+  // /** \brief Pre-load remote control */
+  // void loadRemoteControl();
 
   // Node Interfaces
   rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;

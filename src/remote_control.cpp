@@ -155,8 +155,11 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
   }
 
   // Show message
-  std::cout << std::endl;
-  std::cout << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET << std::flush;
+  {
+    std::stringstream ss;
+    ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
+    RCLCPP_ERROR(logger_,ss.str().c_str());
+  }
 
   if (displayWaitingState_)
   {
@@ -170,6 +173,9 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
   while (!autonomous_ && rclcpp::ok() && future_next_step_ready.valid())
   {
     status = future_next_step_ready.wait_for(std::chrono::milliseconds(250));
+    // TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520  there is no way
+    //                 to spin without an executor so the remote control is not yet usable
+    //                 Once this feature is ready it should be implemented here
     if (status == std::future_status::ready)
     {
       break;
@@ -186,7 +192,12 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
   }
   next_step_ready_.reset();
 
-  std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
+  // Show message
+  {
+    std::stringstream ss;
+    ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
+    RCLCPP_ERROR(logger_,ss.str().c_str());
+  }
 
   if (displayWaitingState_)
   {
@@ -204,8 +215,11 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
   }
 
   // Show message
-  std::cout << std::endl;
-  std::cout << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET << std::flush;
+  {
+    std::stringstream ss;
+    ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
+    RCLCPP_ERROR(logger_,ss.str().c_str());
+  }
 
   if (displayWaitingState_)
   {
@@ -219,6 +233,9 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
   while (!full_autonomous_ && rclcpp::ok() && future_next_step_ready.valid())
   {
     status = future_next_step_ready.wait_for(std::chrono::milliseconds(250));
+    // TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520  there is no way
+    //                 to spin without an executor so the remote control is not yet usable
+    //                 Once this feature is ready it should be implemented here
     if (status == std::future_status::ready)
     {
       break;
@@ -235,7 +252,11 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
   }
   next_step_ready_.reset();
 
-  std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
+  {
+    std::stringstream ss;
+    ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
+    RCLCPP_ERROR(logger_,ss.str().c_str());
+  }
 
   if (displayWaitingState_)
   {
