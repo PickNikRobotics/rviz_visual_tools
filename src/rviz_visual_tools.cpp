@@ -1222,7 +1222,7 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, 
 bool RvizVisualTools::publishSphere(const geometry_msgs::msg::Point& point, colors color, scales scale,
                                     const std::string& ns, std::size_t id)
 {
-  geometry_msgs::Pose pose_msg = getIdentityPose();
+  geometry_msgs::msg::Pose pose_msg = getIdentityPose();
   pose_msg.position = point;
   return publishSphere(pose_msg, color, scale, ns, id);
 }
@@ -1802,7 +1802,7 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Point& point1, con
   cuboid_marker_.color = getColor(color);
 
   // Calculate center pose
-  geometry_msgs::Pose pose = getIdentityPose();
+  geometry_msgs::msg::Pose pose = getIdentityPose();
   pose.position.x = (point1.x - point2.x) / 2.0 + point2.x;
   pose.position.y = (point1.y - point2.y) / 2.0 + point2.y;
   pose.position.z = (point1.z - point2.z) / 2.0 + point2.z;
@@ -2844,7 +2844,7 @@ void RvizVisualTools::generateRandomPose(Eigen::Isometry3d& pose, RandomPoseBoun
   pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quaternion;
 }
 
-geometry_msgs::Pose RvizVisualTools::getIdentityPose()
+geometry_msgs::msg::Pose RvizVisualTools::getIdentityPose()
 {
   geometry_msgs::msg::Pose pose;
   // Position
