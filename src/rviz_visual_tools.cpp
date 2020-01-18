@@ -117,7 +117,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   arrow_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(arrow_marker_.pose);
+  arrow_marker_.pose = getIdentityPose();
 
   // Load cuboid ----------------------------------------------------
 
@@ -132,7 +132,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   cuboid_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(cuboid_marker_.pose);
+  cuboid_marker_.pose = getIdentityPose();
 
   // Load line ----------------------------------------------------
 
@@ -147,7 +147,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   line_strip_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(line_strip_marker_.pose);
+  line_strip_marker_.pose = getIdentityPose();
 
   // Load path ----------------------------------------------------
 
@@ -162,7 +162,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   line_list_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(line_list_marker_.pose);
+  line_list_marker_.pose = getIdentityPose();
 
   // Load sphers ----------------------------------------------------
 
@@ -177,7 +177,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   spheres_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(spheres_marker_.pose);
+  spheres_marker_.pose = getIdentityPose();
 
   // Load Block ----------------------------------------------------
   block_marker_.header.frame_id = base_frame_;
@@ -191,7 +191,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   block_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(block_marker_.pose);
+  block_marker_.pose = getIdentityPose();
 
   // Load Cylinder ----------------------------------------------------
   cylinder_marker_.header.frame_id = base_frame_;
@@ -202,7 +202,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   cylinder_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(cylinder_marker_.pose);
+  cylinder_marker_.pose = getIdentityPose();
 
   // Load Mesh ----------------------------------------------------
   mesh_marker_.header.frame_id = base_frame_;
@@ -214,7 +214,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   mesh_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(mesh_marker_.pose);
+  mesh_marker_.pose = getIdentityPose();
 
   // Load Sphere -------------------------------------------------
   sphere_marker_.header.frame_id = base_frame_;
@@ -240,7 +240,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   sphere_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(sphere_marker_.pose);
+  sphere_marker_.pose = getIdentityPose();
 
   // Load Text ----------------------------------------------------
   // Set the namespace and id for this marker.  This serves to create a unique
@@ -253,7 +253,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   text_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(text_marker_.pose);
+  text_marker_.pose = getIdentityPose();
 
   // Load Triangle List -------------------------------------------
   // Set the namespace and id for this marker. This serves to create a unique ID
@@ -266,7 +266,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Lifetime
   triangle_marker_.lifetime = marker_lifetime_;
   // Constants
-  generateEmptyPose(triangle_marker_.pose);
+  triangle_marker_.pose = getIdentityPose();
 
   return true;
 }
@@ -1151,7 +1151,7 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, 
 bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, double scale, const std::string& ns,
                                     std::size_t id)
 {
-  geometry_msgs::Pose pose_msg;
+  geometry_msgs::Pose pose_msg = getIdentityPose();
   tf::pointEigenToMsg(point, pose_msg.position);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
@@ -1159,7 +1159,7 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, 
 bool RvizVisualTools::publishSphere(const geometry_msgs::Point& point, colors color, scales scale,
                                     const std::string& ns, std::size_t id)
 {
-  geometry_msgs::Pose pose_msg;
+  geometry_msgs::Pose pose_msg = getIdentityPose();
   pose_msg.position = point;
   return publishSphere(pose_msg, color, scale, ns, id);
 }
@@ -1195,7 +1195,7 @@ bool RvizVisualTools::publishSphere(const Eigen::Isometry3d& pose, const std_msg
 bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, const std_msgs::ColorRGBA& color,
                                     const geometry_msgs::Vector3 scale, const std::string& ns, std::size_t id)
 {
-  geometry_msgs::Pose pose_msg;
+  geometry_msgs::Pose pose_msg = getIdentityPose();
   tf::pointEigenToMsg(point, pose_msg.position);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
@@ -1734,7 +1734,7 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::Point& point1, const ge
   cuboid_marker_.color = getColor(color);
 
   // Calculate center pose
-  geometry_msgs::Pose pose;
+  geometry_msgs::Pose pose = getIdentityPose();
   pose.position.x = (point1.x - point2.x) / 2.0 + point2.x;
   pose.position.y = (point1.y - point2.y) / 2.0 + point2.y;
   pose.position.z = (point1.z - point2.z) / 2.0 + point2.z;
@@ -2758,20 +2758,6 @@ void RvizVisualTools::generateRandomPose(Eigen::Isometry3d& pose, RandomPoseBoun
 
   Eigen::Quaterniond quaternion(Eigen::AngleAxis<double>(static_cast<double>(angle), axis));
   pose = Eigen::Translation3d(pose.translation().x(), pose.translation().y(), pose.translation().z()) * quaternion;
-}
-
-void RvizVisualTools::generateEmptyPose(geometry_msgs::Pose& pose)
-{
-  // Position
-  pose.position.x = 0;
-  pose.position.y = 0;
-  pose.position.z = 0;
-
-  // Orientation on place
-  pose.orientation.x = 0;
-  pose.orientation.y = 0;
-  pose.orientation.z = 0;
-  pose.orientation.w = 1;
 }
 
 geometry_msgs::Pose RvizVisualTools::getIdentityPose()
