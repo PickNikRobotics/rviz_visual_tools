@@ -1101,7 +1101,6 @@ public:
   // void prompt(const std::string& msg);
 
 protected:
-
   // TODO(mlautman): Uncomment once https://github.com/ros2/rclcpp/issues/520 is addressed.
   //                 Currently there is no way to spin without an executor so the remote
   //                 control is not usable until this feature is complete.
@@ -1115,7 +1114,6 @@ protected:
   rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
   rclcpp::node_interfaces::NodeGraphInterface::SharedPtr graph_interface_;
   rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface_;
-  rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logging_interface_;
   rclcpp::Logger logger_;
 
   // Short name for this class

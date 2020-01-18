@@ -71,7 +71,6 @@ RvizVisualTools::RvizVisualTools(const std::string& base_frame, const std::strin
   : topics_interface_(topics_interface)
   , graph_interface_(graph_interface)
   , clock_interface_(clock_interface)
-  , logging_interface_(logging_interface)
   , logger_(logging_interface->get_logger().get_child("rviz_visual_tools"))
   , marker_topic_(marker_topic)
   , base_frame_(base_frame)
