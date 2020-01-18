@@ -9,18 +9,16 @@ cache: ccache
 
 env:
   global:
-    - DOCKER_IMAGE=moveit/moveit:master-source
+    - ROS_DISTRO=eloquent
+    - ROS_REPO=ros
     - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-function"
     - WARNINGS_OK=false
   matrix:
     - TEST="clang-format" # TODO(davetcoleman): enable catkin_lint in the future
-    - TEST=clang-tidy-fix
-    - DOCKER_IMAGE=moveit/moveit:melodic-source
-    - DOCKER_IMAGE=moveit/moveit:master-source
-    - DOCKER_IMAGE=moveit/moveit:kinetic-ci  TEST_BLACKLIST=moveit_ros_perception
+    - ROS_DISTRO=eloquent
 
 before_script:
-  - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
+  - git clone -q -b ros2 --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
 
 script:
   - .moveit_ci/travis.sh
