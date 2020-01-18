@@ -34,25 +34,25 @@ Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, Universi
 ### Ubuntu Debian
 
 ```
-sudo apt-get install ros-melodic-rviz-visual-tools
+sudo apt-get install ros-${ROS_DISTRO}-rviz-visual-tools
 ```
 
 ### Build from Source
 
 Clone this repository into a catkin workspace, then use the rosdep install tool to automatically download its dependencies. Depending on your current version of ROS, use:
 ```
-rosdep install --from-paths src --ignore-src --rosdistro melodic
+rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO}
 ```
 
 ## Quick Start Demo
 
 To see random shapes generated in Rviz, first launch Rviz:
 
-    roslaunch rviz_visual_tools demo_rviz.launch
+    ros2 launch rviz_visual_tools demo_rviz.launch.py
 
 Then start demo:
 
-    roslaunch rviz_visual_tools demo.launch
+    ros2 launch rviz_visual_tools demo.launch.py
 
 ## Code API
 
@@ -66,7 +66,7 @@ We'll assume you will be using these helper functions within a class. Almost all
 
 Add to your includes:
 ```
-#include <rviz_visual_tools/rviz_visual_tools.h>
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
 ```
 
 Add to your class's member variables:

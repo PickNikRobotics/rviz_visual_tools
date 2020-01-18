@@ -188,8 +188,8 @@ install(
 )
 
 # Install shared resources
-# install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
-# install(DIRECTORY resources DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
+# install(DIRECTORY meshes    DESTINATION share/${PROJECT_NAME})
 
 # Install xml plugin config
 # install(FILES
