@@ -63,13 +63,6 @@ const std::array<colors, 14> RvizVisualTools::ALL_RAND_COLORS = { RED,        GR
                                                                   WHITE,      ORANGE, YELLOW, BROWN,  PINK,
                                                                   LIME_GREEN, PURPLE, CYAN,   MAGENTA };
 
-template <class NodePtr>
-RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, NodePtr node)
-  : RvizVisualTools(base_frame, marker_topic, node->get_node_topics_interface(), node->get_node_graph_interface(),
-                    node->get_node_clock_interface(), node->get_node_logging_interface())
-{
-}
-
 RvizVisualTools::RvizVisualTools(const std::string& base_frame, const std::string& marker_topic,
                                  const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
                                  const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
@@ -748,7 +741,9 @@ geometry_msgs::msg::Vector3 RvizVisualTools::getScale(scales scale, double marke
       val = 0.5;
       break;
     default:
-      RCLCPP_ERROR(logger_, "Not implemented yet");
+      std::stringstream ss;
+      ss << "Scale: " << scale << "\tNot implemented yet";
+      RCLCPP_ERROR(logger_, ss.str().c_str());
       break;
   }
 

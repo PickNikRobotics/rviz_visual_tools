@@ -58,7 +58,7 @@
 // Messages
 #include <shape_msgs/msg/mesh.hpp>
 #include <std_msgs/msg/color_rgba.hpp>
-// #include <graph_msgs/msg/GeometryGraph.hpp>
+// #include <graph_msgs/msg/geometry_graph.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/polygon.hpp>
@@ -194,16 +194,20 @@ public:
    * \brief Constructor
    * \param base_frame - common base for all visualization markers, usually "/world" or "/odom"
    * \param marker_topic - rostopic to publish markers to - your Rviz display should match
-   * \param node - ros node handle
+   * \param node - a pointer to a ros node
    */
-  template <class NodePtr>
-  explicit RvizVisualTools(std::string base_frame, std::string marker_topic, NodePtr node);
+  template <typename NodePtr>
+  RvizVisualTools(const std::string& base_frame, const std::string& marker_topic, NodePtr node)
+    : RvizVisualTools(base_frame, marker_topic, node->get_node_topics_interface(), node->get_node_graph_interface(),
+                      node->get_node_clock_interface(), node->get_node_logging_interface())
+  {
+  }
 
-  explicit RvizVisualTools(const std::string& base_frame, const std::string& marker_topic,
-                           const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
-                           const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
-                           const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
-                           const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
+  RvizVisualTools(const std::string& base_frame, const std::string& marker_topic,
+                  const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+                  const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
+                  const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
+                  const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
 
   /**
    * \brief Deconstructor
@@ -256,7 +260,7 @@ public:
    * \return true on successful connection
    */
   template <class PublisherPtr>
-  bool waitForSubscriber(const PublisherPtr& pub, double wait_time = 0.5, bool blocking = false);
+  bool waitForSubscriber(const PublisherPtr& pub, double wait_time = 5, bool blocking = false);
 
   /**
    * \brief Change the transparency of all markers published

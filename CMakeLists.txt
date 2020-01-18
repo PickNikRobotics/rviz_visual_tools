@@ -22,6 +22,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(rviz_ogre_vendor REQUIRED)
 
 find_package(sensor_msgs REQUIRED)
@@ -101,19 +102,23 @@ ament_target_dependencies(${PROJECT_NAME}_remote_control
 
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
-  src/${PROJECT_NAME}.cpp
+  src/rviz_visual_tools.cpp
   src/remote_control.cpp
   # src/tf_visual_tools.cpp
 )
+
 target_link_libraries(${PROJECT_NAME}
   ${Boost_LIBRARIES}
 )
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
+  rclcpp_components
   visualization_msgs
   tf2
   tf2_eigen
   tf2_geometry_msgs
+  sensor_msgs
+  std_msgs
 )
 
 # Library
@@ -129,15 +134,15 @@ ament_target_dependencies(${PROJECT_NAME}
 # )
 
 # Demo executable
-# add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
-# target_link_libraries(${PROJECT_NAME}_demo
-#   ${PROJECT_NAME}
-# )
-# set_target_properties(${PROJECT_NAME}_demo
-#   PROPERTIES
-#   OUTPUT_NAME
-#   demo PREFIX ""
-# )
+add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
+target_link_libraries(${PROJECT_NAME}_demo
+  ${PROJECT_NAME}
+)
+ament_target_dependencies(${PROJECT_NAME}_demo
+  rclcpp
+  geometry_msgs
+  std_msgs
+)
 
 # Demo executable
 # add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
@@ -156,17 +161,17 @@ ament_target_dependencies(${PROJECT_NAME}
 #############
 
 ament_export_libraries(${PROJECT_NAME})
-# ament_export_libraries(${PROJECT_NAME}_gui)
 ament_export_libraries(${PROJECT_NAME}_remote_control)
+# ament_export_libraries(${PROJECT_NAME}_gui)
 # ament_export_libraries(${PROJECT_NAME}_imarker_simple)
 
 # Install libraries
 install(
   TARGETS
     ${PROJECT_NAME}
+    ${PROJECT_NAME}_remote_control
     # ${PROJECT_NAME}_gui
     # ${PROJECT_NAME}_imarker_simple
-    ${PROJECT_NAME}_remote_control
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
@@ -175,7 +180,7 @@ install(
 # Install executables
 install(
   TARGETS
-    # ${PROJECT_NAME}_demo
+    ${PROJECT_NAME}_demo
     # ${PROJECT_NAME}_imarker_simple_demo
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
@@ -183,8 +188,8 @@ install(
 )
 
 # Install shared resources
-install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY resources DESTINATION share/${PROJECT_NAME})
+# install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
+# install(DIRECTORY resources DESTINATION share/${PROJECT_NAME})
 
 # Install xml plugin config
 # install(FILES

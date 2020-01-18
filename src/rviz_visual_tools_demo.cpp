@@ -38,7 +38,7 @@
 */
 
 // ROS
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
@@ -47,32 +47,32 @@
 #include <string>
 #include <vector>
 
+// Msgs
+#include <geometry_msgs/msg/vector3.hpp>
+
+using namespace std::chrono_literals;
+
 namespace rvt = rviz_visual_tools;
 
 namespace rviz_visual_tools
 {
-class RvizVisualToolsDemo
+class RvizVisualToolsDemo : public rclcpp::Node
 {
 private:
-  // A shared node handle
-  ros::NodeHandle nh_;
-
   // For visualizing things in rviz
   rvt::RvizVisualToolsPtr visual_tools_;
-
-  std::string name_;
 
 public:
   /**
    * \brief Constructor
    */
-  RvizVisualToolsDemo() : name_("rviz_demo")
+  explicit RvizVisualToolsDemo(const rclcpp::NodeOptions& options = rclcpp::NodeOptions()) : Node("rviz_demo", options)
   {
-    visual_tools_.reset(new rvt::RvizVisualTools("world", "/rviz_visual_tools"));
+    visual_tools_.reset(new rvt::RvizVisualTools("world", "/rviz_visual_tools", dynamic_cast<rclcpp::Node*>(this)));
     visual_tools_->loadMarkerPub();  // create publisher before waiting
 
-    ROS_INFO("Sleeping 5 seconds before running demo");
-    ros::Duration(5.0).sleep();
+    RCLCPP_INFO(get_logger(), "Sleeping 2 seconds before running demo");
+    rclcpp::sleep_for(2s);
 
     // Clear messages
     visual_tools_->deleteAllMarkers();
@@ -99,12 +99,12 @@ public:
     double step;
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying range of colors red->green");
+    RCLCPP_INFO(get_logger(), "Displaying range of colors red->green");
     step = 0.02;
     for (double i = 0; i <= 1.0; i += 0.02)
     {
-      geometry_msgs::Vector3 scale = visual_tools_->getScale(MEDIUM);
-      std_msgs::ColorRGBA color = visual_tools_->getColorScale(i);
+      geometry_msgs::msg::Vector3 scale = visual_tools_->getScale(MEDIUM);
+      std_msgs::msg::ColorRGBA color = visual_tools_->getColorScale(i);
       visual_tools_->publishSphere(visual_tools_->convertPose(pose1), color, scale, "Sphere");
       if (i == 0.0)
       {
@@ -115,7 +115,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Coordinate Axis");
+    RCLCPP_INFO(get_logger(), "Displaying Coordinate Axis");
     pose1.translation().x() = 0;
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -136,7 +136,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Arrows");
+    RCLCPP_INFO(get_logger(), "Displaying Arrows");
     pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -155,7 +155,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Rectangular Cuboid");
+    RCLCPP_INFO(get_logger(), "Displaying Rectangular Cuboid");
     double cuboid_max_size = 0.075;
     double cuboid_min_size = 0.01;
     pose1 = Eigen::Isometry3d::Identity();
@@ -182,7 +182,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Lines");
+    RCLCPP_INFO(get_logger(), "Displaying Lines");
     double line_max_size = 0.075;
     double line_min_size = 0.01;
     pose1 = Eigen::Isometry3d::Identity();
@@ -209,7 +209,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Cylinder");
+    RCLCPP_INFO(get_logger(), "Displaying Cylinder");
     pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -228,7 +228,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Axis Cone");
+    RCLCPP_INFO(get_logger(), "Displaying Axis Cone");
     pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -251,7 +251,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Wireframe Cuboid");
+    RCLCPP_INFO(get_logger(), "Displaying Wireframe Cuboid");
     pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -274,7 +274,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Sized Wireframe Cuboid");
+    RCLCPP_INFO(get_logger(), "Displaying Sized Wireframe Cuboid");
     pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -294,7 +294,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Planes");
+    RCLCPP_INFO(get_logger(), "Displaying Planes");
     pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -315,17 +315,18 @@ public:
     }
     visual_tools_->trigger();
 
-    // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Graph");
+    /* TODO(mlautman): port graph_msgs
+    // // --------------------------------------------------------------------
+    // RCLCPP_INFO(get_logger(), "Displaying Graph");
     pose1 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
     pose1.translation().y() = y;
     step = 0.1;
-    graph_msgs::GeometryGraph graph;
+    graph_msgs::msg::GeometryGraph graph;
     for (double i = 0; i <= 1.0; i += step)
     {
       graph.nodes.push_back(visual_tools_->convertPose(pose1).position);
-      graph_msgs::Edges edges;
+      graph_msgs::msg::Edges edges;
       if (i > 0)
       {
         edges.node_ids.push_back(0);
@@ -342,6 +343,7 @@ public:
     }
     visual_tools_->publishGraph(graph, rvt::ORANGE, 0.005);
     visual_tools_->trigger();
+    */
 
     // --------------------------------------------------------------------
     // TODO(davetcoleman): publishMesh
@@ -350,7 +352,7 @@ public:
     // TODO(davetcoleman): publishPolygon
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Labeled Coordinate Axis");
+    RCLCPP_INFO(get_logger(), "Displaying Labeled Coordinate Axis");
     pose1.translation().x() = 0;
     y += space_between_rows;
     pose1.translation().y() = y;
@@ -372,7 +374,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying Multi-Color Path");
+    RCLCPP_INFO(get_logger(), "Displaying Multi-Color Path");
     pose1 = Eigen::Isometry3d::Identity();
     pose2 = Eigen::Isometry3d::Identity();
     y += space_between_rows;
@@ -407,7 +409,7 @@ public:
     visual_tools_->trigger();
 
     // --------------------------------------------------------------------
-    ROS_INFO_STREAM_NAMED(name_, "Displaying ABCD Plane");
+    RCLCPP_INFO(get_logger(), "Displaying ABCD Plane");
     double x_width = 0.15;
     double y_width = 0.05;
 
@@ -570,7 +572,7 @@ public:
   /** \brief Compare every size range */
   void testSizes(double& x_location)
   {
-    ROS_INFO_STREAM_NAMED(name_, "Testing sizes of marker scale");
+    RCLCPP_INFO(get_logger(), "Testing sizes of marker scale");
 
     // Create pose
     Eigen::Isometry3d pose1 = Eigen::Isometry3d::Identity();
@@ -586,6 +588,11 @@ public:
     // Sphere
     for (scales scale = XXXXSMALL; scale <= XXXXLARGE; /*inline*/)
     {
+      pose1.translation().y() += visual_tools_->getScale(scale).x + 0.1;
+
+      // Text location
+      pose2.translation().y() = pose1.translation().y();
+      pose2.translation().x() = x_location + visual_tools_->getScale(scale).x * 1.3;
       if (scale == MEDIUM)
       {
         visual_tools_->publishSphere(pose1, GREEN, scale);
@@ -597,11 +604,6 @@ public:
       visual_tools_->publishText(pose2, "Size " + visual_tools_->scaleToString(scale), WHITE, scale, false);
 
       scale = static_cast<scales>(static_cast<int>(scale) + 1);
-      pose1.translation().y() += visual_tools_->getScale(scale).x + 0.1;
-
-      // Text location
-      pose2.translation().y() = pose1.translation().y();
-      pose2.translation().x() = x_location + visual_tools_->getScale(scale).x * 1.3;
     }
 
     // Display test
@@ -614,24 +616,40 @@ public:
 
 }  // namespace rviz_visual_tools
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
-  ros::init(argc, argv, "visual_tools_demo");
-  ROS_INFO_STREAM("Visual Tools Demo");
+  // Force flush of the stdout buffer.
+  setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
+  // Initialize any global resources needed by the middleware and the client library.
+  // This will also parse command line arguments one day (as of Beta 1 they are not used).
+  // You must call this before using any other part of the ROS system.
+  // This should be called once per process.
+  auto args = rclcpp::init_and_remove_ros_arguments(argc, argv);
+
+  // Create an executor that will be responsible for execution of callbacks for a set of nodes.
+  // With this version, all callbacks will be called from within this thread (the main one).
+  rclcpp::executors::SingleThreadedExecutor exec;
+  rclcpp::NodeOptions options;
+  options.arguments(args);
+
+  RCLCPP_INFO(rclcpp::get_logger("rviz_demo"), "Visual Tools Demo");
+
+  // Create demo node
+  auto demo = std::make_shared<rviz_visual_tools::RvizVisualToolsDemo>(options);
   // Allow the action server to recieve and send ros messages
-  ros::AsyncSpinner spinner(1);
-  spinner.start();
-
-  rviz_visual_tools::RvizVisualToolsDemo demo;
+  exec.add_node(demo);
+  exec.spin_some();
 
   double x_location = 0;
-  demo.testRows(x_location);
-  demo.testSize(x_location, rviz_visual_tools::MEDIUM);
-  demo.testSize(x_location, rviz_visual_tools::LARGE);
-  demo.testSizes(x_location);
+  demo->testRows(x_location);
+  demo->testSize(x_location, rviz_visual_tools::MEDIUM);
+  demo->testSize(x_location, rviz_visual_tools::LARGE);
+  demo->testSizes(x_location);
 
-  ROS_INFO_STREAM("Shutting down.");
+  exec.remove_node(demo);
+
+  RCLCPP_INFO(rclcpp::get_logger("rviz_demo"), "Shutting down.");
 
   return 0;
 }
