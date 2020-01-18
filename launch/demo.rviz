@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /InteractiveMarkers1
       Splitter Ratio: 0.5323529243469238
     Tree Height: 614
   - Class: rviz_common/Selection
@@ -45,13 +46,34 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        Arrow: true
+        Axis: true
+        Cuboid: true
+        Cylinder: true
+        Line: true
+        Line Array: true
+        Path: true
+        Sphere: true
+        Spheres: true
+        Text: true
+        Triangle: true
+        Wireframe Cuboid: true
+        label of axis: true
       Topic:
         Depth: 200
         Durability Policy: System Default
         History Policy: Keep All
         Reliability Policy: System Default
         Value: /rviz_visual_tools
+      Value: true
+    - Class: rviz_default_plugins/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Interactive Markers Namespace: /imarker
+      Name: InteractiveMarkers
+      Show Axes: true
+      Show Descriptions: true
+      Show Visual Aids: true
       Value: true
   Enabled: true
   Global Options:

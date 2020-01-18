@@ -36,23 +36,22 @@
    Desc:   Demonstrate how to use the imarker simple interface
 */
 
-#ifndef RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_DEMO_H
-#define RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_DEMO_H
-
 // ROS
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 #include <rviz_visual_tools/imarker_simple.hpp>
 
+using namespace std::chrono_literals;
+
 namespace rviz_visual_tools
 {
-class IMarkerSimpleDemo
+class IMarkerSimpleDemo : public rclcpp::Node
 {
 public:
   /** \brief Constructor */
-  IMarkerSimpleDemo() : nh_("~")
+  IMarkerSimpleDemo(const rclcpp::NodeOptions& options = rclcpp::NodeOptions()) : Node("imarker_simple_demo", options)
   {
-    visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("world", "/rviz_visual_tools"));
+    visual_tools_.reset(new RvizVisualTools("world", "/rviz_visual_tools", dynamic_cast<rclcpp::Node*>(this)));
     visual_tools_->loadMarkerPub();
 
     // Create a random initial pose
@@ -61,12 +60,12 @@ public:
 
     // Create a 6DOF interactive marker
     static const double SCALE = 0.2;
-    imarker_simple_.reset(new rviz_visual_tools::IMarkerSimple("imarker", SCALE, init_pose));
+    imarker_simple_.reset(new IMarkerSimple(dynamic_cast<rclcpp::Node*>(this), "imarker", SCALE, init_pose));
 
     // Add callback to this class
     imarker_simple_->setIMarkerCallback(std::bind(&IMarkerSimpleDemo::processIMarkerPose, this, std::placeholders::_1));
 
-    ROS_INFO_STREAM_NAMED(name_, "IMarkerSimpleDemo Ready.");
+    RCLCPP_INFO(get_logger(), "IMarkerSimpleDemo Ready.");
   }
 
   void processIMarkerPose(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
@@ -82,42 +81,44 @@ private:
   // The short name of this class
   std::string name_ = "imarker_simple_demo";
 
-  // A shared node handle
-  ros::NodeHandle nh_;
-
   rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
   rviz_visual_tools::IMarkerSimplePtr imarker_simple_;
 
 };  // end class
 
-// Create std pointers for this class
-typedef std::shared_ptr<IMarkerSimpleDemo> IMarkerSimpleDemoPtr;
-typedef std::shared_ptr<const IMarkerSimpleDemo> IMarkerSimpleDemoConstPtr;
-
 }  // namespace rviz_visual_tools
-#endif  // RVIZ_VISUAL_TOOLS_IMARKER_SIMPLE_DEMO_H
 
 int main(int argc, char** argv)
 {
-  // Initialize ROS
-  ros::init(argc, argv, "imarker_simple_demo");
-  ROS_INFO_STREAM_NAMED("main", "Starting IMarkerSimpleDemo...");
+  // Force flush of the stdout buffer.
+  setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
-  // Seed random number generator
-  // srand (time(NULL));
+  // Initialize any global resources needed by the middleware and the client library.
+  // This will also parse command line arguments one day (as of Beta 1 they are not used).
+  // You must call this before using any other part of the ROS system.
+  // This should be called once per process.
+  auto args = rclcpp::init_and_remove_ros_arguments(argc, argv);
 
+  // Create an executor that will be responsible for execution of callbacks for a set of nodes.
+  // With this version, all callbacks will be called from within this thread (the main one).
+  rclcpp::executors::SingleThreadedExecutor exec;
+  rclcpp::NodeOptions options;
+  options.arguments(args);
+
+  // Create demo node
+  auto demo = std::make_shared<rviz_visual_tools::IMarkerSimpleDemo>(options);
   // Allow the action server to recieve and send ros messages
-  ros::AsyncSpinner spinner(2);
-  spinner.start();
+  exec.add_node(demo);
+  while (rclcpp::ok())
+  {
+    exec.spin_some();
+    rclcpp::sleep_for(1ms);
+  }
 
-  // Initialize main class
-  rviz_visual_tools::IMarkerSimpleDemo server;
-
-  ros::waitForShutdown();
+  exec.remove_node(demo);
 
   // Shutdown
-  ROS_INFO_STREAM_NAMED("main", "Shutting down.");
-  ros::shutdown();
+  RCLCPP_INFO(rclcpp::get_logger("main"), "Shutting down.");
 
   return 0;
 }

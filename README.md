@@ -249,8 +249,8 @@ This package helps you quickly choose colors - feel free to send PRs with more c
 
 This class quickly gives you basic 6dof pose interactive marker funcitonality. A demo is available:
 
-    roslaunch rviz_visual_tools demo_rviz.launch
-    rosrun rviz_visual_tools imarker_simple_demo
+    ros2 launch rviz_visual_tools demo_rviz.launch.py
+    ros2 run rviz_visual_tools rviz_visual_tools_imarker_simple_demo
 
 ## TF Visual Tools
 

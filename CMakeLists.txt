@@ -134,6 +134,10 @@ target_link_libraries(${PROJECT_NAME}_imarker_simple
 )
 ament_target_dependencies(${PROJECT_NAME}_imarker_simple
   rclcpp
+  interactive_markers
+  geometry_msgs
+  visualization_msgs
+  sensor_msgs
 )
 
 # Demo executable
@@ -148,16 +152,14 @@ ament_target_dependencies(${PROJECT_NAME}_demo
 )
 
 # Demo executable
-# add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
-# target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
-#   ${PROJECT_NAME}
-#   ${PROJECT_NAME}_imarker_simple
-# )
-# set_target_properties(${PROJECT_NAME}_imarker_simple_demo
-#   PROPERTIES
-#   OUTPUT_NAME
-#   imarker_simple_demo PREFIX ""
-# )
+add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
+target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
+  ${PROJECT_NAME}_imarker_simple
+)
+
+ament_target_dependencies(${PROJECT_NAME}_demo
+  rclcpp
+)
 
 #############
 ## Install ##
@@ -184,7 +186,7 @@ install(
 install(
   TARGETS
     ${PROJECT_NAME}_demo
-    # ${PROJECT_NAME}_imarker_simple_demo
+    ${PROJECT_NAME}_imarker_simple_demo
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}

@@ -61,7 +61,8 @@ IMarkerSimple::IMarkerSimple(const rclcpp::node_interfaces::NodeBaseInterface::S
 {
   // Create Marker Server
   std::string name_space = node_base_interface_->get_namespace();
-  const std::string imarker_topic = name_space + "/" + name;
+  const std::string imarker_topic = (name_space == "/" ? name : name_space + "/" + name);
+
   imarker_server_ = std::make_shared<interactive_markers::InteractiveMarkerServer>(
       imarker_topic, node_base_interface_, clock_interface_, logging_interface_, topics_interface_,
       services_interface_);
@@ -162,11 +163,8 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double 
   control.interaction_mode = InteractiveMarkerControl::MOVE_AXIS;
   int_marker_.controls.push_back(control);
 
-  imarker_server_->insert(int_marker_);
-  imarker_server_->setCallback(int_marker_.name,
-                               std::bind(&IMarkerSimple::iMarkerCallback, this, std::placeholders::_1));
-
-  // menu_handler_.apply(*imarker_server_, int_marker_.name);
+  imarker_server_->insert(int_marker_, std::bind(&IMarkerSimple::iMarkerCallback, this, std::placeholders::_1));
+  imarker_server_->applyChanges();
 }
 
 }  // namespace rviz_visual_tools
