@@ -355,7 +355,31 @@ public:
     */
 
     // --------------------------------------------------------------------
-    // TODO(davetcoleman): publishMesh
+    RCLCPP_INFO(get_logger(), "Displaying Mesh");
+    pose1 = Eigen::Isometry3d::Identity();
+    y += space_between_rows;
+    pose1.translation().y() = y;
+
+    step = 0.2;
+    const std::array<double, 5> thetas = { -M_PI / 2.0, M_PI, M_PI, M_PI, M_PI };
+    const std::array<std::string, 5> meshes = { "chimp", "bear", "cat", "mouse", "pig" };
+    const std::array<rvt::colors, 5> mesh_colors = { rvt::RED, rvt::ORANGE, rvt::YELLOW, rvt::GREEN,
+                                                     rvt::BLUE };
+    const std::array<double, 5> scales = { 0.025, 1.0, 1.0, 1.0, 1.0 };
+
+    for (size_t i = 0; i < meshes.size(); ++i)
+    {
+      visual_tools_->publishMesh(pose1 * Eigen::AngleAxisd(thetas[i], Eigen::Vector3d::UnitZ()),
+                                 "package://rviz_visual_tools/meshes/" + meshes[i] + ".stl",
+                                 mesh_colors[i], scales[i]);
+      if (i == 0.0)
+      {
+        publishLabelHelper(pose1, "Meshes");
+      }
+
+      pose1.translation().x() += step;
+    }
+    visual_tools_->trigger();
 
     // --------------------------------------------------------------------
     // TODO(davetcoleman): publishPolygon
