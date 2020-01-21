@@ -235,7 +235,7 @@ ament_export_dependencies(
   # graph_msgs
   geometry_msgs
   shape_msgs
-  roscpp
+  rclcpp
   sensor_msgs
   std_msgs
   trajectory_msgs
