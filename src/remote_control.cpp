@@ -69,7 +69,7 @@ RemoteControl::RemoteControl(const rclcpp::node_interfaces::NodeTopicsInterface:
   RCLCPP_INFO(logger_, "RemoteControl Ready.");
 }
 
-void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::SharedPtr msg)
+void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr msg)  // NOLINT
 {
   if (msg->buttons.size() > 1 && msg->buttons[1] != 0)
   {

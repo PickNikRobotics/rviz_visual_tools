@@ -60,7 +60,7 @@ public:
   {
   }
 
-  bool initialize(std::shared_ptr<rclcpp::Node> node)
+  bool initialize(std::shared_ptr<rclcpp::Node>& node)
   {
     visual_tools_.reset(new RvizVisualTools("base", "/rviz_visual_tools", node));
 

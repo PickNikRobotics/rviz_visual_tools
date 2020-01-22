@@ -16,6 +16,7 @@ env:
   matrix:
     - TEST="clang-format" # TODO(davetcoleman): enable catkin_lint in the future
     - TEST=clang-tidy-fix
+    - TEST=clang-tidy-check
     - ROS_DISTRO=eloquent
 
 before_script:

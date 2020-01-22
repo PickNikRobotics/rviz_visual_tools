@@ -91,7 +91,7 @@ private:
 int main(int argc, char** argv)
 {
   // Force flush of the stdout buffer.
-  setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+  setvbuf(stdout, NULL, _IONBF, BUFSIZ);  // NOLINT
 
   // Initialize any global resources needed by the middleware and the client library.
   // This will also parse command line arguments one day (as of Beta 1 they are not used).

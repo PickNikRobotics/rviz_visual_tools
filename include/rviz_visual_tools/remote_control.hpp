@@ -63,7 +63,7 @@ public:
   /**
    * \brief Callback from ROS topic
    */
-  void rvizDashboardCallback(const sensor_msgs::msg::Joy::SharedPtr msg);
+  void rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr msg);  // NOLINT
 
   /**
    * \brief Step to next step
