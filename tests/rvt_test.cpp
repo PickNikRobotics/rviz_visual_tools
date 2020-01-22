@@ -46,15 +46,26 @@
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 
-class RVTTest
+using namespace rviz_visual_tools;
+
+class RVTTest : public testing::Test
 {
 public:
-  bool initialize()
+  void SetUp() override
   {
-    visual_tools_.reset(new rviz_visual_tools::RvizVisualTools("base", "/rviz_visual_tools"));
+    auto node = std::make_shared<rclcpp::Node>("test_node");
+    initialize(node);
+  }
+  void TearDown() override
+  {
+  }
+
+  bool initialize(std::shared_ptr<rclcpp::Node> node)
+  {
+    visual_tools_.reset(new RvizVisualTools("base", "/rviz_visual_tools", node));
 
     // Allow time to publish messages
-    ROS_INFO_STREAM_NAMED("test", "Waiting 4 seconds to start test...");
+    RCLCPP_INFO(node->get_logger(), "Waiting 4 seconds to start test...");
     return true;
   }
 
@@ -96,26 +107,18 @@ public:
   // ros::NodeHandle nh_;
 
   // For visualizing things in rviz
-  rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
+  RvizVisualToolsPtr visual_tools_;
 
 };  // class
 
-/* Create instance of test class ---------------------------------------------------------- */
-RVTTest BASE;
-
 /* Run tests ------------------------------------------------------------------------------ */
-TEST(RVTTest, initialize)
-{
-  ASSERT_TRUE(BASE.initialize());
-}
-
 // Test rpy conversion
-TEST(RVTTest, test_rpy_conversions)
+TEST_F(RVTTest, test_rpy_conversions)
 {
   // Identity conversions with RPY
   Eigen::Isometry3d expected_affine = Eigen::Isometry3d::Identity();
   std::vector<double> xyzrpy;
-  BASE.visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
+  visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
   std::vector<double> expected_vector;
   expected_vector.push_back(0);
   expected_vector.push_back(0);
@@ -123,89 +126,89 @@ TEST(RVTTest, test_rpy_conversions)
   expected_vector.push_back(0);
   expected_vector.push_back(0);
   expected_vector.push_back(0);
-  EXPECT_TRUE(BASE.testVector("Identity: ", expected_vector, xyzrpy));
+  EXPECT_TRUE(testVector("Identity: ", expected_vector, xyzrpy));
 
   // Identity conversion back to Eigen
-  Eigen::Isometry3d expected_affine2 = BASE.visual_tools_->convertFromXYZRPY(xyzrpy, rviz_visual_tools::XYZ);
-  EXPECT_TRUE(BASE.testIsometry3d("Identity convert back", expected_affine, expected_affine2));
+  Eigen::Isometry3d expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy, XYZ);
+  EXPECT_TRUE(testIsometry3d("Identity convert back", expected_affine, expected_affine2));
 
   // -------------------------------------------------------------------
   // Translation conversions to RPY
   expected_affine.translation().x() = 1;
   expected_affine.translation().y() = 2;
   expected_affine.translation().z() = 3;
-  BASE.visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
+  visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
   expected_vector[0] = 1;
   expected_vector[1] = 2;
   expected_vector[2] = 3;
-  EXPECT_TRUE(BASE.testVector("123: ", expected_vector, xyzrpy));
+  EXPECT_TRUE(testVector("123: ", expected_vector, xyzrpy));
 
   // Translation convertion back to Eigen
-  expected_affine2 = BASE.visual_tools_->convertFromXYZRPY(xyzrpy, rviz_visual_tools::XYZ);
-  EXPECT_TRUE(BASE.testIsometry3d("123 convert back", expected_affine, expected_affine2));
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy, XYZ);
+  EXPECT_TRUE(testIsometry3d("123 convert back", expected_affine, expected_affine2));
 
   // Translation convertion back to Eigen via long function
-  expected_affine2 = BASE.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
-                                                           xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(BASE.testIsometry3d("123 convert back long", expected_affine, expected_affine2));
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
+                                                      XYZ);
+  EXPECT_TRUE(testIsometry3d("123 convert back long", expected_affine, expected_affine2));
 
   // Translation convertion back to Eigen via NEW long function
-  expected_affine2 = BASE.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
-                                                           xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(BASE.testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
+                                                      XYZ);
+  EXPECT_TRUE(testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
 
   // -------------------------------------------------------------------
   // Rotation conversions to RPY
   expected_affine = expected_affine * Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX()) *
                     Eigen::AngleAxisd(0.5 * M_PI, Eigen::Vector3d::UnitZ()) *
                     Eigen::AngleAxisd(-0.5 * M_PI, Eigen::Vector3d::UnitX());
-  BASE.visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
+  visual_tools_->convertToXYZRPY(expected_affine, xyzrpy);
 
   // Rotation convertion back to Eigen
-  expected_affine2 = BASE.visual_tools_->convertFromXYZRPY(xyzrpy, rviz_visual_tools::XYZ);
-  EXPECT_TRUE(BASE.testIsometry3d("123 convert back", expected_affine, expected_affine2));
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy, XYZ);
+  EXPECT_TRUE(testIsometry3d("123 convert back", expected_affine, expected_affine2));
 
   // Rotation convertion back to Eigen via long function
-  expected_affine2 = BASE.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
-                                                           xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(BASE.testIsometry3d("123 convert back long", expected_affine, expected_affine2));
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
+                                                      XYZ);
+  EXPECT_TRUE(testIsometry3d("123 convert back long", expected_affine, expected_affine2));
 
   // Rotation convertion back to Eigen via NEW long function
-  expected_affine2 = BASE.visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4],
-                                                           xyzrpy[5], rviz_visual_tools::XYZ);
-  EXPECT_TRUE(BASE.testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
+                                                      XYZ);
+  EXPECT_TRUE(testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
 }
 
-TEST(RVTTest, default_arguments)
+TEST_F(RVTTest, default_arguments)
 {
   // Check for correct number of parameters and correct size of path
-  std::vector<geometry_msgs::Point> path1;
-  EXPECT_FALSE(BASE.visual_tools_->publishPath(path1, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  std::vector<geometry_msgs::msg::Point> path1;
+  EXPECT_FALSE(visual_tools_->publishPath(path1, RED, MEDIUM));
   path1.resize(1);
-  EXPECT_FALSE(BASE.visual_tools_->publishPath(path1, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  EXPECT_FALSE(visual_tools_->publishPath(path1, RED, MEDIUM));
   path1.resize(2);
-  EXPECT_TRUE(BASE.visual_tools_->publishPath(path1, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  EXPECT_TRUE(visual_tools_->publishPath(path1, RED, MEDIUM));
 
   EigenSTL::vector_Isometry3d path2;
-  EXPECT_FALSE(BASE.visual_tools_->publishPath(path2, rviz_visual_tools::GREEN, rviz_visual_tools::MEDIUM));
+  EXPECT_FALSE(visual_tools_->publishPath(path2, GREEN, MEDIUM));
   path2.resize(1);
-  EXPECT_FALSE(BASE.visual_tools_->publishPath(path2, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  EXPECT_FALSE(visual_tools_->publishPath(path2, RED, MEDIUM));
   path2.resize(2);
-  EXPECT_TRUE(BASE.visual_tools_->publishPath(path2, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  EXPECT_TRUE(visual_tools_->publishPath(path2, RED, MEDIUM));
 
   EigenSTL::vector_Vector3d path3;
-  EXPECT_FALSE(BASE.visual_tools_->publishPath(path3, rviz_visual_tools::BLUE, rviz_visual_tools::MEDIUM));
+  EXPECT_FALSE(visual_tools_->publishPath(path3, BLUE, MEDIUM));
   path3.resize(1);
-  EXPECT_FALSE(BASE.visual_tools_->publishPath(path3, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  EXPECT_FALSE(visual_tools_->publishPath(path3, RED, MEDIUM));
   path3.resize(2);
-  EXPECT_TRUE(BASE.visual_tools_->publishPath(path3, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+  EXPECT_TRUE(visual_tools_->publishPath(path3, RED, MEDIUM));
 }
 
 /* Main  ------------------------------------------------------------------------------------- */
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  ros::init(argc, argv, "rviz_visual_tools_tests");
+  rclcpp::init(argc, argv);
   return RUN_ALL_TESTS();
 }
 

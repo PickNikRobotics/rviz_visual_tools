@@ -212,19 +212,20 @@ install(
 ##########
 
 if (BUILD_TESTING)
-  # # Lint
+  # Lint
   # find_package(ament_lint_auto REQUIRED)
   # ament_lint_auto_find_test_dependencies()
 
-  # # Run tests
-  # find_package(ament_cmake_gtest REQUIRED)
-  # ament_add_gtest(${PROJECT_NAME}_rvt_test tests/rvt_test.cpp)
-  # ament_target_dependencies(${PROJECT_NAME}_rvt_test
-  #   rclcpp
-  # )
-  # target_link_libraries(${PROJECT_NAME}_rvt_test
-  #   ${PROJECT_NAME}
-  # )
+  # Run tests
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(${PROJECT_NAME}_rvt_test tests/rvt_test.cpp
+    TIMEOUT 180)
+  ament_target_dependencies(${PROJECT_NAME}_rvt_test
+    rclcpp
+  )
+  target_link_libraries(${PROJECT_NAME}_rvt_test
+    ${PROJECT_NAME}
+  )
 endif()
 
 
