@@ -57,8 +57,9 @@ public:
   /**
    * \brief Constructor
    */
-  explicit RemoteControl(const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
-                         const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
+  explicit RemoteControl(
+      const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+      const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
 
   /**
    * \brief Callback from ROS topic

@@ -45,12 +45,13 @@ namespace rviz_visual_tools
 using visualization_msgs::msg::InteractiveMarkerFeedback;
 using visualization_msgs::msg::InteractiveMarkerControl;
 
-IMarkerSimple::IMarkerSimple(const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
-                             const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
-                             const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
-                             const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
-                             const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
-                             const std::string& name, double scale, const geometry_msgs::msg::Pose& initial_pose)
+IMarkerSimple::IMarkerSimple(
+    const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
+    const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
+    const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
+    const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+    const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
+    const std::string& name, double scale, const geometry_msgs::msg::Pose& initial_pose)
   : node_base_interface_(node_base_interface)
   , clock_interface_(clock_interface)
   , logging_interface_(logging_interface)
@@ -94,7 +95,8 @@ void IMarkerSimple::setPose(const geometry_msgs::msg::Pose& pose)
   sendUpdatedIMarkerPose();
 }
 
-void IMarkerSimple::iMarkerCallback(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
+void IMarkerSimple::iMarkerCallback(
+    const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
 {
   // Ignore if not pose update
   if (feedback->event_type != visualization_msgs::msg::InteractiveMarkerFeedback::POSE_UPDATE)
@@ -163,7 +165,8 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double 
   control.interaction_mode = InteractiveMarkerControl::MOVE_AXIS;
   int_marker_.controls.push_back(control);
 
-  imarker_server_->insert(int_marker_, std::bind(&IMarkerSimple::iMarkerCallback, this, std::placeholders::_1));
+  imarker_server_->insert(int_marker_,
+                          std::bind(&IMarkerSimple::iMarkerCallback, this, std::placeholders::_1));
   imarker_server_->applyChanges();
 }
 

@@ -58,9 +58,9 @@ TFVisualTools::TFVisualTools(NodePtr node, double loop_hz)
   rclcpp::Duration update_period = rclcpp::Duration::from_seconds(1.0 / loop_hz);
 
   // non_realtime_loop_ = nh_.createTimer(update_freq, &TFVisualTools::publishAllTransforms, this);
-  non_realtime_loop_ =
-      rclcpp::create_timer(node_base_interface_.get(), timers_interface_.get(), clock_interface_->get_clock(),
-                           update_period, std::bind(&TFVisualTools::publishAllTransforms, this));
+  non_realtime_loop_ = rclcpp::create_timer(node_base_interface_.get(), timers_interface_.get(),
+                                            clock_interface_->get_clock(), update_period,
+                                            std::bind(&TFVisualTools::publishAllTransforms, this));
   // , std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node);
@@ -68,8 +68,8 @@ TFVisualTools::TFVisualTools(NodePtr node, double loop_hz)
   RCLCPP_INFO(logger_, "TFVisualTools Ready.");
 }
 
-bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame,
-                                     const std::string& to_frame)
+bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform,
+                                     const std::string& from_frame, const std::string& to_frame)
 {
   std::stringstream ss;
   ss << "Publishing transform from " << from_frame << " to " << to_frame;

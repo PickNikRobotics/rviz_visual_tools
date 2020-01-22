@@ -74,7 +74,8 @@ public:
    * \brief Visualize transforms in Rviz, etc
    * \return true on success
    */
-  bool publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame, const std::string& to_frame);
+  bool publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame,
+                        const std::string& to_frame);
 
   /**
    * \brief Clear all transforms

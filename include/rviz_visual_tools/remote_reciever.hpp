@@ -48,8 +48,8 @@ class RemoteReciever
 public:
   RemoteReciever(rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface)
   {
-    joy_publisher_ =
-        rclcpp::create_publisher<sensor_msgs::msg::Joy>(topics_interface, "/rviz_visual_tools_gui", rclcpp::QoS(100));
+    joy_publisher_ = rclcpp::create_publisher<sensor_msgs::msg::Joy>(
+        topics_interface, "/rviz_visual_tools_gui", rclcpp::QoS(100));
   }
 
   void publishNext()

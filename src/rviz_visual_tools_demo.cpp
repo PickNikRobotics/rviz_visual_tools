@@ -66,9 +66,11 @@ public:
   /**
    * \brief Constructor
    */
-  explicit RvizVisualToolsDemo(const rclcpp::NodeOptions& options = rclcpp::NodeOptions()) : Node("rviz_demo", options)
+  explicit RvizVisualToolsDemo(const rclcpp::NodeOptions& options = rclcpp::NodeOptions())
+    : Node("rviz_demo", options)
   {
-    visual_tools_.reset(new rvt::RvizVisualTools("world", "/rviz_visual_tools", dynamic_cast<rclcpp::Node*>(this)));
+    visual_tools_.reset(
+        new rvt::RvizVisualTools("world", "/rviz_visual_tools", dynamic_cast<rclcpp::Node*>(this)));
     visual_tools_->loadMarkerPub();  // create publisher before waiting
 
     RCLCPP_INFO(get_logger(), "Sleeping 2 seconds before running demo");
@@ -460,7 +462,8 @@ public:
 
     // Show test label
     pose1.translation().x() = x_location - 0.1;
-    visual_tools_->publishText(pose1, "Testing consistency of " + visual_tools_->scaleToString(scale) + " marker scale",
+    visual_tools_->publishText(pose1, "Testing consistency of " +
+                                          visual_tools_->scaleToString(scale) + " marker scale",
                                WHITE, XLARGE, false);
 
     pose1.translation().x() = x_location;
@@ -601,7 +604,8 @@ public:
       {
         visual_tools_->publishSphere(pose1, GREY, scale);
       }
-      visual_tools_->publishText(pose2, "Size " + visual_tools_->scaleToString(scale), WHITE, scale, false);
+      visual_tools_->publishText(pose2, "Size " + visual_tools_->scaleToString(scale), WHITE, scale,
+                                 false);
 
       scale = static_cast<scales>(static_cast<int>(scale) + 1);
     }

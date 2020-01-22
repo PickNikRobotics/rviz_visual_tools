@@ -54,7 +54,9 @@
 
 namespace rviz_visual_tools
 {
-typedef std::function<void(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr&)> IMarkerCallback;
+typedef std::function<void(
+    const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr&)>
+    IMarkerCallback;
 
 namespace
 {
@@ -92,7 +94,8 @@ public:
 
   void setPose(const geometry_msgs::msg::Pose& pose);
 
-  void iMarkerCallback(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback);
+  void iMarkerCallback(
+      const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback);
 
   void setIMarkerCallback(IMarkerCallback callback)
   {

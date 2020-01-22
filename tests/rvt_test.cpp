@@ -71,27 +71,36 @@ public:
     return true;
   }
 
-  bool testIsometry3d(const std::string& id, const Eigen::Isometry3d& expect, const Eigen::Isometry3d& actual)
+  bool testIsometry3d(const std::string& id, const Eigen::Isometry3d& expect,
+                      const Eigen::Isometry3d& actual)
   {
     static const double EPSILON = 0.000001;
     EXPECT_GT(EPSILON, fabs(expect.translation().x() - actual.translation().x()))
-        << id << " Translation x - expect: " << expect.translation().x() << " actual: " << actual.translation().x();
+        << id << " Translation x - expect: " << expect.translation().x()
+        << " actual: " << actual.translation().x();
     EXPECT_GT(EPSILON, fabs(expect.translation().y() - actual.translation().y()))
-        << id << " Translation y - expect: " << expect.translation().y() << " actual: " << actual.translation().y();
+        << id << " Translation y - expect: " << expect.translation().y()
+        << " actual: " << actual.translation().y();
     EXPECT_GT(EPSILON, fabs(expect.translation().z() - actual.translation().z()))
-        << id << " Translation z - expect: " << expect.translation().z() << " actual: " << actual.translation().z();
+        << id << " Translation z - expect: " << expect.translation().z()
+        << " actual: " << actual.translation().z();
 
     Eigen::Quaterniond q1(expect.rotation());
     Eigen::Quaterniond q2(actual.rotation());
-    EXPECT_GT(EPSILON, fabs(q1.x() - q2.x())) << id << " Quaternion x - expect: " << q1.x() << " actual: " << q2.x();
-    EXPECT_GT(EPSILON, fabs(q1.y() - q2.y())) << id << " Quaternion y - expect: " << q1.y() << " actual: " << q2.y();
-    EXPECT_GT(EPSILON, fabs(q1.z() - q2.z())) << id << " Quaternion z - expect: " << q1.z() << " actual: " << q2.z();
-    EXPECT_GT(EPSILON, fabs(q1.w() - q2.w())) << id << " Quaternion w - expect: " << q1.w() << " actual: " << q2.w();
+    EXPECT_GT(EPSILON, fabs(q1.x() - q2.x())) << id << " Quaternion x - expect: " << q1.x()
+                                              << " actual: " << q2.x();
+    EXPECT_GT(EPSILON, fabs(q1.y() - q2.y())) << id << " Quaternion y - expect: " << q1.y()
+                                              << " actual: " << q2.y();
+    EXPECT_GT(EPSILON, fabs(q1.z() - q2.z())) << id << " Quaternion z - expect: " << q1.z()
+                                              << " actual: " << q2.z();
+    EXPECT_GT(EPSILON, fabs(q1.w() - q2.w())) << id << " Quaternion w - expect: " << q1.w()
+                                              << " actual: " << q2.w();
 
     return true;
   }
 
-  bool testVector(const std::string& id, const std::vector<double>& expect, const std::vector<double>& actual)
+  bool testVector(const std::string& id, const std::vector<double>& expect,
+                  const std::vector<double>& actual)
   {
     EXPECT_EQ(expect.size(), actual.size()) << id << " Unequal vector sizes";
 
@@ -99,7 +108,8 @@ public:
     for (std::size_t i = 0; i < expect.size(); ++i)
     {
       EXPECT_GT(EPSILON, fabs(expect[i] - actual[i])) << "Section " << id << ", Element " << i
-                                                      << ", Expect: " << expect[i] << ", Actual: " << actual[i];
+                                                      << ", Expect: " << expect[i]
+                                                      << ", Actual: " << actual[i];
     }
 
     return true;
@@ -150,13 +160,13 @@ TEST_F(RVTTest, test_rpy_conversions)
   EXPECT_TRUE(testIsometry3d("123 convert back", expected_affine, expected_affine2));
 
   // Translation convertion back to Eigen via long function
-  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
-                                                      rvt::XYZ);
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3],
+                                                      xyzrpy[4], xyzrpy[5], rvt::XYZ);
   EXPECT_TRUE(testIsometry3d("123 convert back long", expected_affine, expected_affine2));
 
   // Translation convertion back to Eigen via NEW long function
-  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
-                                                      rvt::XYZ);
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3],
+                                                      xyzrpy[4], xyzrpy[5], rvt::XYZ);
   EXPECT_TRUE(testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
 
   // -------------------------------------------------------------------
@@ -171,13 +181,13 @@ TEST_F(RVTTest, test_rpy_conversions)
   EXPECT_TRUE(testIsometry3d("123 convert back", expected_affine, expected_affine2));
 
   // Rotation convertion back to Eigen via long function
-  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
-                                                      rvt::XYZ);
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3],
+                                                      xyzrpy[4], xyzrpy[5], rvt::XYZ);
   EXPECT_TRUE(testIsometry3d("123 convert back long", expected_affine, expected_affine2));
 
   // Rotation convertion back to Eigen via NEW long function
-  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3], xyzrpy[4], xyzrpy[5],
-                                                      rvt::XYZ);
+  expected_affine2 = visual_tools_->convertFromXYZRPY(xyzrpy[0], xyzrpy[1], xyzrpy[2], xyzrpy[3],
+                                                      xyzrpy[4], xyzrpy[5], rvt::XYZ);
   EXPECT_TRUE(testIsometry3d("123 convert back new long", expected_affine, expected_affine2));
 }
 

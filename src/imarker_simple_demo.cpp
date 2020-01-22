@@ -49,9 +49,11 @@ class IMarkerSimpleDemo : public rclcpp::Node
 {
 public:
   /** \brief Constructor */
-  IMarkerSimpleDemo(const rclcpp::NodeOptions& options = rclcpp::NodeOptions()) : Node("imarker_simple_demo", options)
+  IMarkerSimpleDemo(const rclcpp::NodeOptions& options = rclcpp::NodeOptions())
+    : Node("imarker_simple_demo", options)
   {
-    visual_tools_.reset(new RvizVisualTools("world", "/rviz_visual_tools", dynamic_cast<rclcpp::Node*>(this)));
+    visual_tools_.reset(
+        new RvizVisualTools("world", "/rviz_visual_tools", dynamic_cast<rclcpp::Node*>(this)));
     visual_tools_->loadMarkerPub();
 
     // Create a random initial pose
@@ -60,15 +62,18 @@ public:
 
     // Create a 6DOF interactive marker
     static const double SCALE = 0.2;
-    imarker_simple_.reset(new IMarkerSimple(dynamic_cast<rclcpp::Node*>(this), "imarker", SCALE, init_pose));
+    imarker_simple_.reset(
+        new IMarkerSimple(dynamic_cast<rclcpp::Node*>(this), "imarker", SCALE, init_pose));
 
     // Add callback to this class
-    imarker_simple_->setIMarkerCallback(std::bind(&IMarkerSimpleDemo::processIMarkerPose, this, std::placeholders::_1));
+    imarker_simple_->setIMarkerCallback(
+        std::bind(&IMarkerSimpleDemo::processIMarkerPose, this, std::placeholders::_1));
 
     RCLCPP_INFO(get_logger(), "IMarkerSimpleDemo Ready.");
   }
 
-  void processIMarkerPose(const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
+  void processIMarkerPose(
+      const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
   {
     // Show some spheres for fun
     visual_tools_->publishSphere(feedback->pose, visual_tools_->getRandColor());
