@@ -23,7 +23,7 @@ from launch_ros.actions import Node
 
   <!-- Load Rviz -->
   <node name="$(anon rviz)" pkg="rviz" type="rviz" respawn="false"
-	args="-d $(find rviz_visual_tools)/launch/demo.rviz" output="screen">
+        args="-d $(find rviz_visual_tools)/launch/demo.rviz" output="screen">
   </node>
 
   <!-- Fake transform from world origin to robot origin (base) -->
@@ -34,9 +34,10 @@ from launch_ros.actions import Node
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
   <!-- Start demo -->
-  <node name="rviz_visual_tools_demo" launch-prefix="$(arg launch_prefix)" pkg="rviz_visual_tools" type="demo" output="screen">
+  <node name="rviz_visual_tools_demo"
+        launch-prefix="$(arg launch_prefix)"
+        pkg="rviz_visual_tools" type="demo" output="screen">
   </node>
-
 </launch>
 """
 

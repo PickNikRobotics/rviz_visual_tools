@@ -65,7 +65,6 @@
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
 
 // rviz_visual_tools
-#include <rviz_visual_tools/deprecation.hpp>
 #include <rviz_visual_tools/remote_control.hpp>
 
 // Import/export for windows dll's and visibility for gcc shared libraries.
@@ -198,12 +197,14 @@ public:
    */
   template <typename NodePtr>
   RvizVisualTools(const std::string& base_frame, const std::string& marker_topic, NodePtr node)
-    : RvizVisualTools(base_frame, marker_topic, node->get_node_topics_interface(), node->get_node_graph_interface(),
-                      node->get_node_clock_interface(), node->get_node_logging_interface())
+    : RvizVisualTools(base_frame, marker_topic, node->get_node_base_interface(), node->get_node_topics_interface(),
+                      node->get_node_graph_interface(), node->get_node_clock_interface(),
+                      node->get_node_logging_interface())
   {
   }
 
   RvizVisualTools(const std::string& base_frame, const std::string& marker_topic,
+                  const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
                   const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
                   const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
                   const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
@@ -1111,13 +1112,12 @@ protected:
   // void loadRemoteControl();
 
   // Node Interfaces
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
   rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
   rclcpp::node_interfaces::NodeGraphInterface::SharedPtr graph_interface_;
   rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface_;
+  rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logging_interface_;
   rclcpp::Logger logger_;
-
-  // Short name for this class
-  static RVIZ_VISUAL_TOOLS_DECL const std::string NAME;
 
   // Optional remote control
   RemoteControlPtr remote_control_;

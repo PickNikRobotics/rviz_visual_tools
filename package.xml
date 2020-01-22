@@ -4,7 +4,7 @@
   <version>3.7.0</version>
   <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
 
-  <maintainer email="dave@picknik.ai">Dave Coleman</maintainer>
+  <maintainer email="mike@picknik.ai">Mike Lautman</maintainer>
 
   <license>BSD</license>
 
@@ -12,7 +12,7 @@
   <url type="butracker">https://github.com/PickNikRobotics/rviz_visual_tools/issues</url>
   <url type="repository">https://github.com/PickNikRobotics/rviz_visual_tools/</url>
 
-  <author email="dave@picknik.ai">Dave Coleman</author>
+  <author email="mike@picknik.ai">Mike Lautman</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>eigen3_cmake_module</buildtool_depend>
@@ -40,25 +40,15 @@
   <!-- from the rosdep list that worked: https://github.com/ros/rosdistro/blob/master/rosdep/base.yaml -->
   <depend>libqt5x11extras5-dev</depend>
 
-  <!-- <depend>eigen_conversions</depend> -->
-  <!-- <depend>tf_conversions</depend> -->
-  <!-- <depend>graph_msgs</depend> -->
-  <!-- <depend>roslint</depend> -->
-  <!-- <depend>libogre-dev</depend> -->
-
   <build_depend>qtbase5-dev</build_depend>
   <build_depend>eigen</build_depend>
 
   <build_export_depend>eigen</build_export_depend>
-
-  <!-- Boilerplate from rviz_default_plugins might not be necessary -->
-  <!-- <exec_depend>libqt5-core</exec_depend> -->
-  <!-- <exec_depend>libqt5-gui</exec_depend> -->
-  <!-- <exec_depend>libqt5-opengl</exec_depend> -->
   <exec_depend>libqt5-widgets</exec_depend>
 
   <!-- Launch files -->
   <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>rviz2</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
 
@@ -68,7 +58,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <!-- <rviz plugin="${prefix}/plugin_description.xml"/> -->
   </export>
 
 </package>

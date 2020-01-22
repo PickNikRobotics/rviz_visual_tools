@@ -56,22 +56,22 @@ namespace rviz_visual_tools
 {
 const std::string LOGNAME = "visual_tools";
 
-// DEPRECATED, remove in Melodic after Dec 2018 release or so
-const std::string RvizVisualTools::NAME = "visual_tools";
-
 const std::array<colors, 14> RvizVisualTools::ALL_RAND_COLORS = { RED,        GREEN,  BLUE,   GREY,   DARK_GREY,
                                                                   WHITE,      ORANGE, YELLOW, BROWN,  PINK,
                                                                   LIME_GREEN, PURPLE, CYAN,   MAGENTA };
 
 RvizVisualTools::RvizVisualTools(const std::string& base_frame, const std::string& marker_topic,
+                                 const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
                                  const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
                                  const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
                                  const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
                                  const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
-  : topics_interface_(topics_interface)
+  : node_base_interface_(node_base_interface)
+  , topics_interface_(topics_interface)
   , graph_interface_(graph_interface)
   , clock_interface_(clock_interface)
-  , logger_(logging_interface->get_logger().get_child("rviz_visual_tools"))
+  , logging_interface_(logging_interface)
+  , logger_(logging_interface_->get_logger().get_child("rviz_visual_tools"))
   , marker_topic_(marker_topic)
   , base_frame_(base_frame)
 {
@@ -2949,7 +2949,7 @@ void RvizVisualTools::printTransformFull(const Eigen::Isometry3d& transform)
 //   // Load remote
 //   if (!remote_control_)
 //   {
-//     remote_control_ = std::make_shared<RemoteControl>(topics_interface_, logging_interface_);
+//     remote_control_ = std::make_shared<RemoteControl>(node_base_interface_, topics_interface_, logging_interface_);
 //   }
 // }
 

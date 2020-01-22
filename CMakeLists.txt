@@ -13,13 +13,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     -Wno-unused-parameter -Wno-unused-function)
 endif()
 
-# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# TODO(mlautman): find alternatives to missing pkgs
-# find_package(eigen_conversions)
-# find_package(tf_conversions)
-# find_package(graph_msgs REQUIRED)
-
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
@@ -36,7 +29,6 @@ find_package(eigen3_cmake_module REQUIRED)
 find_package(eigen_stl_containers REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-find_package(Boost REQUIRED thread system)
 find_package(PkgConfig REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
@@ -46,23 +38,6 @@ find_package(interactive_markers REQUIRED)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
-# pkg_check_modules(OGRE_OV OGRE)
-
-# Qt 4 or 5
-# if("${rviz_QT_VERSION}" VERSION_LESS "5")
-#   find_package(Qt4 ${rviz_QT_VERSION} REQUIRED QtCore QtGui)
-#   include(${QT_USE_FILE})
-#   macro(qt_wrap_ui)
-#     qt4_wrap_ui(${ARGN})
-#   endmacro()
-# else()
-#   find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
-#   set(QT_LIBRARIES Qt5::Widgets)
-#   macro(qt_wrap_ui)
-#     qt5_wrap_ui(${ARGN})
-#   endmacro()
-# endif()
-
 ## Qt5 boilerplate options from http://doc.qt.io/qt-5/cmake-manual.html
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -71,8 +46,6 @@ set(CMAKE_AUTOMOC ON)
 ## etc because they can conflict with boost signals, so define QT_NO_KEYWORDS here.
 set(CMAKE_AUTOMOC_COMPILER_PREDEFINES OFF)
 add_definitions(-DQT_NO_KEYWORDS)
-
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 ###########
 ## Build ##
@@ -96,22 +69,24 @@ include_directories(
 # )
 
 # Remote control library
-add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
+add_library(${PROJECT_NAME}_remote_control
+  src/remote_control.cpp
+)
 target_link_libraries(${PROJECT_NAME}_remote_control)
 ament_target_dependencies(${PROJECT_NAME}_remote_control
   rclcpp
+  sensor_msgs
 )
 
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
   src/rviz_visual_tools.cpp
-  src/remote_control.cpp
   src/tf_visual_tools.cpp
+  src/remote_control.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}
-  ${Boost_LIBRARIES}
-)
+target_link_libraries(${PROJECT_NAME})
+
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
@@ -121,16 +96,17 @@ ament_target_dependencies(${PROJECT_NAME}
   tf2_geometry_msgs
   sensor_msgs
   std_msgs
+  eigen_stl_containers
 )
 
 # Library
 add_library(${PROJECT_NAME}_imarker_simple
   src/imarker_simple.cpp
-  src/rviz_visual_tools.cpp
-  src/remote_control.cpp
 )
 target_link_libraries(${PROJECT_NAME}_imarker_simple
-  ${Boost_LIBRARIES}
+  ${PROJECT_NAME}
+  ${${PROJECT_NAME}_LIBRARIES}
+  # ${PROJECT_NAME}_remote_control
 )
 ament_target_dependencies(${PROJECT_NAME}_imarker_simple
   rclcpp
@@ -138,12 +114,15 @@ ament_target_dependencies(${PROJECT_NAME}_imarker_simple
   geometry_msgs
   visualization_msgs
   sensor_msgs
+  eigen_stl_containers
 )
 
 # Demo executable
-add_executable(${PROJECT_NAME}_demo src/${PROJECT_NAME}_demo.cpp)
+add_executable(${PROJECT_NAME}_demo
+  src/${PROJECT_NAME}_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_demo
   ${PROJECT_NAME}
+  ${${PROJECT_NAME}_LIBRARIES}
 )
 ament_target_dependencies(${PROJECT_NAME}_demo
   rclcpp
@@ -155,6 +134,7 @@ ament_target_dependencies(${PROJECT_NAME}_demo
 add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
   ${PROJECT_NAME}_imarker_simple
+  ${${PROJECT_NAME}_LIBRARIES}
 )
 
 ament_target_dependencies(${PROJECT_NAME}_demo
@@ -194,13 +174,6 @@ install(
 
 # Install shared resources
 install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
-# install(DIRECTORY meshes    DESTINATION share/${PROJECT_NAME})
-
-# Install xml plugin config
-# install(FILES
-#   plugin_description.xml
-#   DESTINATION share/${PROJECT_NAME}
-# )
 
 # Install header files
 install(
@@ -212,10 +185,6 @@ install(
 ##########
 
 if (BUILD_TESTING)
-  # Lint
-  # find_package(ament_lint_auto REQUIRED)
-  # ament_lint_auto_find_test_dependencies()
-
   # Run tests
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(${PROJECT_NAME}_rvt_test tests/rvt_test.cpp
@@ -231,9 +200,6 @@ endif()
 
 ament_export_include_directories(include)
 ament_export_dependencies(
-  # eigen_conversions
-  # tf_conversions
-  # graph_msgs
   geometry_msgs
   shape_msgs
   rclcpp
@@ -243,6 +209,8 @@ ament_export_dependencies(
   visualization_msgs
   eigen3_cmake_module
   Eigen3
+  eigen_stl_containers
+  interactive_markers
 )
 
 ament_package()

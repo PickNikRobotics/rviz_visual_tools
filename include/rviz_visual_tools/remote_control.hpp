@@ -124,7 +124,7 @@ private:
   // Input
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr rviz_dashboard_sub_;
 
-  std::shared_ptr<std::promise<bool>> next_step_ready_;
+  std::unique_ptr<std::promise<bool>> next_step_ready_;
   bool autonomous_ = false;
   bool full_autonomous_ = false;
   bool stop_ = false;

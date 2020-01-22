@@ -71,19 +71,19 @@ RemoteControl::RemoteControl(const rclcpp::node_interfaces::NodeTopicsInterface:
 
 void RemoteControl::rvizDashboardCallback(const sensor_msgs::msg::Joy::SharedPtr msg)
 {
-  if (msg->buttons[1] != 0)
+  if (msg->buttons.size() > 1 && msg->buttons[1] != 0)
   {
     setReadyForNextStep();
   }
-  else if (msg->buttons[2] != 0)
+  else if (msg->buttons.size() > 2 && msg->buttons[2] != 0)
   {
     setAutonomous();
   }
-  else if (msg->buttons[3] != 0)
+  else if (msg->buttons.size() > 3 && msg->buttons[3] != 0)
   {
     setFullAutonomous();
   }
-  else if (msg->buttons[4] != 0)
+  else if (msg->buttons.size() > 4 && msg->buttons[4] != 0)
   {
     setStop();
   }
@@ -166,7 +166,7 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
     displayWaitingState_(true);
   }
 
-  next_step_ready_ = std::make_shared<std::promise<bool>>();
+  next_step_ready_ = std::make_unique<std::promise<bool>>();
   // Wait until next step is ready
   std::future<bool> future_next_step_ready = next_step_ready_->get_future();
   std::future_status status;
@@ -226,7 +226,7 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
     displayWaitingState_(true);
   }
 
-  next_step_ready_ = std::make_shared<std::promise<bool>>();
+  next_step_ready_ = std::make_unique<std::promise<bool>>();
   // Wait until next step is ready
   std::future<bool> future_next_step_ready = next_step_ready_->get_future();
   std::future_status status;
