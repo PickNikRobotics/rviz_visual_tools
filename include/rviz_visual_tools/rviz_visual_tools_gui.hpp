@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2012, Willow Garage, Inc.
+ *  Copyright (c) 2017, PickNik Consulting
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
  *     with the distribution.
- *   * Neither the name of Willow Garage nor the names of its
+ *   * Neither the name of PickNik Consulting nor the names of its
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -32,17 +32,59 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
+/* Author: Dave Coleman
+   Desc:   Rviz display panel for controlling and debugging ROS applications
+*/
+
+// TODO(dave): convert to flow layout:
+// http://doc.qt.io/qt-5/qtwidgets-layouts-flowlayout-example.html
+
 #pragma once
 
-/** \def RVIZ_VISUAL_TOOLS_DEPRECATED
-    Macro that marks functions as deprecated */
+#ifndef Q_MOC_RUN
+#include <rclcpp/rclcpp.hpp>
 
-#ifdef __GNUC__
-#define RVIZ_VISUAL_TOOLS_DEPRECATED __attribute__((deprecated))
-#elif defined(_MSC_VER)
-#define RVIZ_VISUAL_TOOLS_DEPRECATED __declspec(deprecated)
-#elif defined(__clang__)
-#define RVIZ_VISUAL_TOOLS_DEPRECATED __attribute__((deprecated("Use of this method is deprecated")))
-#else
-#define RVIZ_VISUAL_TOOLS_DEPRECATED /* Nothing */
+#include <rviz/panel.h>
 #endif
+
+#include <QPushButton>
+#include <QComboBox>
+
+#include <rviz_visual_tools/remote_reciever.hpp>
+
+class QLineEdit;
+class QSpinBox;
+
+namespace rviz_visual_tools
+{
+class RvizVisualToolsGui : public rviz::Panel
+{
+  Q_OBJECT
+public:
+  explicit RvizVisualToolsGui(QWidget* parent = 0);
+
+  virtual void load(const rviz::Config& config);
+  virtual void save(rviz::Config config) const;
+
+public Q_SLOTS:
+
+protected Q_SLOTS:
+
+  void moveNext();
+
+  void moveAuto();
+
+  void moveFullAuto();
+
+  void moveStop();
+
+protected:
+  QPushButton* btn_next_;
+  QPushButton* btn_auto_;
+  QPushButton* btn_full_auto_;
+  QPushButton* btn_stop_;
+
+  RemoteReciever remote_reciever_;
+};
+
+}  // end namespace rviz_visual_tools

@@ -39,14 +39,14 @@
 #pragma once
 
 // ROS
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 
-#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 
-#include <interactive_markers/interactive_marker_server.h>
-#include <visualization_msgs/InteractiveMarkerFeedback.h>
-#include <visualization_msgs/InteractiveMarker.h>
-#include <interactive_markers/menu_handler.h>
+#include <interactive_markers/interactive_marker_server.hpp>
+#include <visualization_msgs/msg/interactive_marker_feedback.hpp>
+#include <visualization_msgs/msg/interactive_marker.hpp>
+#include <interactive_markers/menu_handler.hpp>
 #include <Eigen/Geometry>
 
 // C++
@@ -54,16 +54,15 @@
 
 namespace rviz_visual_tools
 {
-using visualization_msgs::InteractiveMarkerFeedback;
-using visualization_msgs::InteractiveMarkerControl;
-
-typedef std::function<void(const visualization_msgs::InteractiveMarkerFeedbackConstPtr&)> IMarkerCallback;
+typedef std::function<void(
+    const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr&)>
+    IMarkerCallback;
 
 namespace
 {
-geometry_msgs::Pose getIdentityPose()
+geometry_msgs::msg::Pose getIdentityPose()
 {
-  geometry_msgs::Pose pose;
+  geometry_msgs::msg::Pose pose;
   pose.orientation.w = 1.0;
   return pose;
 }
@@ -72,16 +71,31 @@ geometry_msgs::Pose getIdentityPose()
 class IMarkerSimple
 {
 public:
-  explicit IMarkerSimple(const std::string& name = "imarker", double scale = 0.2,
-                         const geometry_msgs::Pose& initial_pose = getIdentityPose());
+  template <typename NodePtr>
+  IMarkerSimple(NodePtr node, const std::string& name = "imarker", double scale = 0.2,
+                const geometry_msgs::msg::Pose& initial_pose = getIdentityPose())
+    : IMarkerSimple(node->get_node_base_interface(), node->get_node_clock_interface(),
+                    node->get_node_logging_interface(), node->get_node_topics_interface(),
+                    node->get_node_services_interface(), name, scale, initial_pose)
+  {
+  }
 
-  geometry_msgs::Pose& getPose();
+  IMarkerSimple(const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
+                const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
+                const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
+                const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+                const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
+                const std::string& name = "imarker", double scale = 0.2,
+                const geometry_msgs::msg::Pose& initial_pose = getIdentityPose());
+
+  geometry_msgs::msg::Pose& getPose();
 
   void setPose(const Eigen::Isometry3d& pose);
 
-  void setPose(const geometry_msgs::Pose& pose);
+  void setPose(const geometry_msgs::msg::Pose& pose);
 
-  void iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
+  void iMarkerCallback(
+      const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback);
 
   void setIMarkerCallback(IMarkerCallback callback)
   {
@@ -91,24 +105,29 @@ public:
 private:
   void sendUpdatedIMarkerPose();
 
-  void make6DofMarker(const geometry_msgs::Pose& pose, double scale = 0.2);
+  void make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale = 0.2);
 
   // --------------------------------------------------------
 
   // The short name of this class
   std::string name_ = "imarker_simple";
 
-  // A shared node handle
-  ros::NodeHandle nh_;
+  // Node Interfaces
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
+  rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface_;
+  rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logging_interface_;
+  rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
+  rclcpp::node_interfaces::NodeServicesInterface::SharedPtr services_interface_;
+  rclcpp::Logger logger_;
 
-  geometry_msgs::Pose latest_pose_;
+  geometry_msgs::msg::Pose latest_pose_;
 
   // Interactive markers
   std::shared_ptr<interactive_markers::InteractiveMarkerServer> imarker_server_;
 
   // Interactive markers
   // interactive_markers::MenuHandler menu_handler_;
-  visualization_msgs::InteractiveMarker int_marker_;
+  visualization_msgs::msg::InteractiveMarker int_marker_;
 
   // Hook to parent class
   IMarkerCallback imarker_callback_;

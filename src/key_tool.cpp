@@ -39,7 +39,7 @@
 #include <rviz/viewport_mouse_event.h>
 
 // this package
-#include "key_tool.h"
+#include <rviz_visual_tools/key_tool.hpp>
 
 // C++
 #include <sstream>

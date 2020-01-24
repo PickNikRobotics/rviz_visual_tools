@@ -34,18 +34,19 @@
 
 /* Author: Dave Coleman <dave@picknik.ai>
    Desc:   Tool for creating break points and user verification points through
-           manipulation pipelines or other live robotitc tool.
+           manipulation pipelines or other live robotic tool.
            Think GDB for robots, or like, a state machine.
 */
 
 #pragma once
 
 // C++
+#include <chrono>
 #include <string>
 
 // ROS
-#include <ros/ros.h>
-#include <sensor_msgs/Joy.h>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/joy.hpp>
 
 namespace rviz_visual_tools
 {
@@ -55,26 +56,42 @@ class RemoteControl
 {
 public:
   /**
-   * \brief Constructor
+   * \brief Constructor for passing in NodeOptions and an executor.
+   * \param node - A node that will be added to an executor outside of this class
    */
-  explicit RemoteControl(const ros::NodeHandle& nh);
+  explicit RemoteControl(const rclcpp::executor::Executor::SharedPtr& executor,
+                         const rclcpp::NodeOptions& node_options)
+    : RemoteControl(executor, std::make_shared<rclcpp::Node>("remote_control", node_options))
+  {
+  }
+
+  /**
+   * \brief Constructor for passing in a Node and it's executor.
+   * \param node - A node that will be added to an executor outside of this class
+   */
+  template <typename NodePtr>
+  explicit RemoteControl(const rclcpp::executor::Executor::SharedPtr& executor, NodePtr node)
+    : RemoteControl(executor, node->get_node_base_interface(), node->get_node_topics_interface(),
+                    node->get_node_logging_interface())
+  {
+  }
+
+  /**
+   * \brief Constructor for passing in Node components for a node that is already added to an
+   * executor.
+   * \param topics_iterface - An interface for publishing and subscribing to topics
+   * \param logging_iterface - An interface for publishing to the rosconsole
+   */
+  explicit RemoteControl(
+      const rclcpp::executor::Executor::SharedPtr& executor,
+      const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
+      const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+      const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
 
   /**
    * \brief Callback from ROS topic
    */
-  void rvizDashboardCallback(const sensor_msgs::Joy::ConstPtr& msg);
-
-  /**
-   * \brief Step to next step
-   * \return true on success
-   */
-  bool setReadyForNextStep();
-
-  /**
-   * \brief Enable autonomous mode
-   */
-  void setAutonomous(bool autonomous = true);
-  void setFullAutonomous(bool autonomous = true);
+  void rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr msg);  // NOLINT
 
   /**
    * \brief Get the autonomous mode
@@ -82,11 +99,6 @@ public:
    */
   bool getAutonomous();
   bool getFullAutonomous();
-
-  /**
-   * \brief Stop something in pipeline
-   */
-  void setStop(bool stop = true);
 
   /**
    * \brief See if we are in stop mode
@@ -103,7 +115,8 @@ public:
   /** \brief Return true if debug interface is waiting for user input */
   bool isWaiting()
   {
-    return is_waiting_;
+    // if next_step_ready_ is nullptr then we are not currently waiting
+    return next_step_ready_ != nullptr;
   }
 
   void setDisplayWaitingState(DisplayWaitingState displayWaitingState)
@@ -112,18 +125,44 @@ public:
   }
 
 private:
-  // A shared node handle
-  ros::NodeHandle nh_;
+  /**
+   * \brief Step to next step
+   * \return true on success
+   */
+  void setReadyForNextStep();
+
+  /**
+   * \brief Enable autonomous mode
+   */
+  void setAutonomous();
+  void setFullAutonomous();
+
+  /**
+   * \brief Stop autonomous and full autonomous modes
+   */
+  void stopAllAutonomous();
+
+  /**
+   * \brief Wait until user presses a button
+   * \return true on success
+   */
+  bool waitForNextStepCommon(const std::string& caption, bool autonomous);
+
+  // Executor for spinning while in waitForNextStepCommon
+  rclcpp::executor::Executor::SharedPtr executor_;
+
+  // Node Interfaces
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
+  rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
+  rclcpp::Logger logger_;
 
   // Short name for this class
   std::string name_ = "remote_control";
 
   // Input
-  ros::Subscriber rviz_dashboard_sub_;
+  rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr rviz_dashboard_sub_;
 
-  // Debug interface
-  bool is_waiting_ = false;
-  bool next_step_ready_ = false;
+  std::unique_ptr<std::promise<void>> next_step_ready_;
   bool autonomous_ = false;
   bool full_autonomous_ = false;
   bool stop_ = false;

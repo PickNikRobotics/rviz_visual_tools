@@ -47,7 +47,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
-#include "rviz_visual_tools_gui.h"
+#include <rviz_visual_tools/rviz_visual_tools_gui.hpp>
 
 namespace rviz_visual_tools
 {

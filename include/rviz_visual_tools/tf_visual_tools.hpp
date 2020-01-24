@@ -45,8 +45,8 @@
 #include <string>
 
 // ROS
-#include <ros/ros.h>
-#include <geometry_msgs/TransformStamped.h>
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 
 // Eigen
 #include <Eigen/Geometry>
@@ -65,44 +65,52 @@ class TFVisualTools
 public:
   /**
    * \brief Constructor
+   * \param node - a pointer to a rclcpp::Node
    * \param loop_hz - how often tf is published
    */
-  explicit TFVisualTools(double loop_hz = 2);
-
+  template <typename NodePtr>
+  TFVisualTools(NodePtr node, double loop_hz = 2);
   /**
    * \brief Visualize transforms in Rviz, etc
    * \return true on success
    */
-  bool publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame, const std::string& to_frame);
+  bool publishTransform(const Eigen::Isometry3d& transform, const std::string& from_frame,
+                        const std::string& to_frame);
 
   /**
    * \brief Clear all transforms
    */
   void clearAllTransforms();
 
+private:
   /**
    * \brief At a certain frequency update the tf transforms that we are tracking
    *        This is called internally by a clock, you should not need to use this
-   *        TODO: make private in next release?
    */
-  void publishAllTransforms(const ros::TimerEvent& e);
+  void publishAllTransforms();
 
-private:
-  // A shared node handle
-  ros::NodeHandle nh_;
+  // Node Interfaces
+  // rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
+  // rclcpp::node_interfaces::NodeGraphInterface::SharedPtr graph_interface_;
+  // rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logging_interface_;
+
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
+  rclcpp::node_interfaces::NodeTimersInterface::SharedPtr timers_interface_;
+  rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface_;
+  rclcpp::Logger logger_;
 
   // Send tf messages
-  tf2_ros::TransformBroadcaster tf_pub_;
+  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   // Separate thread to publish transforms
-  ros::Timer non_realtime_loop_;
+  rclcpp::TimerBase::SharedPtr non_realtime_loop_;
 
   // Collect the transfroms
-  std::vector<geometry_msgs::TransformStamped> transforms_;
+  std::vector<geometry_msgs::msg::TransformStamped> transforms_;
 };  // end class
 
 // Create boost pointers for this class
-typedef boost::shared_ptr<TFVisualTools> TFVisualToolsPtr;
-typedef boost::shared_ptr<const TFVisualTools> TFVisualToolsConstPtr;
+typedef std::shared_ptr<TFVisualTools> TFVisualToolsPtr;
+typedef std::shared_ptr<const TFVisualTools> TFVisualToolsConstPtr;
 
 }  // namespace rviz_visual_tools

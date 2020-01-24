@@ -36,18 +36,37 @@
    Desc:   Use interactive markers in a C++ class via the external python node
 */
 
-#include <rviz_visual_tools/imarker_simple.h>
-#include <rviz_visual_tools/rviz_visual_tools.h>
+#include <rviz_visual_tools/imarker_simple.hpp>
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
 #include <string>
 
 namespace rviz_visual_tools
 {
-IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::Pose& initial_pose)
-  : nh_("~"), latest_pose_(initial_pose)
+using visualization_msgs::msg::InteractiveMarkerFeedback;
+using visualization_msgs::msg::InteractiveMarkerControl;
+
+IMarkerSimple::IMarkerSimple(
+    const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
+    const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
+    const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
+    const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+    const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
+    const std::string& name, double scale, const geometry_msgs::msg::Pose& initial_pose)
+  : node_base_interface_(node_base_interface)
+  , clock_interface_(clock_interface)
+  , logging_interface_(logging_interface)
+  , topics_interface_(topics_interface)
+  , services_interface_(services_interface)
+  , logger_(logging_interface_->get_logger().get_child("imarker_simple"))
+  , latest_pose_(initial_pose)
 {
   // Create Marker Server
-  const std::string imarker_topic = nh_.getNamespace() + "/" + name;
-  imarker_server_.reset(new interactive_markers::InteractiveMarkerServer(imarker_topic, "", false));
+  std::string name_space = node_base_interface_->get_namespace();
+  const std::string imarker_topic = (name_space == "/" ? name : name_space + "/" + name);
+
+  imarker_server_ = std::make_shared<interactive_markers::InteractiveMarkerServer>(
+      imarker_topic, node_base_interface_, clock_interface_, logging_interface_, topics_interface_,
+      services_interface_);
 
   // ros::Duration(2.0).sleep();
 
@@ -58,28 +77,29 @@ IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geomet
   imarker_server_->applyChanges();
 }
 
-geometry_msgs::Pose& IMarkerSimple::getPose()
+geometry_msgs::msg::Pose& IMarkerSimple::getPose()
 {
   return latest_pose_;
 }
 
 void IMarkerSimple::setPose(const Eigen::Isometry3d& pose)
 {
-  geometry_msgs::Pose pose_msg;
+  geometry_msgs::msg::Pose pose_msg;
   rviz_visual_tools::RvizVisualTools::convertPoseSafe(pose, pose_msg);
   setPose(pose_msg);
 }
 
-void IMarkerSimple::setPose(const geometry_msgs::Pose& pose)
+void IMarkerSimple::setPose(const geometry_msgs::msg::Pose& pose)
 {
   latest_pose_ = pose;
   sendUpdatedIMarkerPose();
 }
 
-void IMarkerSimple::iMarkerCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback)
+void IMarkerSimple::iMarkerCallback(
+    const visualization_msgs::msg::InteractiveMarkerFeedback::ConstSharedPtr& feedback)
 {
   // Ignore if not pose update
-  if (feedback->event_type != visualization_msgs::InteractiveMarkerFeedback::POSE_UPDATE)
+  if (feedback->event_type != visualization_msgs::msg::InteractiveMarkerFeedback::POSE_UPDATE)
   {
     return;
   }
@@ -97,9 +117,11 @@ void IMarkerSimple::sendUpdatedIMarkerPose()
   imarker_server_->applyChanges();
 }
 
-void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose& pose, double scale)
+void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale)
 {
-  ROS_INFO_STREAM_NAMED(name_, "Making 6dof interactive marker named " << name_);
+  std::stringstream ss;
+  ss << "Making 6dof interactive marker named " << name_;
+  RCLCPP_INFO(logger_, ss.str().c_str());
 
   int_marker_.header.frame_id = "world";
   int_marker_.pose = pose;
@@ -143,9 +165,9 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose& pose, double scale
   control.interaction_mode = InteractiveMarkerControl::MOVE_AXIS;
   int_marker_.controls.push_back(control);
 
-  imarker_server_->insert(int_marker_);
-  imarker_server_->setCallback(int_marker_.name, boost::bind(&IMarkerSimple::iMarkerCallback, this, _1));
-  // menu_handler_.apply(*imarker_server_, int_marker_.name);
+  imarker_server_->insert(int_marker_,
+                          std::bind(&IMarkerSimple::iMarkerCallback, this, std::placeholders::_1));
+  imarker_server_->applyChanges();
 }
 
 }  // namespace rviz_visual_tools

@@ -39,7 +39,7 @@
 // C++
 #include <string>
 
-#include <rviz_visual_tools/remote_control.h>
+#include <rviz_visual_tools/remote_control.hpp>
 
 #define CONSOLE_COLOR_RESET "\033[0m"
 #define CONSOLE_COLOR_CYAN "\033[96m"
@@ -47,82 +47,89 @@
 
 namespace rviz_visual_tools
 {
+using namespace std::chrono_literals;
+
 /**
  * \brief Constructor
  */
-RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_(nh)
+RemoteControl::RemoteControl(
+    const rclcpp::executor::Executor::SharedPtr& executor,
+    const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
+    const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
+    const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
+  : executor_(executor)
+  , node_base_interface_(node_base_interface)
+  , topics_interface_(topics_interface)
+  , logger_(logging_interface->get_logger().get_child("remote_control"))
+  , next_step_ready_(nullptr)
 {
-  std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
-
   // Subscribe to Rviz Dashboard
+  std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
   const std::size_t button_queue_size = 10;
-  rviz_dashboard_sub_ = nh_.subscribe<sensor_msgs::Joy>(rviz_dashboard_topic, button_queue_size,
-                                                        &RemoteControl::rvizDashboardCallback, this);
+  const rclcpp::QoS update_sub_qos(button_queue_size);
+  rviz_dashboard_sub_ = rclcpp::create_subscription<sensor_msgs::msg::Joy>(
+      topics_interface_, rviz_dashboard_topic, update_sub_qos,
+      std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
 
-  ROS_INFO_STREAM_NAMED(name_, "RemoteControl Ready.");
+  if (!node_base_interface_->get_associated_with_executor_atomic().load())
+  {
+    executor_->add_node(node_base_interface_);
+  }
+  RCLCPP_INFO(logger_, "RemoteControl Ready.");
 }
 
-void RemoteControl::rvizDashboardCallback(const sensor_msgs::Joy::ConstPtr& msg)
+void RemoteControl::rvizDashboardCallback(
+    const sensor_msgs::msg::Joy::ConstSharedPtr msg)  // NOLINT
 {
-  if (msg->buttons[1] != 0)
+  if (msg->buttons.size() > 1 && msg->buttons[1] != 0)
   {
     setReadyForNextStep();
   }
-  else if (msg->buttons[2] != 0)
+  else if (msg->buttons.size() > 2 && msg->buttons[2] != 0)
   {
     setAutonomous();
   }
-  else if (msg->buttons[3] != 0)
+  else if (msg->buttons.size() > 3 && msg->buttons[3] != 0)
   {
     setFullAutonomous();
   }
-  else if (msg->buttons[4] != 0)
+  else if (msg->buttons.size() > 4 && msg->buttons[4] != 0)
   {
-    setStop();
+    stopAllAutonomous();
   }
   else
   {
-    ROS_ERROR_STREAM_NAMED(name_, "Unknown input button");
+    RCLCPP_ERROR(logger_, "Unknown input button");
   }
 }
 
-bool RemoteControl::setReadyForNextStep()
+void RemoteControl::setReadyForNextStep()
 {
-  stop_ = false;
-
-  if (is_waiting_)
+  if (next_step_ready_ != nullptr)
   {
-    next_step_ready_ = true;
+    next_step_ready_->set_value();
   }
-  return true;
 }
 
-void RemoteControl::setAutonomous(bool autonomous)
+void RemoteControl::setAutonomous()
 {
-  autonomous_ = autonomous;
-  stop_ = false;
-}
-
-void RemoteControl::setFullAutonomous(bool autonomous)
-{
-  full_autonomous_ = autonomous;
-  autonomous_ = autonomous;
-  stop_ = false;
-}
-
-void RemoteControl::setStop(bool stop)
-{
-  stop_ = stop;
-  if (stop)
+  autonomous_ = true;
+  if (next_step_ready_ != nullptr)
   {
-    autonomous_ = false;
-    full_autonomous_ = false;
+    next_step_ready_->set_value();
   }
 }
 
-bool RemoteControl::getStop()
+void RemoteControl::setFullAutonomous()
 {
-  return stop_;
+  full_autonomous_ = true;
+  setAutonomous();
+}
+
+void RemoteControl::stopAllAutonomous()
+{
+  autonomous_ = false;
+  full_autonomous_ = false;
 }
 
 bool RemoteControl::getAutonomous()
@@ -137,81 +144,72 @@ bool RemoteControl::getFullAutonomous()
 
 bool RemoteControl::waitForNextStep(const std::string& caption)
 {
-  // Check if we really need to wait
-  if (!(!next_step_ready_ && !autonomous_ && ros::ok()))
-  {
-    return true;
-  }
-
-  // Show message
-  std::cout << std::endl;
-  std::cout << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET << std::flush;
-
-  if (displayWaitingState_)
-  {
-    displayWaitingState_(true);
-  }
-
-  is_waiting_ = true;
-  // Wait until next step is ready
-  while (!next_step_ready_ && !autonomous_ && ros::ok())
-  {
-    ros::Duration(0.25).sleep();
-    ros::spinOnce();
-  }
-  if (!ros::ok())
-  {
-    exit(0);
-  }
-
-  next_step_ready_ = false;
-  is_waiting_ = false;
-  std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
-
-  if (displayWaitingState_)
-  {
-    displayWaitingState_(false);
-  }
-  return true;
+  return (waitForNextStepCommon(caption, autonomous_));
 }
 
 bool RemoteControl::waitForNextFullStep(const std::string& caption)
 {
+  return (waitForNextStepCommon(caption, full_autonomous_));
+}
+
+bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool autonomous)
+{
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !full_autonomous_ && ros::ok()))
+  if (next_step_ready_ != nullptr || autonomous || !rclcpp::ok())
   {
     return true;
   }
 
   // Show message
-  std::cout << std::endl;
-  std::cout << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET << std::flush;
+  {
+    std::stringstream ss;
+    ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
+    RCLCPP_ERROR(logger_, ss.str().c_str());
+  }
 
   if (displayWaitingState_)
   {
     displayWaitingState_(true);
   }
 
-  is_waiting_ = true;
+  next_step_ready_ = std::make_unique<std::promise<void>>();
   // Wait until next step is ready
-  while (!next_step_ready_ && !full_autonomous_ && ros::ok())
+  std::shared_future<void> future_next_step_ready = next_step_ready_->get_future();
+  while (!autonomous && rclcpp::ok())
   {
-    ros::Duration(0.25).sleep();
-    ros::spinOnce();
-  }
-  if (!ros::ok())
-  {
-    exit(0);
+    /* TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520 the only way to spin is by
+     * having access to the executor. Thus, the remote control must have an executor. Once the issue
+     * has been resolved, it would be nice to remove the executor from this class */
+    rclcpp::executor::FutureReturnCode status = executor_->spin_until_future_complete(
+        future_next_step_ready, std::chrono::milliseconds(125));
+    if (status == rclcpp::executor::FutureReturnCode::SUCCESS)
+    {
+      break;
+    }
+    else if (status == rclcpp::executor::FutureReturnCode::INTERRUPTED)
+    {
+      RCLCPP_INFO(logger_, "Spinning was interrupted.");
+      next_step_ready_ = nullptr;
+      if (!rclcpp::ok())
+      {
+        exit(0);
+      }
+    }
   }
 
-  next_step_ready_ = false;
-  is_waiting_ = false;
-  std::cout << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET << std::endl;
+  {
+    std::stringstream ss;
+    ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
+    RCLCPP_ERROR(logger_, ss.str().c_str());
+  }
 
   if (displayWaitingState_)
   {
     displayWaitingState_(false);
   }
+
+  next_step_ready_ = nullptr;
+
   return true;
 }
 
