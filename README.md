@@ -104,7 +104,7 @@ In the following snippet we create a pose at xyz (0.1, 0.1, 0.1) and rotate the 
     // Don't forget to trigger the publisher!
     visual_tools_->trigger();
 
-For more example code see [rviz_visual_tools_demo.cpp](https://github.com/PickNikRobotics/rviz_visual_tools/blob/melodic-devel/src/rviz_visual_tools_demo.cpp)
+For more example code see [rviz_visual_tools_demo.cpp](https://github.com/PickNikRobotics/rviz_visual_tools/blob/eloquent-devel/src/rviz_visual_tools_demo.cpp)
 
 ## Rviz GUI Usage
 **NOT PORTED**
@@ -278,18 +278,18 @@ Run with clang-tidy:
 
 ## Docker Image
 
-[Dockerhub](https://hub.docker.com/r/davetcoleman/rviz_visual_tools/builds/) automatically creates a Docker for this repo. To run with GUI:
+[Dockerhub](https://hub.docker.com/r/picknik/rviz_visual_tools/builds/) automatically creates a Docker for this repo. To run with GUI:
 
     # This is not the safest way however, as you then compromise the access control to X server on your host
     xhost +local:root # for the lazy and reckless
-    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" davetcoleman/rviz_visual_tools:melodic
+    docker run -it --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" picknik/rviz_visual_tools:${ROS_DISTRO}
     export containerId=$(docker ps -l -q)
     # Close security hole:
     xhost -local:root
 
 (Optional) To build the docker image locally for this repo, run in base of package:
 
-    docker build -t davetcoleman/rviz_visual_tools:melodic .
+    docker build -t picknik/rviz_visual_tools:${ROS_DISTRO} .
 
 ## Contribute
 

@@ -52,9 +52,6 @@
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
-// Boost
-#include <boost/shared_ptr.hpp>
-
 // Messages
 #include <shape_msgs/msg/mesh.hpp>
 #include <std_msgs/msg/color_rgba.hpp>
