@@ -41,6 +41,7 @@
 #pragma once
 
 // C++
+#include <chrono>
 #include <string>
 
 // ROS
@@ -55,9 +56,35 @@ class RemoteControl
 {
 public:
   /**
-   * \brief Constructor
+   * \brief Constructor for passing in NodeOptions and an executor.
+   * \param node - A node that will be added to an executor outside of this class
+   */
+  explicit RemoteControl(const rclcpp::executor::Executor::SharedPtr& executor,
+                         const rclcpp::NodeOptions& node_options)
+    : RemoteControl(executor, std::make_shared<rclcpp::Node>("remote_control", node_options))
+  {
+  }
+
+  /**
+   * \brief Constructor for passing in a Node and it's executor.
+   * \param node - A node that will be added to an executor outside of this class
+   */
+  template <typename NodePtr>
+  explicit RemoteControl(const rclcpp::executor::Executor::SharedPtr& executor, NodePtr node)
+    : RemoteControl(executor, node->get_node_base_interface(), node->get_node_topics_interface(),
+                    node->get_node_logging_interface())
+  {
+  }
+
+  /**
+   * \brief Constructor for passing in Node components for a node that is already added to an
+   * executor.
+   * \param topics_iterface - An interface for publishing and subscribing to topics
+   * \param logging_iterface - An interface for publishing to the rosconsole
    */
   explicit RemoteControl(
+      const rclcpp::executor::Executor::SharedPtr& executor,
+      const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
       const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
       const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
 
@@ -67,28 +94,11 @@ public:
   void rvizDashboardCallback(const sensor_msgs::msg::Joy::ConstSharedPtr msg);  // NOLINT
 
   /**
-   * \brief Step to next step
-   * \return true on success
-   */
-  bool setReadyForNextStep();
-
-  /**
-   * \brief Enable autonomous mode
-   */
-  void setAutonomous(bool autonomous = true);
-  void setFullAutonomous(bool autonomous = true);
-
-  /**
    * \brief Get the autonomous mode
    * \return true if is in autonomous mode
    */
   bool getAutonomous();
   bool getFullAutonomous();
-
-  /**
-   * \brief Stop something in pipeline
-   */
-  void setStop(bool stop = true);
 
   /**
    * \brief See if we are in stop mode
@@ -115,7 +125,34 @@ public:
   }
 
 private:
+  /**
+   * \brief Step to next step
+   * \return true on success
+   */
+  void setReadyForNextStep();
+
+  /**
+   * \brief Enable autonomous mode
+   */
+  void setAutonomous();
+  void setFullAutonomous();
+
+  /**
+   * \brief Stop autonomous and full autonomous modes
+   */
+  void stopAllAutonomous();
+
+  /**
+   * \brief Wait until user presses a button
+   * \return true on success
+   */
+  bool waitForNextStepCommon(const std::string& caption, bool autonomous);
+
+  // Executor for spinning while in waitForNextStepCommon
+  rclcpp::executor::Executor::SharedPtr executor_;
+
   // Node Interfaces
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
   rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
   rclcpp::Logger logger_;
 
@@ -125,7 +162,7 @@ private:
   // Input
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr rviz_dashboard_sub_;
 
-  std::unique_ptr<std::promise<bool>> next_step_ready_;
+  std::unique_ptr<std::promise<void>> next_step_ready_;
   bool autonomous_ = false;
   bool full_autonomous_ = false;
   bool stop_ = false;

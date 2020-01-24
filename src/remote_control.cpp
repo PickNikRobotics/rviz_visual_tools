@@ -53,9 +53,13 @@ using namespace std::chrono_literals;
  * \brief Constructor
  */
 RemoteControl::RemoteControl(
+    const rclcpp::executor::Executor::SharedPtr& executor,
+    const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
     const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
     const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
-  : topics_interface_(topics_interface)
+  : executor_(executor)
+  , node_base_interface_(node_base_interface)
+  , topics_interface_(topics_interface)
   , logger_(logging_interface->get_logger().get_child("remote_control"))
   , next_step_ready_(nullptr)
 {
@@ -67,6 +71,10 @@ RemoteControl::RemoteControl(
       topics_interface_, rviz_dashboard_topic, update_sub_qos,
       std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
 
+  if (!node_base_interface_->get_associated_with_executor_atomic().load())
+  {
+    executor_->add_node(node_base_interface_);
+  }
   RCLCPP_INFO(logger_, "RemoteControl Ready.");
 }
 
@@ -87,7 +95,7 @@ void RemoteControl::rvizDashboardCallback(
   }
   else if (msg->buttons.size() > 4 && msg->buttons[4] != 0)
   {
-    setStop();
+    stopAllAutonomous();
   }
   else
   {
@@ -95,47 +103,33 @@ void RemoteControl::rvizDashboardCallback(
   }
 }
 
-bool RemoteControl::setReadyForNextStep()
+void RemoteControl::setReadyForNextStep()
 {
-  stop_ = false;
-
-  if (next_step_ready_)
+  if (next_step_ready_ != nullptr)
   {
-    next_step_ready_->set_value(true);
-  }
-  return true;
-}
-
-void RemoteControl::setAutonomous(bool autonomous)
-{
-  autonomous_ = autonomous;
-  if (next_step_ready_)
-  {
-    next_step_ready_->set_value(true);
-  }
-  stop_ = false;
-}
-
-void RemoteControl::setFullAutonomous(bool autonomous)
-{
-  full_autonomous_ = autonomous;
-  if (full_autonomous_)
-    setAutonomous(full_autonomous_);
-}
-
-void RemoteControl::setStop(bool stop)
-{
-  stop_ = stop;
-  if (stop)
-  {
-    autonomous_ = false;
-    full_autonomous_ = false;
+    next_step_ready_->set_value();
   }
 }
 
-bool RemoteControl::getStop()
+void RemoteControl::setAutonomous()
 {
-  return stop_;
+  autonomous_ = true;
+  if (next_step_ready_ != nullptr)
+  {
+    next_step_ready_->set_value();
+  }
+}
+
+void RemoteControl::setFullAutonomous()
+{
+  full_autonomous_ = true;
+  setAutonomous();
+}
+
+void RemoteControl::stopAllAutonomous()
+{
+  autonomous_ = false;
+  full_autonomous_ = false;
 }
 
 bool RemoteControl::getAutonomous()
@@ -150,68 +144,18 @@ bool RemoteControl::getFullAutonomous()
 
 bool RemoteControl::waitForNextStep(const std::string& caption)
 {
-  // Check if we really need to wait
-  if (next_step_ready_ || autonomous_ || !rclcpp::ok())
-  {
-    return true;
-  }
-
-  // Show message
-  {
-    std::stringstream ss;
-    ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_, ss.str().c_str());
-  }
-
-  if (displayWaitingState_)
-  {
-    displayWaitingState_(true);
-  }
-
-  next_step_ready_ = std::make_unique<std::promise<bool>>();
-  // Wait until next step is ready
-  std::future<bool> future_next_step_ready = next_step_ready_->get_future();
-  std::future_status status;
-  while (!autonomous_ && rclcpp::ok() && future_next_step_ready.valid())
-  {
-    status = future_next_step_ready.wait_for(std::chrono::milliseconds(250));
-    // TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520  there is no way
-    //                 to spin without an executor so the remote control is not yet usable
-    //                 Once this feature is ready it should be implemented here
-    if (status == std::future_status::ready)
-    {
-      break;
-    }
-  }
-  if (!future_next_step_ready.valid())
-  {
-    RCLCPP_ERROR(logger_, "Future became invalid");
-    return false;
-  }
-  if (!rclcpp::ok())
-  {
-    exit(0);
-  }
-  next_step_ready_.reset();
-
-  // Show message
-  {
-    std::stringstream ss;
-    ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_, ss.str().c_str());
-  }
-
-  if (displayWaitingState_)
-  {
-    displayWaitingState_(false);
-  }
-  return true;
+  return (waitForNextStepCommon(caption, autonomous_));
 }
 
 bool RemoteControl::waitForNextFullStep(const std::string& caption)
 {
+  return (waitForNextStepCommon(caption, full_autonomous_));
+}
+
+bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool autonomous)
+{
   // Check if we really need to wait
-  if (next_step_ready_ || full_autonomous_ || !rclcpp::ok())
+  if (next_step_ready_ != nullptr || autonomous || !rclcpp::ok())
   {
     return true;
   }
@@ -228,31 +172,27 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
     displayWaitingState_(true);
   }
 
-  next_step_ready_ = std::make_unique<std::promise<bool>>();
+  next_step_ready_ = std::make_unique<std::promise<void>>();
   // Wait until next step is ready
-  std::future<bool> future_next_step_ready = next_step_ready_->get_future();
-  std::future_status status;
-  while (!full_autonomous_ && rclcpp::ok() && future_next_step_ready.valid())
+  std::shared_future<void> future_next_step_ready = next_step_ready_->get_future();
+  while (!autonomous)
   {
-    status = future_next_step_ready.wait_for(std::chrono::milliseconds(250));
-    // TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520  there is no way
-    //                 to spin without an executor so the remote control is not yet usable
-    //                 Once this feature is ready it should be implemented here
-    if (status == std::future_status::ready)
+    /* TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520 the only way to spin is by
+     * having access to the executor. Thus, the remote control must have an executor. Once the issue
+     * has been resolved, it would be nice to remove the executor from this class */
+    rclcpp::executor::FutureReturnCode status = executor_->spin_until_future_complete(
+        future_next_step_ready, std::chrono::milliseconds(125));
+    if (status == rclcpp::executor::FutureReturnCode::SUCCESS)
     {
       break;
     }
+    else if (status == rclcpp::executor::FutureReturnCode::INTERRUPTED)
+    {
+      RCLCPP_INFO(logger_, "Spinning was interrupted.");
+      next_step_ready_ = nullptr;
+      return false;
+    }
   }
-  if (!future_next_step_ready.valid())
-  {
-    RCLCPP_ERROR(logger_, "Future became invalid");
-    return false;
-  }
-  if (!rclcpp::ok())
-  {
-    exit(0);
-  }
-  next_step_ready_.reset();
 
   {
     std::stringstream ss;
@@ -264,6 +204,9 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
   {
     displayWaitingState_(false);
   }
+
+  next_step_ready_ = nullptr;
+
   return true;
 }
 

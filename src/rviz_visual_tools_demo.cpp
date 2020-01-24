@@ -42,6 +42,7 @@
 
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
+#include <rviz_visual_tools/remote_control.hpp>
 
 // C++
 #include <string>
@@ -79,6 +80,12 @@ public:
     // Clear messages
     visual_tools_->deleteAllMarkers();
     visual_tools_->enableBatchPublishing();
+  }
+
+  /** \brief Pre-load remote control */
+  void setRemoteControl(const RemoteControlPtr& remote_control)
+  {
+    visual_tools_->setRemoteControl(remote_control);
   }
 
   void publishLabelHelper(const Eigen::Isometry3d& pose, const std::string& label)
@@ -633,17 +640,22 @@ int main(int argc, char* argv[])
 
   // Create an executor that will be responsible for execution of callbacks for a set of nodes.
   // With this version, all callbacks will be called from within this thread (the main one).
-  rclcpp::executors::SingleThreadedExecutor exec;
-  rclcpp::NodeOptions options;
-  options.arguments(args);
 
   RCLCPP_INFO(rclcpp::get_logger("rviz_demo"), "Visual Tools Demo");
 
+  // Create executor
+  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+
   // Create demo node
+  rclcpp::NodeOptions options = rclcpp::NodeOptions().arguments(args);
   auto demo = std::make_shared<rviz_visual_tools::RvizVisualToolsDemo>(options);
+
+  auto remote_control = std::make_shared<rviz_visual_tools::RemoteControl>(executor, options);
+  demo->setRemoteControl(remote_control);
+
   // Allow the action server to recieve and send ros messages
-  exec.add_node(demo);
-  exec.spin_some();
+  executor->add_node(demo);
+  executor->spin_some();
 
   double x_location = 0;
   demo->testRows(x_location);
@@ -651,7 +663,7 @@ int main(int argc, char* argv[])
   demo->testSize(x_location, rviz_visual_tools::LARGE);
   demo->testSizes(x_location);
 
-  exec.remove_node(demo);
+  executor->remove_node(demo);
 
   RCLCPP_INFO(rclcpp::get_logger("rviz_demo"), "Shutting down.");
 
