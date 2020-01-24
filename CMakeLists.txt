@@ -68,22 +68,13 @@ include_directories(
   # rclcpp
 # )
 
-# Remote control library
-add_library(${PROJECT_NAME}_remote_control
-  src/remote_control.cpp
-)
-target_link_libraries(${PROJECT_NAME}_remote_control)
-ament_target_dependencies(${PROJECT_NAME}_remote_control
-  rclcpp
-  sensor_msgs
-)
-
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
   src/rviz_visual_tools.cpp
   src/tf_visual_tools.cpp
   src/remote_control.cpp
 )
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 target_link_libraries(${PROJECT_NAME})
 
@@ -103,10 +94,11 @@ ament_target_dependencies(${PROJECT_NAME}
 add_library(${PROJECT_NAME}_imarker_simple
   src/imarker_simple.cpp
 )
+target_include_directories(${PROJECT_NAME}_imarker_simple PUBLIC include)
+
 target_link_libraries(${PROJECT_NAME}_imarker_simple
   ${PROJECT_NAME}
   ${${PROJECT_NAME}_LIBRARIES}
-  # ${PROJECT_NAME}_remote_control
 )
 ament_target_dependencies(${PROJECT_NAME}_imarker_simple
   rclcpp
@@ -131,13 +123,14 @@ ament_target_dependencies(${PROJECT_NAME}_demo
 )
 
 # Demo executable
-add_executable(${PROJECT_NAME}_imarker_simple_demo src/imarker_simple_demo.cpp)
+add_executable(${PROJECT_NAME}_imarker_simple_demo
+  src/imarker_simple_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
   ${PROJECT_NAME}_imarker_simple
   ${${PROJECT_NAME}_LIBRARIES}
 )
 
-ament_target_dependencies(${PROJECT_NAME}_demo
+ament_target_dependencies(${PROJECT_NAME}_imarker_simple_demo
   rclcpp
 )
 
@@ -145,20 +138,14 @@ ament_target_dependencies(${PROJECT_NAME}_demo
 ## Install ##
 #############
 
-ament_export_libraries(${PROJECT_NAME})
-ament_export_libraries(${PROJECT_NAME}_remote_control)
-# ament_export_libraries(${PROJECT_NAME}_gui)
-ament_export_libraries(${PROJECT_NAME}_imarker_simple)
-
 # Install libraries
 install(
   TARGETS
     ${PROJECT_NAME}
-    ${PROJECT_NAME}_remote_control
     # ${PROJECT_NAME}_gui
     ${PROJECT_NAME}_imarker_simple
-  LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
@@ -172,13 +159,17 @@ install(
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-# Install shared resources
-install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
-
 # Install header files
 install(
   DIRECTORY include/
   DESTINATION include)
+
+# Install shared resources
+install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
+
+ament_export_libraries(${PROJECT_NAME})
+# ament_export_libraries(${PROJECT_NAME}_gui)
+ament_export_libraries(${PROJECT_NAME}_imarker_simple)
 
 ##########
 ## TEST ##
@@ -187,7 +178,8 @@ install(
 if (BUILD_TESTING)
   # Run tests
   find_package(ament_cmake_gtest REQUIRED)
-  ament_add_gtest(${PROJECT_NAME}_rvt_test tests/rvt_test.cpp
+  ament_add_gtest(${PROJECT_NAME}_rvt_test
+    tests/rvt_test.cpp
     TIMEOUT 180)
   ament_target_dependencies(${PROJECT_NAME}_rvt_test
     rclcpp

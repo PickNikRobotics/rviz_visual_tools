@@ -175,7 +175,7 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
   next_step_ready_ = std::make_unique<std::promise<void>>();
   // Wait until next step is ready
   std::shared_future<void> future_next_step_ready = next_step_ready_->get_future();
-  while (!autonomous)
+  while (!autonomous && rclcpp::ok())
   {
     /* TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520 the only way to spin is by
      * having access to the executor. Thus, the remote control must have an executor. Once the issue
@@ -190,7 +190,10 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
     {
       RCLCPP_INFO(logger_, "Spinning was interrupted.");
       next_step_ready_ = nullptr;
-      return false;
+      if (!rclcpp::ok())
+      {
+        exit(0);
+      }
     }
   }
 

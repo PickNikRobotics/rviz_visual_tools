@@ -638,12 +638,10 @@ int main(int argc, char* argv[])
   // This should be called once per process.
   auto args = rclcpp::init_and_remove_ros_arguments(argc, argv);
 
-  // Create an executor that will be responsible for execution of callbacks for a set of nodes.
-  // With this version, all callbacks will be called from within this thread (the main one).
-
   RCLCPP_INFO(rclcpp::get_logger("rviz_demo"), "Visual Tools Demo");
 
-  // Create executor
+  // Create an executor that will be responsible for execution of callbacks for a set of nodes.
+  // With this version, all callbacks will be called from within this thread (the main one).
   auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
   // Create demo node
