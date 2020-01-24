@@ -197,20 +197,23 @@ public:
    * \param node - a pointer to a ros node
    */
   template <typename NodePtr>
-  RvizVisualTools(const std::string& base_frame, const std::string& marker_topic, NodePtr node)
+  explicit RvizVisualTools(const std::string& base_frame, const std::string& marker_topic,
+                           NodePtr node, const RemoteControlPtr& remote_control = nullptr)
     : RvizVisualTools(base_frame, marker_topic, node->get_node_base_interface(),
                       node->get_node_topics_interface(), node->get_node_graph_interface(),
-                      node->get_node_clock_interface(), node->get_node_logging_interface())
+                      node->get_node_clock_interface(), node->get_node_logging_interface(),
+                      remote_control)
   {
   }
 
-  RvizVisualTools(
+  explicit RvizVisualTools(
       const std::string& base_frame, const std::string& marker_topic,
       const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
       const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
       const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
       const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
-      const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
+      const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
+      const RemoteControlPtr& remote_control = nullptr);
 
   /**
    * \brief Deconstructor
@@ -1150,22 +1153,16 @@ public:
     psychedelic_mode_ = psychedelic_mode;
   }
 
-  // TODO(mlautman): Uncomment once https://github.com/ros2/rclcpp/issues/520 is addressed.
-  //                 Currently there is no way to spin without an executor so the remote
-  //                 control is not usable until this feature is complete.
   /** \brief Wait for user feedback i.e. through a button or joystick */
-  // void prompt(const std::string& msg);
+  bool prompt(const std::string& msg);
+
+  /** \brief Ability to load remote control on the fly */
+  RemoteControlPtr& getRemoteControl();
+
+  /** \brief Pre-load remote control */
+  void setRemoteControl(const RemoteControlPtr& remote_control);
 
 protected:
-  // TODO(mlautman): Uncomment once https://github.com/ros2/rclcpp/issues/520 is addressed.
-  //                 Currently there is no way to spin without an executor so the remote
-  //                 control is not usable until this feature is complete.
-  // /** \brief Ability to load remote control on the fly */
-  // RemoteControlPtr& getRemoteControl();
-  //
-  // /** \brief Pre-load remote control */
-  // void loadRemoteControl();
-
   // Node Interfaces
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
   rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;

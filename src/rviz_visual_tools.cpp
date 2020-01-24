@@ -67,13 +67,15 @@ RvizVisualTools::RvizVisualTools(
     const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
     const rclcpp::node_interfaces::NodeGraphInterface::SharedPtr& graph_interface,
     const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
-    const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
+    const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
+    const RemoteControlPtr& remote_control)
   : node_base_interface_(node_base_interface)
   , topics_interface_(topics_interface)
   , graph_interface_(graph_interface)
   , clock_interface_(clock_interface)
   , logging_interface_(logging_interface)
   , logger_(logging_interface_->get_logger().get_child("rviz_visual_tools"))
+  , remote_control_(remote_control)
   , marker_topic_(marker_topic)
   , base_frame_(base_frame)
 {
@@ -3008,28 +3010,29 @@ void RvizVisualTools::printTransformFull(const Eigen::Isometry3d& transform)
 // TODO(mlautman): Uncomment once https://github.com/ros2/rclcpp/issues/520 is addressed.
 //                 Currently there is no way to spin without an executor so the remote
 //                 control is not usable until this feature is complete.
-// void RvizVisualTools::prompt(const std::string& msg)
-// {
-//   getRemoteControl()->waitForNextStep(msg);
-// }
+bool RvizVisualTools::prompt(const std::string& msg)
+{
+  if (!remote_control_)
+  {
+    RCLCPP_INFO(logger_, "Remote control not initialized, skipping prompt");
+    return false;
+  }
+  return remote_control_->waitForNextStep(msg);
+}
 
-// RemoteControlPtr& RvizVisualTools::getRemoteControl()
-// {
-//   if (!remote_control_)
-//   {
-//     loadRemoteControl();
-//   }
-//   return remote_control_;
-// }
+RemoteControlPtr& RvizVisualTools::getRemoteControl()
+{
+  return remote_control_;
+}
 
-// void RvizVisualTools::loadRemoteControl()
-// {
-//   // Load remote
-//   if (!remote_control_)
-//   {
-//     remote_control_ = std::make_shared<RemoteControl>(node_base_interface_, topics_interface_,
-//     logging_interface_);
-//   }
-// }
+void RvizVisualTools::setRemoteControl(const RemoteControlPtr& remote_control)
+{
+  if (remote_control_)
+  {
+    RCLCPP_INFO(logger_,
+                "Overwriting existing remote_control_. there should be no reason to do that");
+  }
+  remote_control_ = remote_control;
+}
 
 }  // namespace rviz_visual_tools
