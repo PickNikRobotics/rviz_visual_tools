@@ -86,7 +86,9 @@ ament_target_dependencies(${PROJECT_NAME}
   tf2_eigen
   tf2_geometry_msgs
   sensor_msgs
+  shape_msgs
   std_msgs
+  trajectory_msgs
   eigen_stl_containers
 )
 
