@@ -35,7 +35,15 @@
 /* Author: Dave Coleman <dave@picknik.ai>, Andy McEvoy
    Desc:   Helper functions for displaying basic shape markers in Rviz
 */
+// C++
+#include <cassert>
+#include <cmath>  // for random poses
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
+// Header
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 
 // Conversions
@@ -45,12 +53,8 @@
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-// C++
-#include <cmath>  // for random poses
-#include <set>
-#include <string>
-#include <utility>
-#include <vector>
+// Use (void) to silent unused warnings.
+#define assertm(exp, msg) assert(((void)msg, exp))
 
 namespace rviz_visual_tools
 {
@@ -2003,9 +2007,9 @@ bool RvizVisualTools::publishLines(const EigenSTL::vector_Vector3d& aPoints,
                                    const EigenSTL::vector_Vector3d& bPoints,
                                    const std::vector<colors>& colors, scales scale)
 {
-  BOOST_ASSERT_MSG(aPoints.size() == bPoints.size() && bPoints.size() == colors.size(),
-                   "Mismatching vector sizes: "
-                   "aPoints, bPoints, and colors");
+  assertm(aPoints.size() == bPoints.size() && bPoints.size() == colors.size(),
+          "Mismatching vector sizes: "
+          "aPoints, bPoints, and colors");
 
   std::vector<geometry_msgs::msg::Point> a_points_msg;
   std::vector<geometry_msgs::msg::Point> b_points_msg;
@@ -2019,10 +2023,9 @@ bool RvizVisualTools::publishLines(const EigenSTL::vector_Vector3d& aPoints,
     // Convert color to ROS Msg
     colors_msg.push_back(getColor(colors[i]));
   }
-  BOOST_ASSERT_MSG(a_points_msg.size() == b_points_msg.size() &&
-                       b_points_msg.size() == colors_msg.size(),
-                   "Mismatched "
-                   "vector sizes");
+  assertm(a_points_msg.size() == b_points_msg.size() && b_points_msg.size() == colors_msg.size(),
+          "Mismatched "
+          "vector sizes");
 
   return publishLines(a_points_msg, b_points_msg, colors_msg, getScale(scale));
 }
@@ -2057,10 +2060,9 @@ bool RvizVisualTools::publishLines(const std::vector<geometry_msgs::msg::Point>&
   }
 
   // Testing
-  BOOST_ASSERT_MSG(line_list_marker_.colors.size() == line_list_marker_.points.size(),
-                   "Arrays mismatch in size");
-  BOOST_ASSERT_MSG(line_list_marker_.colors.size() == aPoints.size() * 2,
-                   "Colors arrays mismatch in size");
+  assertm(line_list_marker_.colors.size() == line_list_marker_.points.size(),
+          "Arrays mismatch in size");
+  assertm(line_list_marker_.colors.size() == aPoints.size() * 2, "Colors arrays mismatch in size");
 
   // Helper for publishing rviz markers
   return publishMarker(line_list_marker_);
@@ -2586,7 +2588,7 @@ bool RvizVisualTools::publishSpheres(const EigenSTL::vector_Vector3d& points,
                                      const std::vector<colors>& colors, scales scale,
                                      const std::string& ns)
 {
-  BOOST_ASSERT_MSG(points.size() == colors.size(), "Mismatching vector sizes: points and colors");
+  assertm(points.size() == colors.size(), "Mismatching vector sizes: points and colors");
 
   std::vector<geometry_msgs::msg::Point> points_msg;
   std::vector<std_msgs::msg::ColorRGBA> colors_msg;

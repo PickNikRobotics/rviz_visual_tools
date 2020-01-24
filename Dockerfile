@@ -6,7 +6,7 @@ MAINTAINER Mike Lautman mike@picknik.ai
 
 ENV TERM xterm
 
-ENV GIT_BRANCH=${ROS_DISTRO}-port
+ENV GIT_BRANCH=${ROS_DISTRO}-devel
 
 # Setup catkin workspace
 ENV ROS_WS=/opt/ws_moveit
@@ -27,17 +27,15 @@ RUN apt-get -qq update && \
         python3-vcstool \
         python3-rospkg-modules \
         python3-rosdistro-modules && \
+    rosdep update -q && \
     cd $ROS_WS/src && \
     git clone https://github.com/picknikrobotics/rviz_visual_tools.git -b ${GIT_BRANCH} && \
     vcs import < rviz_visual_tools/rviz_visual_tools.repos && \
     # Remove folders declared as COLCON_IGNORE
     find -L . -name COLCON_IGNORE -printf "%h\0" | xargs -0 rm -rf && \
-    apt-get -qq update && \
-    rosdep update -q && \
     rosdep install -q -y --from-paths . --ignore-src --rosdistro ${ROS_DISTRO} --as-root=apt:false && \
     # Clear apt-cache to reduce image size
     rm -rf /var/lib/apt/lists/* && \
-    # Build the workspace
     . /opt/ros/${ROS_DISTRO}/setup.sh &&\
     cd $ROS_WS/ && \
     colcon build \
