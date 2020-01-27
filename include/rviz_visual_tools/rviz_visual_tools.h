@@ -609,6 +609,16 @@ public:
   bool publishCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height, colors color = BLUE);
 
   /**
+   * \brief Display a rectangular cuboid
+   * \param pose - pose of the box
+   * \param size - (x, y, z) of the box
+   * \param color - an enum pre-defined name of a color
+   * \return true on success
+   */
+  bool publishCuboid(const Eigen::Isometry3d& pose, const Eigen::Vector3d& size, colors color = BLUE);
+  bool publishCuboid(const geometry_msgs::Pose& pose, const geometry_msgs::Vector3& size, colors color = BLUE);
+
+  /**
    * \brief Display a marker of line
    * \param point1 - x,y,z of start of line
    * \param point2 - x,y,z of end of line
