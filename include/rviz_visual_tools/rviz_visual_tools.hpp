@@ -221,6 +221,15 @@ public:
 
   /**
    * \brief Tell Rviz to clear all markers on a particular display.
+   * \param ns - the namespace of the marker to be deleted
+   * \param id - the id of the marker to be deleted
+   * \return true if we published a marker message
+   */
+  bool deleteMarker(const std::string& ns, std::size_t id);
+
+  /**
+   * \brief Tell Rviz to clear all markers on a particular display.
+   * \return true if we published a marker message
    */
   bool deleteAllMarkers();
 

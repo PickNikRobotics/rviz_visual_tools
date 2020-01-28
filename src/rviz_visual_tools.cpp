@@ -94,6 +94,21 @@ void RvizVisualTools::initialize()
   loadRvizMarkers();
 }
 
+bool RvizVisualTools::deleteMarker(const std::string& ns, std::size_t id)
+{
+  visualization_msgs::msg::Marker delete_marker;
+  delete_marker.header.frame_id = base_frame_;
+  delete_marker.header.stamp = builtin_interfaces::msg::Time();
+  delete_marker.ns = ns;
+  delete_marker.id = id;
+  delete_marker.action =
+      2;  // TODO(davetcoleman): In ROS-J set to visualization_msgs::msg::Marker::DELETE;
+  delete_marker.pose.orientation.w = 1;
+
+  // Helper for publishing rviz markers
+  return publishMarker(delete_marker);
+}
+
 bool RvizVisualTools::deleteAllMarkers()
 {
   // Helper for publishing rviz markers

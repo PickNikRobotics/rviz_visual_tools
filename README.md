@@ -175,6 +175,7 @@ And more...
 
 Reset function
 
+ - ``deleteMarker(std::string namespace, std::size_t id)`` - tells Rviz to clear a specific marker from being displayed.
  - ``deleteAllMarkers()`` - tells Rviz to clear out all current markers from being displayed.
 
 All markers must be triggered after being published, by calling the ``trigger()`` function. This allows batch publishing to be achieved by only calling after several markers have been created, greatly increasing the speed of your application. You can even explicitly tell ``rviz_visual_tools`` how often to publish via the ``triggerEvery(NUM_MARKERS)`` command:
