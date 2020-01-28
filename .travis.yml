@@ -19,6 +19,11 @@ env:
     - TEST=clang-tidy-check
     - ROS_DISTRO=eloquent
 
+before_install:
+  # Support Git LFS
+  - echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
+  - git lfs pull
+
 before_script:
   - git clone -q -b ros2 --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
 
