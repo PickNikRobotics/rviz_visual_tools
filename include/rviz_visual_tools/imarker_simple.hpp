@@ -72,11 +72,11 @@ class IMarkerSimple
 {
 public:
   template <typename NodePtr>
-  IMarkerSimple(NodePtr node, const std::string& name = "imarker", double scale = 0.2,
+  IMarkerSimple(NodePtr node, const std::string& imarker_topic_name = "imarker", double scale = 0.2,
                 const geometry_msgs::msg::Pose& initial_pose = getIdentityPose())
     : IMarkerSimple(node->get_node_base_interface(), node->get_node_clock_interface(),
                     node->get_node_logging_interface(), node->get_node_topics_interface(),
-                    node->get_node_services_interface(), name, scale, initial_pose)
+                    node->get_node_services_interface(), imarker_topic_name, scale, initial_pose)
   {
   }
 
@@ -85,7 +85,7 @@ public:
                 const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
                 const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
                 const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
-                const std::string& name = "imarker", double scale = 0.2,
+                const std::string& imarker_topic_name = "imarker", double scale = 0.2,
                 const geometry_msgs::msg::Pose& initial_pose = getIdentityPose());
 
   geometry_msgs::msg::Pose& getPose();
@@ -108,10 +108,6 @@ private:
   void make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale = 0.2);
 
   // --------------------------------------------------------
-
-  // The short name of this class
-  std::string name_ = "imarker_simple";
-
   // Node Interfaces
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
   rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface_;
@@ -128,6 +124,8 @@ private:
   // Interactive markers
   // interactive_markers::MenuHandler menu_handler_;
   visualization_msgs::msg::InteractiveMarker int_marker_;
+  // The int_marker_.id
+  static const std::string IMARKER_NAME;  // "imarker_simple";
 
   // Hook to parent class
   IMarkerCallback imarker_callback_;

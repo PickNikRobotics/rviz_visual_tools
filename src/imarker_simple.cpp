@@ -45,13 +45,16 @@ namespace rviz_visual_tools
 using visualization_msgs::msg::InteractiveMarkerFeedback;
 using visualization_msgs::msg::InteractiveMarkerControl;
 
+const std::string IMarkerSimple::IMARKER_NAME = "imarker_simple";
+
 IMarkerSimple::IMarkerSimple(
     const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
     const rclcpp::node_interfaces::NodeClockInterface::SharedPtr& clock_interface,
     const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface,
     const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
     const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
-    const std::string& name, double scale, const geometry_msgs::msg::Pose& initial_pose)
+    const std::string& imarker_topic_name, double scale,
+    const geometry_msgs::msg::Pose& initial_pose)
   : node_base_interface_(node_base_interface)
   , clock_interface_(clock_interface)
   , logging_interface_(logging_interface)
@@ -62,7 +65,8 @@ IMarkerSimple::IMarkerSimple(
 {
   // Create Marker Server
   std::string name_space = node_base_interface_->get_namespace();
-  const std::string imarker_topic = (name_space == "/" ? name : name_space + "/" + name);
+  const std::string imarker_topic =
+      (name_space == "/" ? imarker_topic_name : name_space + "/" + imarker_topic_name);
 
   imarker_server_ = std::make_shared<interactive_markers::InteractiveMarkerServer>(
       imarker_topic, node_base_interface_, clock_interface_, logging_interface_, topics_interface_,
@@ -120,14 +124,14 @@ void IMarkerSimple::sendUpdatedIMarkerPose()
 void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale)
 {
   std::stringstream ss;
-  ss << "Making 6dof interactive marker named " << name_;
+  ss << "Making 6dof interactive marker named " << IMARKER_NAME;
   RCLCPP_INFO(logger_, ss.str().c_str());
 
   int_marker_.header.frame_id = "world";
   int_marker_.pose = pose;
   int_marker_.scale = scale;
 
-  int_marker_.name = name_;
+  int_marker_.name = IMARKER_NAME;
 
   // int_marker_.controls[0].interaction_mode = InteractiveMarkerControl::MENU;
 

@@ -50,10 +50,6 @@ add_definitions(-DQT_NO_KEYWORDS)
 ###########
 ## Build ##
 ###########
-include_directories(
-  include
-  ${Eigen3_INCLUDE_DIRS})
-
 # Rviz GUI library
 # set(SOURCE_FILES
   # src/${PROJECT_NAME}_gui.cpp
@@ -68,16 +64,40 @@ include_directories(
   # rclcpp
 # )
 
+add_library(${PROJECT_NAME}_remote_control SHARED
+  src/remote_control.cpp
+)
+target_include_directories(${PROJECT_NAME}_remote_control
+  PUBLIC
+    include
+)
+ament_target_dependencies(${PROJECT_NAME}_remote_control
+  rclcpp
+  rclcpp_components
+  visualization_msgs
+  tf2
+  tf2_eigen
+  tf2_geometry_msgs
+  sensor_msgs
+  shape_msgs
+  std_msgs
+  trajectory_msgs
+  eigen_stl_containers
+)
+
 # Visualization Tools Library
 add_library(${PROJECT_NAME} SHARED
   src/rviz_visual_tools.cpp
   src/tf_visual_tools.cpp
-  src/remote_control.cpp
 )
-target_include_directories(${PROJECT_NAME} PUBLIC include)
-
-target_link_libraries(${PROJECT_NAME})
-
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    include
+    ${Eigen3_INCLUDE_DIRS}
+)
+target_link_libraries(${PROJECT_NAME}
+  ${PROJECT_NAME}_remote_control
+)
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   rclcpp_components
@@ -96,11 +116,13 @@ ament_target_dependencies(${PROJECT_NAME}
 add_library(${PROJECT_NAME}_imarker_simple
   src/imarker_simple.cpp
 )
-target_include_directories(${PROJECT_NAME}_imarker_simple PUBLIC include)
-
+target_include_directories(${PROJECT_NAME}_imarker_simple
+  PUBLIC
+    include
+    ${Eigen3_INCLUDE_DIRS}
+)
 target_link_libraries(${PROJECT_NAME}_imarker_simple
   ${PROJECT_NAME}
-  ${${PROJECT_NAME}_LIBRARIES}
 )
 ament_target_dependencies(${PROJECT_NAME}_imarker_simple
   rclcpp
@@ -113,10 +135,10 @@ ament_target_dependencies(${PROJECT_NAME}_imarker_simple
 
 # Demo executable
 add_executable(${PROJECT_NAME}_demo
-  src/${PROJECT_NAME}_demo.cpp)
+  src/${PROJECT_NAME}_demo.cpp
+)
 target_link_libraries(${PROJECT_NAME}_demo
   ${PROJECT_NAME}
-  ${${PROJECT_NAME}_LIBRARIES}
 )
 ament_target_dependencies(${PROJECT_NAME}_demo
   rclcpp
@@ -129,9 +151,7 @@ add_executable(${PROJECT_NAME}_imarker_simple_demo
   src/imarker_simple_demo.cpp)
 target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
   ${PROJECT_NAME}_imarker_simple
-  ${${PROJECT_NAME}_LIBRARIES}
 )
-
 ament_target_dependencies(${PROJECT_NAME}_imarker_simple_demo
   rclcpp
 )
@@ -139,13 +159,17 @@ ament_target_dependencies(${PROJECT_NAME}_imarker_simple_demo
 #############
 ## Install ##
 #############
-
 # Install libraries
 install(
   TARGETS
     ${PROJECT_NAME}
+    ${PROJECT_NAME}_remote_control
     # ${PROJECT_NAME}_gui
     ${PROJECT_NAME}_imarker_simple
+  EXPORT
+    ${PROJECT_NAME}
+    # ${PROJECT_NAME}_gui
+    # ${PROJECT_NAME}_imarker_simple
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -169,14 +193,29 @@ install(
 # Install shared resources
 install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
 
-ament_export_libraries(${PROJECT_NAME})
-# ament_export_libraries(${PROJECT_NAME}_gui)
-ament_export_libraries(${PROJECT_NAME}_imarker_simple)
+ament_export_dependencies(geometry_msgs
+  shape_msgs
+  rclcpp
+  sensor_msgs
+  std_msgs
+  trajectory_msgs
+  visualization_msgs
+  eigen3_cmake_module
+  Eigen3
+  eigen_stl_containers
+  interactive_markers
+)
+ament_export_include_directories(include)
+ament_export_libraries(
+  ${PROJECT_NAME}
+  ${PROJECT_NAME}_remote_control
+  ${PROJECT_NAME}_imarker_simple
+  # ${PROJECT_NAME}_gui
+)
 
 ##########
 ## TEST ##
 ##########
-
 if (BUILD_TESTING)
   # Run tests
   find_package(ament_cmake_gtest REQUIRED)
@@ -190,21 +229,5 @@ if (BUILD_TESTING)
     ${PROJECT_NAME}
   )
 endif()
-
-
-ament_export_include_directories(include)
-ament_export_dependencies(
-  geometry_msgs
-  shape_msgs
-  rclcpp
-  sensor_msgs
-  std_msgs
-  trajectory_msgs
-  visualization_msgs
-  eigen3_cmake_module
-  Eigen3
-  eigen_stl_containers
-  interactive_markers
-)
 
 ament_package()

@@ -102,17 +102,17 @@ bool RvizVisualTools::deleteAllMarkers()
 
 void RvizVisualTools::resetMarkerCounts()
 {
-  arrow_marker_.id++;
-  sphere_marker_.id++;
-  block_marker_.id++;
-  cylinder_marker_.id++;
-  mesh_marker_.id++;
-  text_marker_.id++;
-  cuboid_marker_.id++;
-  line_strip_marker_.id++;
-  line_list_marker_.id++;
-  spheres_marker_.id++;
-  triangle_marker_.id++;
+  arrow_marker_.id = 0;
+  sphere_marker_.id = 0;
+  block_marker_.id = 0;
+  cylinder_marker_.id = 0;
+  mesh_marker_.id = 0;
+  text_marker_.id = 0;
+  cuboid_marker_.id = 0;
+  line_strip_marker_.id = 0;
+  line_list_marker_.id = 0;
+  spheres_marker_.id = 0;
+  triangle_marker_.id = 0;
 }
 
 bool RvizVisualTools::loadRvizMarkers()

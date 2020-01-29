@@ -82,10 +82,6 @@ public:
 
 private:
   // --------------------------------------------------------
-
-  // The short name of this class
-  std::string name_ = "imarker_simple_demo";
-
   rviz_visual_tools::RvizVisualToolsPtr visual_tools_;
   rviz_visual_tools::IMarkerSimplePtr imarker_simple_;
 
