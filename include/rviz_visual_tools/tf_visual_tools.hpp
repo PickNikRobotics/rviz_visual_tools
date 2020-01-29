@@ -109,7 +109,7 @@ private:
   std::vector<geometry_msgs::msg::TransformStamped> transforms_;
 };  // end class
 
-// Create boost pointers for this class
+// Create std pointers for this class
 typedef std::shared_ptr<TFVisualTools> TFVisualToolsPtr;
 typedef std::shared_ptr<const TFVisualTools> TFVisualToolsConstPtr;
 

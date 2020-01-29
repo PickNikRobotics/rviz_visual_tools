@@ -74,8 +74,6 @@ add_library(${PROJECT_NAME} SHARED
   src/tf_visual_tools.cpp
   src/remote_control.cpp
 )
-target_include_directories(${PROJECT_NAME} PUBLIC include)
-
 target_link_libraries(${PROJECT_NAME})
 
 ament_target_dependencies(${PROJECT_NAME}
@@ -159,6 +157,13 @@ install(
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install shared resources
+install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
+install(
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/meshes"
+  DESTINATION "share/${PROJECT_NAME}"
 )
 
 # Install header files
