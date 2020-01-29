@@ -54,7 +54,8 @@ IMarkerSimple::IMarkerSimple(
     const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
     const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
     const std::string& imarker_topic_name, double scale,
-    const geometry_msgs::msg::Pose& initial_pose)
+    const geometry_msgs::msg::Pose& initial_pose, const rclcpp::QoS& update_pub_qos,
+    const rclcpp::QoS& feedback_sub_qos)
   : node_base_interface_(node_base_interface)
   , clock_interface_(clock_interface)
   , logging_interface_(logging_interface)
@@ -70,7 +71,7 @@ IMarkerSimple::IMarkerSimple(
 
   imarker_server_ = std::make_shared<interactive_markers::InteractiveMarkerServer>(
       imarker_topic, node_base_interface_, clock_interface_, logging_interface_, topics_interface_,
-      services_interface_);
+      services_interface_, update_pub_qos, feedback_sub_qos);
 
   // ros::Duration(2.0).sleep();
 
