@@ -292,7 +292,7 @@ bool RvizVisualTools::loadRvizMarkers()
   return true;
 }
 
-void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
+void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber)
 {
   if (pub_rviz_markers_ != nullptr)
   {
@@ -314,29 +314,23 @@ void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
   }
 }
 
-void RvizVisualTools::waitForMarkerPub()
+bool RvizVisualTools::waitForMarkerSub(double wait_time)
 {
-  bool blocking = true;
-  waitForSubscriber(pub_rviz_markers_, 0, blocking);
-}
-
-void RvizVisualTools::waitForMarkerPub(double wait_time)
-{
-  bool blocking = false;
-  waitForSubscriber(pub_rviz_markers_, wait_time, blocking);
+  return waitForSubscriber(pub_rviz_markers_, wait_time);
 }
 
 template <class PublisherPtr>
-bool RvizVisualTools::waitForSubscriber(const PublisherPtr& pub, double wait_time, bool blocking)
+bool RvizVisualTools::waitForSubscriber(const PublisherPtr& pub, double wait_time)
 {
   // Will wait at most this amount of time
-  rclcpp::Time max_time(clock_interface_->get_clock()->now() + rclcpp::Duration(wait_time));
+  rclcpp::Time max_time(clock_interface_->get_clock()->now() +
+                        rclcpp::Duration::from_seconds(wait_time));
 
   // This is wrong. It returns only the number of subscribers that have already
   // established their direct connections to this publisher
 
   // How often to check for subscribers
-  rclcpp::Duration loop_duration(1.0 / 200.0);
+  rclcpp::Duration loop_duration = rclcpp::Duration::from_seconds(1.0 / 200.0);
   if (!pub)
   {
     RCLCPP_ERROR(logger_,
@@ -345,40 +339,39 @@ bool RvizVisualTools::waitForSubscriber(const PublisherPtr& pub, double wait_tim
 
   std::string topic_name = pub->get_topic_name();
   int num_existing_subscribers = graph_interface_->count_subscribers(topic_name);
-  if (blocking && num_existing_subscribers == 0)
+  if (wait_time > 0 && num_existing_subscribers == 0)
   {
-    std::stringstream ss;
-    ss << "Topic '" << pub->get_topic_name() << "' waiting for subscriber...";
-    RCLCPP_INFO(logger_, ss.str().c_str());
+    RCLCPP_INFO(logger_, "Topic '%s' waiting %f seconds for subscriber, ", pub->get_topic_name(),
+                wait_time);
   }
 
   // Wait for subscriber
-  while (num_existing_subscribers == 0 && rclcpp::ok())
+  while (wait_time > 0 && num_existing_subscribers == 0 && rclcpp::ok())
   {
-    if (!blocking && clock_interface_->get_clock()->now() > max_time)  // Check if timed out
+    if (clock_interface_->get_clock()->now() > max_time)  // Check if timed out
     {
-      std::stringstream ss;
-      ss << "Topic '" << pub->get_topic_name() << "' unable to connect to any subscribers within "
-         << wait_time << " sec. It is possible initially published visual messages "
-                         "will be lost.";
-      RCLCPP_WARN(logger_, ss.str().c_str());
-      return false;
+      RCLCPP_WARN(logger_, "Topic '%s' unable to connect to any subscribers within %f sec. It is "
+                           "possible initially published visual messages will be lost.",
+                  pub->get_topic_name(), wait_time);
+      pub_rviz_markers_connected_ = false;
+      return pub_rviz_markers_connected_;
     }
-
-    // Sleep
-    rclcpp::sleep_for(std::chrono::nanoseconds(loop_duration.nanoseconds()));
 
     // Check again
     num_existing_subscribers = graph_interface_->count_subscribers(topic_name);
+
+    // Sleep
+    rclcpp::sleep_for(std::chrono::nanoseconds(loop_duration.nanoseconds()));
   }
 
   if (!rclcpp::ok())
   {
+    pub_rviz_markers_connected_ = false;
     return false;
   }
-  pub_rviz_markers_connected_ = true;
 
-  return true;
+  pub_rviz_markers_connected_ = (num_existing_subscribers != 0);
+  return pub_rviz_markers_connected_;
 }
 
 void RvizVisualTools::setLifetime(double lifetime)

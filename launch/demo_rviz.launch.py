@@ -32,13 +32,14 @@ ROS equivalent
 </launch>
 """
 
+
 def generate_launch_description():
     rviz_config = os.path.join(get_package_share_directory('rviz_visual_tools'),
                                'launch', 'demo.rviz')
 
     return LaunchDescription([
-        # ros2 run rviz2 rviz2 --display-config ./src/rviz_visual_tools/launch/demo.rviz
-        Node(package='rviz2', node_executable='rviz2', arguments=['--display-config', rviz_config], output='screen'),
-        Node(package='tf2_ros', node_executable='static_transform_publisher', arguments=["0", "0", "0", "0", "0", "0", "/world", "/base"], output='screen')
+        Node(package='rviz2', node_executable='rviz2', arguments=[
+             '--display-config', rviz_config], output='screen'),
+        Node(package='tf2_ros', node_executable='static_transform_publisher', arguments=[
+             "0", "0", "0", "0", "0", "0", "/world", "/base"], output='screen')
     ])
-
