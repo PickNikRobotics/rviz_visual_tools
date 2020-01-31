@@ -40,6 +40,7 @@
 #include <gtest/gtest.h>
 
 // C++
+#include <cmath>
 #include <string>
 #include <vector>
 

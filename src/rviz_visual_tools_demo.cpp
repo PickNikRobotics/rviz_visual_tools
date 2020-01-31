@@ -37,12 +37,12 @@
            To use, add a Rviz Marker Display subscribed to topic /rviz_visual_tools
 */
 
-// ROS
-#include <rclcpp/rclcpp.hpp>
-
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 #include <rviz_visual_tools/remote_control.hpp>
+
+// ROS
+#include <rclcpp/rclcpp.hpp>
 
 // C++
 #include <string>

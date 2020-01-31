@@ -38,6 +38,9 @@
 
 #pragma once
 
+// rviz_visual_tools
+#include <rviz_visual_tools/remote_control.hpp>
+
 #include <rclcpp/rclcpp.hpp>
 
 // C++
@@ -60,9 +63,6 @@
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/polygon.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
-
-// rviz_visual_tools
-#include <rviz_visual_tools/remote_control.hpp>
 
 // Import/export for windows dll's and visibility for gcc shared libraries.
 
