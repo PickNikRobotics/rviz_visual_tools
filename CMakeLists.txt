@@ -50,6 +50,13 @@ add_definitions(-DQT_NO_KEYWORDS)
 ###########
 ## Build ##
 ###########
+
+# Needed for shared libraries on Windows
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+if(NOT DEFINED BUILD_SHARED_LIBS)
+  option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
+endif()
+
 # Rviz GUI library
 # set(SOURCE_FILES
   # src/${PROJECT_NAME}_gui.cpp
@@ -67,6 +74,8 @@ add_definitions(-DQT_NO_KEYWORDS)
 add_library(${PROJECT_NAME}_remote_control SHARED
   src/remote_control.cpp
 )
+# Needed for M_PI on Windows
+target_compile_definitions(${PROJECT_NAME}_remote_control PRIVATE _USE_MATH_DEFINES)
 target_include_directories(${PROJECT_NAME}_remote_control
   PUBLIC
     include
@@ -90,6 +99,7 @@ add_library(${PROJECT_NAME} SHARED
   src/rviz_visual_tools.cpp
   src/tf_visual_tools.cpp
 )
+target_compile_definitions(${PROJECT_NAME} PRIVATE _USE_MATH_DEFINES)
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     include
@@ -116,6 +126,7 @@ ament_target_dependencies(${PROJECT_NAME}
 add_library(${PROJECT_NAME}_imarker_simple
   src/imarker_simple.cpp
 )
+target_compile_definitions(${PROJECT_NAME}_imarker_simple PRIVATE _USE_MATH_DEFINES)
 target_include_directories(${PROJECT_NAME}_imarker_simple
   PUBLIC
     include
@@ -137,6 +148,7 @@ ament_target_dependencies(${PROJECT_NAME}_imarker_simple
 add_executable(${PROJECT_NAME}_demo
   src/${PROJECT_NAME}_demo.cpp
 )
+target_compile_definitions(${PROJECT_NAME}_demo PRIVATE _USE_MATH_DEFINES)
 target_link_libraries(${PROJECT_NAME}_demo
   ${PROJECT_NAME}
 )
@@ -149,6 +161,7 @@ ament_target_dependencies(${PROJECT_NAME}_demo
 # Demo executable
 add_executable(${PROJECT_NAME}_imarker_simple_demo
   src/imarker_simple_demo.cpp)
+target_compile_definitions(${PROJECT_NAME}_imarker_simple_demo PRIVATE _USE_MATH_DEFINES)
 target_link_libraries(${PROJECT_NAME}_imarker_simple_demo
   ${PROJECT_NAME}_imarker_simple
 )
@@ -222,6 +235,7 @@ if (BUILD_TESTING)
   ament_add_gtest(${PROJECT_NAME}_rvt_test
     tests/rvt_test.cpp
     TIMEOUT 180)
+  target_compile_definitions(${PROJECT_NAME}_rvt_test PRIVATE _USE_MATH_DEFINES)
   ament_target_dependencies(${PROJECT_NAME}_rvt_test
     rclcpp
   )

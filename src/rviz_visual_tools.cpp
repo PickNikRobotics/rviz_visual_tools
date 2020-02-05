@@ -35,6 +35,7 @@
 /* Author: Dave Coleman <dave@picknik.ai>, Andy McEvoy
    Desc:   Helper functions for displaying basic shape markers in Rviz
 */
+
 // C++
 #include <cassert>
 #include <cmath>  // for random poses

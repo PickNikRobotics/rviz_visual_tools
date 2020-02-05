@@ -36,10 +36,11 @@
    Desc:   Demonstrate how to use the imarker simple interface
 */
 
-// ROS
-#include <rclcpp/rclcpp.hpp>
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 #include <rviz_visual_tools/imarker_simple.hpp>
+
+// ROS
+#include <rclcpp/rclcpp.hpp>
 
 using namespace std::chrono_literals;
 
