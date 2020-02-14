@@ -78,7 +78,7 @@ catkin_package(
     ${OGRE_OV_INCLUDE_DIRS}
 )
 
-include_directories(SYSTEM include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS} ${OGRE_OV_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS} ${OGRE_OV_INCLUDE_DIRS})
 
 ###########
 ## Build ##
