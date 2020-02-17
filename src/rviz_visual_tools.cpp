@@ -49,6 +49,9 @@
 #include <utility>
 #include <vector>
 
+// Boost
+#include <boost/config.hpp>  // for BOOST_FALLTHROUGH
+
 namespace rviz_visual_tools
 {
 const std::string LOGNAME = "visual_tools";
@@ -493,6 +496,7 @@ std_msgs::ColorRGBA RvizVisualTools::getColor(colors color) const
       ROS_WARN_STREAM_NAMED(LOGNAME, "The 'DEFAULT' color should probably not "
                                      "be used with getColor(). Defaulting to "
                                      "blue.");
+      BOOST_FALLTHROUGH;
     case BLUE:
     default:
       result.r = 0.1;
