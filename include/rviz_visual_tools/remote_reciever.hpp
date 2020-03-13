@@ -46,7 +46,7 @@ namespace rviz_visual_tools
 class RemoteReciever : public rclcpp::Node
 {
 public:
-  RemoteReciever( ) : rclcpp::Node("rviz_visual_tools_gui")
+  RemoteReciever( const std::string nodeName ) : rclcpp::Node(nodeName)
   {
     joy_publisher_ = this->create_publisher<sensor_msgs::msg::Joy>( "/rviz_visual_tools_gui", rclcpp::QoS(100));
   }

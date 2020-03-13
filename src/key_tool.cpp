@@ -46,7 +46,7 @@
 
 namespace rviz_visual_tools
 {
-KeyTool::KeyTool() = default;
+KeyTool::KeyTool() : remote_reciever_("rviz_visual_tools_keyTool"){};
 
 KeyTool::~KeyTool() = default;
 
