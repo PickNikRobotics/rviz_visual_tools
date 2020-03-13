@@ -44,7 +44,7 @@
 #ifndef Q_MOC_RUN
 #include <rclcpp/rclcpp.hpp>
 
-#include <rviz/panel.h>
+#include <rviz_common/panel.hpp>
 #endif
 
 #include <QPushButton>
@@ -57,14 +57,14 @@ class QSpinBox;
 
 namespace rviz_visual_tools
 {
-class RvizVisualToolsGui : public rviz::Panel
+class RvizVisualToolsGui : public rviz_common::Panel
 {
   Q_OBJECT
 public:
   explicit RvizVisualToolsGui(QWidget* parent = 0);
 
-  virtual void load(const rviz::Config& config);
-  virtual void save(rviz::Config config) const;
+  virtual void load(const rviz_common::Config& config);
+  virtual void save(rviz_common::Config config) const;
 
 public Q_SLOTS:
 

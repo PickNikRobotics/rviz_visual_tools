@@ -51,9 +51,9 @@
 
 namespace rviz_visual_tools
 {
-RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent) : rviz::Panel(parent)
+RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent) : rviz_common::Panel(parent)
 {
-  // Create a push button
+    // Create a push button
   btn_next_ = new QPushButton(this);
   btn_next_->setText("Next");
   connect(btn_next_, SIGNAL(clicked()), this, SLOT(moveNext()));
@@ -110,16 +110,16 @@ void RvizVisualToolsGui::moveStop()
   remote_reciever_.publishStop();
 }
 
-void RvizVisualToolsGui::save(rviz::Config config) const
+void RvizVisualToolsGui::save(rviz_common::Config config) const
 {
-  rviz::Panel::save(config);
+  rviz_common::Panel::save(config);
 }
 
-void RvizVisualToolsGui::load(const rviz::Config& config)
+void RvizVisualToolsGui::load(const rviz_common::Config& config)
 {
-  rviz::Panel::load(config);
+  rviz_common::Panel::load(config);
 }
 }  // end namespace rviz_visual_tools
 
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::RvizVisualToolsGui, rviz::Panel)
+#include <pluginlib/class_list_macros.hpp>
+PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::RvizVisualToolsGui, rviz_common::Panel)
