@@ -26,6 +26,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf2_eigen
   tf2_ros
+  tf2_geometry_msgs
   trajectory_msgs
   visualization_msgs
 )
