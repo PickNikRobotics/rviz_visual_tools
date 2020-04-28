@@ -39,8 +39,10 @@
 #include <rviz_visual_tools/rviz_visual_tools.h>
 
 // Conversions
-#include <eigen_conversions/eigen_msg.h>
-#include <tf_conversions/tf_eigen.h>
+#include <tf2_eigen/tf2_eigen.h>
+#include <tf2/convert.h>
+#include <tf2/LinearMath/Vector3.h>
+#include <tf2/LinearMath/Quaternion.h>
 
 // C++
 #include <cmath>  // for random poses
@@ -790,16 +792,16 @@ Eigen::Isometry3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d&
   // Method 1 - TF - works
 
   // Convert vector to TF format
-  tf::Vector3 tf_right_axis_vector;
-  tf::vectorEigenToTF(right_axis_vector, tf_right_axis_vector);
+  tf2::Vector3 tf_right_axis_vector;
+  tf2::convert(right_axis_vector, tf_right_axis_vector);
 
   // Create quaternion using 'Axis angle Constructor'
   //   axis: The axis which the rotation is around
   //   angle: The magnitude of the rotation around the angle (Radians)
-  tf::Quaternion tf_q(tf_right_axis_vector, angle_rotation);
+  tf2::Quaternion tf_q(tf_right_axis_vector, angle_rotation);
 
   // Convert back to Eigen
-  tf::quaternionTFToEigen(tf_q, q);
+  tf2::convert(tf_q, q);
   //-------------------------------------------
 
   if (verbose)
@@ -1167,7 +1169,7 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, 
                                     std::size_t id)
 {
   geometry_msgs::Pose pose_msg;
-  tf::pointEigenToMsg(point, pose_msg.position);
+  tf2::convert(point, pose_msg.position);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
 
@@ -1175,7 +1177,7 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, colors color, 
                                     std::size_t id)
 {
   geometry_msgs::Pose pose_msg = getIdentityPose();
-  tf::pointEigenToMsg(point, pose_msg.position);
+  tf2::convert(point, pose_msg.position);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
 
@@ -1219,7 +1221,7 @@ bool RvizVisualTools::publishSphere(const Eigen::Vector3d& point, const std_msgs
                                     const geometry_msgs::Vector3 scale, const std::string& ns, std::size_t id)
 {
   geometry_msgs::Pose pose_msg = getIdentityPose();
-  tf::pointEigenToMsg(point, pose_msg.position);
+  tf2::convert(point, pose_msg.position);
   return publishSphere(pose_msg, color, scale, ns, id);
 }
 
@@ -2561,25 +2563,25 @@ bool RvizVisualTools::publishText(const geometry_msgs::Pose& pose, const std::st
 geometry_msgs::Pose RvizVisualTools::convertPose(const Eigen::Isometry3d& pose)
 {
   geometry_msgs::Pose pose_msg;
-  tf::poseEigenToMsg(pose, pose_msg);
+  tf2::convert(pose, pose_msg);
   return pose_msg;
 }
 
 void RvizVisualTools::convertPoseSafe(const Eigen::Isometry3d& pose, geometry_msgs::Pose& pose_msg)
 {
-  tf::poseEigenToMsg(pose, pose_msg);
+  tf2::convert(pose, pose_msg);
 }
 
 Eigen::Isometry3d RvizVisualTools::convertPose(const geometry_msgs::Pose& pose)
 {
   Eigen::Isometry3d shared_pose_eigen;
-  tf::poseMsgToEigen(pose, shared_pose_eigen);
+  tf2::convert(pose, shared_pose_eigen);
   return shared_pose_eigen;
 }
 
 void RvizVisualTools::convertPoseSafe(const geometry_msgs::Pose& pose_msg, Eigen::Isometry3d& pose)
 {
-  tf::poseMsgToEigen(pose_msg, pose);
+  tf2::convert(pose_msg, pose);
 }
 
 Eigen::Isometry3d RvizVisualTools::convertPoint32ToPose(const geometry_msgs::Point32& point)
@@ -2614,7 +2616,7 @@ Eigen::Isometry3d RvizVisualTools::convertPointToPose(const Eigen::Vector3d& poi
 geometry_msgs::Point RvizVisualTools::convertPoseToPoint(const Eigen::Isometry3d& pose)
 {
   geometry_msgs::Pose pose_msg;
-  tf::poseEigenToMsg(pose, pose_msg);
+  tf2::convert(pose, pose_msg);
   return pose_msg.position;
 }
 
