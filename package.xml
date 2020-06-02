@@ -18,11 +18,12 @@
 
   <depend>rviz</depend>
   <depend>sensor_msgs</depend>
-  <depend>eigen_conversions</depend>
+  <depend>tf2_eigen</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>shape_msgs</depend>
   <depend>roscpp</depend>
-  <depend>tf_conversions</depend>
   <depend>visualization_msgs</depend>
   <depend>graph_msgs</depend>
   <depend>std_msgs</depend>
