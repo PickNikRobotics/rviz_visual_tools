@@ -365,10 +365,12 @@ public:
 
     step = 0.2;
     const std::array<double, 6> thetas = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-    const std::array<std::string, 6> meshes = { "pawn", "knight", "bishop", "rook", "queen", "king" }; // "pig" };
-    const std::array<rvt::colors, 6> mesh_colors = { rvt::RED, rvt::ORANGE, rvt::YELLOW, rvt::GREEN,
-                                                     rvt::BLACK, rvt::WHITE };
-    const std::array<double, 6> scales = { 0.05, 0.05, 0.05, 0.05, 0.05 , 0.05 };
+    const std::array<std::string, 6> meshes = {
+      "pawn", "knight", "bishop", "rook", "queen", "king"
+    };  // "pig" };
+    const std::array<rvt::colors, 6> mesh_colors = { rvt::RED,   rvt::ORANGE, rvt::YELLOW,
+                                                     rvt::GREEN, rvt::BLACK,  rvt::WHITE };
+    const std::array<double, 6> scales = { 0.05, 0.05, 0.05, 0.05, 0.05, 0.05 };
 
     for (size_t i = 0; i < meshes.size(); ++i)
     {
