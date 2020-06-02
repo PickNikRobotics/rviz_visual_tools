@@ -1,13 +1,13 @@
-<library path="lib/librviz_visual_tools_gui">
+<library path="rviz_visual_tools_gui">
   <class name="rviz_visual_tools/RvizVisualToolsGui"
          type="rviz_visual_tools::RvizVisualToolsGui"
-         base_class_type="rviz::Panel">
+         base_class_type="rviz_common::Panel">
     <description>
       A panel widget allowing control of a ROS pipeline
     </description>
   </class>
 
-  <class name="rviz_visual_tools/KeyTool" type="rviz_visual_tools::KeyTool" base_class_type="rviz::Tool">
+  <class name="rviz_visual_tools/KeyTool" type="rviz_visual_tools::KeyTool" base_class_type="rviz_common::Tool">
     <description>
       Tool to capture keyboard input
     </description>

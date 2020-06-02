@@ -31,12 +31,12 @@
 #include <OgreVector3.h>
 
 // Rviz
-#include <rviz/display_context.h>
-#include <rviz/load_resource.h>
-#include <rviz/properties/bool_property.h>
-#include <rviz/properties/string_property.h>
-#include <rviz/view_controller.h>
-#include <rviz/viewport_mouse_event.h>
+#include <rviz_common/display_context.hpp>
+#include <rviz_common/load_resource.hpp>
+#include <rviz_common/properties/bool_property.hpp>
+#include <rviz_common/properties/string_property.hpp>
+#include <rviz_common/view_controller.hpp>
+#include <rviz_common/viewport_mouse_event.hpp>
 
 // this package
 #include <rviz_visual_tools/key_tool.hpp>
@@ -46,7 +46,7 @@
 
 namespace rviz_visual_tools
 {
-KeyTool::KeyTool() = default;
+KeyTool::KeyTool() : remote_reciever_("rviz_visual_tools_keyTool"){};
 
 KeyTool::~KeyTool() = default;
 
@@ -63,7 +63,7 @@ void KeyTool::deactivate()
 {
 }
 
-int KeyTool::processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel)
+int KeyTool::processKeyEvent(QKeyEvent* event, rviz_common::RenderPanel* panel)
 {
   // move forward / backward
   switch (event->key())
@@ -86,7 +86,7 @@ int KeyTool::processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel)
   return move_tool_.processKeyEvent(event, panel);
 }
 
-int KeyTool::processMouseEvent(rviz::ViewportMouseEvent& event)
+int KeyTool::processMouseEvent(rviz_common::ViewportMouseEvent& event)
 {
   int flags = 0;
 
@@ -98,5 +98,5 @@ int KeyTool::processMouseEvent(rviz::ViewportMouseEvent& event)
 
 }  // namespace rviz_visual_tools
 
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::KeyTool, rviz::Tool)
+#include <pluginlib/class_list_macros.hpp>
+PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::KeyTool, rviz_common::Tool)

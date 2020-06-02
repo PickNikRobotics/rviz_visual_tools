@@ -34,7 +34,11 @@ find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
+find_package(pluginlib REQUIRED)
 find_package(interactive_markers REQUIRED)
+find_package(rviz_common REQUIRED)
+find_package(rviz_rendering REQUIRED)
+find_package(rviz_default_plugins REQUIRED)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
@@ -58,18 +62,38 @@ if(NOT DEFINED BUILD_SHARED_LIBS)
 endif()
 
 # Rviz GUI library
-# set(SOURCE_FILES
-  # src/${PROJECT_NAME}_gui.cpp
-  # src/key_tool.cpp
-# )
-# add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
-# target_include_directories(${PROJECT_NAME}_gui PUBLIC
-  # ${OGRE_INCLUDE_DIRS}
-# )
-# target_link_libraries(${PROJECT_NAME}_gui Qt5::Widgets)
-# ament_target_dependencies(${PROJECT_NAME}_gui
-  # rclcpp
-# )
+ set(SOURCE_FILES
+   src/${PROJECT_NAME}_gui.cpp
+   src/key_tool.cpp
+   src/remote_control.cpp
+ )
+set(HEADER_FILES
+    include/${PROJECT_NAME}/${PROJECT_NAME}_gui.hpp
+    include/${PROJECT_NAME}/key_tool.hpp
+    include/${PROJECT_NAME}/remote_control.hpp
+    include/${PROJECT_NAME}/remote_reciever.hpp
+    )
+
+add_library(${PROJECT_NAME}_gui SHARED ${SOURCE_FILES} ${HEADER_FILES})
+ament_target_dependencies(${PROJECT_NAME}_gui
+        rclcpp
+        rviz_common
+        rviz_rendering
+        rviz_default_plugins
+        )
+target_include_directories(${PROJECT_NAME}_gui PUBLIC
+   include
+   ${OGRE_INCLUDE_DIRS}
+   ${rviz_rendering_INCLUDE_DIRS}
+   ${rviz_common_INCLUDE_DIRS}
+   ${rviz_default_plugins_INCLUDE_DIRS}
+)
+target_link_libraries(${PROJECT_NAME}_gui Qt5::Widgets)
+# prevent pluginlib from using boost
+target_compile_definitions(${PROJECT_NAME}_gui PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
+## Causes the visibility macros to use dllexport rather than dllimport (for Windows, when your plugin should be used as library)
+#target_compile_definitions(${PROJECT_NAME}_gui PRIVATE "RVIZ_DEFAULT_PLUGINS_BUILDING_LIBRARY")
+pluginlib_export_plugin_description_file(rviz_common plugin_description.xml)
 
 add_library(${PROJECT_NAME}_remote_control SHARED
   src/remote_control.cpp
@@ -177,11 +201,11 @@ install(
   TARGETS
     ${PROJECT_NAME}
     ${PROJECT_NAME}_remote_control
-    # ${PROJECT_NAME}_gui
+    ${PROJECT_NAME}_gui
     ${PROJECT_NAME}_imarker_simple
   EXPORT
     ${PROJECT_NAME}
-    # ${PROJECT_NAME}_gui
+    #${PROJECT_NAME}_gui
     # ${PROJECT_NAME}_imarker_simple
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -217,13 +241,16 @@ ament_export_dependencies(geometry_msgs
   Eigen3
   eigen_stl_containers
   interactive_markers
+  rviz_common
+  rviz_rendering
+  rviz_default_plugins
 )
 ament_export_include_directories(include)
 ament_export_libraries(
   ${PROJECT_NAME}
   ${PROJECT_NAME}_remote_control
   ${PROJECT_NAME}_imarker_simple
-  # ${PROJECT_NAME}_gui
+  ${PROJECT_NAME}_gui
 )
 
 ##########

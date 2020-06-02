@@ -43,56 +43,54 @@
 
 namespace rviz_visual_tools
 {
-class RemoteReciever
+class RemoteReciever : public rclcpp::Node
 {
 public:
-  RemoteReciever(rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface)
+  RemoteReciever( const std::string nodeName ) : rclcpp::Node(nodeName)
   {
-    joy_publisher_ = rclcpp::create_publisher<sensor_msgs::msg::Joy>(
-        topics_interface, "/rviz_visual_tools_gui", rclcpp::QoS(100));
+    joy_publisher_ = this->create_publisher<sensor_msgs::msg::Joy>( "/rviz_visual_tools_gui", rclcpp::QoS(100));
   }
 
   void publishNext()
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "Next");
+    RCLCPP_DEBUG(this->get_logger(), "Next");
     sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[1] = 1;
-    joy_publisher_.publish(msg);
+    joy_publisher_->publish(msg);
   }
 
   void publishContinue()
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "Continue");
+    RCLCPP_DEBUG(this->get_logger(), "Continue");
     sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[2] = 1;
-    joy_publisher_.publish(msg);
+    joy_publisher_->publish(msg);
   }
 
   void publishBreak()
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "Break (not implemented yet)");
-
+    RCLCPP_DEBUG(this->get_logger(), "Break");
     sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[3] = 1;
-    joy_publisher_.publish(msg);
+    joy_publisher_->publish(msg);
   }
 
   void publishStop()
   {
-    ROS_DEBUG_STREAM_NAMED("gui", "Stop (not implemented yet)");
-
+    RCLCPP_DEBUG(this->get_logger(), "Stop");
     sensor_msgs::msg::Joy msg;
     msg.buttons.resize(9);
     msg.buttons[4] = 1;
-    joy_publisher_.publish(msg);
+    joy_publisher_->publish(msg);
   }
 
 protected:
   // The ROS publishers
-  rclcpp::Publisher joy_publisher_;
+  rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_publisher_;
+
 };
 
 }  // end namespace rviz_visual_tools
