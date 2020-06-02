@@ -222,6 +222,13 @@ install(
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
+# Install shared resources
+install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
+install(
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/meshes"
+  DESTINATION "share/${PROJECT_NAME}"
+)
+
 # Install header files
 install(
   DIRECTORY include/
