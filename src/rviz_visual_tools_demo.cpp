@@ -37,12 +37,12 @@
            To use, add a Rviz Marker Display subscribed to topic /rviz_visual_tools
 */
 
-// ROS
-#include <rclcpp/rclcpp.hpp>
-
 // For visualizing things in rviz
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 #include <rviz_visual_tools/remote_control.hpp>
+
+// ROS
+#include <rclcpp/rclcpp.hpp>
 
 // C++
 #include <string>
@@ -72,10 +72,13 @@ public:
   {
     visual_tools_.reset(
         new rvt::RvizVisualTools("world", "/rviz_visual_tools", dynamic_cast<rclcpp::Node*>(this)));
-    visual_tools_->loadMarkerPub();  // create publisher before waiting
-
-    RCLCPP_INFO(get_logger(), "Sleeping 2 seconds before running demo");
-    rclcpp::sleep_for(2s);
+    // create publisher before waiting
+    visual_tools_->loadMarkerPub();
+    bool has_sub = visual_tools_->waitForMarkerSub(10.0);
+    if (!has_sub)
+      RCLCPP_INFO(
+          get_logger(),
+          "/rviz_visual_tools does not have a subscriber after 10s. Visualizations may be lost");
 
     // Clear messages
     visual_tools_->deleteAllMarkers();

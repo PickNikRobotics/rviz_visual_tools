@@ -38,6 +38,9 @@
 
 #pragma once
 
+// rviz_visual_tools
+#include <rviz_visual_tools/remote_control.hpp>
+
 #include <rclcpp/rclcpp.hpp>
 
 // C++
@@ -60,9 +63,6 @@
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/polygon.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
-
-// rviz_visual_tools
-#include <rviz_visual_tools/remote_control.hpp>
 
 // Import/export for windows dll's and visibility for gcc shared libraries.
 
@@ -221,6 +221,15 @@ public:
 
   /**
    * \brief Tell Rviz to clear all markers on a particular display.
+   * \param ns - the namespace of the marker to be deleted
+   * \param id - the id of the marker to be deleted
+   * \return true if we published a marker message
+   */
+  bool deleteMarker(const std::string& ns, std::size_t id);
+
+  /**
+   * \brief Tell Rviz to clear all markers on a particular display.
+   * \return true if we published a marker message
    */
   bool deleteAllMarkers();
 
@@ -245,27 +254,34 @@ public:
   /**
    * \brief Load publishers as needed
    * \param wait_for_subscriber - whether a sleep for loop should be used to check for connectivity
-   * to an external node
-   *                              before proceeding
+   * to an external subscriber before proceeding
    */
-  void loadMarkerPub(bool wait_for_subscriber = false, bool latched = false);
+  void loadMarkerPub(bool wait_for_subscriber = false);
 
   /** \brief Optional blocking function to call *after* calling loadMarkerPub(). Allows you to do
-   * some intermediate
-   *         processing before wasting cycles waiting for the marker pub to find a subscriber
+   *         some intermediate processing before wasting cycles waiting for the marker pub to find a
+   * subscriber
+   * \param wait_time - Wait some amount of time for a subscriber before returning. Method will
+   * early exit if a subscriber is found before wait_time. Set to 0 to disable waiting and simply
+   * return if a subscriber exists.
+   * \return - true if a subscriber is found
    */
-  void waitForMarkerPub();
-  void waitForMarkerPub(double wait_time);
+  bool waitForMarkerSub(double wait_time = 5);
+  [[deprecated("waitForMarkerPub deprecated. Use waitForMarkerSub instad")]] bool
+  waitForMarkerPub(double wait_time = 5)
+  {
+    return waitForMarkerSub(wait_time);
+  }
 
   /**
    * \brief Wait until at least one subscriber connects to a publisher
    * \param pub - the publisher to check for subscribers
-   * \param wait_time - time to wait for subscriber to be available before throwing warning
+   * \param wait_time - time to wait for subscriber to be available before throwing warning (sec)
    * \param blocking - if true, the function loop until a subscriber is gotten
    * \return true on successful connection
    */
   template <class PublisherPtr>
-  bool waitForSubscriber(const PublisherPtr& pub, double wait_time = 5, bool blocking = false);
+  bool waitForSubscriber(const PublisherPtr& pub, double wait_time = 5);
 
   /**
    * \brief Change the transparency of all markers published
