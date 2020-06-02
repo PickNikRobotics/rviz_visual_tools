@@ -85,8 +85,8 @@ public:
     static const double EPSILON = 0.000001;
     for (std::size_t i = 0; i < expect.size(); ++i)
     {
-      EXPECT_GT(EPSILON, fabs(expect[i] - actual[i])) << "Section " << id << ", Element " << i
-                                                      << ", Expect: " << expect[i] << ", Actual: " << actual[i];
+      EXPECT_GT(EPSILON, fabs(expect[i] - actual[i]))
+          << "Section " << id << ", Element " << i << ", Expect: " << expect[i] << ", Actual: " << actual[i];
     }
 
     return true;
@@ -199,6 +199,28 @@ TEST(RVTTest, default_arguments)
   EXPECT_FALSE(BASE.visual_tools_->publishPath(path3, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
   path3.resize(2);
   EXPECT_TRUE(BASE.visual_tools_->publishPath(path3, rviz_visual_tools::RED, rviz_visual_tools::MEDIUM));
+}
+
+TEST(RVTTest, get_vector_between_points)
+{
+  using namespace Eigen;
+  const auto x_actual = BASE.visual_tools_->getVectorBetweenPoints(Vector3d::UnitX(), Vector3d::Zero());
+  const auto x_expected =
+      Isometry3d(Isometry3d::Identity()).translate(Vector3d::UnitX()).rotate(AngleAxisd(M_PI, Vector3d::UnitY()));
+  EXPECT_TRUE(BASE.testIsometry3d("get_vector_between_points X", x_expected, x_actual));
+
+  const auto x2_actual = BASE.visual_tools_->getVectorBetweenPoints(2 * Vector3d::UnitX(), Vector3d::Zero());
+  const auto x2_expected =
+      Isometry3d(Isometry3d::Identity()).translate(2 * Vector3d::UnitX()).rotate(AngleAxisd(M_PI, Vector3d::UnitY()));
+  EXPECT_TRUE(BASE.testIsometry3d("get_vector_between_points 2X", x2_expected, x2_actual));
+
+  const auto random_actual = BASE.visual_tools_->getVectorBetweenPoints({ 2.0, 3.0, 4.0 }, { 5.0, 6.0, 7.0 });
+  const auto random_expected = []() {
+    Eigen::Matrix4d d;
+    d << 0.57735, -0.211325, -0.788675, 2, 0.57735, 0.788675, 0.211325, 3, 0.57735, -0.57735, 0.57735, 4, 0, 0, 0, 1;
+    return Eigen::Isometry3d(d);
+  }();
+  EXPECT_TRUE(BASE.testIsometry3d("get_vector_between_points random", random_expected, random_actual));
 }
 
 /* Main  ------------------------------------------------------------------------------------- */
