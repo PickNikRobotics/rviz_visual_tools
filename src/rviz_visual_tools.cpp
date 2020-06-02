@@ -789,33 +789,7 @@ Eigen::Isometry3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d&
   double theta = axis_vector.dot(up_vector);
   double angle_rotation = -1.0 * acos(theta);
 
-  //-------------------------------------------
-  // Method 1 - TF - works
-
-  // Convert vector to TF format
-  tf2::Vector3 tf_right_axis_vector;
-  tf2::convert(right_axis_vector, tf_right_axis_vector);
-
-  // Create quaternion using 'Axis angle Constructor'
-  //   axis: The axis which the rotation is around
-  //   angle: The magnitude of the rotation around the angle (Radians)
-  tf2::Quaternion tf_q(tf_right_axis_vector, angle_rotation);
-
-  // Convert back to Eigen
-  tf2::convert(tf_q, q);
-  //-------------------------------------------
-
-  if (verbose)
-  {
-    std::cout << "rotation matrix: " << std::endl;
-    std::cout << q.toRotationMatrix() << std::endl;
-  }
-
-  //-------------------------------------------
-  // Method 2 - Eigen - broken TODO(davetcoleman)
-  // q = Eigen::AngleAxis<double>(angle_rotation, right_axis_vector);
-  //-------------------------------------------
-  // std::cout << q.toRotationMatrix() << std::endl;
+  q = Eigen::AngleAxis<double>(angle_rotation, right_axis_vector);
 
   q.normalize();
 
