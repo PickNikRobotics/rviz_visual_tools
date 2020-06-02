@@ -778,7 +778,7 @@ Eigen::Isometry3d RvizVisualTools::getVectorBetweenPoints(const Eigen::Vector3d&
     return result_pose;
   }
 
-  right_axis_vector.normalized();
+  right_axis_vector.normalize();
 
   if (verbose)
   {
