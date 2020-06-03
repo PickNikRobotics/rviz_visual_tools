@@ -1,26 +1,23 @@
-# This config file for Travis CI utilizes https://github.com/ros-planning/moveit_ci package.
-sudo: required
-dist: xenial  # distro used by Travis, moveit_ci uses the docker image's distro
+language: generic
 services:
   - docker
-language: cpp
-compiler: gcc
-cache: ccache
+
+cache:
+  directories:
+    - $HOME/.ccache
+
+git:
+  quiet: true
 
 env:
   global:
-    - ROS_DISTRO=eloquent
     - ROS_REPO=ros
-    - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-function"
-    - WARNINGS_OK=false
+    - CCACHE_DIR=$HOME/.ccache
+    - UPSTREAM_WORKSPACE="rviz_visual_tools.repos"
   matrix:
-    - TEST="clang-format" # TODO(davetcoleman): enable catkin_lint in the future
-    - TEST=clang-tidy-fix
-    - TEST=clang-tidy-check
-    - ROS_DISTRO=eloquent
+    - ROS_DISTRO="eloquent"
 
-before_script:
-  - git clone -q -b ros2 --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
-
+install:
+  - git clone --quiet --depth 1 https://github.com/ros-industrial/industrial_ci.git .industrial_ci -b master
 script:
-  - .moveit_ci/travis.sh
+  - .industrial_ci/travis.sh

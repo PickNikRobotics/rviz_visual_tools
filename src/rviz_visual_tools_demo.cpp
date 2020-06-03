@@ -394,7 +394,7 @@ public:
     step = 0.1;
 
     EigenSTL::vector_Vector3d path;
-    std::vector<rviz_visual_tools::colors> colors;
+    std::vector<rviz_visual_tools::Colors> colors;
     unsigned index(0);
     for (double i = 0; i < 1.0; i += step)
     {
@@ -453,14 +453,14 @@ public:
   }
 
   /** \brief Compare sizes of markers using all MEDIUM-scale markers */
-  void testSize(double& x_location, scales scale)
+  void testSize(double& x_location, Scales scale)
   {
     // Create pose
     Eigen::Isometry3d pose1 = Eigen::Isometry3d::Identity();
     Eigen::Isometry3d pose2 = Eigen::Isometry3d::Identity();
 
     // Reusable vector of 2 colors
-    std::vector<colors> colors;
+    std::vector<Colors> colors;
     colors.push_back(RED);
     colors.push_back(GREEN);
 
@@ -599,7 +599,7 @@ public:
     pose2.translation().x() = x_location;
 
     // Sphere
-    for (scales scale = XXXXSMALL; scale <= XXXXLARGE; /*inline*/)
+    for (Scales scale = XXXXSMALL; scale <= XXXXLARGE; /*inline*/)
     {
       pose1.translation().y() += visual_tools_->getScale(scale).x + 0.1;
 
@@ -617,7 +617,7 @@ public:
       visual_tools_->publishText(pose2, "Size " + visual_tools_->scaleToString(scale), WHITE, scale,
                                  false);
 
-      scale = static_cast<scales>(static_cast<int>(scale) + 1);
+      scale = static_cast<Scales>(static_cast<int>(scale) + 1);
     }
 
     // Display test

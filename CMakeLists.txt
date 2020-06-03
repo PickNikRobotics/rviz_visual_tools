@@ -257,6 +257,10 @@ ament_export_libraries(
 ## TEST ##
 ##########
 if (BUILD_TESTING)
+  # ROS2 linters
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+
   # Run tests
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(${PROJECT_NAME}_rvt_test

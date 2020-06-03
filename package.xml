@@ -5,6 +5,7 @@
   <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
 
   <maintainer email="mike@picknik.ai">Mike Lautman</maintainer>
+  <author email="mike@picknik.ai">Mike Lautman</author>
 
   <license>BSD</license>
 
@@ -12,11 +13,8 @@
   <url type="butracker">https://github.com/PickNikRobotics/rviz_visual_tools/issues</url>
   <url type="repository">https://github.com/PickNikRobotics/rviz_visual_tools/</url>
 
-  <author email="mike@picknik.ai">Mike Lautman</author>
-
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>eigen3_cmake_module</buildtool_depend>
-
   <buildtool_export_depend>eigen3_cmake_module</buildtool_export_depend>
 
   <depend>rclcpp</depend>
@@ -54,7 +52,8 @@
 
   <test_depend>ament_cmake_gtest</test_depend>
   <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_lint_cmake</test_depend>
+  <test_depend>ament_cmake_clang_format</test_depend>
 
   <export>
     <rviz plugin="plugin_description.xml"/>
