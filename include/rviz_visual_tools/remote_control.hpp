@@ -47,6 +47,7 @@
 // ROS
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joy.hpp>
+#include <utility>
 
 namespace rviz_visual_tools
 {
@@ -121,7 +122,7 @@ public:
 
   void setDisplayWaitingState(DisplayWaitingState displayWaitingState)
   {
-    displayWaitingState_ = displayWaitingState;
+    displayWaitingState_ = std::move(displayWaitingState);
   }
 
 private:
