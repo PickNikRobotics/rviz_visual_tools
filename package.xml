@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>rviz_visual_tools</name>
   <version>3.7.0</version>
   <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
 
   <maintainer email="mike@picknik.ai">Mike Lautman</maintainer>
+  <author email="mike@picknik.ai">Mike Lautman</author>
 
   <license>BSD</license>
 
@@ -13,12 +14,7 @@
   <url type="repository">https://github.com/PickNikRobotics/rviz_visual_tools/</url>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
-  <author email="mike@picknik.ai">Mike Lautman</author>
-
-  <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>eigen3_cmake_module</buildtool_depend>
-
   <buildtool_export_depend>eigen3_cmake_module</buildtool_export_depend>
 
   <depend>rclcpp</depend>
