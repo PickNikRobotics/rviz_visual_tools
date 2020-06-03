@@ -11,6 +11,7 @@ git:
 
 env:
   global:
+    - BUILDER=colcon
     - ROS_REPO=ros
     - CCACHE_DIR=$HOME/.ccache
     - UPSTREAM_WORKSPACE="rviz_visual_tools.repos"
