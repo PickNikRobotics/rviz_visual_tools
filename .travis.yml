@@ -11,10 +11,9 @@ git:
 
 env:
   global:
-    - BUILDER=colcon
     - ROS_REPO=ros
     - CCACHE_DIR=$HOME/.ccache
-    - UPSTREAM_WORKSPACE="rviz_visual_tools.repos"
+    - UPSTREAM_WORKSPACE="https://raw.githubusercontent.com/ros-planning/moveit2/master/moveit2.repos rviz_visual_tools.repos"
   matrix:
     - ROS_DISTRO="eloquent"
 
