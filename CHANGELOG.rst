@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.9.0 (2020-06-04)
+------------------
 * replace tf_conversions with tf2 (`#151 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/151>`_)
   Co-authored-by: Bjar Ne <gleichdick@users.noreply.github.com>
 * bump cmake version (`#150 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/150>`_)
