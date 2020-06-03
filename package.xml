@@ -12,6 +12,8 @@
   <url type="butracker">https://github.com/PickNikRobotics/rviz_visual_tools/issues</url>
   <url type="repository">https://github.com/PickNikRobotics/rviz_visual_tools/</url>
 
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
   <author email="mike@picknik.ai">Mike Lautman</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -54,7 +56,8 @@
 
   <test_depend>ament_cmake_gtest</test_depend>
   <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_lint_cmake</test_depend>
+  <test_depend>ament_cmake_clang_format</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
