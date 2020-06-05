@@ -14,7 +14,6 @@ env:
     - WARNINGS_OK=false
   matrix:
     - TEST="clang-format" # TODO(davetcoleman): enable catkin_lint in the future
-    - TEST=clang-tidy-fix
     - DOCKER_IMAGE=moveit/moveit:melodic-source
 
 before_script:
