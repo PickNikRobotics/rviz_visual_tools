@@ -994,7 +994,8 @@ public:
    * \brief Create a pose of position (0,0,0) and quaternion (0,0,0,1)
    * \param Pose to fill in
    */
-  static void generateEmptyPose(geometry_msgs::Pose& pose);
+  [[deprecated("Replaced with getIdentityPose() in future releases")]] static void generateEmptyPose(geometry_msgs::Pose& pose);
+  static geometry_msgs::Pose getIdentityPose();
 
   /**
    * \brief Test if two Eigen poses are close enough
