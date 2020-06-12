@@ -43,7 +43,7 @@
 namespace rviz_visual_tools
 {
 IMarkerSimple::IMarkerSimple(const std::string& name, double scale, const geometry_msgs::Pose& initial_pose,
-                            const std::string& parent_frame)
+                             const std::string& parent_frame)
   : nh_("~"), latest_pose_(initial_pose)
 {
   // Create Marker Server
