@@ -47,15 +47,15 @@ class KeyTool : public rviz::Tool
   Q_OBJECT
 public:
   KeyTool();
-  virtual ~KeyTool();
+  ~KeyTool() override;
 
-  virtual void onInitialize();
+  void onInitialize() override;
 
-  virtual void activate();
-  virtual void deactivate();
+  void activate() override;
+  void deactivate() override;
 
-  virtual int processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel);
-  virtual int processMouseEvent(rviz::ViewportMouseEvent& event);
+  int processKeyEvent(QKeyEvent* event, rviz::RenderPanel* panel) override;
+  int processMouseEvent(rviz::ViewportMouseEvent& event) override;
 
 public Q_SLOTS:
 
