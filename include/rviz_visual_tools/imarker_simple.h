@@ -73,7 +73,8 @@ class IMarkerSimple
 {
 public:
   explicit IMarkerSimple(const std::string& name = "imarker", double scale = 0.2,
-                         const geometry_msgs::Pose& initial_pose = getIdentityPose());
+                         const geometry_msgs::Pose& initial_pose = getIdentityPose(),
+                         const std::string& parent_frame = "world");
 
   geometry_msgs::Pose& getPose();
 
@@ -91,7 +92,8 @@ public:
 private:
   void sendUpdatedIMarkerPose();
 
-  void make6DofMarker(const geometry_msgs::Pose& pose, double scale = 0.2);
+  void make6DofMarker(const geometry_msgs::Pose& pose = getIdentityPose(), double scale = 0.2,
+                      const std::string& parent_frame = "world");
 
   // --------------------------------------------------------
 

@@ -61,10 +61,10 @@ class RvizVisualToolsGui : public rviz::Panel
 {
   Q_OBJECT
 public:
-  explicit RvizVisualToolsGui(QWidget* parent = 0);
+  explicit RvizVisualToolsGui(QWidget* parent = nullptr);
 
-  virtual void load(const rviz::Config& config);
-  virtual void save(rviz::Config config) const;
+  void load(const rviz::Config& config) override;
+  void save(rviz::Config config) const override;
 
 public Q_SLOTS:
 
