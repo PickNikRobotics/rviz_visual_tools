@@ -92,7 +92,7 @@ public:
 private:
   void sendUpdatedIMarkerPose();
 
-  void make6DofMarker(const geometry_msgs::Pose& pose = geometry_msgs::Pose(), double scale = 0.2,
+  void make6DofMarker(const geometry_msgs::Pose& pose = getIdentityPose(), double scale = 0.2,
                       const std::string& parent_frame = "world");
 
   // --------------------------------------------------------
