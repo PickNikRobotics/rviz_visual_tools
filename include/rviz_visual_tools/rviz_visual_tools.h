@@ -217,6 +217,8 @@ public:
    */
   void resetMarkerCounts();
 
+  void removeMarkerWithID(int id);
+
   /**
    * \brief Pre-load rviz markers for better efficiency
    * \return converted pose   * \return true on sucess
