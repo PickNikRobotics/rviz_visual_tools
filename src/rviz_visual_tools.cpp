@@ -80,6 +80,21 @@ bool RvizVisualTools::deleteAllMarkers()
   return publishMarker(reset_marker_);
 }
 
+void RvizVisualTools::removeMarkerWithID(int id)
+{
+  visualization_msgs::Marker empty_marker;
+  empty_marker.header.frame_id = base_frame_;
+  empty_marker.id = id;
+  empty_marker.header.stamp = ros::Time();
+  empty_marker.ns = "deleteAllMarkers";  
+  empty_marker.action = 3; 
+  empty_marker.pose.orientation.w = 1;
+
+  visualization_msgs::MarkerArray empty_marker_array;
+  empty_marker_array.markers.push_back(empty_marker);
+  pub_rviz_markers_.publish(empty_marker_array);
+}
+
 void RvizVisualTools::resetMarkerCounts()
 {
   arrow_marker_.id++;

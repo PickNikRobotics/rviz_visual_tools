@@ -217,6 +217,9 @@ public:
    */
   void resetMarkerCounts();
 
+  /** 
+   * \brief Remove a specific marker with the given id.
+   */
   void removeMarkerWithID(int id);
 
   /**
