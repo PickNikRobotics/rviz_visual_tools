@@ -2152,8 +2152,8 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, doub
 }
 
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, const Eigen::Vector3d& min_point,
-                                             const Eigen::Vector3d& max_point, colors color, scales scale, const std::string& ns,
-                                             std::size_t id)
+                                             const Eigen::Vector3d& max_point, colors color, scales scale,
+                                             const std::string& ns, std::size_t id)
 {
   // Extract 8 cuboid vertices
   Eigen::Vector3d p1(min_point[0], min_point[1], min_point[2]);

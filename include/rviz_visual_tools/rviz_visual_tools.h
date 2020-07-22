@@ -726,7 +726,8 @@ public:
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height,
-                              colors color = BLUE, scales scale = SMALL, const std::string& ns = "Wireframe Cuboid", std::size_t id = 0);
+                              colors color = BLUE, scales scale = XXSMALL, const std::string& ns = "Wireframe Cuboid",
+                              std::size_t id = 0);
 
   /**
    * \brief Publish transformed wireframe cuboid. Useful eg to show an oriented bounding box.
@@ -739,7 +740,7 @@ public:
    * \return true on success
    */
   bool publishWireframeCuboid(const Eigen::Isometry3d& pose, const Eigen::Vector3d& min_point,
-                              const Eigen::Vector3d& max_point, colors color = BLUE, scales scale = SMALL,
+                              const Eigen::Vector3d& max_point, colors color = BLUE, scales scale = XXSMALL,
                               const std::string& ns = "Wireframe Cuboid", std::size_t id = 0);
 
   /**
