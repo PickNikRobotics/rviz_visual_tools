@@ -4,6 +4,7 @@ Changelog for package rviz_visual_tools
 
 3.9.1 (2020-10-09)
 ------------------
+* [maint] add soname versions to libraries (`#166 <https://github.com/tylerjw/rviz_visual_tools/issues/166>`_)
 * [maint] Apply clang-format-10 (`#173 <https://github.com/tylerjw/rviz_visual_tools/issues/173>`_)
 * Contributors: Tyler Weaver
 
