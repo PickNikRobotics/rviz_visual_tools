@@ -29,6 +29,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_geometry_msgs
   trajectory_msgs
   visualization_msgs
+  interactive_markers
 )
 
 find_package(Eigen3 REQUIRED)
@@ -74,6 +75,7 @@ catkin_package(
     tf2_ros
     trajectory_msgs
     visualization_msgs
+    interactive_markers
   INCLUDE_DIRS
     include
     ${OGRE_OV_INCLUDE_DIRS}
