@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   eigen_stl_containers
   geometry_msgs
   graph_msgs
+  interactive_markers
   shape_msgs
   roscpp
   roslint
@@ -66,6 +67,7 @@ catkin_package(
   CATKIN_DEPENDS
     geometry_msgs
     graph_msgs
+    interactive_markers
     shape_msgs
     roscpp
     sensor_msgs
