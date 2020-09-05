@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   eigen_stl_containers
   geometry_msgs
   graph_msgs
+  interactive_markers
   shape_msgs
   roscpp
   roslint
@@ -29,7 +30,6 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_geometry_msgs
   trajectory_msgs
   visualization_msgs
-  interactive_markers
 )
 
 find_package(Eigen3 REQUIRED)
@@ -67,6 +67,7 @@ catkin_package(
   CATKIN_DEPENDS
     geometry_msgs
     graph_msgs
+    interactive_markers
     shape_msgs
     roscpp
     sensor_msgs
@@ -75,7 +76,6 @@ catkin_package(
     tf2_ros
     trajectory_msgs
     visualization_msgs
-    interactive_markers
   INCLUDE_DIRS
     include
     ${OGRE_OV_INCLUDE_DIRS}
