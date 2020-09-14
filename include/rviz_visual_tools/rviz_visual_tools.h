@@ -45,8 +45,9 @@
 #include <vector>
 
 // Eigen
-#include <Eigen/Geometry>
 #include <eigen_stl_containers/eigen_stl_vector_container.h>
+
+#include <Eigen/Geometry>
 
 // Rviz
 #include <visualization_msgs/Marker.h>
@@ -56,12 +57,12 @@
 #include <boost/shared_ptr.hpp>
 
 // Messages
-#include <shape_msgs/Mesh.h>
-#include <std_msgs/ColorRGBA.h>
-#include <graph_msgs/GeometryGraph.h>
+#include <geometry_msgs/Polygon.h>
 #include <geometry_msgs/PoseArray.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/Polygon.h>
+#include <graph_msgs/GeometryGraph.h>
+#include <shape_msgs/Mesh.h>
+#include <std_msgs/ColorRGBA.h>
 #include <trajectory_msgs/JointTrajectory.h>
 
 // rviz_visual_tools
@@ -648,12 +649,14 @@ public:
    * \param bPoints - x,y,z of end of line, as a vector
    * \param colors - an enum pre-defined name of a color
    * \param scale - an enum pre-defined name of a size
+   * \param ns - namespace of marker
    * \return true on success
    */
   bool publishLines(const EigenSTL::vector_Vector3d& aPoints, const EigenSTL::vector_Vector3d& bPoints,
-                    const std::vector<colors>& colors, scales scale = MEDIUM);
+                    const std::vector<colors>& colors, scales scale = MEDIUM, const std::string& ns = "Line Array");
   bool publishLines(const std::vector<geometry_msgs::Point>& aPoints, const std::vector<geometry_msgs::Point>& bPoints,
-                    const std::vector<std_msgs::ColorRGBA>& colors, const geometry_msgs::Vector3& scale);
+                    const std::vector<std_msgs::ColorRGBA>& colors, const geometry_msgs::Vector3& scale,
+                    const std::string& ns = "Line Array");
 
   /**
    * \brief Display a series of connected lines using the LINE_STRIP method - deprecated because visual bugs

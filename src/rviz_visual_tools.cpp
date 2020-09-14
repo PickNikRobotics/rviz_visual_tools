@@ -39,9 +39,9 @@
 #include <rviz_visual_tools/rviz_visual_tools.h>
 
 // Conversions
+#include <tf2/convert.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <tf2/convert.h>
 
 // C++
 #include <cmath>  // for random poses
@@ -1888,7 +1888,7 @@ bool RvizVisualTools::publishLine(const geometry_msgs::Point& point1, const geom
 }
 
 bool RvizVisualTools::publishLines(const EigenSTL::vector_Vector3d& aPoints, const EigenSTL::vector_Vector3d& bPoints,
-                                   const std::vector<colors>& colors, scales scale)
+                                   const std::vector<colors>& colors, scales scale, const std::string& ns)
 {
   BOOST_ASSERT_MSG(aPoints.size() == bPoints.size() && bPoints.size() == colors.size(), "Mismatching vector sizes: "
                                                                                         "aPoints, bPoints, and colors");
@@ -1905,20 +1905,21 @@ bool RvizVisualTools::publishLines(const EigenSTL::vector_Vector3d& aPoints, con
     // Convert color to ROS Msg
     colors_msg.push_back(getColor(colors[i]));
   }
-  BOOST_ASSERT_MSG(a_points_msg.size() == b_points_msg.size() && b_points_msg.size() == colors_msg.size(),
-                   "Mismatched "
-                   "vector sizes");
+  BOOST_ASSERT_MSG(a_points_msg.size() == b_points_msg.size() && b_points_msg.size() == colors_msg.size(), "Mismatched "
+                                                                                                           "vector "
+                                                                                                           "sizes");
 
-  return publishLines(a_points_msg, b_points_msg, colors_msg, getScale(scale));
+  return publishLines(a_points_msg, b_points_msg, colors_msg, getScale(scale), ns);
 }
 
 bool RvizVisualTools::publishLines(const std::vector<geometry_msgs::Point>& aPoints,
                                    const std::vector<geometry_msgs::Point>& bPoints,
-                                   const std::vector<std_msgs::ColorRGBA>& colors, const geometry_msgs::Vector3& scale)
+                                   const std::vector<std_msgs::ColorRGBA>& colors, const geometry_msgs::Vector3& scale,
+                                   const std::string& ns)
 {
   // Setup marker
   line_list_marker_.header.stamp = ros::Time();
-  line_list_marker_.ns = "Line Array";
+  line_list_marker_.ns = ns;
 
   // Provide a new id every call to this function
   line_list_marker_.id++;
@@ -2079,8 +2080,8 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                             << ".");
+    ROS_ERROR_STREAM_NAMED(LOGNAME,
+                           "Skipping path because " << path.size() << " different from " << colors.size() << ".");
     return false;
   }
 
@@ -2104,8 +2105,8 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                             << ".");
+    ROS_ERROR_STREAM_NAMED(LOGNAME,
+                           "Skipping path because " << path.size() << " different from " << colors.size() << ".");
     return false;
   }
 
