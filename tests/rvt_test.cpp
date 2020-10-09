@@ -85,8 +85,8 @@ public:
     static const double EPSILON = 0.000001;
     for (std::size_t i = 0; i < expect.size(); ++i)
     {
-      EXPECT_GT(EPSILON, fabs(expect[i] - actual[i])) << "Section " << id << ", Element " << i
-                                                      << ", Expect: " << expect[i] << ", Actual: " << actual[i];
+      EXPECT_GT(EPSILON, fabs(expect[i] - actual[i]))
+          << "Section " << id << ", Element " << i << ", Expect: " << expect[i] << ", Actual: " << actual[i];
     }
 
     return true;

@@ -2079,8 +2079,8 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                             << ".");
+    ROS_ERROR_STREAM_NAMED(LOGNAME,
+                           "Skipping path because " << path.size() << " different from " << colors.size() << ".");
     return false;
   }
 
@@ -2104,8 +2104,8 @@ bool RvizVisualTools::publishPath(const EigenSTL::vector_Vector3d& path, const s
 
   if (path.size() != colors.size())
   {
-    ROS_ERROR_STREAM_NAMED(LOGNAME, "Skipping path because " << path.size() << " different from " << colors.size()
-                                                             << ".");
+    ROS_ERROR_STREAM_NAMED(LOGNAME,
+                           "Skipping path because " << path.size() << " different from " << colors.size() << ".");
     return false;
   }
 

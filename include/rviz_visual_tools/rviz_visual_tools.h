@@ -780,8 +780,7 @@ public:
    */
   bool publishAxis(const geometry_msgs::Pose& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
   bool publishAxis(const Eigen::Isometry3d& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
-  bool publishAxis(const geometry_msgs::Pose& pose, double length, double radius = 0.01,
-                   const std::string& ns = "Axis");
+  bool publishAxis(const geometry_msgs::Pose& pose, double length, double radius = 0.01, const std::string& ns = "Axis");
   bool publishAxis(const Eigen::Isometry3d& pose, double length, double radius = 0.01, const std::string& ns = "Axis");
 
 private:
