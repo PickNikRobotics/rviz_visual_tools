@@ -2,57 +2,36 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-3.9.0 (2020-06-04)
+3.9.1 (2020-10-09)
 ------------------
-* replace tf_conversions with tf2 (`#151 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/151>`_)
-  Co-authored-by: Bjar Ne <gleichdick@users.noreply.github.com>
-* bump cmake version (`#150 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/150>`_)
-  Get rid of CMP0048 warning.
-  https://github.com/ros-planning/geometric_shapes/pull/129
-* Publish cuboid with size as a vector3 or Eigen::Vector3d  (`#125 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/125>`_)
-* fix rviz warnings about scale and uninitialized quaternions (`#129 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/129>`_)
-* Normalize interactive marker quaternions. (`#132 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/132>`_)
-* normalize before publish (`#131 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/131>`_)
-* remove trailing whitespaces (`#130 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/130>`_)
-* Apply clang-tidy (`#127 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/127>`_)
-  * Apply clang-tidy
-  * Switch include guards to pragma once
-* Remove auto-bot for assignees, update reviewers (`#128 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/128>`_)
-* New helper function getIdentityPose() (`#122 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/122>`_)
-* Switch to moveit_ci, apply clang-format (`#124 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/124>`_)
-  * Switch to moveit_ci, apply clang-format
-  * Update .travis.yml
-  * Update .travis.yml
-* Windows bring up. (`#116 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/116>`_)
-* Add more auto-assign reviewers
-* For ABCD planes: better comments, ensure the plane equation is satisfied. (`#120 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/120>`_)
-  * Better comments, ensure the plane equation is satisfied.
-  * Fix very small typo
-  * ABCD plane: use fabs(D) rather than -D
-  * A more readable plane calculation.
-  * Better comment on plane parameters.
-  * Initialize C to 0
-  * Remove unnecessary line
-  Co-Authored-By: Henning Kayser <henningkayser@picknik.ai>
-* Make `rviz_visual_tools` publish triangle mesh and `tf_visual_tools` clean published transforms (`#117 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/117>`_)
-  * Add `clearAllTransform` method to tf_visual_tools
-  * Add new function to publish mesh marker from triangles and vertices
-* Publish plane from Ax+By+Cz+D=0 equation (`#119 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/119>`_)
-  * Publish plane from Ax+By+Cz+D=0 equation
-  * Adding a 'D' argument to publishABCDplane
-  * Small simplifications to ABCD plane implementation.
-* Change email address (`#114 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/114>`_)
-* Fixed publishCylinder namespace (`#109 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/109>`_)
-* Remove default arguments to make function calls not ambiguous (`#112 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/112>`_)
-  * Remove default arguments to make function calls not ambiguous
-  * Remove further default values
-  * Add unit tests for publishPath() functions, make sucess return value more stringent
-* Initizalize quaternions in demo to avoid warning (`#111 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/111>`_)
-* Fix node type in demo launch files (`#110 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/110>`_)
-* Only auto-assign one reviewer (`#107 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/107>`_)
-* Use LOGNAME for logging re:moveit styel (`#106 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/106>`_)
-* Document Github Probot for Auto Assign (`#101 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/101>`_)
-* Contributors: AndyZe, Bjar Ne, Dave Coleman, Jafar Abdi, Michael Görner, Mike Lautman, Sean Yen, Victor Lamoine, Yu, Yan, d-walsh
+* [maint] Apply clang-format-10 (`#173 <https://github.com/tylerjw/rviz_visual_tools/issues/173>`_)
+* Contributors: Tyler Weaver
+
+3.9.0 (2020-09-05)
+------------------
+* [feature] Add optional parent frame to iMarker (`#159 <https://github.com/tylerjw/rviz_visual_tools/issues/159>`_)
+* [feature] Publish cuboid with size as a vector3 or Eigen::Vector3d  (`#125 <https://github.com/tylerjw/rviz_visual_tools/issues/125>`_)
+* [feature] Normalize interactive marker quaternions. (`#132 <https://github.com/tylerjw/rviz_visual_tools/issues/132>`_)
+* [feature] normalize before publish (`#131 <https://github.com/tylerjw/rviz_visual_tools/issues/131>`_)
+* [feature] New helper function getIdentityPose() (`#122 <https://github.com/tylerjw/rviz_visual_tools/issues/122>`_)
+* [feature] Windows bring up. (`#116 <https://github.com/tylerjw/rviz_visual_tools/issues/116>`_)
+* [feature] For ABCD planes: better comments, ensure the plane equation is satisfied. (`#120 <https://github.com/tylerjw/rviz_visual_tools/issues/120>`_)
+* [feature] Make `rviz_visual_tools` publish triangle mesh and `tf_visual_tools` clean published transforms (`#117 <https://github.com/tylerjw/rviz_visual_tools/issues/117>`_)
+* [feature] Publish plane from Ax+By+Cz+D=0 equation (`#119 <https://github.com/tylerjw/rviz_visual_tools/issues/119>`_)
+* [feature] Remove default arguments to make function calls not ambiguous (`#112 <https://github.com/tylerjw/rviz_visual_tools/issues/112>`_)
+* [feature] Initizalize quaternions in demo to avoid warning (`#111 <https://github.com/tylerjw/rviz_visual_tools/issues/111>`_)
+* [fix] rviz warnings about scale and uninitialized quaternions (`#129 <https://github.com/tylerjw/rviz_visual_tools/issues/129>`_)
+* [fix] publishCylinder namespace (`#109 <https://github.com/tylerjw/rviz_visual_tools/issues/109>`_)
+* [fix] node type in demo launch files (`#110 <https://github.com/tylerjw/rviz_visual_tools/issues/110>`_)
+* [maint] Adding missing dependency (interactive_markers) (`#168 <https://github.com/tylerjw/rviz_visual_tools/issues/168>`_)
+* [maint] clang-tidy (`#158 <https://github.com/tylerjw/rviz_visual_tools/issues/158>`_)
+* [maint] replace tf_conversions with tf2 (`#151 <https://github.com/tylerjw/rviz_visual_tools/issues/151>`_)
+* [maint] bump cmake version (`#150 <https://github.com/tylerjw/rviz_visual_tools/issues/150>`_)
+* [maint] remove trailing whitespaces (`#130 <https://github.com/tylerjw/rviz_visual_tools/issues/130>`_)
+* [maint] Apply clang-tidy (`#127 <https://github.com/tylerjw/rviz_visual_tools/issues/127>`_)
+* [maint] Switch to moveit_ci, apply clang-format (`#124 <https://github.com/tylerjw/rviz_visual_tools/issues/124>`_)
+* [maint] Use LOGNAME for logging re:moveit styel (`#106 <https://github.com/tylerjw/rviz_visual_tools/issues/106>`_)
+* Contributors: AndyZe, Bjar Ne, Dave Coleman, Jafar Abdi, JafarAbdi, Michael Görner, Mike Lautman, Sean Yen, Victor Lamoine, Yu, Yan, d-walsh
 
 3.7.0 (2018-11-26)
 ------------------
