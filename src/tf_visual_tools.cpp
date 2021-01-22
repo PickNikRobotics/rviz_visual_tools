@@ -58,7 +58,7 @@ TFVisualTools::TFVisualTools(NodePtr node, double loop_hz)
   rclcpp::Duration update_period = rclcpp::Duration::from_seconds(1.0 / loop_hz);
 
   // non_realtime_loop_ = nh_.createTimer(update_freq, &TFVisualTools::publishAllTransforms, this);
-  non_realtime_loop_ = rclcpp::create_timer(node_base_interface_.get(), timers_interface_.get(),
+  non_realtime_loop_ = rclcpp::create_timer(node_base_interface_, timers_interface_,
                                             clock_interface_->get_clock(), update_period,
                                             std::bind(&TFVisualTools::publishAllTransforms, this));
   // , std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
