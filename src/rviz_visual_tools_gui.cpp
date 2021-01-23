@@ -51,9 +51,10 @@
 
 namespace rviz_visual_tools
 {
-RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent) : rviz_common::Panel(parent), remote_reciever_("rviz_visual_tools_gui")
+RvizVisualToolsGui::RvizVisualToolsGui(QWidget* parent)
+  : rviz_common::Panel(parent), remote_reciever_("rviz_visual_tools_gui")
 {
-    // Create a push button
+  // Create a push button
   btn_next_ = new QPushButton(this);
   btn_next_->setText("Next");
   connect(btn_next_, SIGNAL(clicked()), this, SLOT(moveNext()));

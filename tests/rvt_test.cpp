@@ -88,14 +88,14 @@ public:
 
     Eigen::Quaterniond q1(expect.rotation());
     Eigen::Quaterniond q2(actual.rotation());
-    EXPECT_GT(EPSILON, fabs(q1.x() - q2.x())) << id << " Quaternion x - expect: " << q1.x()
-                                              << " actual: " << q2.x();
-    EXPECT_GT(EPSILON, fabs(q1.y() - q2.y())) << id << " Quaternion y - expect: " << q1.y()
-                                              << " actual: " << q2.y();
-    EXPECT_GT(EPSILON, fabs(q1.z() - q2.z())) << id << " Quaternion z - expect: " << q1.z()
-                                              << " actual: " << q2.z();
-    EXPECT_GT(EPSILON, fabs(q1.w() - q2.w())) << id << " Quaternion w - expect: " << q1.w()
-                                              << " actual: " << q2.w();
+    EXPECT_GT(EPSILON, fabs(q1.x() - q2.x()))
+        << id << " Quaternion x - expect: " << q1.x() << " actual: " << q2.x();
+    EXPECT_GT(EPSILON, fabs(q1.y() - q2.y()))
+        << id << " Quaternion y - expect: " << q1.y() << " actual: " << q2.y();
+    EXPECT_GT(EPSILON, fabs(q1.z() - q2.z()))
+        << id << " Quaternion z - expect: " << q1.z() << " actual: " << q2.z();
+    EXPECT_GT(EPSILON, fabs(q1.w() - q2.w()))
+        << id << " Quaternion w - expect: " << q1.w() << " actual: " << q2.w();
 
     return true;
   }
@@ -108,9 +108,9 @@ public:
     static const double EPSILON = 0.000001;
     for (std::size_t i = 0; i < expect.size(); ++i)
     {
-      EXPECT_GT(EPSILON, fabs(expect[i] - actual[i])) << "Section " << id << ", Element " << i
-                                                      << ", Expect: " << expect[i]
-                                                      << ", Actual: " << actual[i];
+      EXPECT_GT(EPSILON, fabs(expect[i] - actual[i]))
+          << "Section " << id << ", Element " << i << ", Expect: " << expect[i]
+          << ", Actual: " << actual[i];
     }
 
     return true;
