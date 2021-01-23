@@ -43,8 +43,8 @@
 
 namespace rviz_visual_tools
 {
-using visualization_msgs::msg::InteractiveMarkerFeedback;
 using visualization_msgs::msg::InteractiveMarkerControl;
+using visualization_msgs::msg::InteractiveMarkerFeedback;
 
 const std::string IMarkerSimple::IMARKER_NAME = "imarker_simple";
 

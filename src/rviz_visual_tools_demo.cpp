@@ -76,9 +76,8 @@ public:
     visual_tools_->loadMarkerPub();
     bool has_sub = visual_tools_->waitForMarkerSub(10.0);
     if (!has_sub)
-      RCLCPP_INFO(
-          get_logger(),
-          "/rviz_visual_tools does not have a subscriber after 10s. Visualizations may be lost");
+      RCLCPP_INFO(get_logger(), "/rviz_visual_tools does not have a subscriber after 10s. "
+                                "Visualizations may be lost");
 
     // Clear messages
     visual_tools_->deleteAllMarkers();
@@ -472,9 +471,9 @@ public:
 
     // Show test label
     pose1.translation().x() = x_location - 0.1;
-    visual_tools_->publishText(pose1, "Testing consistency of " +
-                                          visual_tools_->scaleToString(scale) + " marker scale",
-                               WHITE, XLARGE, false);
+    visual_tools_->publishText(
+        pose1, "Testing consistency of " + visual_tools_->scaleToString(scale) + " marker scale",
+        WHITE, XLARGE, false);
 
     pose1.translation().x() = x_location;
 

@@ -66,7 +66,7 @@ geometry_msgs::msg::Pose getIdentityPose()
   pose.orientation.w = 1.0;
   return pose;
 }
-}
+}  // namespace
 
 class IMarkerSimple
 {

@@ -364,8 +364,9 @@ bool RvizVisualTools::waitForSubscriber(const PublisherPtr& pub, double wait_tim
   {
     if (clock_interface_->get_clock()->now() > max_time)  // Check if timed out
     {
-      RCLCPP_WARN(logger_, "Topic '%s' unable to connect to any subscribers within %f sec. It is "
-                           "possible initially published visual messages will be lost.",
+      RCLCPP_WARN(logger_,
+                  "Topic '%s' unable to connect to any subscribers within %f sec. It is "
+                  "possible initially published visual messages will be lost.",
                   pub->get_topic_name(), wait_time);
       pub_rviz_markers_connected_ = false;
       return pub_rviz_markers_connected_;
