@@ -44,6 +44,8 @@
 #include <geometry_msgs/msg/pose_stamped.hpp>
 
 #include <interactive_markers/interactive_marker_server.hpp>
+#include <utility>
+
 #include <visualization_msgs/msg/interactive_marker_feedback.hpp>
 #include <visualization_msgs/msg/interactive_marker.hpp>
 #include <interactive_markers/menu_handler.hpp>
@@ -103,7 +105,7 @@ public:
 
   void setIMarkerCallback(IMarkerCallback callback)
   {
-    imarker_callback_ = callback;
+    imarker_callback_ = std::move(callback);
   }
 
 private:
