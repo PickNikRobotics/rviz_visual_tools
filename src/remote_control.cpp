@@ -180,7 +180,7 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
     /* TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520 the only way to spin is by
      * having access to the executor. Thus, the remote control must have an executor. Once the issue
      * has been resolved, it would be nice to remove the executor from this class */
-    rclcpp::executor::FutureReturnCode status = executor_->spin_until_future_complete(
+    rclcpp::FutureReturnCode status = executor_->spin_until_future_complete(
         future_next_step_ready, std::chrono::milliseconds(125));
     if (status == rclcpp::executor::FutureReturnCode::SUCCESS)
     {
