@@ -182,11 +182,11 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
      * has been resolved, it would be nice to remove the executor from this class */
     rclcpp::FutureReturnCode status = executor_->spin_until_future_complete(
         future_next_step_ready, std::chrono::milliseconds(125));
-    if (status == rclcpp::executor::FutureReturnCode::SUCCESS)
+    if (status == rclcpp::FutureReturnCode::SUCCESS)
     {
       break;
     }
-    else if (status == rclcpp::executor::FutureReturnCode::INTERRUPTED)
+    else if (status == rclcpp::FutureReturnCode::INTERRUPTED)
     {
       RCLCPP_INFO(logger_, "Spinning was interrupted.");
       next_step_ready_ = nullptr;
