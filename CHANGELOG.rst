@@ -2,6 +2,37 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix warning about deprecation (`#180 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/180>`_)
+  rclcpp::executor::FutureReturnCode was removed
+* Update to offer shared_ptr to create_timer
+* Fix rviz_visual_tools_gui (`#147 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/147>`_)
+* Compilation for Windows (`#143 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/143>`_)
+* Remove stl file in preparation for LFS setup (`#140 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/140>`_)
+* Add function deleteMarker: deletes marker for given namespace and id (`#137 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/137>`_)
+* fix waitForSubscriber time (`#142 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/142>`_)
+* Eloquent cleanup (`#135 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/135>`_)
+  * some misc cleanup of the imarker simple lib
+  * actually reset marker counts
+  * changes for using IMarker simple as a library
+* Fix rviz warnings about scale and uninitialized quaternions (`#129 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/129>`_)
+* Normalize interactive marker quaternions. (`#132 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/132>`_)
+* normalize before publish (`#131 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/131>`_)
+* New helper function getIdentityPose() (`#122 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/122>`_)
+* For ABCD planes: better comments, ensure the plane equation is satisfied. (`#120 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/120>`_)
+  Co-Authored-By: Henning Kayser <henningkayser@picknik.ai>
+* Make `rviz_visual_tools` publish triangle mesh and `tf_visual_tools` clean published transforms (`#117 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/117>`_)
+  * Add `clearAllTransform` method to tf_visual_tools
+  * Add new function to publish mesh marker from triangles and vertices
+* Publish plane from Ax+By+Cz+D=0 equation (`#119 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/119>`_)
+* Fixed publishCylinder namespace (`#109 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/109>`_)
+* Remove default arguments to make function calls not ambiguous (`#112 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/112>`_)
+* Initialize quaternions in demo to avoid warning (`#111 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/111>`_)
+* Fix node type in demo launch files (`#110 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/110>`_)
+* Use LOGNAME for logging re:moveit styel (`#106 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/106>`_)
+* Contributors: AndyZe, Bjar Ne, Dave Coleman, Jafar Abdi, Mike Lautman, Mori, MoriKen, Nathan Brooks, Sean Yen, Victor Lamoine, Yu Yan, d-walsh, hshose
+
 3.7.0 (2018-11-26)
 ------------------
 * Fix Eigen::Affine3d for Melodic (using Eigen::Isometry3d) (`#105 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/105>`_)
