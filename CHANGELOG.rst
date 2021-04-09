@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.0.0 (2021-04-09)
+------------------
 * Fix warning about deprecation (`#180 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/180>`_)
   rclcpp::executor::FutureReturnCode was removed
 * Update to offer shared_ptr to create_timer
