@@ -277,6 +277,23 @@ public:
   template <class PublisherPtr>
   bool waitForSubscriber(const PublisherPtr& pub, double wait_time = 5);
 
+  bool waitForSubscriber(const std::string _topic_name, double wait_time = 5);
+
+  // template <class rclcpp::Publisher< MessageT, AllocatorT> >
+  // template <typename M, typename A>
+  template<typename MessageT>
+  bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> > &pub, double wait_time = 5);
+
+  // template<typename MessageT, typename AllocatorT = std::allocator<void>>
+  // bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT<AllocatorT>, AllocatorT> > &pub, double wait_time = 5);
+
+  // bool waitForSubscriber(rclcpp::Publisher<M, A>::SharedPtr pub, double wait_time = 5);
+  // template<typename MessageT>
+  // bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> > &pub, double wait_time = 5);
+  // template<typename MessageT, typename AllocatorT = std::allocator<void>>
+  // bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT, AllocatorT> > &pub, double wait_time = 5);
+  // bool waitForSubscriber(rclcpp::Publisher<T>::SharedPtr pub, double wait_time = 5);
+
   /**
    * \brief Change the transparency of all markers published
    * \param alpha - value 0 - 1 where 0 is invisible
