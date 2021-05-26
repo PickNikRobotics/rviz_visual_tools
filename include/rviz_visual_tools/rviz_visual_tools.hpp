@@ -271,28 +271,52 @@ public:
    * \brief Wait until at least one subscriber connects to a publisher
    * \param pub - the publisher to check for subscribers
    * \param wait_time - time to wait for subscriber to be available before throwing warning (sec)
-   * \param blocking - if true, the function loop until a subscriber is gotten
    * \return true on successful connection
    */
-  template <class PublisherPtr>
-  bool waitForSubscriber(const PublisherPtr& pub, double wait_time = 5);
-
-  bool waitForSubscriber(const std::string _topic_name, double wait_time = 5);
-
-  // template <class rclcpp::Publisher< MessageT, AllocatorT> >
-  // template <typename M, typename A>
   template<typename MessageT>
-  bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> > &pub, double wait_time = 5);
-
-  // template<typename MessageT, typename AllocatorT = std::allocator<void>>
-  // bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT<AllocatorT>, AllocatorT> > &pub, double wait_time = 5);
-
-  // bool waitForSubscriber(rclcpp::Publisher<M, A>::SharedPtr pub, double wait_time = 5);
-  // template<typename MessageT>
-  // bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> > &pub, double wait_time = 5);
-  // template<typename MessageT, typename AllocatorT = std::allocator<void>>
-  // bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT, AllocatorT> > &pub, double wait_time = 5);
-  // bool waitForSubscriber(rclcpp::Publisher<T>::SharedPtr pub, double wait_time = 5);
+  bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> > &pub, double wait_time = 5.0)
+  {
+    // Will wait at most this amount of time
+    rclcpp::Time max_time(clock_interface_->get_clock()->now() +
+                          rclcpp::Duration::from_seconds(wait_time));
+    // This is wrong. It returns only the number of subscribers that have already
+    // established their direct connections to this publisher
+    // How often to check for subscribers
+    rclcpp::Duration loop_duration = rclcpp::Duration::from_seconds(1.0 / 200.0);
+    if (!pub)
+    {
+      RCLCPP_ERROR(logger_,
+                  "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
+    }
+    std::string topic_name = pub->get_topic_name();
+    int num_existing_subscribers = graph_interface_->count_subscribers(topic_name);
+    if (wait_time > 0 && num_existing_subscribers == 0)
+    {
+      RCLCPP_INFO_STREAM(logger_, "Topic " << pub->get_topic_name() << " waiting " << wait_time << " seconds for subscriber, ");
+    }
+    // Wait for subscriber
+    while (wait_time > 0 && num_existing_subscribers == 0 && rclcpp::ok())
+    {
+      if (clock_interface_->get_clock()->now() > max_time)  // Check if timed out
+      {
+        RCLCPP_WARN_STREAM(logger_,
+                    "Topic " << pub->get_topic_name() << " unable to connect to any subscribers within " << wait_time << " sec. It is possible initially published visual messages will be lost.");
+        pub_rviz_markers_connected_ = false;
+        return pub_rviz_markers_connected_;
+      }
+      // Check again
+      num_existing_subscribers = graph_interface_->count_subscribers(topic_name);
+      // Sleep
+      rclcpp::sleep_for(std::chrono::nanoseconds(loop_duration.nanoseconds()));
+    }
+    if (!rclcpp::ok())
+    {
+      pub_rviz_markers_connected_ = false;
+      return false;
+    }
+    pub_rviz_markers_connected_ = (num_existing_subscribers != 0);
+    return pub_rviz_markers_connected_;
+  }
 
   /**
    * \brief Change the transparency of all markers published
