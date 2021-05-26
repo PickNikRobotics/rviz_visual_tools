@@ -273,8 +273,8 @@ public:
    * \param wait_time - time to wait for subscriber to be available before throwing warning (sec)
    * \return true on successful connection
    */
-  template<typename MessageT>
-  bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> > &pub, double wait_time = 5.0)
+  template <typename MessageT>
+  bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> >& pub, double wait_time = 5.0)
   {
     // Will wait at most this amount of time
     rclcpp::Time max_time(clock_interface_->get_clock()->now() +
@@ -286,21 +286,25 @@ public:
     if (!pub)
     {
       RCLCPP_ERROR(logger_,
-                  "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
+                   "loadMarkerPub() has not been called yet, unable to wait for subscriber.");
     }
     std::string topic_name = pub->get_topic_name();
     int num_existing_subscribers = graph_interface_->count_subscribers(topic_name);
     if (wait_time > 0 && num_existing_subscribers == 0)
     {
-      RCLCPP_INFO_STREAM(logger_, "Topic " << pub->get_topic_name() << " waiting " << wait_time << " seconds for subscriber, ");
+      RCLCPP_INFO_STREAM(logger_, "Topic " << pub->get_topic_name() << " waiting " << wait_time
+                                           << " seconds for subscriber, ");
     }
     // Wait for subscriber
     while (wait_time > 0 && num_existing_subscribers == 0 && rclcpp::ok())
     {
       if (clock_interface_->get_clock()->now() > max_time)  // Check if timed out
       {
-        RCLCPP_WARN_STREAM(logger_,
-                    "Topic " << pub->get_topic_name() << " unable to connect to any subscribers within " << wait_time << " sec. It is possible initially published visual messages will be lost.");
+        RCLCPP_WARN_STREAM(
+            logger_,
+            "Topic " << pub->get_topic_name() << " unable to connect to any subscribers within "
+                     << wait_time
+                     << " sec. It is possible initially published visual messages will be lost.");
         pub_rviz_markers_connected_ = false;
         return pub_rviz_markers_connected_;
       }
