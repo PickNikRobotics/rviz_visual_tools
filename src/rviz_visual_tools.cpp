@@ -137,7 +137,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Load reset marker -------------------------------------------------
   reset_marker_.header.frame_id = base_frame_;
   reset_marker_.header.stamp = builtin_interfaces::msg::Time();
-  reset_marker_.ns = "";  // needs to be empty in order for rviz to delete all markers
+  reset_marker_.ns = "";  // needs to be empty in order for rviz to delete all markers in all namespaces
   reset_marker_.action = visualization_msgs::msg::Marker::DELETEALL;
   reset_marker_.pose.orientation.w = 1;
 
