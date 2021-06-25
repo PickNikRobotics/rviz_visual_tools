@@ -83,8 +83,8 @@ bool RvizVisualTools::deleteAllMarkers()
 
 bool RvizVisualTools::deleteAllMarkers(const std::string& ns)
 {
-  visualization_msgs::msg::Marker delete_ns_marker = reset_marker_;
-  delete_ns_marker.header.stamp = builtin_interfaces::msg::Time();
+  visualization_msgs::Marker delete_ns_marker = reset_marker_;
+  delete_ns_marker.header.stamp = ros::Time();
   delete_ns_marker.ns = ns;
   return publishMarker(delete_ns_marker);
 }
