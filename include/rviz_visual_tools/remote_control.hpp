@@ -54,7 +54,7 @@ public:
    * \brief Constructor for passing in NodeOptions and an executor.
    * \param node - A node that will be added to an executor outside of this class
    */
-  explicit RemoteControl(const rclcpp::executor::Executor::SharedPtr& executor,
+  explicit RemoteControl(const rclcpp::Executor::SharedPtr& executor,
                          const rclcpp::NodeOptions& node_options)
     : RemoteControl(executor, std::make_shared<rclcpp::Node>("remote_control", node_options))
   {
@@ -65,7 +65,7 @@ public:
    * \param node - A node that will be added to an executor outside of this class
    */
   template <typename NodePtr>
-  explicit RemoteControl(const rclcpp::executor::Executor::SharedPtr& executor, NodePtr node)
+  explicit RemoteControl(const rclcpp::Executor::SharedPtr& executor, NodePtr node)
     : RemoteControl(executor, node->get_node_base_interface(), node->get_node_topics_interface(),
                     node->get_node_logging_interface())
   {
@@ -78,7 +78,7 @@ public:
    * \param logging_iterface - An interface for publishing to the rosconsole
    */
   explicit RemoteControl(
-      const rclcpp::executor::Executor::SharedPtr& executor,
+      const rclcpp::Executor::SharedPtr& executor,
       const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
       const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
       const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
@@ -144,7 +144,7 @@ private:
   bool waitForNextStepCommon(const std::string& caption, bool autonomous);
 
   // Executor for spinning while in waitForNextStepCommon
-  rclcpp::executor::Executor::SharedPtr executor_;
+  rclcpp::Executor::SharedPtr executor_;
 
   // Node Interfaces
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
