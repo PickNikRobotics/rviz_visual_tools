@@ -20,6 +20,15 @@ jobs:
             CCOV: true
           - ROS_DISTRO: foxy
             ROS_REPO: testing
+          - ROS_DISTRO: galactic
+            ROS_REPO: main
+          - ROS_DISTRO: galactic
+            ROS_REPO: testing
+          - ROS_DISTRO: rolling
+            ROS_REPO: main
+          - ROS_DISTRO: rolling
+            ROS_REPO: testing
+
     env:
       AFTER_RUN_TARGET_TEST: ${{ matrix.env.CCOV && './.ci.prepare_codecov' || '' }}
       TARGET_CMAKE_ARGS: >
