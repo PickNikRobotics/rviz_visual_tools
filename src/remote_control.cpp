@@ -47,7 +47,7 @@ using namespace std::chrono_literals;
  * \brief Constructor
  */
 RemoteControl::RemoteControl(
-    const rclcpp::executor::Executor::SharedPtr& executor,
+    const rclcpp::Executor::SharedPtr& executor,
     const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
     const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
     const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
