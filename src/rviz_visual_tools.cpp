@@ -280,7 +280,9 @@ void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber, bool latched)
   }
 
   // Rviz marker publisher
-  pub_rviz_markers_ = nh_.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10, latched);
+  ros::NodeHandle nh(nh_.getNamespace());
+  nh.setCallbackQueue(&vis_marker_queue_);
+  pub_rviz_markers_ = nh.advertise<visualization_msgs::MarkerArray>(marker_topic_, 10, latched);
   ROS_DEBUG_STREAM_NAMED(LOGNAME, "Publishing Rviz markers on topic " << pub_rviz_markers_.getTopic());
 
   if (wait_for_subscriber)
@@ -334,7 +336,7 @@ bool RvizVisualTools::waitForSubscriber(const ros::Publisher& pub, double wait_t
                                                   "will be lost.");
       return false;
     }
-    ros::spinOnce();
+    vis_marker_queue_.callAvailable(ros::WallDuration());
 
     // Sleep
     poll_rate.sleep();
