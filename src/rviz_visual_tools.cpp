@@ -44,7 +44,9 @@
 #include <tf2/convert.h>
 
 // C++
+#include <chrono>
 #include <cmath>  // for random poses
+#include <random>
 #include <set>
 #include <string>
 #include <utility>
@@ -60,6 +62,8 @@ const std::string RvizVisualTools::NAME = "visual_tools";
 const std::array<colors, 14> RvizVisualTools::ALL_RAND_COLORS = { RED,        GREEN,  BLUE,   GREY,   DARK_GREY,
                                                                   WHITE,      ORANGE, YELLOW, BROWN,  PINK,
                                                                   LIME_GREEN, PURPLE, CYAN,   MAGENTA };
+
+std::mt19937 RvizVisualTools::mt_random_engine_(std::chrono::system_clock::now().time_since_epoch().count());
 
 RvizVisualTools::RvizVisualTools(std::string base_frame, std::string marker_topic, ros::NodeHandle nh)
   : nh_(nh), marker_topic_(std::move(marker_topic)), base_frame_(std::move(base_frame))
@@ -2801,26 +2805,21 @@ bool RvizVisualTools::posesEqual(const Eigen::Isometry3d& pose1, const Eigen::Is
 
 double RvizVisualTools::dRand(double min, double max)
 {
-  double d = static_cast<double>(rand()) / RAND_MAX;
-  return min + d * (max - min);
+  return std::uniform_real_distribution<double>(min,max)(mt_random_engine_);
 }
 
 float RvizVisualTools::fRand(float min, float max)
 {
-  float d = static_cast<float>(rand()) / RAND_MAX;
-  return min + d * (max - min);
+  return std::uniform_real_distribution<float>(min,max)(mt_random_engine_);
 }
 
 int RvizVisualTools::iRand(int min, int max)
 {
-  int n = max - min + 1;
-  int remainder = RAND_MAX % n;
-  int x;
-  do
-  {
-    x = rand();
-  } while (x >= RAND_MAX - remainder);
-  return min + x % n;
+  return std::uniform_int_distribution<int>(min,max)(mt_random_engine_);
+}
+
+void RvizVisualTools::setRandomSeed(unsigned int seed){
+  mt_random_engine_.seed(seed);
 }
 
 void RvizVisualTools::printTranslation(const Eigen::Vector3d& translation)
