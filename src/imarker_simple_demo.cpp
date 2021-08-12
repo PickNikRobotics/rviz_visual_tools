@@ -103,8 +103,8 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "imarker_simple_demo");
   ROS_INFO_STREAM_NAMED("main", "Starting IMarkerSimpleDemo...");
 
-  // Seed random number generator
-  // srand (time(NULL));
+  // Optionally set a fixed random seed
+  // rviz_visual_tools::RvizVisualTools::setRandomSeed(0xdeadbeef);
 
   // Allow the action server to recieve and send ros messages
   ros::AsyncSpinner spinner(2);
