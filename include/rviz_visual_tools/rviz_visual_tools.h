@@ -1055,9 +1055,9 @@ public:
 
   /**
    * \brief Set seed for random methods above
-	*
-	* Random sampling uses std::mt19937 internally
-	*/
+   *
+   * Random sampling uses std::mt19937 internally
+   */
   static void setRandomSeed(unsigned int seed);
 
   /**
