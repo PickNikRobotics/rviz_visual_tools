@@ -2805,20 +2805,21 @@ bool RvizVisualTools::posesEqual(const Eigen::Isometry3d& pose1, const Eigen::Is
 
 double RvizVisualTools::dRand(double min, double max)
 {
-  return std::uniform_real_distribution<double>(min,max)(mt_random_engine_);
+  return std::uniform_real_distribution<double>(min, max)(mt_random_engine_);
 }
 
 float RvizVisualTools::fRand(float min, float max)
 {
-  return std::uniform_real_distribution<float>(min,max)(mt_random_engine_);
+  return std::uniform_real_distribution<float>(min, max)(mt_random_engine_);
 }
 
 int RvizVisualTools::iRand(int min, int max)
 {
-  return std::uniform_int_distribution<int>(min,max)(mt_random_engine_);
+  return std::uniform_int_distribution<int>(min, max)(mt_random_engine_);
 }
 
-void RvizVisualTools::setRandomSeed(unsigned int seed){
+void RvizVisualTools::setRandomSeed(unsigned int seed)
+{
   mt_random_engine_.seed(seed);
 }
 
