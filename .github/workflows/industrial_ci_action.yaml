@@ -8,7 +8,7 @@ on:
   pull_request:
   push:
     branches:
-      - foxy-devel
+      - ros2
 
 jobs:
   industrial_ci:
