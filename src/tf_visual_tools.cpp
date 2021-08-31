@@ -32,7 +32,11 @@
 
 #include <rviz_visual_tools/tf_visual_tools.hpp>
 #include <rclcpp/create_timer.hpp>
+#if __has_include(<tf2_eigen/tf2_eigen.hpp>)
+#include <tf2_eigen/tf2_eigen.hpp>
+#else
 #include <tf2_eigen/tf2_eigen.h>
+#endif
 
 // TF
 #include <tf2/convert.h>
