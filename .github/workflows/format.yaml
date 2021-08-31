@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
   pull_request:
   push:
+    branches:
+      - ros2
 
 jobs:
   pre-commit:
