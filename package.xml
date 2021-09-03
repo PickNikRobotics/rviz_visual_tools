@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>rviz_visual_tools</name>
-  <version>3.7.0</version>
+  <version>3.9.1</version>
   <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
 
   <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>
@@ -9,7 +9,7 @@
   <license>BSD</license>
 
   <url type="website">https://github.com/davetcoleman/rviz_visual_tools</url>
-  <url type="butracker">https://github.com/davetcoleman/rviz_visual_tools/issues</url>
+  <url type="bugtracker">https://github.com/davetcoleman/rviz_visual_tools/issues</url>
   <url type="repository">https://github.com/davetcoleman/rviz_visual_tools/</url>
 
   <author email="dave@picknik.ai">Dave Coleman</author>
@@ -31,6 +31,7 @@
   <depend>roslint</depend>
   <depend>eigen_stl_containers</depend>
   <depend>libogre-dev</depend>
+  <depend>interactive_markers</depend>
 
   <!-- Something changed in ROS Lunar / Ubuntu Zesty that requires extra QT5 dependency-->
   <!-- I suspect this depend is more than needed, but was the only dependency available -->

@@ -54,8 +54,8 @@
 
 namespace rviz_visual_tools
 {
-using visualization_msgs::InteractiveMarkerFeedback;
 using visualization_msgs::InteractiveMarkerControl;
+using visualization_msgs::InteractiveMarkerFeedback;
 
 typedef std::function<void(const visualization_msgs::InteractiveMarkerFeedbackConstPtr&)> IMarkerCallback;
 
@@ -67,7 +67,7 @@ geometry_msgs::Pose getIdentityPose()
   pose.orientation.w = 1.0;
   return pose;
 }
-}
+}  // namespace
 
 class IMarkerSimple
 {

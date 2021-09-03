@@ -41,6 +41,7 @@
 #include <ros/ros.h>
 
 // C++
+#include <random>
 #include <string>
 #include <vector>
 
@@ -783,8 +784,7 @@ public:
    */
   bool publishAxis(const geometry_msgs::Pose& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
   bool publishAxis(const Eigen::Isometry3d& pose, scales scale = MEDIUM, const std::string& ns = "Axis");
-  bool publishAxis(const geometry_msgs::Pose& pose, double length, double radius = 0.01,
-                   const std::string& ns = "Axis");
+  bool publishAxis(const geometry_msgs::Pose& pose, double length, double radius = 0.01, const std::string& ns = "Axis");
   bool publishAxis(const Eigen::Isometry3d& pose, double length, double radius = 0.01, const std::string& ns = "Axis");
 
 private:
@@ -1057,6 +1057,13 @@ public:
   static int iRand(int min, int max);
 
   /**
+   * \brief Set seed for random methods above
+   *
+   * Random sampling uses std::mt19937 internally
+   */
+  static void setRandomSeed(unsigned int seed);
+
+  /**
    * \brief Display in the console the x,y,z values of a point
    */
   static void printTranslation(const Eigen::Vector3d& translation);
@@ -1147,6 +1154,8 @@ protected:
 
   // Chose random colors from this list
   static const std::array<colors, 14> ALL_RAND_COLORS;
+
+  static std::mt19937 mt_random_engine_;
 
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW  // http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html
