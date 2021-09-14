@@ -2,6 +2,17 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove executor namespace from rclcpp (`#190 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/190>`_)
+* Fixes & improvements for deleting markers (`#188 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/188>`_)
+  * Added RvizVisualTools method to delete all markers in a namespace
+  * Fixed deleteAllMarkers for all namespaces
+  * Added getters for marker ID's
+* Move waitForSubscriber function to header file (`#185 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/185>`_)
+* Create LICENSE (`#183 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/183>`_)
+* Contributors: Jafar Abdi, Nathan Brooks, Vatan Aksoy Tezer, Wyatt Rees
+
 4.0.0 (2021-04-09)
 ------------------
 * Fix warning about deprecation (`#180 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/180>`_)
