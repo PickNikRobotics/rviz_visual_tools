@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.1.0 (2021-09-14)
+------------------
 * Fixes for new ros2 branch (`#198 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/198>`_)
 * Fix include deprecation warning
 * Enable Galactic and Rolling CI (`#190 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/190>`_)
