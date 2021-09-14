@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.0.1 (2021-09-14)
+------------------
 * Remove executor namespace from rclcpp (`#190 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/190>`_)
 * Fixes & improvements for deleting markers (`#188 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/188>`_)
   * Added RvizVisualTools method to delete all markers in a namespace
