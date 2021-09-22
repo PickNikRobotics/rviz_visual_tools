@@ -42,13 +42,13 @@ def generate_launch_description():
         [
             Node(
                 package="rviz2",
-                node_executable="rviz2",
+                executable="rviz2",
                 arguments=["--display-config", rviz_config],
                 output="screen",
             ),
             Node(
                 package="tf2_ros",
-                node_executable="static_transform_publisher",
+                executable="static_transform_publisher",
                 arguments=["0", "0", "0", "0", "0", "0", "/world", "/base"],
                 output="screen",
             ),
