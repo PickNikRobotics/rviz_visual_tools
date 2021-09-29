@@ -22,6 +22,7 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
   <depend>rviz_ogre_vendor</depend>
+  <depend>pluginlib</depend>
   <depend>tf2</depend>
   <depend>tf2_eigen</depend>
   <depend>eigen_stl_containers</depend>
