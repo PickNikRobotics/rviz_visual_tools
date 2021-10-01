@@ -39,11 +39,9 @@
 #define CONSOLE_COLOR_CYAN "\033[96m"
 #define CONSOLE_COLOR_BROWN "\033[93m"
 
-
 namespace rviz_visual_tools
 {
 using namespace std::chrono_literals;
-
 
 /**
  * \brief Constructor

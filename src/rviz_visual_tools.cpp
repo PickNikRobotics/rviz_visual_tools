@@ -3001,7 +3001,8 @@ void RvizVisualTools::loadRemoteControl()
   // Load remote control
   if (!remote_control_)
   {
-    remote_control_ = std::make_shared<RemoteControl>(node_base_interface_, topics_interface_, logging_interface_);
+    remote_control_ = std::make_shared<RemoteControl>(node_base_interface_, topics_interface_,
+                                                      logging_interface_);
   }
 }
 
