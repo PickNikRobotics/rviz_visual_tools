@@ -39,23 +39,22 @@
 #define CONSOLE_COLOR_CYAN "\033[96m"
 #define CONSOLE_COLOR_BROWN "\033[93m"
 
+
 namespace rviz_visual_tools
 {
 using namespace std::chrono_literals;
+
 
 /**
  * \brief Constructor
  */
 RemoteControl::RemoteControl(
-    const rclcpp::Executor::SharedPtr& executor,
     const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
     const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
     const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface)
-  : executor_(executor)
-  , node_base_interface_(node_base_interface)
+  : node_base_interface_(node_base_interface)
   , topics_interface_(topics_interface)
   , logger_(logging_interface->get_logger().get_child("remote_control"))
-  , next_step_ready_(nullptr)
 {
   // Subscribe to Rviz Dashboard
   std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
@@ -65,10 +64,6 @@ RemoteControl::RemoteControl(
       topics_interface_, rviz_dashboard_topic, update_sub_qos,
       std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
 
-  if (!node_base_interface_->get_associated_with_executor_atomic().load())
-  {
-    executor_->add_node(node_base_interface_);
-  }
   RCLCPP_INFO(logger_, "RemoteControl Ready.");
 }
 
@@ -99,19 +94,15 @@ void RemoteControl::rvizDashboardCallback(
 
 void RemoteControl::setReadyForNextStep()
 {
-  if (next_step_ready_ != nullptr)
+  if (is_waiting_)
   {
-    next_step_ready_->set_value();
+    next_step_ready_ = true;
   }
 }
 
 void RemoteControl::setAutonomous()
 {
   autonomous_ = true;
-  if (next_step_ready_ != nullptr)
-  {
-    next_step_ready_->set_value();
-  }
 }
 
 void RemoteControl::setFullAutonomous()
@@ -149,7 +140,7 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
 bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool autonomous)
 {
   // Check if we really need to wait
-  if (next_step_ready_ != nullptr || autonomous || !rclcpp::ok())
+  if (!(!next_step_ready_ && !autonomous && rclcpp::ok()))
   {
     return true;
   }
@@ -158,7 +149,7 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
   {
     std::stringstream ss;
     ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_, ss.str().c_str());
+    RCLCPP_INFO(logger_, ss.str().c_str());
   }
 
   if (displayWaitingState_)
@@ -166,35 +157,17 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
     displayWaitingState_(true);
   }
 
-  next_step_ready_ = std::make_unique<std::promise<void>>();
+  is_waiting_ = true;
   // Wait until next step is ready
-  std::shared_future<void> future_next_step_ready = next_step_ready_->get_future();
-  while (!autonomous && rclcpp::ok())
+  while (!next_step_ready_ && !autonomous && rclcpp::ok())
   {
-    /* TODO(mlautman): Pending https://github.com/ros2/rclcpp/issues/520 the only way to spin is by
-     * having access to the executor. Thus, the remote control must have an executor. Once the issue
-     * has been resolved, it would be nice to remove the executor from this class */
-    rclcpp::FutureReturnCode status = executor_->spin_until_future_complete(
-        future_next_step_ready, std::chrono::milliseconds(125));
-    if (status == rclcpp::FutureReturnCode::SUCCESS)
-    {
-      break;
-    }
-    else if (status == rclcpp::FutureReturnCode::INTERRUPTED)
-    {
-      RCLCPP_INFO(logger_, "Spinning was interrupted.");
-      next_step_ready_ = nullptr;
-      if (!rclcpp::ok())
-      {
-        exit(0);
-      }
-    }
+    rclcpp::sleep_for(125ms);
   }
 
   {
     std::stringstream ss;
     ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
-    RCLCPP_ERROR(logger_, ss.str().c_str());
+    RCLCPP_INFO(logger_, ss.str().c_str());
   }
 
   if (displayWaitingState_)
@@ -202,7 +175,8 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
     displayWaitingState_(false);
   }
 
-  next_step_ready_ = nullptr;
+  next_step_ready_ = false;
+  is_waiting_ = false;
 
   return true;
 }

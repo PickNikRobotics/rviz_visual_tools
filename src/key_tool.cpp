@@ -67,17 +67,16 @@ int KeyTool::processKeyEvent(QKeyEvent* event, rviz_common::RenderPanel* panel)
   // move forward / backward
   switch (event->key())
   {
-    case Qt::Key_N:
+    case Qt::Key_0:
       remote_reciever_.publishNext();
       return 1;
-    case Qt::Key_A:
-    case Qt::Key_C:
+    case Qt::Key_1:
       remote_reciever_.publishContinue();
       return 1;
-    case Qt::Key_B:
+    case Qt::Key_2:
       remote_reciever_.publishBreak();
       return 1;
-    case Qt::Key_S:
+    case Qt::Key_3:
       remote_reciever_.publishStop();
       return 1;
   }
