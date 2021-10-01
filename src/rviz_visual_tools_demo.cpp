@@ -644,7 +644,7 @@ int main(int argc, char* argv[])
   rclcpp::NodeOptions options = rclcpp::NodeOptions().arguments(args);
   auto demo = std::make_shared<rviz_visual_tools::RvizVisualToolsDemo>(options);
 
-  auto remote_control = std::make_shared<rviz_visual_tools::RemoteControl>(executor, options);
+  auto remote_control = std::make_shared<rviz_visual_tools::RemoteControl>(options);
   demo->setRemoteControl(remote_control);
 
   // Allow the action server to recieve and send ros messages

@@ -2984,6 +2984,10 @@ bool RvizVisualTools::prompt(const std::string& msg)
 
 RemoteControlPtr& RvizVisualTools::getRemoteControl()
 {
+  if (!remote_control_)
+  {
+    loadRemoteControl();
+  }
   return remote_control_;
 }
 
@@ -2995,6 +2999,15 @@ void RvizVisualTools::setRemoteControl(const RemoteControlPtr& remote_control)
                 "Overwriting existing remote_control_. there should be no reason to do that");
   }
   remote_control_ = remote_control;
+}
+
+void RvizVisualTools::loadRemoteControl()
+{
+  // Load remote control
+  if (!remote_control_)
+  {
+    remote_control_ = std::make_shared<RemoteControl>(node_base_interface_, topics_interface_, logging_interface_);
+  }
 }
 
 int32_t RvizVisualTools::getArrowId() const

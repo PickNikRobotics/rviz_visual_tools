@@ -51,22 +51,21 @@ class RemoteControl
 {
 public:
   /**
-   * \brief Constructor for passing in NodeOptions and an executor.
-   * \param node - A node that will be added to an executor outside of this class
+   * \brief Constructor for passing in NodeOptions
+   * \param node - A node
    */
-  explicit RemoteControl(const rclcpp::Executor::SharedPtr& executor,
-                         const rclcpp::NodeOptions& node_options)
-    : RemoteControl(executor, std::make_shared<rclcpp::Node>("remote_control", node_options))
+  explicit RemoteControl(const rclcpp::NodeOptions& node_options)
+    : RemoteControl(std::make_shared<rclcpp::Node>("remote_control", node_options))
   {
   }
 
   /**
-   * \brief Constructor for passing in a Node and it's executor.
-   * \param node - A node that will be added to an executor outside of this class
+   * \brief Constructor for passing in a Node
+   * \param node - A node
    */
   template <typename NodePtr>
-  explicit RemoteControl(const rclcpp::Executor::SharedPtr& executor, NodePtr node)
-    : RemoteControl(executor, node->get_node_base_interface(), node->get_node_topics_interface(),
+  explicit RemoteControl(NodePtr node)
+    : RemoteControl(node->get_node_base_interface(), node->get_node_topics_interface(),
                     node->get_node_logging_interface())
   {
   }
@@ -78,7 +77,6 @@ public:
    * \param logging_iterface - An interface for publishing to the rosconsole
    */
   explicit RemoteControl(
-      const rclcpp::Executor::SharedPtr& executor,
       const rclcpp::node_interfaces::NodeBaseInterface::SharedPtr& node_base_interface,
       const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
       const rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr& logging_interface);
@@ -106,13 +104,6 @@ public:
    */
   bool waitForNextStep(const std::string& caption = "go to next step");
   bool waitForNextFullStep(const std::string& caption = "go to next full step");
-
-  /** \brief Return true if debug interface is waiting for user input */
-  bool isWaiting()
-  {
-    // if next_step_ready_ is nullptr then we are not currently waiting
-    return next_step_ready_ != nullptr;
-  }
 
   void setDisplayWaitingState(DisplayWaitingState displayWaitingState)
   {
@@ -143,9 +134,6 @@ private:
    */
   bool waitForNextStepCommon(const std::string& caption, bool autonomous);
 
-  // Executor for spinning while in waitForNextStepCommon
-  rclcpp::Executor::SharedPtr executor_;
-
   // Node Interfaces
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
   rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
@@ -157,10 +145,10 @@ private:
   // Input
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr rviz_dashboard_sub_;
 
-  std::unique_ptr<std::promise<void>> next_step_ready_;
+  bool is_waiting_ = false;
+  bool next_step_ready_ = false;
   bool autonomous_ = false;
   bool full_autonomous_ = false;
-  bool stop_ = false;
 
   // Callback to visualize waiting state
   DisplayWaitingState displayWaitingState_;
