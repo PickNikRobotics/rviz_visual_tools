@@ -153,7 +153,7 @@ private:
   bool full_autonomous_ = false;
 
   std::mutex mutex_;
-  std::condition_variable cv_wait_next_step_;
+  std::condition_variable wait_next_step_;
 
   // Callback to visualize waiting state
   DisplayWaitingState displayWaitingState_;
