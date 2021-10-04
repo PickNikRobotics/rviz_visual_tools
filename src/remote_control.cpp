@@ -164,7 +164,7 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
   is_waiting_ = true;
 
   // Wait until next step is ready
-  wait_next_step_.wait(wait_lock, [=]() -> bool { return next_step_ready_ || !rclcpp::ok(); });
+  wait_next_step_.wait(wait_lock, [this]() { return next_step_ready_ || !rclcpp::ok(); });
 
   std::stringstream ss;
   ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
