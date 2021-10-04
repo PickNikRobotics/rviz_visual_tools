@@ -144,7 +144,7 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
   std::unique_lock<std::mutex> wait_lock(mutex_);
 
   // Check if we really need to wait
-  if ( next_step_ready_ || autonomous || !rclcpp::ok() )
+  if (next_step_ready_ || autonomous || !rclcpp::ok())
   {
     return true;
   }
@@ -164,10 +164,7 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
   is_waiting_ = true;
 
   // Wait until next step is ready
-  cv_wait_next_step_.wait(wait_lock, [=]() -> bool
-  {
-    return next_step_ready_ || !rclcpp::ok();
-  });
+  cv_wait_next_step_.wait(wait_lock, [=]() -> bool { return next_step_ready_ || !rclcpp::ok(); });
 
   std::stringstream ss;
   ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
