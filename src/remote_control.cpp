@@ -92,10 +92,14 @@ void RemoteControl::rvizDashboardCallback(
 
 void RemoteControl::setReadyForNextStep()
 {
-  if (is_waiting_)
   {
-    next_step_ready_ = true;
+    std::lock_guard<std::mutex> wait_lock(mutex_);
+    if (is_waiting_)
+    {
+      next_step_ready_ = true;
+    }
   }
+  cv_wait_next_step_.notify_all();
 }
 
 void RemoteControl::setAutonomous()
@@ -137,8 +141,10 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
 
 bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool autonomous)
 {
+  std::unique_lock<std::mutex> wait_lock(mutex_);
+
   // Check if we really need to wait
-  if (!(!next_step_ready_ && !autonomous && rclcpp::ok()))
+  if ( next_step_ready_ || autonomous || !rclcpp::ok() )
   {
     return true;
   }
@@ -156,17 +162,16 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
   }
 
   is_waiting_ = true;
-  // Wait until next step is ready
-  while (!next_step_ready_ && !autonomous && rclcpp::ok())
-  {
-    rclcpp::sleep_for(125ms);
-  }
 
+  // Wait until next step is ready
+  cv_wait_next_step_.wait(wait_lock, [=]() -> bool
   {
-    std::stringstream ss;
-    ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
-    RCLCPP_INFO(logger_, ss.str().c_str());
-  }
+    return next_step_ready_ || !rclcpp::ok();
+  });
+
+  std::stringstream ss;
+  ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
+  RCLCPP_INFO(logger_, ss.str().c_str());
 
   if (displayWaitingState_)
   {

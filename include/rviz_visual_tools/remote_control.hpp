@@ -37,6 +37,8 @@
 // C++
 #include <chrono>
 #include <string>
+#include <mutex>
+#include <condition_variable>
 
 // ROS
 #include <rclcpp/rclcpp.hpp>
@@ -149,6 +151,9 @@ private:
   bool next_step_ready_ = false;
   bool autonomous_ = false;
   bool full_autonomous_ = false;
+
+  std::mutex mutex_;
+  std::condition_variable cv_wait_next_step_;
 
   // Callback to visualize waiting state
   DisplayWaitingState displayWaitingState_;
