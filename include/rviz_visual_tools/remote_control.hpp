@@ -66,15 +66,6 @@ public:
   }
 
   /**
-   * \brief Constructor for passing in NodeOptions
-   * \param node - A node
-   */
-  explicit RemoteControl(const rclcpp::NodeOptions& node_options)
-    : RemoteControl(std::make_shared<rclcpp::Node>("remote_control", node_options))
-  {
-  }
-
-  /**
    * \brief Constructor for passing in a Node
    * \param node - A node
    */
