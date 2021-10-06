@@ -151,9 +151,8 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
 
   // Show message
   {
-    std::stringstream ss;
-    ss << CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption << CONSOLE_COLOR_RESET;
-    RCLCPP_INFO(logger_, ss.str().c_str());
+    RCLCPP_INFO_STREAM(logger_, CONSOLE_COLOR_CYAN << "Waiting to continue: " << caption
+                                                   << CONSOLE_COLOR_RESET);
   }
 
   if (displayWaitingState_)
@@ -165,10 +164,7 @@ bool RemoteControl::waitForNextStepCommon(const std::string& caption, bool auton
 
   // Wait until next step is ready
   wait_next_step_.wait(wait_lock, [this]() { return next_step_ready_ || !rclcpp::ok(); });
-
-  std::stringstream ss;
-  ss << CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET;
-  RCLCPP_INFO(logger_, ss.str().c_str());
+  RCLCPP_INFO_STREAM(logger_, CONSOLE_COLOR_CYAN << "... continuing" << CONSOLE_COLOR_RESET);
 
   if (displayWaitingState_)
   {
