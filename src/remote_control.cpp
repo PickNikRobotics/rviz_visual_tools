@@ -56,10 +56,8 @@ RemoteControl::RemoteControl(
 {
   // Subscribe to Rviz Dashboard
   std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
-  const std::size_t button_queue_size = 10;
-  const rclcpp::QoS update_sub_qos(button_queue_size);
   rviz_dashboard_sub_ = rclcpp::create_subscription<sensor_msgs::msg::Joy>(
-      topics_interface_, rviz_dashboard_topic, update_sub_qos,
+      topics_interface_, rviz_dashboard_topic, rclcpp::SystemDefaultsQoS(),
       std::bind(&RemoteControl::rvizDashboardCallback, this, std::placeholders::_1));
 
   RCLCPP_INFO(logger_, "RemoteControl Ready.");
