@@ -54,6 +54,19 @@ class RemoteControl
 public:
   /**
    * \brief Constructor for passing in NodeOptions
+   * \param executor - An rclcpp executor
+   * \param node - A node
+   */
+  [[deprecated("RemoteControl(const rclcpp::Executor::SharedPtr&, const rclcpp::NodeOptions&) is "
+               "deprecated Use RemoteControl(const rclcpp::NodeOptions&) constructor "
+               "instead")]] explicit RemoteControl(const rclcpp::Executor::SharedPtr& executor,
+                                                   const rclcpp::NodeOptions& node_options)
+    : RemoteControl(std::make_shared<rclcpp::Node>("remote_control", node_options))
+  {
+  }
+
+  /**
+   * \brief Constructor for passing in NodeOptions
    * \param node - A node
    */
   explicit RemoteControl(const rclcpp::NodeOptions& node_options)
