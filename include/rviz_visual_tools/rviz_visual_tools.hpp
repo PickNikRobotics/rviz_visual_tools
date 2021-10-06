@@ -1220,6 +1220,9 @@ public:
   /** \brief Pre-load remote control */
   void setRemoteControl(const RemoteControlPtr& remote_control);
 
+  /** \brief Ability to load remote control on the fly */
+  void loadRemoteControl();
+
   /** \brief Get the latest ID of arrow_marker_ */
   int32_t getArrowId() const;
 

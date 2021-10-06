@@ -78,10 +78,14 @@ public:
     visual_tools_->enableBatchPublishing();
   }
 
-  /** \brief Pre-load remote control */
-  void setRemoteControl(const RemoteControlPtr& remote_control)
+  auto getRemoteControl()
   {
-    visual_tools_->setRemoteControl(remote_control);
+    return visual_tools_->getRemoteControl();
+  }
+
+  void prompt(const std::string& msg)
+  {
+    visual_tools_->prompt(msg);
   }
 
   void publishLabelHelper(const Eigen::Isometry3d& pose, const std::string& label)
@@ -644,12 +648,14 @@ int main(int argc, char* argv[])
   rclcpp::NodeOptions options = rclcpp::NodeOptions().arguments(args);
   auto demo = std::make_shared<rviz_visual_tools::RvizVisualToolsDemo>(options);
 
-  auto remote_control = std::make_shared<rviz_visual_tools::RemoteControl>(executor, options);
-  demo->setRemoteControl(remote_control);
+  // Initialize RemoteControl
+  auto remote_control = demo->getRemoteControl();
 
   // Allow the action server to recieve and send ros messages
   executor->add_node(demo);
-  executor->spin_some();
+  std::thread([executor]() { executor->spin(); }).detach();
+
+  demo->prompt("Click 'Next' using the RvizVisualToolsGui dashboard!");
 
   double x_location = 0;
   demo->testRows(x_location);
