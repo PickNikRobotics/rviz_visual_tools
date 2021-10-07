@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.0.2 (2021-10-07)
+------------------
 * Add pluginlib dependency. (`#203 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/203>`_)
 * Re-enable RemoteControl functionality (`#204 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/204>`_)
   * use condition_variable to be more thread safe
