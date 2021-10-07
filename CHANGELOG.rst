@@ -2,6 +2,19 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Re-enable RemoteControl functionality (`#205 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/205>`_)
+  * use condition_variable to be more thread safe
+  * Drop executor from constructor, deprecate old one
+  * Fix RemoteControl usage in demo
+  * Use SystemDefaultsQOS for RemoteControl subscriber
+  * Add RvizVisualToolsGui dashboard to rviz config, correct view
+* Add pluginlib dependency. (`#203 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/203>`_)
+* Fix package dependencies and cmake export (`#202 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/202>`_)
+* Rename node_executable to executable (`#200 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/200>`_)
+* Contributors: Davide Faconti, Henning Kayser, Jafar Abdi, Steven! Ragnarök, Vatan Aksoy Tezer
+
 4.1.0 (2021-09-14)
 ------------------
 * Fixes for new ros2 branch (`#198 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/198>`_)
