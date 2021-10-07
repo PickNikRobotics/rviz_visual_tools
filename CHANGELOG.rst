@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.1.1 (2021-10-07)
+------------------
 * Re-enable RemoteControl functionality (`#205 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/205>`_)
   * use condition_variable to be more thread safe
   * Drop executor from constructor, deprecate old one
