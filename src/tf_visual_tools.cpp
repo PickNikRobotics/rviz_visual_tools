@@ -46,7 +46,6 @@
 
 namespace rviz_visual_tools
 {
-
 bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform,
                                      const std::string& from_frame, const std::string& to_frame)
 {
