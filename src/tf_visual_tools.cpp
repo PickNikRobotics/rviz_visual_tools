@@ -46,7 +46,6 @@
 
 namespace rviz_visual_tools
 {
-
 TFVisualTools::TFVisualTools(const rclcpp::Node::SharedPtr& node, double loop_hz)
   : node_base_interface_(node->get_node_base_interface())
   , timers_interface_(node->get_node_timers_interface())
