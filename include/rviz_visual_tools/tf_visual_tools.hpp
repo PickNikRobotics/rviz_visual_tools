@@ -62,8 +62,7 @@ public:
    * \param node - a pointer to a rclcpp::Node
    * \param loop_hz - how often tf is published
    */
-  template <typename NodePtr>
-  TFVisualTools(NodePtr node, double loop_hz = 2);
+  TFVisualTools(const rclcpp::Node::SharedPtr& node, double loop_hz = 2);
   /**
    * \brief Visualize transforms in Rviz, etc
    * \return true on success
