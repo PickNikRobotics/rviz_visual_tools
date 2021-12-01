@@ -46,25 +46,6 @@
 
 namespace rviz_visual_tools
 {
-template <typename NodePtr>
-TFVisualTools::TFVisualTools(NodePtr node, double loop_hz)
-  : node_base_interface_(node->get_node_base_interface())
-  , timers_interface_(node->get_node_timers_interface())
-  , clock_interface_(node->get_node_clock_interface())
-  , logger_(node->get_node_logging_interface()->get_logger().get_child("tf_visual_tools"))
-{
-  rclcpp::Duration update_period = rclcpp::Duration::from_seconds(1.0 / loop_hz);
-
-  // non_realtime_loop_ = nh_.createTimer(update_freq, &TFVisualTools::publishAllTransforms, this);
-  non_realtime_loop_ =
-      rclcpp::create_timer(node_base_interface_, timers_interface_, clock_interface_->get_clock(),
-                           update_period, std::bind(&TFVisualTools::publishAllTransforms, this));
-  // , std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-
-  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node);
-
-  RCLCPP_INFO(logger_, "TFVisualTools Ready.");
-}
 
 bool TFVisualTools::publishTransform(const Eigen::Isometry3d& transform,
                                      const std::string& from_frame, const std::string& to_frame)
