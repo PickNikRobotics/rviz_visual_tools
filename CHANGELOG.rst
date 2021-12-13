@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.0.3 (2021-12-13)
+------------------
 * Make sure to add all dependencies to the package.xml (`#209 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/209>`_) (`#214 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/214>`_)
 * Backport Fix faulty templated constructor (`#213 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/213>`_)
 * Contributors: Vatan Aksoy Tezer, Chris Lalancette
