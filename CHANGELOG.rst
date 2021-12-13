@@ -2,6 +2,13 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix faulty templated constructor (`#211 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/211>`_)
+* Make sure to add all dependencies to the package.xml (`#209 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/209>`_)
+  Otherwise it will fail to build on the buildfarm.
+* Contributors: Chris Lalancette, Vatan Aksoy Tezer
+
 4.1.1 (2021-10-07)
 ------------------
 * Re-enable RemoteControl functionality (`#205 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/205>`_)
