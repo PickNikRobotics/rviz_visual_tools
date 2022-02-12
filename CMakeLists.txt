@@ -1,16 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(rviz_visual_tools)
 
-if(NOT MSVC)
-  add_compile_options(-std=c++11)
-  # Warnings
-  add_definitions(-W -Wall -Wextra
-    #-Wcast-qual
-    -Wwrite-strings -Wunreachable-code -Wpointer-arith
-    -Winit-self -Wredundant-decls
-    -Wno-unused-parameter -Wno-unused-function)
-endif()
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(catkin REQUIRED COMPONENTS
