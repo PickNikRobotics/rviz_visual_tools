@@ -256,7 +256,7 @@ public:
    * \param wait_for_subscriber - whether a sleep for loop should be used to check for connectivity
    * to an external subscriber before proceeding
    */
-  void loadMarkerPub(bool wait_for_subscriber = false);
+  void loadMarkerPub(bool wait_for_subscriber = true);
 
   /** \brief Optional blocking function to call *after* calling loadMarkerPub(). Allows you to do
    *         some intermediate processing before wasting cycles waiting for the marker pub to find a
