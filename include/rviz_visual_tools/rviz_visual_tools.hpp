@@ -283,7 +283,7 @@ public:
   bool waitForSubscriber(std::shared_ptr<rclcpp::Publisher<MessageT> >& pub, double wait_time = 5.0)
   {
     // if the user does not want to wait return no connection
-    if(!wait_for_subscriber_)
+    if (!wait_for_subscriber_)
     {
       return false;
     }
@@ -304,7 +304,7 @@ public:
     if (wait_time > 0 && num_existing_subscribers == 0)
     {
       RCLCPP_INFO_STREAM(logger_, "Topic " << pub->get_topic_name() << " waiting " << wait_time
-                                           << " seconds for subscriber");
+                                           << " seconds for subscriber.");
     }
     // Wait for subscriber
     while (wait_time > 0 && num_existing_subscribers == 0 && rclcpp::ok())

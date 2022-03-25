@@ -320,7 +320,7 @@ void RvizVisualTools::loadMarkerPub(bool wait_for_subscriber)
   {
     return;
   }
-  //remember that the user does not want to wait
+  // remember that the user does not want to wait
   wait_for_subscriber_ = wait_for_subscriber;
 
   // Rviz marker publisher
