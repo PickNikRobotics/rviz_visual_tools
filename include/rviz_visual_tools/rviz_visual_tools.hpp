@@ -527,8 +527,9 @@ public:
    * \param y_width - Y-size of the visualized plane [meters]
    * \return true on success
    */
-  bool publishNormalAndDistancePlane(Eigen::Vector3d normal, double d, Colors color = TRANSLUCENT,
-                                     const double x_width = 1.0, const double y_width = 1.0);
+  bool publishNormalAndDistancePlane(const Eigen::Vector3d& normal, const double d,
+                                     const Colors color = TRANSLUCENT, const double x_width = 1.0,
+                                     const double y_width = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
