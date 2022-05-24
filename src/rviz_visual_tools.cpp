@@ -1038,7 +1038,7 @@ bool RvizVisualTools::publishABCDPlane(const double A, const double B, const dou
   return true;
 }
 
-bool RvizVisualTools::publishNormalAndDistancePlane(const Eigen::Vector3d normal, const double d,
+bool RvizVisualTools::publishNormalAndDistancePlane(const Eigen::Vector3d& normal, const double d,
                                                     const Colors color, const double x_width,
                                                     const double y_width)
 {
