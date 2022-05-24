@@ -1038,6 +1038,15 @@ bool RvizVisualTools::publishABCDPlane(const double A, const double B, const dou
   return true;
 }
 
+bool RvizVisualTools::publishNormalAndDistancePlane(const Eigen::Vector3d normal, const double d,
+                                                    const Colors color, const double x_width,
+                                                    const double y_width)
+{
+  // Scale distance for ABCD plane
+  const auto D = -d * normal.norm();
+  return publishABCDPlane(normal(0), normal(1), normal(2), D);
+}
+
 bool RvizVisualTools::publishXYPlane(const Eigen::Isometry3d& pose, Colors color, double scale)
 {
   return publishXYPlane(convertPose(pose), color, scale);
