@@ -530,7 +530,7 @@ public:
                       double scale = 1.0);
 
   /**
-   * \brief Display the XY plane of a given pose
+   * \brief Display the XZ plane of a given pose
    * \param pose - the position of the plane
    * \param color - the color of the plane
    * \param scale - the size of the vizualized plane
@@ -542,7 +542,7 @@ public:
                       double scale = 1.0);
 
   /**
-   * \brief Display the XY plane of a given pose
+   * \brief Display the YZ plane of a given pose
    * \param pose - the position of the plane
    * \param color - the color of the plane
    * \param scale - the size of the vizualized plane
