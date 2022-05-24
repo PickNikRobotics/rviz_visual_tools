@@ -519,7 +519,7 @@ public:
 
   /**
    * \brief Display a plane given a vector normal to the plane and the distance to the plane along
-   *        that normal. The plane normal does not need to given as a unit vector.
+   *        that normal. The plane normal does not need to be given as a unit vector.
    * \param normal - a vector representing the normal of the plane
    * \param d - the distance to the plane along the vector
    * \param color - the color of the plane
@@ -528,7 +528,7 @@ public:
    * \return true on success
    */
   bool publishNormalAndDistancePlane(Eigen::Vector3d normal, double d, Colors color = TRANSLUCENT,
-                                     double x_width = 1.0, double y_width = 1.0);
+                                     const double x_width = 1.0, const double y_width = 1.0);
 
   /**
    * \brief Display the XY plane of a given pose
