@@ -121,5 +121,5 @@ void RvizVisualToolsGui::load(const rviz::Config& config)
 }
 }  // end namespace rviz_visual_tools
 
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::RvizVisualToolsGui, rviz::Panel)
