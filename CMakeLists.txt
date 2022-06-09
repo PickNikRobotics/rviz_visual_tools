@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   eigen_stl_containers
   geometry_msgs
   graph_msgs
+  interactive_markers
   shape_msgs
   roscpp
   roslint
@@ -66,6 +67,7 @@ catkin_package(
   CATKIN_DEPENDS
     geometry_msgs
     graph_msgs
+    interactive_markers
     shape_msgs
     roscpp
     sensor_msgs
@@ -92,10 +94,12 @@ set(SOURCE_FILES
 
 # Rviz GUI library
 add_library(${PROJECT_NAME}_gui ${SOURCE_FILES} src/remote_control.cpp)
+set_target_properties(${PROJECT_NAME}_gui PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_link_libraries(${PROJECT_NAME}_gui ${rviz_DEFAULT_PLUGIN_LIBRARIES} ${QT_LIBRARIES} ${catkin_LIBRARIES})
 
 # Remote control library
 add_library(${PROJECT_NAME}_remote_control src/remote_control.cpp)
+set_target_properties(${PROJECT_NAME}_remote_control PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_link_libraries(${PROJECT_NAME}_remote_control ${catkin_LIBRARIES})
 
 # Visualization Tools Library
@@ -103,6 +107,7 @@ add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}.cpp
   src/tf_visual_tools.cpp
 )
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_remote_control
   ${catkin_LIBRARIES}
@@ -113,6 +118,7 @@ target_link_libraries(${PROJECT_NAME}
 add_library(${PROJECT_NAME}_imarker_simple
   src/imarker_simple.cpp
 )
+set_target_properties(${PROJECT_NAME}_imarker_simple PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
 target_link_libraries(${PROJECT_NAME}_imarker_simple
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
