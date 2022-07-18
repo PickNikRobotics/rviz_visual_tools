@@ -2,6 +2,17 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+4.1.3 (2022-07-18)
+------------------
+* Humble CI and formatting updates (`#220 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/220>`_)
+* Minor typo fix (`#222 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/222>`_)
+* Add a method to publish a plane using the normal and distance (`#221 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/221>`_)
+  Co-authored-by: AndyZe <andyz@utexas.edu>
+* Fix description of plane functions (`#219 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/219>`_)
+* Update black version (`#218 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/218>`_)
+* Add option to never wait for subscriber (`#217 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/217>`_)
+* Contributors: Marq Rasmussen, Stephanie Eng, Vatan Aksoy Tezer
+
 4.1.2 (2021-12-13)
 ------------------
 * Fix faulty templated constructor (`#211 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/211>`_)
