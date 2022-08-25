@@ -45,6 +45,8 @@
 
 // ROS
 #include <ros/ros.h>
+#include <ros/callback_queue.h>
+
 #include <sensor_msgs/Joy.h>
 
 namespace rviz_visual_tools
@@ -58,6 +60,8 @@ public:
    * \brief Constructor
    */
   explicit RemoteControl(const ros::NodeHandle& nh);
+
+  ~RemoteControl();
 
   /**
    * \brief Callback from ROS topic
@@ -112,14 +116,14 @@ public:
   }
 
 private:
-  // A shared node handle
-  ros::NodeHandle nh_;
-
   // Short name for this class
   std::string name_ = "remote_control";
 
-  // Input
+  // Input and callback management
+  ros::CallbackQueue callback_queue_;
+  ros::NodeHandle nh_;
   ros::Subscriber rviz_dashboard_sub_;
+  ros::AsyncSpinner spinner_;
 
   // Debug interface
   bool is_waiting_ = false;
