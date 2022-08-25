@@ -98,5 +98,5 @@ int KeyTool::processMouseEvent(rviz::ViewportMouseEvent& event)
 
 }  // namespace rviz_visual_tools
 
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(rviz_visual_tools::KeyTool, rviz::Tool)

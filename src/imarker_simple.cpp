@@ -145,7 +145,8 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::Pose& pose, double scale
   int_marker_.controls.push_back(control);
 
   imarker_server_->insert(int_marker_);
-  imarker_server_->setCallback(int_marker_.name, boost::bind(&IMarkerSimple::iMarkerCallback, this, _1));
+  imarker_server_->setCallback(int_marker_.name,
+                               boost::bind(&IMarkerSimple::iMarkerCallback, this, boost::placeholders::_1));
   // menu_handler_.apply(*imarker_server_, int_marker_.name);
 }
 
