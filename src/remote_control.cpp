@@ -50,16 +50,25 @@ namespace rviz_visual_tools
 /**
  * \brief Constructor
  */
-RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_(nh)
+RemoteControl::RemoteControl(const ros::NodeHandle& nh) : nh_{ nh }, spinner_{ 1, &callback_queue_ }
 {
   std::string rviz_dashboard_topic = "/rviz_visual_tools_gui";
 
   // Subscribe to Rviz Dashboard
   const std::size_t button_queue_size = 10;
+
+  nh_.setCallbackQueue(&callback_queue_);
+
   rviz_dashboard_sub_ = nh_.subscribe<sensor_msgs::Joy>(rviz_dashboard_topic, button_queue_size,
                                                         &RemoteControl::rvizDashboardCallback, this);
-
+  spinner_.start();
   ROS_INFO_STREAM_NAMED(name_, "RemoteControl Ready.");
+}
+
+RemoteControl::~RemoteControl()
+{
+  // stop spinner explicitly for clarity.
+  spinner_.stop();
 }
 
 void RemoteControl::rvizDashboardCallback(const sensor_msgs::Joy::ConstPtr& msg)
@@ -157,7 +166,6 @@ bool RemoteControl::waitForNextStep(const std::string& caption)
   while (!next_step_ready_ && !autonomous_ && ros::ok())
   {
     ros::Duration(0.25).sleep();
-    ros::spinOnce();
   }
   if (!ros::ok())
   {
@@ -197,7 +205,6 @@ bool RemoteControl::waitForNextFullStep(const std::string& caption)
   while (!next_step_ready_ && !full_autonomous_ && ros::ok())
   {
     ros::Duration(0.25).sleep();
-    ros::spinOnce();
   }
   if (!ros::ok())
   {
