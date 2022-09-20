@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>rviz_visual_tools</name>
-  <version>3.9.1</version>
+  <version>3.9.2</version>
   <description>Utility functions for displaying and debugging data in Rviz via published markers</description>
 
   <maintainer email="davetcoleman@gmail.com">Dave Coleman</maintainer>

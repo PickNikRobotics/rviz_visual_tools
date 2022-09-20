@@ -2,6 +2,16 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.9.2 (2022-09-20)
+------------------
+* Cleanup for new Ubuntu versions (`#215 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/215>`_)
+* spin independent thread for RemoteControl (`#224 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/224>`_)
+  Avoid deadlocks and cross-thread effects with other callbacks.
+* Migrate CI to Github Actions (`#197 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/197>`_)
+* migrate to <random> (`#195 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/195>`_)
+* Fix bugtracker typo (`#186 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/186>`_)
+* Contributors: Jochen Sprickerhof, Michael Görner, Nathan Brooks, Vatan Aksoy Tezer
+
 3.9.1 (2020-10-09)
 ------------------
 * [maint] add soname versions to libraries (`#166 <https://github.com/tylerjw/rviz_visual_tools/issues/166>`_)
