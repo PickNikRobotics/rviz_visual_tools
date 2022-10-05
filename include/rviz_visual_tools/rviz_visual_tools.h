@@ -38,6 +38,7 @@
 
 #pragma once
 
+#include <ros/callback_queue.h>
 #include <ros/ros.h>
 
 // C++
@@ -189,6 +190,8 @@ private:
    * \brief Shared function for initilization by constructors
    */
   void initialize();
+
+  ros::CallbackQueue vis_marker_queue_;
 
 public:
   /**
