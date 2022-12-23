@@ -1802,12 +1802,26 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::msg::Pose& pose,
 bool RvizVisualTools::publishCuboid(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2,
                                     Colors color)
 {
+  return publishCuboid(convertPoint(point1), convertPoint(point2), getColor(color));
+}
+
+bool RvizVisualTools::publishCuboid(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2,
+                                    const std_msgs::msg::ColorRGBA& color)
+{
   return publishCuboid(convertPoint(point1), convertPoint(point2), color);
 }
 
 bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Point& point1,
                                     const geometry_msgs::msg::Point& point2, Colors color,
                                     const std::string& ns, std::size_t id)
+{
+  return publishCuboid(point1, point2, getColor(color), ns, id);
+}
+
+bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Point& point1,
+                                    const geometry_msgs::msg::Point& point2,
+                                    const std_msgs::msg::ColorRGBA& color, const std::string& ns,
+                                    std::size_t id)
 {
   // Set the timestamp
   cuboid_marker_.header.stamp = clock_interface_->get_clock()->now();
@@ -1822,7 +1836,7 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Point& point1,
     cuboid_marker_.id = id;
   }
 
-  cuboid_marker_.color = getColor(color);
+  cuboid_marker_.color = color;
 
   // Calculate center pose
   geometry_msgs::msg::Pose pose = getIdentityPose();
@@ -1857,16 +1871,29 @@ bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Point& point1,
 bool RvizVisualTools::publishCuboid(const Eigen::Isometry3d& pose, double depth, double width,
                                     double height, Colors color)
 {
+  return publishCuboid(convertPose(pose), depth, width, height, getColor(color));
+}
+
+bool RvizVisualTools::publishCuboid(const Eigen::Isometry3d& pose, double depth, double width,
+                                    double height, const std_msgs::msg::ColorRGBA& color)
+{
   return publishCuboid(convertPose(pose), depth, width, height, color);
 }
 
 bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Pose& pose, double depth,
                                     double width, double height, Colors color)
 {
+  return publishCuboid(pose, depth, width, height, getColor(color));
+}
+
+bool RvizVisualTools::publishCuboid(const geometry_msgs::msg::Pose& pose, double depth,
+                                    double width, double height,
+                                    const std_msgs::msg::ColorRGBA& color)
+{
   cuboid_marker_.header.stamp = clock_interface_->get_clock()->now();
 
   cuboid_marker_.id++;
-  cuboid_marker_.color = getColor(color);
+  cuboid_marker_.color = color;
 
   cuboid_marker_.pose = pose;
 
