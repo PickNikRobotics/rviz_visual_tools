@@ -708,13 +708,18 @@ public:
    * \brief Display a rectangular cuboid
    * \param point1 - x,y,z top corner location of box
    * \param point2 - x,y,z bottom opposite corner location of box
-   * \param color - an enum pre-defined name of a color
+   * \param color - an enum pre-defined name of a color or a color message
    * \return true on success
    */
   bool publishCuboid(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2,
                      Colors color = BLUE);
+  bool publishCuboid(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2,
+                     const std_msgs::msg::ColorRGBA& color);
   bool publishCuboid(const geometry_msgs::msg::Point& point1,
                      const geometry_msgs::msg::Point& point2, Colors color = BLUE,
+                     const std::string& ns = "Cuboid", std::size_t id = 0);
+  bool publishCuboid(const geometry_msgs::msg::Point& point1,
+                     const geometry_msgs::msg::Point& point2, const std_msgs::msg::ColorRGBA& color,
                      const std::string& ns = "Cuboid", std::size_t id = 0);
 
   /**
@@ -723,13 +728,17 @@ public:
    * \param depth - depth of the box
    * \param width - width of the box
    * \param height - height of the box
-   * \param color - an enum pre-defined name of a color
+   * \param color - an enum pre-defined name of a color or a color message
    * \return true on success
    */
-  bool publishCuboid(const geometry_msgs::msg::Pose& pose, double depth, double width,
-                     double height, Colors color = BLUE);
+  bool publishCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height,
+                     const std_msgs::msg::ColorRGBA& color);
   bool publishCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height,
                      Colors color = BLUE);
+  bool publishCuboid(const geometry_msgs::msg::Pose& pose, double depth, double width,
+                     double height, Colors color = BLUE);
+  bool publishCuboid(const geometry_msgs::msg::Pose& pose, double depth, double width,
+                     double height, const std_msgs::msg::ColorRGBA& color);
 
   /**
    * \brief Display a marker of line
