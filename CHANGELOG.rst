@@ -2,6 +2,12 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.9.3 (2023-01-05)
+------------------
+* Fix formatting CI job (`#230 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/230>`_)
+* Move pub_rviz_markers\_ to it's own callback queue (`#193 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/193>`_)
+* Contributors: Jochen Sprickerhof, Vatan Aksoy Tezer
+
 3.9.2 (2022-09-20)
 ------------------
 * Cleanup for new Ubuntu versions (`#215 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/215>`_)
