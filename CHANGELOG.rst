@@ -2,6 +2,14 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+4.1.4 (2023-01-05)
+------------------
+* Migrate to Ogre.h (`#226 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/226>`_)
+* Remove galactic jobs since they are deprecated (`#232 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/232>`_)
+* Add arbitrary color option to publishCuboid (`#227 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/227>`_)
+* Bump clang-format version to 14 (`#228 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/228>`_)
+* Contributors: Sebastian Castro, Stephanie Eng, Vatan Aksoy Tezer
+
 4.1.3 (2022-07-18)
 ------------------
 * Humble CI and formatting updates (`#220 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/220>`_)
