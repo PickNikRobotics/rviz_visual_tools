@@ -27,7 +27,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include <OgreRay.h>
-#include <OgreVector3.h>
+#include <Ogre.h>
 
 // Rviz
 #include <rviz_common/display_context.hpp>
