@@ -70,11 +70,13 @@ public:
   template <typename NodePtr>
   IMarkerSimple(NodePtr node, const std::string& imarker_topic_name = "imarker", double scale = 0.2,
                 const geometry_msgs::msg::Pose& initial_pose = getIdentityPose(),
+                const std::string& parent_frame = "world",
                 const rclcpp::QoS& update_pub_qos = rclcpp::QoS(1),
                 const rclcpp::QoS& feedback_sub_qos = rclcpp::QoS(1))
     : IMarkerSimple(node->get_node_base_interface(), node->get_node_clock_interface(),
                     node->get_node_logging_interface(), node->get_node_topics_interface(),
-                    node->get_node_services_interface(), imarker_topic_name, scale, initial_pose)
+                    node->get_node_services_interface(), imarker_topic_name, scale, initial_pose,
+                    parent_frame)
   {
   }
 
@@ -85,6 +87,7 @@ public:
                 const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
                 const std::string& imarker_topic_name = "imarker", double scale = 0.2,
                 const geometry_msgs::msg::Pose& initial_pose = getIdentityPose(),
+                const std::string& parent_frame = "world",
                 const rclcpp::QoS& update_pub_qos = rclcpp::QoS(1),
                 const rclcpp::QoS& feedback_sub_qos = rclcpp::QoS(1));
 
@@ -105,7 +108,8 @@ public:
 private:
   void sendUpdatedIMarkerPose();
 
-  void make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale = 0.2);
+  void make6DofMarker(const geometry_msgs::msg::Pose& pose = getIdentityPose(), double scale = 0.2,
+                      const std::string& parent_frame = "world");
 
   // --------------------------------------------------------
   // Node Interfaces

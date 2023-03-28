@@ -49,8 +49,8 @@ IMarkerSimple::IMarkerSimple(
     const rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr& topics_interface,
     const rclcpp::node_interfaces::NodeServicesInterface::SharedPtr& services_interface,
     const std::string& imarker_topic_name, double scale,
-    const geometry_msgs::msg::Pose& initial_pose, const rclcpp::QoS& update_pub_qos,
-    const rclcpp::QoS& feedback_sub_qos)
+    const geometry_msgs::msg::Pose& initial_pose, const std::string& parent_frame,
+    const rclcpp::QoS& update_pub_qos, const rclcpp::QoS& feedback_sub_qos)
   : node_base_interface_(node_base_interface)
   , clock_interface_(clock_interface)
   , logging_interface_(logging_interface)
@@ -71,7 +71,7 @@ IMarkerSimple::IMarkerSimple(
   // ros::Duration(2.0).sleep();
 
   // Create imarker
-  make6DofMarker(latest_pose_, scale);
+  make6DofMarker(latest_pose_, scale, parent_frame);
 
   // Send imarker to Rviz
   imarker_server_->applyChanges();
@@ -117,13 +117,14 @@ void IMarkerSimple::sendUpdatedIMarkerPose()
   imarker_server_->applyChanges();
 }
 
-void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale)
+void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale,
+                                   const std::string& parent_frame)
 {
   std::stringstream ss;
   ss << "Making 6dof interactive marker named " << IMARKER_NAME;
   RCLCPP_INFO(logger_, ss.str().c_str());
 
-  int_marker_.header.frame_id = "world";
+  int_marker_.header.frame_id = parent_frame;
   int_marker_.pose = pose;
   int_marker_.scale = scale;
 
