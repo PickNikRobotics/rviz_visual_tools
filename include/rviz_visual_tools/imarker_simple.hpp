@@ -75,7 +75,8 @@ public:
                 const rclcpp::QoS& feedback_sub_qos = rclcpp::QoS(1))
     : IMarkerSimple(node->get_node_base_interface(), node->get_node_clock_interface(),
                     node->get_node_logging_interface(), node->get_node_topics_interface(),
-                    node->get_node_services_interface(), imarker_topic_name, scale, initial_pose, parent_frame)
+                    node->get_node_services_interface(), imarker_topic_name, scale, initial_pose,
+                    parent_frame)
   {
   }
 

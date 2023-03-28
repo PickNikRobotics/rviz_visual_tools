@@ -117,7 +117,8 @@ void IMarkerSimple::sendUpdatedIMarkerPose()
   imarker_server_->applyChanges();
 }
 
-void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale, const std::string& parent_frame)
+void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double scale,
+                                   const std::string& parent_frame)
 {
   std::stringstream ss;
   ss << "Making 6dof interactive marker named " << IMARKER_NAME;
