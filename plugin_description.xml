@@ -3,7 +3,7 @@
          type="rviz_visual_tools::RvizVisualToolsGui"
          base_class_type="rviz_common::Panel">
     <description>
-      A panel widget allowing control of a ROS pipeline
+      A panel widget allowing control of a ROS2 pipeline
     </description>
   </class>
 
