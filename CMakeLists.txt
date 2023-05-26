@@ -256,4 +256,25 @@ if (BUILD_TESTING)
   )
 endif()
 
+####################
+## Python binding ##
+####################
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(pybind11_vendor REQUIRED)
+find_package(pybind11 REQUIRED)
+
+ament_python_install_package(rviz_visual_tools PACKAGE_DIR python/rviz_visual_tools)
+
+pybind11_add_module(pyrviz_visual_tools python/src/rviz_visual_tools.cpp)
+target_link_libraries(pyrviz_visual_tools PRIVATE rviz_visual_tools)
+ament_target_dependencies(pyrviz_visual_tools pybind11)
+install(TARGETS pyrviz_visual_tools
+        LIBRARY DESTINATION ${PYTHON_INSTALL_DIR}/rviz_visual_tools)
+install(PROGRAMS
+  python/examples/rviz_visual_tools_demo.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+
 ament_package()
