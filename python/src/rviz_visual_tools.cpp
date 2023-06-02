@@ -2,174 +2,16 @@
 #include <pybind11/eigen.h>
 #include <pybind11/stl.h>
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
-#include <rclcpp/serialization.hpp>
+#include <rviz_visual_tools/binding_utils.hpp>
 
 namespace py = pybind11;
 using py::literals::operator""_a;
 
-PYBIND11_EXPORT py::object createMessage(const std::string& ros_msg_name)
-{
-  // find delimiting '/' in ros msg name
-  std::size_t pos = ros_msg_name.find('/');
-  // import module
-  py::module m = py::module::import((ros_msg_name.substr(0, pos) + ".msg").c_str());
-  // retrieve type instance
-  py::object cls = m.attr(ros_msg_name.substr(pos + 1).c_str());
-  // create message instance
-  return cls();
-}
-
-PYBIND11_EXPORT bool convertible(const pybind11::handle& h, const std::string& ros_msg_name)
-{
-  PyObject* o = h.attr("__class__").attr("__name__").ptr();
-  std::size_t pos = ros_msg_name.find_last_of('/');
-  std::string class_name = ros_msg_name.substr(pos + 1);
-  return py::cast<std::string>(o) == class_name;
-}
-
-namespace pybind11
-{
-namespace detail
-{
-// Base class for type conversion (C++ <-> python) of ROS message types
-template <typename T>
-struct RosMsgTypeCaster
-{
-  // C++ -> Python
-  static handle cast(const T& src, return_value_policy /* policy */, handle /* parent */)
-  {
-    // serialize src
-    rclcpp::Serialization<T> serializer;
-    rclcpp::SerializedMessage serialized_msg;
-    serializer.serialize_message(&src, &serialized_msg);
-    py::bytes bytes =
-        py::bytes(reinterpret_cast<const char*>(serialized_msg.get_rcl_serialized_message().buffer),
-                  serialized_msg.get_rcl_serialized_message().buffer_length);
-
-    // get Python object type
-    const std::string ros_msg_name = rosidl_generator_traits::name<T>();
-
-    // find delimiting '/' in ros_msg_name
-    std::size_t pos1 = ros_msg_name.find('/');
-    std::size_t pos2 = ros_msg_name.find('/', pos1 + 1);
-    py::module m = py::module::import((ros_msg_name.substr(0, pos1) + ".msg").c_str());
-
-    // retrieve type instance
-    py::object cls = m.attr(ros_msg_name.substr(pos2 + 1).c_str());
-
-    // deserialize into python object
-    py::module rclpy = py::module::import("rclpy.serialization");
-    py::object msg = rclpy.attr("deserialize_message")(bytes, cls);
-
-    return msg.release();
-  }
-
-  // Python -> C++
-  bool load(handle src, bool /*convert*/)
-  {
-    // check datatype of src
-    if (!convertible(src, rosidl_generator_traits::name<T>()))
-      return false;
-
-    // serialize src into python buffer
-    py::module rclpy = py::module::import("rclpy.serialization");
-    py::bytes bytes = rclpy.attr("serialize_message")(src);
-
-    // deserialize into C++ object
-    rcl_serialized_message_t rcl_serialized_msg = rmw_get_zero_initialized_serialized_message();
-    char* serialized_buffer;
-    Py_ssize_t length;
-    if (PYBIND11_BYTES_AS_STRING_AND_SIZE(bytes.ptr(), &serialized_buffer, &length))
-    {
-      throw py::error_already_set();
-    }
-    if (length < 0)
-    {
-      throw py::error_already_set();
-    }
-    rcl_serialized_msg.buffer_capacity = length;
-    rcl_serialized_msg.buffer_length = length;
-    rcl_serialized_msg.buffer = reinterpret_cast<uint8_t*>(serialized_buffer);
-    rmw_ret_t rmw_ret = rmw_deserialize(
-        &rcl_serialized_msg, rosidl_typesupport_cpp::get_message_type_support_handle<T>(), &value);
-    if (RMW_RET_OK != rmw_ret)
-    {
-      throw std::runtime_error("failed to deserialize ROS message");
-    }
-    return true;
-  }
-
-  PYBIND11_TYPE_CASTER(T, _<T>());
-};
-
-template <typename T>
-struct type_caster<T, enable_if_t<rosidl_generator_traits::is_message<T>::value>>
-  : RosMsgTypeCaster<T>
-{
-};
-}  // namespace detail
-}  // namespace pybind11
-
 namespace rviz_visual_tools
 {
-
-// The idea was taken from
-// https://github.com/RobotLocomotion/drake-ros/blob/main/drake_ros/core/drake_ros.h
-/** A ROS interface that wraps a live rclcpp node.*/
-class RvizVisualToolsNode final
-{
-public:
-  RvizVisualToolsNode(const std::string& node_name)
-  {
-    node = rclcpp::Node::make_unique(node_name);
-    executor.add_node(node->get_node_base_interface());
-  }
-
-  ~RvizVisualToolsNode()
-  {
-    executor.remove_node(node->get_node_base_interface());
-    stop_spin_thread();
-  }
-
-  [[nodiscard]] const rclcpp::Node& getNode() const
-  {
-    return *node;
-  }
-
-  [[nodiscard]] rclcpp::Node* getMutableNode() const
-  {
-    return node.get();
-  }
-
-  void spin_all(int timeout_millis = 0)
-  {
-    executor.spin_all(std::chrono::milliseconds(timeout_millis));
-  }
-
-  void start_spin_thread()
-  {
-    stop_spin_thread();
-    executor_thread = std::thread([this] { executor.spin(); });
-  }
-
-  void stop_spin_thread()
-  {
-    executor.cancel();
-    if (executor_thread.joinable())
-    {
-      executor_thread.join();
-    }
-  }
-
-private:
-  rclcpp::Node::UniquePtr node;
-  rclcpp::executors::SingleThreadedExecutor executor;
-  std::thread executor_thread;
-};
-
 PYBIND11_MODULE(pyrviz_visual_tools, m)
 {
-  py::class_<RvizVisualToolsNode>(m, "RvizVisualToolsNode")
+  py::class_<RvizVisualToolsNode, RvizVisualToolsNode::SharedPtr>(m, "RvizVisualToolsNode")
       .def(py::init<const std::string&>(), "node_name"_a)
       .def("spin_all", &RvizVisualToolsNode::spin_all, "timeout_millis"_a = 0)
       .def("start_spin_thread", &RvizVisualToolsNode::start_spin_thread)
@@ -180,10 +22,10 @@ PYBIND11_MODULE(pyrviz_visual_tools, m)
   */
   m.def(
       "init",
-      [](std::vector<std::string> args) {
+      [](const std::vector<std::string>& args) {
         std::vector<const char*> raw_args;
         raw_args.reserve(args.size());
-        for (auto& arg : args)
+        for (const auto& arg : args)
         {
           raw_args.push_back(arg.c_str());
         }
@@ -237,9 +79,9 @@ PYBIND11_MODULE(pyrviz_visual_tools, m)
       .value("ZXZ", EulerConvention::ZXZ);
 
   py::class_<RvizVisualTools>(m, "RvizVisualTools")
-      .def(py::init([](RvizVisualToolsNode* node, const std::string& base_frame,
+      .def(py::init([](const RvizVisualToolsNode::SharedPtr& node, const std::string& base_frame,
                        const std::string& marker_topic) {
-        return RvizVisualTools(base_frame, marker_topic, node->getMutableNode());
+        return RvizVisualTools(base_frame, marker_topic, node);
       }))
       .def("delete_marker", &RvizVisualTools::deleteMarker)
       .def("delete_all_markers", py::overload_cast<>(&RvizVisualTools::deleteAllMarkers))
@@ -252,7 +94,7 @@ PYBIND11_MODULE(pyrviz_visual_tools, m)
       .def("wait_for_marker_subscriber", &RvizVisualTools::waitForMarkerSub)
       .def("set_alpha", &RvizVisualTools::setAlpha)
       .def("set_lifetime", &RvizVisualTools::setLifetime)
-      .def("get_random_color", &RvizVisualTools::getRandColor)
+      .def_static("get_random_color", &RvizVisualTools::getRandColor)
       .def("get_color", &RvizVisualTools::getColor)
       .def("get_color_scale", &RvizVisualTools::getColorScale)
       .def("get_scale", &RvizVisualTools::getScale)
