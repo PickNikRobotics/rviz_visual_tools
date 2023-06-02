@@ -22,7 +22,11 @@ PYBIND11_MODULE(pyrviz_visual_tools, m)
   */
   m.def(
       "init",
-      [](const std::vector<std::string>& args) {
+      [](std::vector<std::string> args) {
+        if (args.empty())
+        {
+          args = py::module::import("sys").attr("argv").cast<std::vector<std::string>>();
+        }
         std::vector<const char*> raw_args;
         raw_args.reserve(args.size());
         for (const auto& arg : args)
