@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.5.1)
 project(rviz_visual_tools)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -27,20 +27,13 @@ find_package(Boost REQUIRED thread system)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(OGRE_OV OGRE)
 
-# Qt 4 or 5
-if("${rviz_QT_VERSION}" VERSION_LESS "5")
-  find_package(Qt4 ${rviz_QT_VERSION} REQUIRED QtCore QtGui)
-  include(${QT_USE_FILE})
-  macro(qt_wrap_ui)
-    qt4_wrap_ui(${ARGN})
-  endmacro()
-else()
-  find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
-  set(QT_LIBRARIES Qt5::Widgets)
-  macro(qt_wrap_ui)
-    qt5_wrap_ui(${ARGN})
-  endmacro()
-endif()
+find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
+set(QT_LIBRARIES Qt5::Widgets)
+macro(qt_wrap_ui)
+  qt5_wrap_ui(${ARGN})
+endmacro()
+
+
 ## Prefer the Qt signals and slots to avoid defining "emit", "slots",
 ## etc because they can conflict with boost signals, so define QT_NO_KEYWORDS here.
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
