@@ -13,7 +13,7 @@ jobs:
     name: Format
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - uses: actions/setup-python@v2
     - name: Install clang-format-10
       run: sudo apt-get install clang-format-10
