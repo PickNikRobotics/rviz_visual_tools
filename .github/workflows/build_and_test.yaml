@@ -62,7 +62,7 @@ jobs:
         uses: 'ros-industrial/industrial_ci@master'
         env: ${{ matrix.env }}
       - name: upload test artifacts (on failure)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: test-results
