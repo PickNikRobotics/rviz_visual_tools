@@ -30,7 +30,6 @@ RUN apt-get -qq update && \
     rosdep update -q && \
     cd $ROS_WS/src && \
     git clone https://github.com/picknikrobotics/rviz_visual_tools.git -b ${GIT_BRANCH} && \
-    vcs import < rviz_visual_tools/rviz_visual_tools.repos && \
     # Remove folders declared as COLCON_IGNORE
     find -L . -name COLCON_IGNORE -printf "%h\0" | xargs -0 rm -rf && \
     rosdep install -q -y --from-paths . --ignore-src --rosdistro ${ROS_DISTRO} --as-root=apt:false && \
