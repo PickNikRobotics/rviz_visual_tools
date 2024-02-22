@@ -8,11 +8,12 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   graph_msgs
   interactive_markers
-  shape_msgs
+  pluginlib
   roscpp
   roslint
   rostest
   rviz
+  shape_msgs
   sensor_msgs
   std_msgs
   tf2_eigen
