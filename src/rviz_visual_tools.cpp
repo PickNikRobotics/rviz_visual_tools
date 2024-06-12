@@ -85,6 +85,14 @@ bool RvizVisualTools::deleteAllMarkers()
   return publishMarker(reset_marker_);
 }
 
+bool RvizVisualTools::deleteAllMarkers(const std::string& ns)
+{
+  visualization_msgs::Marker delete_ns_marker = reset_marker_;
+  delete_ns_marker.header.stamp = ros::Time();
+  delete_ns_marker.ns = ns;
+  return publishMarker(delete_ns_marker);
+}
+
 void RvizVisualTools::resetMarkerCounts()
 {
   arrow_marker_.id++;
@@ -105,7 +113,7 @@ bool RvizVisualTools::loadRvizMarkers()
   // Load reset marker -------------------------------------------------
   reset_marker_.header.frame_id = base_frame_;
   reset_marker_.header.stamp = ros::Time();
-  reset_marker_.ns = "deleteAllMarkers";  // helps during debugging
+  reset_marker_.ns = "";  // needs to be empty in order for rviz to delete all markers in all namespaces
   reset_marker_.action = 3;               // TODO(davetcoleman): In ROS-J set to visualization_msgs::Marker::DELETEALL;
   reset_marker_.pose.orientation.w = 1;
 
@@ -2875,6 +2883,61 @@ void RvizVisualTools::loadRemoteControl()
     remote_control_ = std::make_shared<RemoteControl>(nh_);
     ros::spinOnce();
   }
+}
+
+int32_t RvizVisualTools::getArrowId() const
+{
+  return arrow_marker_.id;
+}
+
+int32_t RvizVisualTools::getSphereId() const
+{
+  return sphere_marker_.id;
+}
+
+int32_t RvizVisualTools::getBlockId() const
+{
+  return block_marker_.id;
+}
+
+int32_t RvizVisualTools::getCylinderId() const
+{
+  return cylinder_marker_.id;
+}
+
+int32_t RvizVisualTools::getMeshId() const
+{
+  return mesh_marker_.id;
+}
+
+int32_t RvizVisualTools::getTextId() const
+{
+  return text_marker_.id;
+}
+
+int32_t RvizVisualTools::getCuboidId() const
+{
+  return cuboid_marker_.id;
+}
+
+int32_t RvizVisualTools::getLineStripId() const
+{
+  return line_strip_marker_.id;
+}
+
+int32_t RvizVisualTools::getLineListId() const
+{
+  return line_list_marker_.id;
+}
+
+int32_t RvizVisualTools::getSpheresId() const
+{
+  return spheres_marker_.id;
+}
+
+int32_t RvizVisualTools::getTriangleId() const
+{
+  return triangle_marker_.id;
 }
 
 }  // namespace rviz_visual_tools

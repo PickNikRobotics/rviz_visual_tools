@@ -215,6 +215,12 @@ public:
   bool deleteAllMarkers();
 
   /**
+   * \brief Tell Rviz to clear all markers on a particular display in a particular namespace
+   * \return true if we published a marker message
+   */
+  bool deleteAllMarkers(const std::string& ns);
+
+  /**
    * \brief Reset the id's of all published markers so that they overwrite themselves in the future
    *        NOTE you may prefer deleteAllMarkers()
    */
@@ -1103,6 +1109,39 @@ public:
 
   /** \brief Pre-load remote control */
   void loadRemoteControl();
+
+  /** \brief Get the latest ID of arrow_marker_ */
+  int32_t getArrowId() const;
+
+  /** \brief Get the latest ID of sphere_marker_ */
+  int32_t getSphereId() const;
+
+  /** \brief Get the latest ID of block_marker_*/
+  int32_t getBlockId() const;
+
+  /** \brief Get the latest ID of cylinder_marker_*/
+  int32_t getCylinderId() const;
+
+  /** \brief Get the latest ID of mesh_marker_*/
+  int32_t getMeshId() const;
+
+  /** \brief Get the latest ID of text_marker_*/
+  int32_t getTextId() const;
+
+  /** \brief Get the latest ID of cuboid_marker_*/
+  int32_t getCuboidId() const;
+
+  /** \brief Get the latest ID of line_strip_marker_*/
+  int32_t getLineStripId() const;
+
+  /** \brief Get the latest ID of line_list_marker_*/
+  int32_t getLineListId() const;
+
+  /** \brief Get the latest ID of spheres_marker_*/
+  int32_t getSpheresId() const;
+
+  /** \brief Get the latest ID of triangle_marker_*/
+  int32_t getTriangleId() const;
 
 protected:
   // A shared node handle
