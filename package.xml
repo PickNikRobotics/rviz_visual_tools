@@ -41,6 +41,7 @@
 
   <build_depend>qtbase5-dev</build_depend>
   <build_depend>eigen</build_depend>
+  <build_depend>pybind11_vendor</build_depend>
 
   <build_export_depend>eigen</build_export_depend>
   <exec_depend>libqt5-widgets</exec_depend>
