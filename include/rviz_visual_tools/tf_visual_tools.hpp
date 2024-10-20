@@ -47,7 +47,6 @@
 
 #include <tf2_ros/transform_broadcaster.h>
 
-
 namespace rviz_visual_tools
 {
 class TFVisualTools
