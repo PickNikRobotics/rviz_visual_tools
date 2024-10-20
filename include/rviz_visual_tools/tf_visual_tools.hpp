@@ -47,10 +47,6 @@
 
 #include <tf2_ros/transform_broadcaster.h>
 
-// namespace tf2_ros
-// {
-// class StaticTransformBroadcaster;
-// };
 
 namespace rviz_visual_tools
 {
@@ -83,10 +79,6 @@ private:
   void publishAllTransforms();
 
   // Node Interfaces
-  // rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface_;
-  // rclcpp::node_interfaces::NodeGraphInterface::SharedPtr graph_interface_;
-  // rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr logging_interface_;
-
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr node_base_interface_;
   rclcpp::node_interfaces::NodeTimersInterface::SharedPtr timers_interface_;
   rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface_;
