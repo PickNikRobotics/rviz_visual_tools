@@ -23,10 +23,6 @@ Developed by [Dave Coleman](http://dav.ee) at the Correll Robotics Lab, Universi
  * [![Format](https://github.com/PickNikRobotics/rviz_visual_tools/actions/workflows/format.yml/badge.svg?branch=ros2)](https://github.com/PickNikRobotics/rviz_visual_tools/actions/workflows/format.yaml?branch=ros2)
  * [![BuildAndTest](https://github.com/PickNikRobotics/rviz_visual_tools/actions/workflows/industrial_ci_action.yaml/badge.svg?branch=ros2)](https://github.com/PickNikRobotics/rviz_visual_tools/actions/workflows/industrial_ci_action.yaml?branch=ros2)
  * [![codecov](https://codecov.io/gh/PickNikRobotics/rviz_visual_tools/branch/ros2/graph/badge.svg)](https://codecov.io/gh/PickNikRobotics/rviz_visual_tools)
- * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary)](http://build.ros.org/view/Kbin_uX64/job/Kbin_uX64__rviz_visual_tools__ubuntu_xenial_amd64__binary/) ROS Kinetic Buildfarm - AMD64 Xenial Debian Build for Ubuntu 16.04
- * [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdev__rviz_visual_tools__ubuntu_xenial_amd64)](http://build.ros.org/view/Kdev/job/Kdev__rviz_visual_tools__ubuntu_xenial_amd64/) ROS Kinetic Buildfarm - AMD64 Xenial Devel Build for Ubuntu 16.04
- * [![Build Status](http://build.ros.org/buildStatus/icon?job=Msrc_uB__rviz_visual_tools__ubuntu_bionic__source)](http://build.ros.org/job/Msrc_uB__rviz_visual_tools__ubuntu_bionic__source/) ROS Melodic Buildfarm - AMD64 Bionic Debian Build for Ubuntu 18.04
- * [![Build Status](http://build.ros.org/buildStatus/icon?job=Mdev__rviz_visual_tools__ubuntu_bionic_amd64)](http://build.ros.org/job/Mdev__rviz_visual_tools__ubuntu_bionic_amd64/) ROS Melodic Buildfarm - AMD64 Bionic Devel Build for Ubuntu 18.04
 
 
 ![](resources/screenshot.png)
@@ -58,7 +54,7 @@ Then start the RViz Visual Tools demo:
 
 ## Code API
 
-See [the Doxygen documentation](http://docs.ros.org/melodic/api/rviz_visual_tools/html/annotated.html)
+See [the Doxygen documentation](https://docs.ros.org/en/ros2_packages/humble/api/rviz_visual_tools/)
 
 ## Usage
 
