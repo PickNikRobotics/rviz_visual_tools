@@ -38,6 +38,7 @@
   <depend>visualization_msgs</depend>
   <depend>std_msgs</depend>
   <depend>trajectory_msgs</depend>
+  <depend>py_binding_tools</depend>
 
   <build_depend>qtbase5-dev</build_depend>
   <build_depend>eigen</build_depend>

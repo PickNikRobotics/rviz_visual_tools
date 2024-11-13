@@ -6,11 +6,12 @@ from geometry_msgs.msg import Point, Pose, Quaternion
 from threading import Thread
 import numpy as np
 from copy import deepcopy
+import rclcpp
 
 LOGGER = get_logger("rviz_visual_tools_demo")
 
-rvt.init()
-node = rvt.RvizVisualToolsNode("rviz_visual_tools_demo")
+rclcpp.init()
+node = rclcpp.Node("rviz_visual_tools_demo")
 visual_tools = rvt.RvizVisualTools(node, "world", "/rviz_visual_tools")
 visual_tools.load_marker_publisher(True)
 visual_tools.delete_all_markers()

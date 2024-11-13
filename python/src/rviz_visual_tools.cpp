@@ -2,7 +2,7 @@
 #include <pybind11/eigen.h>
 #include <pybind11/stl.h>
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
-#include <rviz_visual_tools/binding_utils.hpp>
+#include <py_binding_tools/ros_msg_typecasters.h>
 
 namespace py = pybind11;
 using py::literals::operator""_a;
@@ -11,36 +11,6 @@ namespace rviz_visual_tools
 {
 PYBIND11_MODULE(pyrviz_visual_tools, m)
 {
-  py::class_<RvizVisualToolsNode, RvizVisualToolsNode::SharedPtr>(m, "RvizVisualToolsNode")
-      .def(py::init<const std::string&>(), "node_name"_a)
-      .def("spin_all", &RvizVisualToolsNode::spin_all, "timeout_millis"_a = 0)
-      .def("start_spin_thread", &RvizVisualToolsNode::start_spin_thread)
-      .def("stop_spin_thread", &RvizVisualToolsNode::stop_spin_thread);
-
-  /**Initialize ROS 2's global context.
-   This function decorates a `rclcpp::init` invocation.
-  */
-  m.def(
-      "init",
-      [](std::vector<std::string> args) {
-        if (args.empty())
-        {
-          args = py::module::import("sys").attr("argv").cast<std::vector<std::string>>();
-        }
-        std::vector<const char*> raw_args;
-        raw_args.reserve(args.size());
-        for (const auto& arg : args)
-        {
-          raw_args.push_back(arg.c_str());
-        }
-        if (!rclcpp::ok())
-        {
-          rclcpp::init(raw_args.size(), raw_args.data());
-        }
-      },
-      py::arg("args") = std::vector<std::string>{});
-  m.def("shutdown", &rclcpp::shutdown);
-
   py::enum_<Colors>(m, "Colors")
       .value("BLACK", Colors::BLACK)
       .value("BROWN", Colors::BROWN)
@@ -83,7 +53,7 @@ PYBIND11_MODULE(pyrviz_visual_tools, m)
       .value("ZXZ", EulerConvention::ZXZ);
 
   py::class_<RvizVisualTools>(m, "RvizVisualTools")
-      .def(py::init([](const RvizVisualToolsNode::SharedPtr& node, const std::string& base_frame,
+      .def(py::init([](const rclcpp::Node::SharedPtr& node, const std::string& base_frame,
                        const std::string& marker_topic) {
         return RvizVisualTools(base_frame, marker_topic, node);
       }))

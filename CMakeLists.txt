@@ -213,7 +213,7 @@ install(DIRECTORY include/ DESTINATION include)
 # Install shared resources
 install(DIRECTORY launch    DESTINATION share/${PROJECT_NAME})
 
-ament_export_targets(export_${PROJECT_NAME} rviz_visual_tools_binding_utilsTargets HAS_LIBRARY_TARGET)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(geometry_msgs
   shape_msgs
   rclcpp
@@ -257,27 +257,14 @@ endif()
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 find_package(pybind11_vendor REQUIRED)
 find_package(pybind11 REQUIRED)
+find_package(py_binding_tools REQUIRED)
 
 ament_python_install_package(rviz_visual_tools PACKAGE_DIR python/rviz_visual_tools)
 
-add_library(rviz_visual_tools_binding_utils SHARED python/src/binding_utils.cpp)
-ament_target_dependencies(rviz_visual_tools_binding_utils rclcpp pybind11)
-target_include_directories(rviz_visual_tools_binding_utils PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/python/include>
-  $<INSTALL_INTERFACE:include/rviz_visual_tools>
-)
-
 pybind11_add_module(pyrviz_visual_tools python/src/rviz_visual_tools.cpp)
-target_link_libraries(pyrviz_visual_tools PRIVATE rviz_visual_tools rviz_visual_tools_binding_utils)
+target_link_libraries(pyrviz_visual_tools PRIVATE rviz_visual_tools py_binding_tools::py_binding_tools)
 ament_target_dependencies(pyrviz_visual_tools pybind11)
-install(
-  TARGETS
-    rviz_visual_tools_binding_utils
-  EXPORT
-    rviz_visual_tools_binding_utilsTargets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-)
+
 install(DIRECTORY python/include/ DESTINATION include/rviz_visual_tools)
 install(TARGETS pyrviz_visual_tools
         LIBRARY DESTINATION ${PYTHON_INSTALL_DIR}/rviz_visual_tools)
@@ -285,5 +272,6 @@ install(PROGRAMS
   python/examples/rviz_visual_tools_demo.py
   DESTINATION lib/${PROJECT_NAME}
 )
+ament_export_dependencies(py_binding_tools)
 
 ament_package()
