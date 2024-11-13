@@ -231,12 +231,6 @@ ament_export_dependencies(geometry_msgs
   rviz_ogre_vendor
 )
 ament_export_include_directories(include)
-ament_export_libraries(
-  ${PROJECT_NAME}
-  ${PROJECT_NAME}_remote_control
-  ${PROJECT_NAME}_imarker_simple
-  ${PROJECT_NAME}_gui
-)
 
 ##########
 ## TEST ##
@@ -255,5 +249,29 @@ if (BUILD_TESTING)
     ${PROJECT_NAME}
   )
 endif()
+
+####################
+## Python binding ##
+####################
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(pybind11_vendor REQUIRED)
+find_package(pybind11 REQUIRED)
+find_package(py_binding_tools REQUIRED)
+
+ament_python_install_package(rviz_visual_tools PACKAGE_DIR python/rviz_visual_tools)
+
+pybind11_add_module(pyrviz_visual_tools python/src/rviz_visual_tools.cpp)
+target_link_libraries(pyrviz_visual_tools PRIVATE rviz_visual_tools py_binding_tools::py_binding_tools)
+ament_target_dependencies(pyrviz_visual_tools pybind11)
+
+install(DIRECTORY python/include/ DESTINATION include/rviz_visual_tools)
+install(TARGETS pyrviz_visual_tools
+        LIBRARY DESTINATION ${PYTHON_INSTALL_DIR}/rviz_visual_tools)
+install(PROGRAMS
+  python/examples/rviz_visual_tools_demo.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+ament_export_dependencies(py_binding_tools)
 
 ament_package()
