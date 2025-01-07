@@ -1,7 +1,7 @@
 # This config uses industrial_ci (https://github.com/ros-industrial/industrial_ci.git).
 # For troubleshooting, see readme (https://github.com/ros-industrial/industrial_ci/blob/master/README.rst)
 
-name: Build And Test
+name: BuildAndTest
 
 on:
   workflow_dispatch:
@@ -17,8 +17,6 @@ jobs:
         env:
           - ROS_DISTRO: melodic
             ROS_REPO: main
-          - ROS_DISTRO: melodic
-            ROS_REPO: testing
           - ROS_DISTRO: noetic
             ROS_REPO: main
             CCOV: true
@@ -39,36 +37,40 @@ jobs:
     name: "${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}${{ matrix.env.CCOV && ' + ccov' || ''}}${{ matrix.env.CLANG_TIDY && ' + clang-tidy' || '' }}"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # The target directory cache doesn't include the source directory because
       # that comes from the checkout.  See "prepare target_ws for cache" task below
       - name: cache target_ws
         if: ${{ ! matrix.env.CCOV }}
-        uses: pat-s/always-upload-cache@v2.1.5
+        uses: rhaschke/cache@main
         with:
           path: ${{ env.BASEDIR }}/target_ws
           key: target_ws-${{ env.CACHE_PREFIX }}-${{ hashFiles('**/CMakeLists.txt', '**/package.xml') }}-${{ github.run_id }}
           restore-keys: |
             target_ws-${{ env.CACHE_PREFIX }}-${{ hashFiles('**/CMakeLists.txt', '**/package.xml') }}
+        env:
+          GHA_CACHE_SAVE: always
       - name: cache ccache
-        uses: pat-s/always-upload-cache@v3
+        uses: rhaschke/cache@main
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ env.CACHE_PREFIX }}-${{ github.sha }}-${{ github.run_id }}
           restore-keys: |
             ccache-${{ env.CACHE_PREFIX }}-${{ github.sha }}
             ccache-${{ env.CACHE_PREFIX }}
+        env:
+          GHA_CACHE_SAVE: always
       - name: industrial_ci
-        uses: 'ros-industrial/industrial_ci@master'
+        uses: ros-industrial/industrial_ci@master
         env: ${{ matrix.env }}
       - name: upload test artifacts (on failure)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: test-results
           path: ${{ env.BASEDIR }}/target_ws/**/test_results/**/*.xml
       - name: upload codecov report
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: ${{ matrix.env.CCOV }}
         with:
           files: ${{ env.BASEDIR }}/coverage.info
