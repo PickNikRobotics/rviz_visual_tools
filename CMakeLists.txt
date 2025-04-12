@@ -36,9 +36,11 @@ find_package(tf2_geometry_msgs REQUIRED)
 
 find_package(pluginlib REQUIRED)
 find_package(interactive_markers REQUIRED)
+find_package(resource_retriever REQUIRED)
 find_package(rviz_common REQUIRED)
 find_package(rviz_rendering REQUIRED)
 find_package(rviz_default_plugins REQUIRED)
+find_package(rviz_resource_interfaces REQUIRED)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
@@ -83,6 +85,7 @@ ament_target_dependencies(${PROJECT_NAME}_gui PUBLIC
   rviz_rendering
   rviz_default_plugins
   rviz_ogre_vendor
+  rviz_resource_interfaces
 )
 target_link_libraries(${PROJECT_NAME}_gui PUBLIC Qt5::Widgets)
 
@@ -229,6 +232,7 @@ ament_export_dependencies(geometry_msgs
   rviz_rendering
   rviz_default_plugins
   rviz_ogre_vendor
+  rviz_resource_interfaces
 )
 ament_export_include_directories(include)
 ament_export_libraries(
