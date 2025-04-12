@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.16)
 project(rviz_visual_tools)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
