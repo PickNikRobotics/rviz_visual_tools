@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.15)
 project(rviz_visual_tools)
 
-# Default to C++14
+# Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -33,15 +33,13 @@ find_package(PkgConfig REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-
+find_package(resource_retriever REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(interactive_markers REQUIRED)
-find_package(resource_retriever REQUIRED)
 find_package(rviz_common REQUIRED)
 find_package(rviz_rendering REQUIRED)
 find_package(rviz_default_plugins REQUIRED)
 find_package(rviz_resource_interfaces REQUIRED)
-
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 ## Qt5 boilerplate options from http://doc.qt.io/qt-5/cmake-manual.html
