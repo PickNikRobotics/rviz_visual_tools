@@ -25,7 +25,7 @@
   <depend>rviz_ogre_vendor</depend>
   <depend>rviz_rendering</depend>
   <depend>rviz_default_plugins</depend>
-  <depend>rviz_resource_interfaces</depend>
+  <depend>resource_retriever</depend>
   <depend>pluginlib</depend>
   <depend>tf2</depend>
   <depend>tf2_eigen</depend>
