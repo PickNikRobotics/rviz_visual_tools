@@ -34,12 +34,11 @@
 #include <rclcpp/create_timer.hpp>
 #if __has_include(<tf2_eigen/tf2_eigen.hpp>)
 #include <tf2_eigen/tf2_eigen.hpp>
+#include <tf2/convert.hpp>
 #else
 #include <tf2_eigen/tf2_eigen.h>
-#endif
-
-// TF
 #include <tf2/convert.h>
+#endif
 
 // C++
 #include <string>

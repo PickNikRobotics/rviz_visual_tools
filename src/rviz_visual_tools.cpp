@@ -42,13 +42,16 @@
 #include <rviz_visual_tools/rviz_visual_tools.hpp>
 
 // Conversions
+#if __has_include(<tf2_eigen/tf2_eigen.hpp>)
 #include <tf2/convert.hpp>
 #include <tf2/LinearMath/Vector3.hpp>
 #include <tf2/LinearMath/Quaternion.hpp>
-#if __has_include(<tf2_eigen/tf2_eigen.hpp>)
 #include <tf2_eigen/tf2_eigen.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #else
+#include <tf2/convert.h>
+#include <tf2/LinearMath/Vector3.h>
+#include <tf2/LinearMath/Quaternion.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #endif
