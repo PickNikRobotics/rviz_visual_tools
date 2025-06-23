@@ -35,11 +35,6 @@
 
 #pragma once
 
-#ifndef Q_MOC_RUN
-#include <rclcpp/rclcpp.hpp>
-
-#include <rviz_common/panel.hpp>
-#endif
 
 #include <QPushButton>
 #include <QComboBox>

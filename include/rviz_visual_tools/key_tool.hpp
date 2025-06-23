@@ -28,14 +28,6 @@
 
 #pragma once
 
-#ifndef Q_MOC_RUN  // See: https://bugreports.qt-project.org/browse/QTBUG-22829
-
-#include <rviz_common/tool.hpp>
-#include <rviz_default_plugins/tools/move/move_tool.hpp>
-
-#include <QCursor>
-#include <QObject>
-#endif
 
 #include <rviz_visual_tools/remote_reciever.hpp>
 
