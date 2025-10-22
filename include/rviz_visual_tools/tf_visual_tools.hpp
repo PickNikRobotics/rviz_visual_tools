@@ -45,7 +45,7 @@
 // Eigen
 #include <Eigen/Geometry>
 
-#include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/transform_broadcaster.hpp>
 
 namespace rviz_visual_tools
 {
