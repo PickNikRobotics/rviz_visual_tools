@@ -39,13 +39,20 @@
 #include <string>
 
 // ROS
-#include <rclcpp/rclcpp.hpp>
-#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <rclcpp/version.h>
+#include <ros/ros.h>
+#include <geometry_msgs/TransformStamped.h>
 
 // Eigen
 #include <Eigen/Geometry>
 
+// For Rolling, Kilted, and newer
+#if RCLCPP_VERSION_GTE(29, 6, 0)
 #include <tf2_ros/transform_broadcaster.hpp>
+// For Jazzy and older
+#else
+#include <tf2_ros/transform_broadcaster.h>
+#endif
 
 namespace rviz_visual_tools
 {
