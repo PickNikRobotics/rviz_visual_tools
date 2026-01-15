@@ -39,9 +39,9 @@
 #include <string>
 
 // ROS
+#include <rclcpp/rclcpp.hpp>
 #include <rclcpp/version.h>
-#include <ros/ros.h>
-#include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 
 // Eigen
 #include <Eigen/Geometry>
