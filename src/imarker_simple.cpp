@@ -68,8 +68,6 @@ IMarkerSimple::IMarkerSimple(
       imarker_topic, node_base_interface_, clock_interface_, logging_interface_, topics_interface_,
       services_interface_, update_pub_qos, feedback_sub_qos);
 
-  // ros::Duration(2.0).sleep();
-
   // Create imarker
   make6DofMarker(latest_pose_, scale, parent_frame);
 
@@ -130,8 +128,6 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double 
 
   int_marker_.name = IMARKER_NAME;
 
-  // int_marker_.controls[0].interaction_mode = InteractiveMarkerControl::MENU;
-
   InteractiveMarkerControl control;
   control.orientation.w = 0.7071;
   control.orientation.x = 0.7071;
@@ -144,10 +140,9 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double 
   control.interaction_mode = InteractiveMarkerControl::MOVE_AXIS;
   int_marker_.controls.push_back(control);
 
-  control.orientation.w = 0.7071;
   control.orientation.x = 0;
   control.orientation.y = 0.7071;
-  control.orientation.z = 0;
+
   control.name = "rotate_z";
   control.interaction_mode = InteractiveMarkerControl::ROTATE_AXIS;
   int_marker_.controls.push_back(control);
@@ -155,8 +150,6 @@ void IMarkerSimple::make6DofMarker(const geometry_msgs::msg::Pose& pose, double 
   control.interaction_mode = InteractiveMarkerControl::MOVE_AXIS;
   int_marker_.controls.push_back(control);
 
-  control.orientation.w = 0.7071;
-  control.orientation.x = 0;
   control.orientation.y = 0;
   control.orientation.z = 0.7071;
   control.name = "rotate_y";
