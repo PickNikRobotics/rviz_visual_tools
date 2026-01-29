@@ -39,12 +39,12 @@ jobs:
     name: "${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}${{ matrix.env.CCOV && ' + ccov' || ''}}${{ matrix.env.CLANG_TIDY && ' + clang-tidy' || '' }}"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       # The target directory cache doesn't include the source directory because
       # that comes from the checkout.  See "prepare target_ws for cache" task below
       - name: cache target_ws
         if: ${{ ! matrix.env.CCOV }}
-        uses: pat-s/always-upload-cache@v2.1.5
+        uses: pat-s/always-upload-cache@v3
         with:
           path: ${{ env.BASEDIR }}/target_ws
           key: target_ws-${{ env.CACHE_PREFIX }}-${{ hashFiles('**/CMakeLists.txt', '**/package.xml') }}-${{ github.run_id }}
@@ -62,7 +62,7 @@ jobs:
         uses: 'ros-industrial/industrial_ci@master'
         env: ${{ matrix.env }}
       - name: upload test artifacts (on failure)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: test-results
