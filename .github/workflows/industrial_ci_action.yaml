@@ -37,7 +37,7 @@ jobs:
     name: "${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}${{ matrix.env.CCOV && ' + ccov' || ''}}"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       # The target directory cache doesn't include the source directory because
       # that comes from the checkout.  See "prepare target_ws for cache" task below
       - name: cache target_ws
@@ -50,7 +50,7 @@ jobs:
           restore-keys: |
             target_ws-${{ env.CACHE_PREFIX }}-${{ hashFiles('**/CMakeLists.txt', '**/package.xml') }}
       - name: cache ccache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           save-always: true
           path: ${{ env.CCACHE_DIR }}
@@ -68,7 +68,7 @@ jobs:
           name: test-results
           path: ${{ env.BASEDIR }}/target_ws/**/test_results/**/*.xml
       - name: upload codecov report
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         if: ${{ matrix.env.CCOV }}
         with:
           files: ${{ env.BASEDIR }}/coverage.info
