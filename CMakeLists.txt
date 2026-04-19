@@ -78,7 +78,6 @@ if(NOT DEFINED BUILD_SHARED_LIBS)
 endif()
 
 
- 
 add_library(${PROJECT_NAME}_gui SHARED src/${PROJECT_NAME}_gui.cpp
    src/key_tool.cpp
    src/remote_control.cpp )#${HEADER_FILES})
@@ -95,7 +94,7 @@ if(Qt${QT_VERSION_MAJOR} VERSION_EQUAL "6")
   rviz_common::rviz_common
   rviz_rendering::rviz_rendering
   rviz_default_plugins::rviz_default_plugins
-  rviz_ogre_vendor::OgreMain rviz_ogre_vendor::OgreOverlay 
+  rviz_ogre_vendor::OgreMain rviz_ogre_vendor::OgreOverlay
   Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Core5Compat
   )
 else()
@@ -150,7 +149,7 @@ add_library(${PROJECT_NAME} SHARED
 )
 target_compile_definitions(${PROJECT_NAME} PRIVATE _USE_MATH_DEFINES)
 
-set(${PROJECT_NAME}_LINK_LIBRARIES
+set(${_LINK_LIBRARIES}
   rviz_ogre_vendor::OgreMain
   rviz_ogre_vendor::OgreOverlay
   rviz_common::rviz_common
@@ -160,13 +159,13 @@ set(${PROJECT_NAME}_LINK_LIBRARIES
 )
 
 if(Qt${QT_VERSION_MAJOR} VERSION_EQUAL "6")
-  list(APPEND ${PROJECT_NAME}_LINK_LIBRARIES
+  list(APPEND ${_LINK_LIBRARIES}
     Qt6::Core5Compat
   )
 endif()
 
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_remote_control
-    ${PROJECT_NAME}_LINK_LIBRARIES
+    ${_LINK_LIBRARIES}
 )
 
 

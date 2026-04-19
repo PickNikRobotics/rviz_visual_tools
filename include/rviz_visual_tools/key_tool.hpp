@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <rviz_common/tool.hpp>
+#include <rviz_default_plugins/tools/move/move_tool.hpp>
 
 #include <rviz_visual_tools/remote_reciever.hpp>
 

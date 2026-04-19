@@ -35,6 +35,7 @@
 
 #pragma once
 
+#include <rviz_common/panel.hpp>
 
 #include <QPushButton>
 #include <QComboBox>
