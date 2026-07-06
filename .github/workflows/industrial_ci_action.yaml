@@ -42,7 +42,7 @@ jobs:
       # that comes from the checkout.  See "prepare target_ws for cache" task below
       - name: cache target_ws
         if: ${{ ! matrix.env.CCOV }}
-        uses: actions/cache@v7
+        uses: actions/cache@v6
         with:
           save-always: true
           path: ${{ env.BASEDIR }}/target_ws
@@ -50,7 +50,7 @@ jobs:
           restore-keys: |
             target_ws-${{ env.CACHE_PREFIX }}-${{ hashFiles('**/CMakeLists.txt', '**/package.xml') }}
       - name: cache ccache
-        uses: actions/cache@v7
+        uses: actions/cache@v6
         with:
           save-always: true
           path: ${{ env.CCACHE_DIR }}
