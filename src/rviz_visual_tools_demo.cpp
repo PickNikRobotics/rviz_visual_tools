@@ -324,7 +324,7 @@ public:
     }
     visual_tools_->trigger();
 
-        // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
     RCLCPP_INFO(get_logger(), "Displaying Labeled Coordinate Axis");
     pose1.translation().x() = 0;
     y += space_between_rows;
