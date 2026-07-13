@@ -1016,7 +1016,6 @@ public:
                    Colors color = CLEAR, double scale = 1, const std::string& ns = "mesh",
                    std::size_t id = 0);
 
-
   /**
    * \brief Display a marker of a text
    * \param pose - the location to publish the marker with respect to the base frame
