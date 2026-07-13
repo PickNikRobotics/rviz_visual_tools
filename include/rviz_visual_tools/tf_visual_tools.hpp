@@ -84,7 +84,7 @@ private:
   rclcpp::Logger logger_;
 
   // Send tf messages
-  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   // Separate thread to publish transforms
   rclcpp::TimerBase::SharedPtr non_realtime_loop_;
