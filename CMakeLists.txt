@@ -40,9 +40,22 @@ find_package(rviz_common REQUIRED)
 find_package(rviz_rendering REQUIRED)
 find_package(rviz_default_plugins REQUIRED)
 
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
+# rviz switched to Qt6 in 15.1.14 (ros2/rviz#1635 merged 2025-12-08 but did not
+# land until that patch release; 15.1.13 and earlier are still Qt5).
+# Gate on rviz's version rather than Qt6 availability -- Ubuntu 24.04 ships both
+# Qt5 and Qt6, and linking a Qt6 build against a Qt5 rviz is an ABI mismatch.
+if(rviz_common_VERSION VERSION_GREATER_EQUAL 15.1.14)
+  find_package(Qt6 REQUIRED COMPONENTS Widgets)
+  set(QT_VERSION_MAJOR 6)
+  # Hint for transitive deps that use find_package(QT NAMES Qt6 Qt5 ...) which
+  # may incorrectly resolve to Qt5 due to CMake's ascending path order
+  set(QT_DIR "${Qt6_DIR}")
+else()
+  find_package(Qt5 REQUIRED COMPONENTS Widgets)
+  set(QT_VERSION_MAJOR 5)
+endif()
 
-## Qt5 boilerplate options from http://doc.qt.io/qt-5/cmake-manual.html
+## Qt boilerplate options from https://doc.qt.io/qt-6/cmake-manual.html
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -83,7 +96,7 @@ target_link_libraries(${PROJECT_NAME}_gui PUBLIC
   rviz_rendering::rviz_rendering
   rviz_default_plugins::rviz_default_plugins
   rviz_ogre_vendor::OgreMain
-  Qt5::Widgets
+  Qt${QT_VERSION_MAJOR}::Widgets
 )
 
 # prevent pluginlib from using boost

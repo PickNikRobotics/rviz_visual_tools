@@ -39,11 +39,11 @@
   <depend>std_msgs</depend>
   <depend>trajectory_msgs</depend>
 
-  <build_depend>qtbase5-dev</build_depend>
+  <build_depend>qt-base-dev</build_depend>
   <build_depend>eigen</build_depend>
 
   <build_export_depend>eigen</build_export_depend>
-  <exec_depend>libqt5-widgets</exec_depend>
+  <exec_depend>libqtwidgets</exec_depend>
 
   <!-- Launch files -->
   <exec_depend>ament_index_python</exec_depend>
