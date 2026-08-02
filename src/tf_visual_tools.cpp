@@ -59,7 +59,7 @@ TFVisualTools::TFVisualTools(const rclcpp::Node::SharedPtr& node, double loop_hz
                            update_period, std::bind(&TFVisualTools::publishAllTransforms, this));
   // , std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
-  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(node);
+  tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(*node);
 
   RCLCPP_INFO(logger_, "TFVisualTools Ready.");
 }
