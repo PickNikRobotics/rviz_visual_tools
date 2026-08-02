@@ -13,17 +13,40 @@ on:
 jobs:
   industrial_ci:
     strategy:
+      # Without this, one failing job cancels its siblings before they report.
+      # The rolling+main job currently fails at setup on Resolute (see below),
+      # which was silently discarding the humble and rolling-testing results.
+      fail-fast: false
       matrix:
         env:
           - ROS_DISTRO: humble
             ROS_REPO: main
           - ROS_DISTRO: humble
             ROS_REPO: testing
-          - ROS_DISTRO: rolling
+          # jazzy and kilted are both Ubuntu Noble, where Qt5 and Qt6 can be
+          # installed side by side. That is the case the rviz-version Qt gate in
+          # CMakeLists exists for, and until now the only coverage this branch
+          # had was humble (jammy, Qt5) and rolling (resolute, Qt6) -- so the
+          # interesting middle was untested despite being released.
+          - ROS_DISTRO: jazzy
             ROS_REPO: main
-            CCOV: true
+          - ROS_DISTRO: kilted
+            ROS_REPO: main
+          # lyrical is Ubuntu Resolute and is a released distro, so its `main`
+          # repo is populated. This gives us a *blocking* Qt6-on-Resolute job
+          # that should stay green, rather than depending on rolling for it.
+          - ROS_DISTRO: lyrical
+            ROS_REPO: main
+            OS_CODE_NAME: resolute
+          # Rolling's `main` apt repo has no Resolute packages yet, so track
+          # `testing`. Pin OS_CODE_NAME rather than relying on industrial_ci's
+          # default. Non-blocking until the Resolute packages are all released,
+          # matching the policy moveit2 uses for its rolling-resolute job.
           - ROS_DISTRO: rolling
             ROS_REPO: testing
+            OS_CODE_NAME: resolute
+            CCOV: true
+            NONBLOCKING: true
 
     env:
       AFTER_RUN_TARGET_TEST: ${{ matrix.env.CCOV && './.ci.prepare_codecov' || '' }}
@@ -36,6 +59,9 @@ jobs:
 
     name: "${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}${{ matrix.env.CCOV && ' + ccov' || ''}}"
     runs-on: ubuntu-latest
+    # Valid here because this is a step-based job. It would be silently ignored
+    # on a job that calls a reusable workflow via `uses:`.
+    continue-on-error: ${{ matrix.env.NONBLOCKING || false }}
     steps:
       - uses: actions/checkout@v4
       # The target directory cache doesn't include the source directory because
