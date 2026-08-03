@@ -2,6 +2,33 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* CMakeLists: dual-support Qt5 and Qt6 (`#300 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/300>`_)
+  Select Qt6 when building against rviz 15.1.14 or newer, the release where rviz
+  itself switched to Qt6, and keep Qt5 otherwise. ``package.xml`` now uses the
+  versionless ``qt-base-dev`` and ``libqtwidgets`` rosdep keys so rosdep installs
+  the same Qt that CMake selects.
+* tf_visual_tools: pass Node by reference to TransformBroadcaster (`#302 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/302>`_)
+  ``tf2_ros::TransformBroadcaster`` removed its deprecated node-pointer
+  constructors in tf2_ros 0.46.2.
+* Fix additional geometry2 tf2 .h deprecations (`#284 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/284>`_)
+* Replace ament_target_dependencies with target_link_libraries (`#277 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/277>`_)
+* Raise the minimum CMake version to silence the compatibility deprecation (`#287 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/287>`_)
+* ci: unblock and broaden the ros2 matrix for Rolling/Resolute (`#301 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/301>`_)
+  Set ``fail-fast: false``, move the rolling job to ``ROS_REPO: testing`` on
+  Ubuntu Resolute and mark it non-blocking, and add jazzy, kilted and lyrical
+  coverage.
+* CI: update actions (`#247 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/247>`_, `#249 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/249>`_, `#259 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/259>`_)
+* Update pre-commit hooks (`#250 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/250>`_, `#257 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/257>`_, `#273 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/273>`_)
+* [ros2] pass in parent frame for imarker (`#233 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/233>`_)
+* Fix unused variables in publishNormalAndDistancePlane (`#251 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/251>`_)
+* Clean tf_visual_tools.hpp (`#261 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/261>`_)
+* Clean imarker_simple.cpp (`#262 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/262>`_)
+* Remove unnecessary .repos file (`#245 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/245>`_)
+* Remove outdated build reports from the README (`#274 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/274>`_)
+* Contributors: Alejandro Hernández Cordero, Michael Wiznitzer, Nathan Brooks, PPokorski, Robert Haschke, Sebastian Jahr, mosfet80
+
 4.1.4 (2023-01-05)
 ------------------
 * Migrate to Ogre.h (`#226 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/226>`_)
