@@ -24,7 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(Eigen3 REQUIRED)
-find_package(Boost REQUIRED thread system)
+find_package(Boost REQUIRED thread)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(OGRE_OV OGRE)
 
