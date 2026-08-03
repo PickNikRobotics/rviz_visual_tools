@@ -2,8 +2,8 @@
 Changelog for package rviz_visual_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+4.2.0 (2026-08-02)
+------------------
 * CMakeLists: dual-support Qt5 and Qt6 (`#300 <https://github.com/PickNikRobotics/rviz_visual_tools/issues/300>`_)
   Select Qt6 when building against rviz 15.1.14 or newer, the release where rviz
   itself switched to Qt6, and keep Qt5 otherwise. ``package.xml`` now uses the
