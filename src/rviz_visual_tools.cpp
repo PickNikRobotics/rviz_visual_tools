@@ -2149,17 +2149,17 @@ bool RvizVisualTools::publishPolygon(const geometry_msgs::Polygon& polygon, colo
 }
 
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, double depth, double width, double height,
-                                             colors color, const std::string& ns, std::size_t id)
+                                             colors color, scales scale, const std::string& ns, std::size_t id)
 {
   Eigen::Vector3d min_point, max_point;
   min_point << -depth / 2, -width / 2, -height / 2;
   max_point << depth / 2, width / 2, height / 2;
-  return publishWireframeCuboid(pose, min_point, max_point, color, ns, id);
+  return publishWireframeCuboid(pose, min_point, max_point, color, scale, ns, id);
 }
 
 bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, const Eigen::Vector3d& min_point,
-                                             const Eigen::Vector3d& max_point, colors color, const std::string& ns,
-                                             std::size_t id)
+                                             const Eigen::Vector3d& max_point, colors color, scales scale,
+                                             const std::string& ns, std::size_t id)
 {
   // Extract 8 cuboid vertices
   Eigen::Vector3d p1(min_point[0], min_point[1], min_point[2]);
@@ -2194,7 +2194,7 @@ bool RvizVisualTools::publishWireframeCuboid(const Eigen::Isometry3d& pose, cons
   }
 
   std_msgs::ColorRGBA this_color = getColor(color);
-  line_list_marker_.scale = getScale(XXSMALL);
+  line_list_marker_.scale = getScale(scale);
   line_list_marker_.scale.y = 0;
   line_list_marker_.scale.z = 0;
   line_list_marker_.color = this_color;
