@@ -49,7 +49,7 @@ To see random shapes generated in Rviz, first launch Rviz:
 
 Then start the RViz Visual Tools demo:
 
-    ros2 run rviz_visual_tools rviz_visual_tools_demo
+    ros2 run rviz_visual_tools rviz_visual_tools_demo # Or rviz_visual_tools_demo.py for the python version
 
 ## Code API
 
