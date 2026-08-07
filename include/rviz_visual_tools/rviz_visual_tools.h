@@ -220,6 +220,11 @@ public:
    */
   void resetMarkerCounts();
 
+  /** 
+   * \brief Remove a specific marker with the given id.
+   */
+  void removeMarkerWithID(int id);
+
   /**
    * \brief Pre-load rviz markers for better efficiency
    * \return converted pose   * \return true on sucess
