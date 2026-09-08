@@ -6,7 +6,7 @@
 
   <maintainer email="mike@picknik.ai">Mike Lautman</maintainer>
 
-  <license>BSD</license>
+  <license>BSD-3-Clause</license>
 
   <url type="website">https://github.com/PickNikRobotics/rviz_visual_tools</url>
   <url type="bugtracker">https://github.com/PickNikRobotics/rviz_visual_tools/issues</url>
