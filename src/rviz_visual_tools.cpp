@@ -1768,40 +1768,6 @@ bool RvizVisualTools::publishMesh(const geometry_msgs::msg::Pose& pose,
   return publishMarker(triangle_marker_);
 }
 
-// TODO(mlautman): port graph_msgs
-// bool RvizVisualTools::publishGraph(const graph_msgs::msg::GeometryGraph& graph, colors color,
-// double radius)
-// {
-//   // Track which pairs of nodes we've already connected since graph is
-//   // bi-directional
-//   typedef std::pair<std::size_t, std::size_t> node_ids;
-//   std::set<node_ids> added_edges;
-//   std::pair<std::set<node_ids>::iterator, bool> return_value;
-//   Eigen::Vector3d a, b;
-//   for (std::size_t i = 0; i < graph.nodes.size(); ++i)
-//   {
-//     for (std::size_t j = 0; j < graph.edges[i].node_ids.size(); ++j)
-//     {
-//       // Check if we've already added this pair of nodes (edge)
-//       return_value = added_edges.insert(node_ids(i, j));
-//       if (!return_value.second)
-//       {
-//         // Element already existed in set, so don't add a new collision object
-//       }
-//       else
-//       {
-//         // Create a cylinder from two points
-//         a = convertPoint(graph.nodes[i]);
-//         b = convertPoint(graph.nodes[graph.edges[i].node_ids[j]]);
-
-//         publishCylinder(a, b, color, radius);
-//       }
-//     }
-//   }
-
-//   return true;
-// }
-
 bool RvizVisualTools::publishCuboid(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2,
                                     Colors color)
 {

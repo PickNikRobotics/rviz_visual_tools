@@ -324,42 +324,6 @@ public:
     }
     visual_tools_->trigger();
 
-    /* TODO(mlautman): port graph_msgs
-    // // --------------------------------------------------------------------
-    // RCLCPP_INFO(get_logger(), "Displaying Graph");
-    pose1 = Eigen::Isometry3d::Identity();
-    y += space_between_rows;
-    pose1.translation().y() = y;
-    step = 0.1;
-    graph_msgs::msg::GeometryGraph graph;
-    for (double i = 0; i <= 1.0; i += step)
-    {
-      graph.nodes.push_back(visual_tools_->convertPose(pose1).position);
-      graph_msgs::msg::Edges edges;
-      if (i > 0)
-      {
-        edges.node_ids.push_back(0);
-      }
-      graph.edges.push_back(edges);
-
-      if (i == 0.0)
-      {
-        publishLabelHelper(pose1, "Graph");
-      }
-
-      pose1.translation().x() += step;
-      pose1.translation().z() += visual_tools_->dRand(-0.1, 0.1);
-    }
-    visual_tools_->publishGraph(graph, rvt::ORANGE, 0.005);
-    visual_tools_->trigger();
-    */
-
-    // --------------------------------------------------------------------
-    // TODO(davetcoleman): publishMesh
-
-    // --------------------------------------------------------------------
-    // TODO(davetcoleman): publishPolygon
-
     // --------------------------------------------------------------------
     RCLCPP_INFO(get_logger(), "Displaying Labeled Coordinate Axis");
     pose1.translation().x() = 0;

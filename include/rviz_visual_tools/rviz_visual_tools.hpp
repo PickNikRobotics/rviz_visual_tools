@@ -52,7 +52,6 @@
 // Messages
 #include <shape_msgs/msg/mesh.hpp>
 #include <std_msgs/msg/color_rgba.hpp>
-// #include <graph_msgs/msg/geometry_graph.hpp>
 #include <geometry_msgs/msg/pose_array.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/polygon.hpp>
@@ -1016,16 +1015,6 @@ public:
   bool publishMesh(const geometry_msgs::msg::Pose& pose, const shape_msgs::msg::Mesh& mesh,
                    Colors color = CLEAR, double scale = 1, const std::string& ns = "mesh",
                    std::size_t id = 0);
-
-  /**
-   * \brief Display a graph
-   * \param graph of nodes and edges
-   * \param color - an enum pre-defined name of a color
-   * \param radius - width of cylinders
-   * \return true on success
-   */
-  // TODO(mlautman): port graph_msgs
-  // bool publishGraph(const graph_msgs::msg::GeometryGraph& graph, colors color, double radius);
 
   /**
    * \brief Display a marker of a text
